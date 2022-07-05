@@ -1,0 +1,19 @@
+### Analyze Text query
+POST  https://{{param.searchServiceName}}.search.windows.net/indexes/{{param.indexName}}/analyze?api-version={{config.searchVersion}}
+content-type: application/json
+api-key : {{param.searchServiceKey}}
+
+{
+  "text": "This-Is_a_test_2016-08-10.mp4",
+  "analyzer": "standard"
+}
+
+### Using the German Analyzer
+POST  https://{{param.searchServiceName}}.search.windows.net/indexes/{{param.indexName}}/analyze?api-version={{config.searchVersion}}
+content-type: application/json
+api-key : {{param.searchServiceKey}}
+
+{
+  "text": "Das_ist_ein_Test_2016-08-10.mp4",
+  "analyzer": "de.Microsoft"
+}

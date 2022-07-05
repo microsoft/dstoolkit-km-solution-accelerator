@@ -1,0 +1,126 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+
+@{
+    ViewData["Title"] = "Knowledge Mining - Ingest Data";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css"/>
+
+<!-- Pass controller data to view -->
+<script>
+    var Microsoft = Microsoft || {};
+</script>
+
+<main role="main">
+    <div class="container">
+        <div class="card mb-2 mt-5 mr-5 ml-5">
+            <h4 class="card-header bg-primary text-white"><span class="bi bi-cloud-upload me-2"></span>Upload files</h4>
+            <div class="card-body">
+                <p>
+                    You can used the area below to upload files into your Azure Blob Storage account. Once uploaded, the files will be indexed by Azure Search, and within a few minutes will be available for searching using this tool.
+                </p>
+                <div id="upload-dropzone" class="justify-content-center bg-light">Drag and drop files into this zone to add them to the upload list, or click anywhere in this block to open a file dialog.</div>
+            </div>
+        </div>
+
+        <div id="upload-message" class="alert alert-success mb-2 mt-2 mr-5 ml-5 d-none"></div>
+
+       <div class="card mb-2 mt-5 mr-5 ml-5">
+            <h4 class="card-header bg-secondary text-white"><span class="bi bi-inbox me-2"></span>Paste Screenshot - Ctrl+V</h4>
+            <div class="card-body">
+                <form id="usrform" method="post" enctype="multipart/form-data" action="/api/storage/upload">
+                @* <form method="post" enctype="multipart/form-data" asp-controller="api\/storage" asp-action="UploadScreenshot"> *@
+                    <div class="row">
+                        <div class="col">
+                            <input type="image" name="PastedImage" id="pastedImage" title="Pasted image" class="w-100 d-none"></input>
+                            <input type="hidden" name="pastedImageHidden" id="pastedImageHidden">
+                            <textarea class="w-100 d-none" name="PastedText" id="pastedText" form="usrform" rows="10"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mt-2">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="reset" class="btn btn-warning">Reset</button>
+                        </div>
+                    </div>
+                </form>                
+            </div>
+        </div>
+        <div id="upload-screenshot" class="alert alert-success mb-2 mt-2 mr-5 ml-5 d-none"></div>
+    </div>
+</main>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        Microsoft.Search.disableSearchBox();
+
+        $('#upload-dropzone').dropzone({
+            url: '/api/storage/upload',
+            method: 'POST',
+            parallelUploads: 10,
+            maxFilesize: 50, // MB
+            uploadMultiple: true,
+            maxFiles: 10,
+            success: function (file, response) {
+                file.previewElement.classList.add('dz-success');
+                var $message = $('#upload-message');
+                $message.text("Files uploaded successfully.");
+                $message.attr('style', 'display:block;');
+            },
+            error: function (file, response) {
+                file.previewElement.classList.add('dz-error');
+                var $message = $('#upload-message');
+                $message.text("Files uploaded successfully.");
+                $message.removeClass('alert-success');
+                $message.addClass('alert-warning border-warning');
+                $message.attr('style', 'display:block;');
+            }
+        });
+
+        $('#upload-dropzone').addClass('dropzone');
+
+        // TODO - see more drag options too not just paste
+        //https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItem
+        //https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItem/getAsString
+        window.addEventListener("paste", function(event){
+            // use event.originalEvent.clipboard for newer chrome versions
+            var items = (event.clipboardData  || event.originalEvent.clipboardData).items;
+
+            // find pasted items text or images...
+            var blob = null;
+            for (var i = 0; i < items.length; i++) {
+
+                // Pasting Screenshot Image
+                if (items[i].type.indexOf("image") === 0) {
+                    blob = items[i].getAsFile();
+                }
+
+                // Pasting Text data
+                if ((items[i].kind == 'string') && (items[i].type.match('^text/plain'))) {
+                    items[i].getAsString(function (str){
+                        document.getElementById("pastedText").innerText += str;
+                    });
+                    $("#pastedText").removeClass("d-none");
+                }
+            }
+
+            // load image if there is a pasted image
+            if (blob !== null) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    @* console.log(event.target.result); // data url! *@
+                    document.getElementById("pastedImage").src = event.target.result;
+                    document.getElementById("pastedImageHidden").value = event.target.result;
+                    $("#pastedImage").removeClass("d-none");
+                };
+                reader.readAsDataURL(blob);
+            }
+        }, false);
+    });
+</script>
+

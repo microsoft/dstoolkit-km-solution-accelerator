@@ -1,0 +1,61 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+@model CognitiveSearch.UI.Models.SearchViewModel
+
+@using CognitiveSearch.UI.Configuration
+@inject AppConfig AppConfig
+@inject UIConfig UIConfig
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Pass controller data to view -->
+<script>
+    Microsoft["View"] = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+</script>
+
+<!--Navigation Modal-->
+<partial name="_NewsNavigationPartial" />
+
+<!--Search Filter -->
+<partial name="_SearchFilterPartial" />
+
+<div id="results-container">
+
+    <div class="row content-results no-gutters">
+        <div class="col-md-2">
+            <div id="loading-indicator" class="d-flex align-items-center" style="display:none !important">
+              <strong>Loading news...</strong>
+              <div class="spinner-border text-warning spinner-grow-sm" role="status" aria-hidden="true"></div>
+            </div>
+        </div>            
+        <div class="col-md-10">        
+            <div id="filterReset"></div>
+        </div>
+    </div>
+
+    <div class="row content-results">
+        <div class="col-md-3">
+            <nav id="navbar-feeds" class="navbar navbar-light bg-light rounded flex-column p-3"></nav>
+        </div>
+        <div id="news-results-content" class="row col-md-9 reset-view"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            Microsoft.Search.initSearchVertical(Microsoft.View.config);
+
+            $("#navbar-row-1").attr("style", "display: none !important");
+
+            Microsoft.News.init().then(() => {
+                Microsoft.News.UpdateNewsFacets(Microsoft.News.news_facets);
+                Microsoft.News.LiveNewsSearch();
+            });
+
+        });
+    </script>
+}

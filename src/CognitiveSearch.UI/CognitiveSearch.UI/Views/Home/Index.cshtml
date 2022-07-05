@@ -1,0 +1,138 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+@using CognitiveSearch.UI.Configuration
+@inject AppConfig AppConfig
+@inject UIConfig UIConfig
+
+@model CognitiveSearch.UI.Models.SearchViewModel
+
+@{
+    Layout = "~/Views/Shared/_SimpleLayout.cshtml";
+}
+
+<script>
+    Microsoft["View"] = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+    Microsoft["Landing"] = JSON.parse('@Html.Raw(Json.Serialize(UIConfig.LandingPage))');
+    Microsoft["Colors"] = @Html.Raw(Json.Serialize(UIConfig.ColorPalette));
+</script>
+
+<div class="container-fluid bg-black"> 
+
+    <div id="highlight-header" class="p-2">
+        @*<h1 class="text-white">Research</h1>*@
+    </div>
+
+    <div class="form-group mt-3 p-2">
+        <div id="search-input-group" class="input-group">
+            <div id="scrollable-dropdown-menu" class="col-md-9">
+                <input type="text" class="form-control typeahead" name="q" id="q" placeholder="@Model.GetDashboardPageConfig().GetSearchInputPlaceHolder()" autocomplete="off" spellcheck="true">
+                <input type="hidden" name="searchFacetsAsString" id="search-input-search-facets">
+            </div>
+            <span class="input-group-btn col-md-3">
+                <button id="search-input-button" class="btn btn-dark" onclick="Microsoft.Utils.OpenView('@Model.GetDashboardPageConfig().path');" title="@Model.GetDashboardPageConfig().GetSearchInputTitle()">
+                    <span class="bi bi-search"></span>
+                </button>
+
+                @if (AppConfig.UIConfig.UploadData)
+                {
+                    <button class="btn btn-primary" title="Upload content to the Knowledge lake" onclick="location.href='@Url.Action("UploadData", "Admin")';">
+                        <span class="bi bi-cloud-upload"></span>
+                    </button>
+                }
+            </span>
+        </div>
+    </div>
+</div>
+
+@for (int j = 0; j < UIConfig.LandingPage.Highlights.Count; j++)
+{
+    var item = UIConfig.LandingPage.Highlights[j];
+
+    var items = UIConfig.LandingPage.Highlights[j].Insights;
+    @if (item.enable)
+    {
+        <div class="container-fluid parallax parallax-@j min-vh-100 bg-black"> 
+            <div class="container rounded">
+
+                @if (! String.IsNullOrEmpty(item.title))
+                {
+                    <div id="highlight-header" class="p-3">
+                        <h3 class="text-white">@item.title</h3>
+                    </div>
+                }
+
+                <div id="highlight-content">
+                    <ul class="nav nav-pills mb-3 p-3" id="pills-tab" role="tablist">
+
+                        @for (int i = 0; i < items.Count; i++)
+                        {
+                            var insight = items[i];
+
+                            @if (insight.enable)
+                            {
+                                var classes = "nav-link";
+                                <li class="nav-item" role="presentation">
+                                    @if (i == 0)
+                                    {
+                                        classes += " active";
+                                    }
+                                    <button class="@classes" id="pills-@insight.id-tab" data-bs-toggle="pill" data-bs-target="#pills-@insight.id" type="button" role="tab" aria-controls="pills-@insight.id" aria-selected="true">
+                                        <span class="@insight.icon"></span>
+                                        <span>@insight.title</span>
+                                    </button>
+                                </li>                    
+                            }
+                        }
+                    </ul>
+
+                    <div class="tab-content" id="pills-tabContent">
+
+                        @for (int i = 0; i < items.Count; i++)
+                        {
+                            var insight = items[i];
+
+                            @if (insight.enable) {
+                                var classes = "tab-pane fade";
+
+                                @if (i == 0) {
+                                    classes += " show active";
+                                }
+
+                                <div class="@classes" id="pills-@insight.id" role="tabpanel" aria-labelledby="pills-@insight.id-tab">
+
+                                    @if (insight.layouts?.Count > 0)
+                                    {
+                                        <div class="row @insight.id-feed-section mb-5">
+                                        @for (int l = 0; l < insight.layouts.Count; l++)
+                                        {
+                                            <div id="@insight.layouts[l].divid" class="@insight.layouts[l].divclass"></div>                        
+                                        }
+                                        </div>                                
+                                    }
+                                    else
+                                    {
+                                        <div class="row @insight.id-feed-section mb-5">
+                                            <div id="@insight.id-feed" class="@insight.id-feed-content"></div>
+                                            <br/>
+                                        </div>                                
+                                    }
+		                        </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>                
+    }
+
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            //TODO Check Terms of Use acceptance
+            Microsoft.Home.initSearchHome();
+        });
+    </script>
+}

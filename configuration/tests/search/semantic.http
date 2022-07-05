@@ -1,0 +1,31 @@
+### Semantic Search Test
+POST  https://{{param.searchServiceName}}.search.windows.net/indexes/{{param.indexName}}/docs/search?api-version={{config.searchVersion}}
+content-type: application/json
+api-key : {{param.searchServiceQueryKey}}
+
+{
+    "queryType": "semantic",
+    "search": "what is the best way to mount an IKEA furniture ",
+    "searchFields": "translated_title, translated_text",
+    "queryLanguage": "en-us",
+    "speller": "lexicon",
+    "answers": "extractive|count-3",
+    "count":true,
+    "top":5
+}
+
+### Semantic Search Test
+POST  https://{{param.searchServiceName}}.search.windows.net/indexes/{{param.indexName}}/docs/search?api-version={{config.searchVersion}}
+content-type: application/json
+api-key : {{param.searchServiceQueryKey}}
+
+{
+    "queryType": "semantic",
+    "search": "where are the tools located?",
+    "searchFields": "translated_title, translated_text",
+    "queryLanguage": "en-us",
+    "speller": "lexicon",
+    "answers": "extractive|count-3",
+    "count":true,
+    "top":50
+}

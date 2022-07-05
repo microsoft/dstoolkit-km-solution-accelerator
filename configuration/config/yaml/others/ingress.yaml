@@ -1,0 +1,110 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{config.name}}-fanout-ingress
+  namespace: dstoolkit
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+      - services.contoso.net
+  rules:
+  - host: services.contoso.net
+    http:
+      paths:
+      - path: /entities
+        pathType: Prefix
+        backend:
+          service:
+            name: entities-service
+            port:
+              number: 80
+      - path: /geo
+        pathType: Prefix
+        backend:
+          service:
+            name: geo-service
+            port:
+              number: 80
+      - path: /imgext
+        pathType: Prefix
+        backend:
+          service:
+            name: imgext-service
+            port:
+              number: 80
+      - path: /language
+        pathType: Prefix
+        backend:
+          service:
+            name: language-service
+            port:
+              number: 80
+      - path: /mtda
+        pathType: Prefix
+        backend:
+          service:
+            name: mtda-service
+            port:
+              number: 80
+      - path: /mtdext
+        pathType: Prefix
+        backend:
+          service:
+            name: mtdext-service
+            port:
+              number: 80
+      - path: /textext
+        pathType: Prefix
+        backend:
+          service:
+            name: textext-service
+            port:
+              number: 80
+      - path: /vision
+        pathType: Prefix
+        backend:
+          service:
+            name: vision-service
+            port:
+              number: 80
+      - path: /tika
+        pathType: Prefix
+        backend:
+          service:
+            name: tika-service
+            port:
+              number: 9998
+      - path: /azure
+        pathType: Prefix
+        backend:
+          service:
+            name: tika-service
+            port:
+              number: 9998
+      - path: /meta
+        pathType: Prefix
+        backend:
+          service:
+            name: tika-service
+            port:
+              number: 9998
+      - path: /rmeta
+        pathType: Prefix
+        backend:
+          service:
+            name: tika-service
+            port:
+              number: 9998
+      - path: /parsers
+        pathType: Prefix
+        backend:
+          service:
+            name: tika-service
+            port:
+              number: 9998

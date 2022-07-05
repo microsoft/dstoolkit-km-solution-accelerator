@@ -1,0 +1,26 @@
+{
+  "GraphConfig": {
+    "GraphTypes": [
+      {
+        "id": "sankey",
+        "name": "Sankey",
+        "enable": true,
+        "type": "hierarchical"
+      },
+      {
+        "id": "fdgraph",
+        "name": "FD Graph",
+        "enable": true,
+        "type": "forced-directed"
+      },
+      {
+        "id": "customgraph",
+        "name": "Custom Graph",
+        "enable": true,
+        "isDefault": true,
+        "type": "forced-directed"
+      }
+    ],
+    "GraphFacet": "image_categories,image_tags,key_phrases,organizations,countries"    
+    }
+}

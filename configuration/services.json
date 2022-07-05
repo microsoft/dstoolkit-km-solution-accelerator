@@ -1,0 +1,21 @@
+{
+    "searchServiceName": "{{config.name}}search",
+    "cogServicesBundle": "{{config.name}}cog",
+    "cogServiceLanguage": "{{config.name}}coglanguage",
+    "cogServiceVision": "{{config.name}}cogvision",
+    "cogServiceForm": "{{config.name}}cogform",
+    "cogServiceTranslate": "{{config.name}}cogtranslate",
+    "appInsightsService": "{{config.name}}insights",
+    "techStorageAccountName": "{{config.name}}tech",
+    "dataStorageAccountName": "{{config.name}}data",
+    "vnetnsg": "{{config.name}}nsg",
+    "adf": "{{config.name}}adf",
+    "aks": "{{config.name}}aks",
+    "acr": "{{config.name}}acr.azurecr.io",
+    "acr_prefix": "{{config.name}}acr",
+    "maps": "{{config.name}}maps",
+    "bing": "{{config.name}}bing",
+    "keyvault": "{{config.name}}kv",
+    "TikaContainerUrl":"https://{{config.name}}tikaserver.azurewebsites.net",
+    "kubernetesHost":"https://{{config.name}}aks.intra.contoso.com"
+}

@@ -1,0 +1,61 @@
+[
+  {
+    "id": "energy",
+    "name": "Energy",
+    "type": "static",
+    "target": "fulltext",
+    "includeHomePage": true,
+    "values": [
+      {
+        "value": "Fossil",
+        "query": [ "Fossil Fuel", "Fossil Energy" ]
+      },
+      {
+        "value": "Wind",
+        "query": [ "Wind Farm", "Wind Turbine" ]
+      },
+      {
+        "value": "Solar"
+      },
+      {
+        "value": "Gas Natural"
+      }
+    ]
+  },
+  {
+    "id": "keyphrases",
+    "name": "Key Phrases",
+    "type": "dynamic",
+    "target": "key_phrases"
+  },
+  {
+    "id": "sciencesstuff",
+    "name": "Sciences",
+    "type": "static",
+    "target": "key_phrases",
+    "includeHomePage": true,
+    "values": [
+      {
+        "value": "Physical Geology"
+      }
+    ]
+  },
+  {
+    "id": "xr",
+    "name": "Realities",
+    "type": "static",
+    "target": "key_phrases",
+    "includeHomePage": true,
+    "values": [
+      {
+        "value": "Mixed Reality"
+      },
+      {
+        "value": "Augmented Reality"
+      },
+      {
+        "value": "Virtual Reality"
+      }
+    ]
+  }
+]

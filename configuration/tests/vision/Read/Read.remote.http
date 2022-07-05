@@ -1,0 +1,12 @@
+###
+### Test 0 - Frame 0 Image W 1284 H 1655 Size Ratio 1.2889408099688473
+POST {{param.vision.Read}}
+content-type: application/json
+
+< Image.Read.1.json
+
+###
+POST {{param.vision.Read}}
+content-type: application/json
+
+< Image.Read.2.json

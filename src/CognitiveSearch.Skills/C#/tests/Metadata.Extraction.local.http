@@ -1,0 +1,81 @@
+### Empty Request
+POST http://localhost:7071/mtdext/DurableMetadataExtractionSkill_HttpStart
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "0",
+            "data": {
+            }
+        }
+    ]
+}
+
+### Recursive 
+POST http://localhost:7071/mtdext/DurableMetadataExtractionSkill_HttpStart
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvVGVzdCUyMDElMjA0MzM3NC5wZGY",
+                "document_filename":"europe.pdf",
+                "document_url":"https://{{param.dataStorageAccountName}}.blob.core.windows.net/documents/europe.pdf"
+            }
+        }
+    ]
+}
+
+### Non-Recursive
+POST http://localhost:7071/mtdext/MetadataExtractionSkill
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvVGVzdCUyMDElMjA0MzM3NC5wZGY",
+                "document_filename":"europe.pdf",
+                "document_url":"https://{{param.dataStorageAccountName}}.blob.core.windows.net/documents/europe.pdf"
+            }
+        }
+    ]
+}
+### Document metadata
+POST http://localhost:7071/mtdext/MetadataExtractionSkill
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvVGVzdCUyMDElMjA0MzM3NC5wZGY",
+                "document_filename":"europe-energy.jpg",
+                "document_url":"https://{{param.dataStorageAccountName}}.blob.core.windows.net/documents/europe-energy.jpg"
+            }
+        }
+    ]
+}
+
+
+### Image metadata
+POST http://localhost:7071/mtdext/MetadataExtractionSkill
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvVGVzdCUyMDElMjA0MzM3NC5wZGY",
+                "document_filename":"image-00001-00001.jpg",
+                "document_url":"https://{{param.dataStorageAccountName}}.blob.core.windows.net/images/documents/CadenadelPetroleo_sp.pdf/image-00001-00001.jpg"
+            }
+        }
+    ]
+}

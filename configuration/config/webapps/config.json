@@ -1,0 +1,37 @@
+{
+    "AppPlans": [
+        {
+            "Name": "{{config.name}}uiplan",
+            "Sku": "{{param.pricing.premium}}",
+            "ResourceGroup":"{{config.ResourceGroupName}}",
+            "IsLinux":false,
+            "WebApps": [
+                {
+                    "Id":"webappui",
+                    "Name": "{{config.name}}ui",
+                    "Path": "src\\CognitiveSearch.UI\\CognitiveSearch.UI",
+                    "vnetPrivateEndpoint":false,
+                    "vnetIntegration":true,
+                    "slots":[
+                        "staging"
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "{{config.name}}tikaplan",
+            "Sku": "{{param.pricing.premium}}",
+            "ResourceGroup":"{{config.ResourceGroupName}}",
+            "IsLinux":true,
+            "WebApps": [
+                {
+                    "Id":"tikaserver",
+                    "Name": "{{config.name}}tikaserver",
+                    "Image": "microsoft/tikaserver:latest",
+                    "vnetPrivateEndpoint":true,
+                    "vnetIntegration":true
+                }
+            ]
+        }
+    ]
+}

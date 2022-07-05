@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Knowledge.API": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

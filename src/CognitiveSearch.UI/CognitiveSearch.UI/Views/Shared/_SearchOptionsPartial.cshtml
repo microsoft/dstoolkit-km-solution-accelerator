@@ -1,0 +1,93 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+
+@using Knowledge.Services.Configuration
+@inject SearchServiceConfig SearchConfig 
+
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBackdrop" aria-labelledby="offcanvasWithBackdropLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Search Options</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div id="search-options-body" class="offcanvas-body">
+        <p>The below options let you control your search experience.</p>
+        @if (SearchConfig.semanticSearchEnabled)
+        {
+            <div class="form-check form-switch search-semantic-switch">
+                <label class="form-check-label search-semantic-label" for="semanticSwitch">Semantic</label>
+                <input class="form-check-input search-semantic-input" type="checkbox" id="semanticSwitch" checked onclick="Microsoft.Search.Options.switchSemanticSearch(this);">
+            </div>
+            <hr />
+        }
+
+        <div class="form-check form-switch search-translation-switch">
+            <label class="form-check-label search-translation-label" for="translation-switch">Query Translation</label>
+            @if (SearchConfig.TranslateQueryText)
+            {
+                <input class="form-check-input search-translation-input" type="checkbox" id="translation-switch" checked onclick="Microsoft.Search.Options.switchQueryTranslation(this);">                    
+            }
+            else
+            {
+                <input class="form-check-input search-translation-input" type="checkbox" id="translation-switch" onclick="Microsoft.Search.Options.switchQueryTranslation(this);">
+                    
+            }
+        </div>
+        <br />
+        <div class="form-check form-switch search-spellcheck-switch">
+            <label class="form-check-label search-spellcheck-label" for="spellcheck-switch">Query Spell Checking</label>
+            @if (SearchConfig.SpellCheckQueryText)
+            {
+                <input class="form-check-input search-spellcheck-input" type="checkbox" id="spellcheck-switch" checked onclick="Microsoft.Search.Options.switchQuerySpellCheck(this);">
+            }
+            else
+            {
+                <input class="form-check-input search-spellcheck-input" type="checkbox" id="spellcheck-switch" onclick="Microsoft.Search.Options.switchQuerySpellCheck(this);">                    
+            }
+        </div>
+        <hr>
+        <div class="form-check form-switch search-suggestions-switch">
+            <label class="form-check-label search-suggestions-label" for="suggestions-switch">Suggestions As Filter</label>
+            @if (SearchConfig.SuggestionsAsFilter)
+            {
+                <input class="form-check-input search-suggestions-input" type="checkbox" id="suggestions-switch" checked onclick="Microsoft.Search.Options.switchSuggestionsAsFilter(this);">
+            }
+            else
+            {
+                <input class="form-check-input search-suggestions-input" type="checkbox" id="suggestions-switch" onclick="Microsoft.Search.Options.switchSuggestionsAsFilter(this);">                    
+            }
+        </div>
+        <hr>
+        <div>
+            <h5>References</h5>
+            <ul class="list-group">
+                <li class="list-group-item border-0">
+                    <a href="https://docs.microsoft.com/en-us/azure/search/search-what-is-azure-search" target="_blank">What is Azure Cognitive Search?</a>
+                </li>
+                <li class="list-group-item border-0">
+                    <a href="https://docs.microsoft.com/en-us/azure/search/semantic-search-overview" target="_blank">Semantic Search</a>
+                </li>
+                <li class="list-group-item border-0">
+                    <a href="https://docs.microsoft.com/en-us/azure/applied-ai-services/what-are-applied-ai-services" target="_blank">What are Azure Applied AI Services?</a>
+                </li>
+                <li class="list-group-item border-0">
+                    <a href="https://www.youtube.com/watch?v=M4Rf1s0WcWQ&t=19s" target="_blank">Knowledge Mining: use AI to search on your data, regardless of format</a>
+                </li>
+                <li class="list-group-item border-0">
+                    <a href="https://docs.microsoft.com/azure/search/cognitive-search-resources-documentation" target="_blank">AI enrichment in Azure Cognitive Search</a>
+                </li>
+            </ul>
+        </div>
+        <hr>
+        <div>
+            <h5>Feedback</h5>
+            <ul class="list-group">
+                <li class="list-group-item border-0">
+                    <a href="https://github.com/microsoft/dstoolkit-km-solution-accelerator" target="_blank">Github repository</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    @* <div class="offcanvas-footer">
+        <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Documentation</h5>
+    </div> *@
+</div>

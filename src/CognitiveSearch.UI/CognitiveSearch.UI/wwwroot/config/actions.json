@@ -1,0 +1,29 @@
+[
+  {
+    "id": "action1",
+    "name": "Action1",
+    "title": "Action1 description",
+    "class": "btn-outline-primary",
+    "method": "window.alert",
+    "icon": "bi bi-share-fill",
+    "enable": true
+  },
+  {
+    "id": "action2",
+    "name": "Action2",
+    "title": "Action2 description",
+    "class": "btn-outline-success",
+    "method": "window.alert",
+    "icon": "bi bi-broadcast",
+    "enable": true
+  },
+  {
+    "id": "action3",
+    "name": "Action3",
+    "title": "Action3 description",
+    "class": "btn-outline-warning",
+    "method": "window.alert",
+    "icon": "bi bi-box",
+    "enable": true
+  }
+]

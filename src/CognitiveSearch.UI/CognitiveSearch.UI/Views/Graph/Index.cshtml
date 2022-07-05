@@ -1,0 +1,140 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+@model CognitiveSearch.UI.Models.SearchViewModel
+
+@using CognitiveSearch.UI.Configuration
+@inject AppConfig AppConfig
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Pass controller data to view -->
+<script>
+    Microsoft["View"] = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+
+    var graphFacetFields = @Json.Serialize(AppConfig.GraphConfig.GetGraphFacets());
+    
+</script>
+
+<environment include="Development">
+    <script src="~/js/graph/sunburst.js" asp-append-version="true"></script>
+    <script src="~/js/graph/sankey.js" asp-append-version="true"></script>
+    <script src="~/js/graph/force-directed-graph.js" asp-append-version="true"></script>
+</environment>
+
+<!--Navigation Modal-->
+<partial name="_NavigationPartial" />
+
+<!--Search Filter -->
+<partial name="_SearchFilterPartial" />
+
+<!--Entity Map-->
+
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="graph-offcanvas" aria-labelledby="graph-offcanvas-label">
+    <div class="offcanvas-header bg-light">
+        <h5 class="offcanvas-title" id="graph-offcanvas-label">Graph Controls</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="sidePanel-graph">
+            <fieldset>
+                @* <legend><span class="bi bi-link-45deg"></span> Graph Controls</legend> *@
+                <hr />
+                <div class="col">
+                    <label class="col-header">Entities</label><br />
+
+                    <ul id="entities-list" class="checkbox-menu allow-focus graphfields-list">
+                        @foreach (var f in AppConfig.GraphConfig.GetGraphFacets())
+                        {
+                            <li>
+                                <label>
+                                    <input value="@f" type="checkbox"> @f
+                                </label>
+                                <span id="@f-badge" class="badge rounded-pill">  </span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <hr />
+                <div class="col">
+                    <label class="col-header" accesskey="">Graph Type</label><br />
+                    @foreach (var graphType in AppConfig.GraphConfig.GraphTypes)
+                    {
+                        <div class="form-check form-check-inline">
+                            @if (graphType.isDefault) {
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="graph-@graphType.id" value="@graphType.id" onclick="Microsoft.Graph.changeGraphType(this.value);" checked>
+                            }
+                            else {
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="graph-@graphType.id" value="@graphType.id" onclick="Microsoft.Graph.changeGraphType(this.value);">                                
+                            }
+                            <label class="form-check-label" for="graph-@graphType.id">@graphType.name</label>
+                        </div>
+                    }
+                </div>
+                <hr />
+                <div class="col">
+                    <label class="col-header" for="slider-currentMaxNodes">Max Levels</label><br />
+                    <input type="range" class="custom-range" min="1" max="3" step="1" value="1" id="slider-currentMaxLevels" oninput="Microsoft.Graph.changeMaxLevels(this.value, false)" onchange="Microsoft.Graph.changeMaxLevels(this.value, true)">
+                    <label id="lbl-currentMaxLevels">1</label>
+                </div>
+                <hr />
+                <div class="col">
+                    <label class="col-header" for="slider-currentMaxNodes">Max Nodes per Level</label><br />
+                    <input type="range" class="custom-range" min="10" max="30" step="10" value="10" id="slider-currentMaxNodes" oninput="Microsoft.Graph.changeMaxNodes(this.value, false)" onchange="Microsoft.Graph.changeMaxNodes(this.value, true)">
+                    <label id="lbl-currentMaxNodes">10</label>
+                </div>
+                <hr />
+                <div class="col">
+                    <label class="col-header">Models</label><br />
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineModelRadioOptions" id="inlineModelRadio1" value="model1" onclick="Microsoft.Graph.changeModelType(this.value);">
+                        <label class="form-check-label" for="inlineModelRadio1">Model1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineModelRadioOptions" id="inlineModelRadio2" value="model2" onclick="Microsoft.Graph.changeModelType(this.value);" checked>
+                        <label class="form-check-label" for="inlineModelRadio2">Model2</label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="entity-map" class="container">
+
+    <div>
+        <div class="btn-group btn-group-sm me-2 mt-1" role="group" aria-label="Graph Configuration">
+            <button id="navigation-btn" class="btn btn-info btn-sm" type="button" title="Graph Configuration" data-bs-toggle="offcanvas" data-bs-target="#graph-offcanvas" aria-controls="graph-offcanvas">
+                <span class="bi bi-diagram-2-fill"></span>
+            </button>
+        </div>
+
+        @foreach (var f in AppConfig.GraphConfig.GetGraphFacets())
+        {
+            <span id="@f-badge-indicator" title="@f" class="badge rounded-pill d-none">@f</span>
+        }
+
+        <span id="graph-message" class="fs-6"></span>
+    </div>
+
+    <div id="results-container" class="row">
+        <!--Graph Results-->
+        <div id="graph-svg" class="graph-viewer"></div>
+@*            <div class="">
+            <div id="node-viewer" class="row"></div>
+            <div id="link-viewer" class="row"></div>
+        </div>*@
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            Microsoft.Search.initSearchVertical(Microsoft.View.config);
+            Microsoft.Graph.initEntityGraph();
+            Microsoft.Search.initSearch();
+        });</script>
+}

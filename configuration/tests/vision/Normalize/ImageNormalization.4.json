@@ -1,0 +1,14 @@
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "file_data": {
+                    "$type": "file",
+                    "url": "https://contoso.blob.core.windows.net/ms-az-cognitive-search-debugsession/new-debug-session-2/binary/3cfe0206-0920-4839-9ec9-588e09b03c60",
+                    "data": ""
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+@model CognitiveSearch.UI.Models.SearchViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Pass controller data to view -->
+<script>
+    Microsoft["View"] = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+</script>
+
+<!--Details Modal-->
+<partial name="_DetailsModal" />
+
+<!--Navigation Modal-->
+<partial name="_NavigationPartial" />
+
+<!--Search Filter -->
+<partial name="_SearchFilterPartial" />
+
+<!--Search, Filters, and Facets-->
+<div id="results-container">
+    <div class="row content-results">
+        <div id="qna-answer-content" class="reset-view d-none row border border-1 rounded"></div>
+        <div id="semantic-answer-content" class="reset-view d-none row border border-1 rounded"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            Microsoft.Search.initSearchVertical(Microsoft.View.config);
+
+                Microsoft.Search.initSearch();
+            });
+        </script>
+    }
+</div>

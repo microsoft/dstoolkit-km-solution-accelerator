@@ -1,0 +1,42 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+@model CognitiveSearch.UI.Models.SearchViewModel
+
+@using CognitiveSearch.UI.Configuration
+@inject AppConfig AppConfig
+@inject UIConfig UIConfig
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Pass controller data to view -->
+<script>
+    Microsoft["View"] = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+</script>
+
+<!--Details Modal-->
+<partial name="_DetailsModal" />
+
+<!--Navigation Modal-->
+<partial name="_NavigationPartial" />
+
+<!--Search Filter -->
+<partial name="_SearchFilterPartial" />
+
+<div id="results-container">
+    <div class="row content-results">
+        <div class="tablesResults reset-view" id="search-results-content"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            Microsoft.Search.initSearchVertical(Microsoft.View.config);
+
+            Microsoft.Search.initSearch();
+        });
+    </script>
+}

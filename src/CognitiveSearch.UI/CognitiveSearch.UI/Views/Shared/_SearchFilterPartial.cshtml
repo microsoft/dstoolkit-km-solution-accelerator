@@ -1,0 +1,54 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+
+@using CognitiveSearch.UI.Configuration
+@inject UIConfig UIConfig
+
+<!-- Search Filter Partial -->
+<div class="container rounded mt-1 mb-1 border border-secondary" id="filter-navbar">
+    <div class="row align-items-center">
+        <div class="col-md-7">
+            <div id="filter-button-toolbar" class="btn-toolbar align-items-center" role="toolbar" aria-label="Toolbar with button groups">
+
+                <div class="btn-group btn-group-sm me-2 mt-1" role="group" aria-label="Navigation">
+                    <button id="navigation-btn" class="btn btn-warning btn-sm d-none" type="button" title="Navigation" data-bs-toggle="offcanvas" data-bs-target="#navigation-offcanvas" aria-controls="navigation-offcanvas">
+                        <span class="bi bi-signpost-split-fill"></span>
+                    </button>
+                </div>
+
+                <div class="input-group me-2 mt-1">
+                    <div class="input-group-text rounded text-dark bg-light" id="doc-count" style="min-width: 250px;display: block;"></div>
+                    <div class="progress rounded" id="loading-indicator" style="display: none;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" title="Request in progress..." role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+		                </div>
+                    </div>
+                </div>
+
+                <div id="filter-results-rendering" class="btn-group btn-group-sm btn-group-toggle me-2 mt-1" role="group" aria-label="Results Rendering" data-toggle="buttons">
+                </div>
+
+                <div class="btn-group btn-group-sm me-1 pt-2 mt-1" role="group" aria-label="Date Range Filter">
+                    <form id="daterange-form-id" class="d-flex daterange-form d-none">
+                        <div class="input-group">
+                            <span class="input-group-text vertical-calendar-range" id="basic-addon1"><span class="bi bi-calendar3"></span></span>
+                            <input type="text" name="datefilter" id="daterange" placeholder="Enter a date range..."  class="form-control vertical-calendar-range">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div id="filterReset" class="wrapper text-left mt-1"></div>
+        </div>
+        <div class="col">
+            <div id="options-button-toolbar" class="btn-toolbar justify-content-end mt-1" role="toolbar" aria-label="Search Options">
+                <button id="export-excel-btn" class="btn btn-sm d-none" title="Export Search results to Excel" onclick="Microsoft.Search.Utils.Excel.exportToExcel();">
+                    <img alt="Export Search results to Excel" class="export-excel" src="/icons/icxlsx.svg" />
+                </button>
+                <button id="settings-btn" class="btn btn-lg" type="button" title="Search Options" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBackdrop" aria-controls="offcanvasWithBackdrop">
+                    <span class="bi bi-sliders"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

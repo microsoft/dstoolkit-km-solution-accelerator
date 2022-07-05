@@ -1,0 +1,67 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+@model CognitiveSearch.UI.Models.SearchViewModel
+
+@using CognitiveSearch.UI.Configuration
+@inject AppConfig AppConfig
+@inject UIConfig UIConfig
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Pass controller data to view -->
+<script>
+    var Microsoft = Microsoft || {};
+    Microsoft["View"] = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+</script>
+
+<!--Details Modal-->
+<partial name="_DetailsModal" />
+
+<!--Navigation Modal-->
+<partial name="_NavigationPartial" />
+
+<!--Search Filter -->
+<partial name="_SearchFilterPartial" />
+
+<!--Search, Filters, and Facets-->
+<div id="results-container">
+    <div class="row content-results">
+        <div id="content-results-col1" class="col-md-12">
+            <div id="qna-answer-content" class="reset-view d-none row border border-1 rounded"></div>
+            <div id="semantic-answer-content" class="reset-view d-none row border border-1 rounded"></div>
+            <div id="results-content" class="row border border-1 rounded">
+                <h6 class="mt-2">
+                    <span class="bi bi-card-list text-secondary"> Intelligent Search Results</span>
+                </h6>
+                <div id="search-results-content" class="reset-view"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+    <!-- Position it: -->
+    <!-- - `.toast-container` for spacing between toasts -->
+    <!-- - `.position-absolute`, `top-0` & `end-0` to position the toasts in the upper right corner -->
+    <!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
+    <div id="response-toaster" class="toast-container position-absolute top-0 end-0 p-3">
+
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            Microsoft.Search.initSearchVertical(Microsoft.View.config);
+
+            // TODO should be included in the init Search vertical piece
+            //Static Facets
+            Microsoft.Facets.RenderStaticFacets();
+
+            Microsoft.Search.initSearch();
+
+        });</script>
+}

@@ -1,0 +1,14 @@
+﻿[
+  {
+    "source": [ "folder1"],
+    "target": "Group1 Data"
+  },
+  {
+    "source": [ "folder2"],
+    "target": "Group2 Data"
+  },
+  {
+    "source": [ "folder3"],
+    "target": "Group3 Data"
+  }
+]

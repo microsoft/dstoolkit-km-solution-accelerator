@@ -1,0 +1,5 @@
+###
+POST {{param.language.Summarization}}
+Content-Type: application/json
+
+< TextSummarization.1.json

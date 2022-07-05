@@ -1,0 +1,7 @@
+local.settings.json
+bin
+obj
+.vscode
+.vs
+# There is an issue running Durable Function in AKS (temporary workaround)
+DurableImageExtractionSkill.cs

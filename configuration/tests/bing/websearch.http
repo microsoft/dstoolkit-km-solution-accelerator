@@ -1,0 +1,9 @@
+### Send a query to Bing Search
+GET  https://api.bing.microsoft.com/v7.0/search?q=testing&mkt=en-us&textDecorations=True
+content-type: application/json
+Ocp-Apim-Subscription-Key : {{param.WebSearchKey}}
+
+### Send another query to Bing Search
+GET  https://api.bing.microsoft.com/v7.0/search?q=testing&mkt=en-us&textDecorations=True&count=20&offset=20&textFormat=HTML
+content-type: application/json
+Ocp-Apim-Subscription-Key : {{param.WebSearchKey}}

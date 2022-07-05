@@ -1,0 +1,6 @@
+### Test TIFF 6 (small)
+POST {{param.vision.Normalize}}
+content-type: application/json
+
+< Image.TIFF.1.json
+

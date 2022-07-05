@@ -1,0 +1,41 @@
+###
+POST http://localhost:7071/language/summarization
+Content-Type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "text": "Overview of target groups 24Benchmark Luxury Study | Global Market Intelligence | March 2021 Country specific aspects USA • Although by no means specific to USA, the country has been particularly hard hit by the Covid-19 pandemic and this has had far-reaching socio-economic consequences. Against the backdrop of the financial crisis* a decade earlier (which exacerbated tensions between the haves and the have nots) and the simultaneous eruption of protests* connected to the Black Lives Matter movement (which further emphasized inequality), these factors may have contributed to heightened sensitivities and a growing social conscience. Thus a large part of the US sample tend to increasingly downplay their wealth in public (hence the preponderance of Quiet Conservatives and Discreet Achievers in the sample as opposed to Extravagant Attention-Seekers). • The recent political change to a Democrat Administration in control of all three branches of government (White House, Congress and Senate) and reputedly hostage to what American conservatives call the „radical left“, appears to have raised some concerns that the increased tax burden may lead to a decline in affordability among HNWIs, especially when it comes to luxury products. • There is also a tendency in USA to regard European culture and brands as „exotic“ and therefore more appealing and more exclusive, especially for luxury products from long-established manufacturers who can boast a unique brand heritage. Covid is taking everybody home so everybody is over-zealous at home. They can’t express themselves outside so they’re doing it through Zoom and social media and they’re lying. (US, m, older) * NB: neither of these events were mentioned by any of the respondents Some people look at it like “How dare you spend your money on something like that when so many don’t have food on their table”. I do think about that when I’m in the car. (US, f, older) Experiences may change because of the unstable political environment. Maybe more taxes, I may not be able to do what I am used to …affordability is getting smaller. (US, m, older)",
+                "language": "en"
+            }
+        },
+        {
+            "recordId": "2",
+            "data": {
+                "text": "Washington, D.C. Autumn in DC is a uniquely beautiful season. The leaves fall from the trees in a city chockful of forrests, leaving yellow leaves on the ground and a clearer view of the blue sky above...",
+                "language": "en"
+            }
+        }
+    ]
+}
+
+###
+POST http://localhost:7071/language/translator
+Content-Type: application/json
+defaultToLanguageCode: en
+defaultFromLanguageCode: de
+suggestedFrom: de
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "text": "Washington, D.C. Der Herbst in DC ist eine einzigartig schöne Jahreszeit. Die Blätter fallen von den Bäumen in einer Stadt voller Wälder, hinterlassen gelbe Blätter auf dem Boden und einen klareren Blick auf den blauen Himmel darüber..."
+            }
+        }
+    ]
+}
+

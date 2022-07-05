@@ -1,0 +1,44 @@
+{
+  "General News": [
+    {
+      "Id": "1",
+      "Source": "NY Times",
+      "URL": "https://www.nytimes.com/section/business",
+      "Language": "English",
+      "Country": "USA",
+      "RSSFeedURL": "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml",
+      "includeHomePage": true
+    },
+    {
+      "Id": "5",
+      "Source": "CNN",
+      "URL": "https://edition.cnn.com/",
+      "Language": "English",
+      "Country": "USA",
+      "RSSFeedURL": "http://rss.cnn.com/rss/cnn_topstories.rss",
+      "includeHomePage": false
+    }
+  ],
+  "European Institutions": [
+    {
+      "Id": "6",
+      "Source": "European Parlement",
+      "URL": "https://www.europarl.europa.eu",
+      "Language": "English",
+      "Country": "Europe",
+      "RSSFeedURL": "https://www.europarl.europa.eu/rss/doc/press-releases/en.xml",
+      "includeHomePage": false
+    }
+  ],
+  "Automotive News": [
+    {
+      "Id": "2",
+      "Source": "Autonews",
+      "URL": "https://www.autonews.com/",
+      "Language": "English",
+      "Country": "USA",
+      "RSSFeedURL": "http://feeds.feedburner.com/autonews/BreakingNews",
+      "includeHomePage": false
+    }
+  ]
+}

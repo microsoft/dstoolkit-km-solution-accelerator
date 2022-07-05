@@ -1,0 +1,42 @@
+{
+  "config": {
+    "pixel": {
+      "ImageTextBoxingXThreshold": 6,
+      "ImageTextBoxingYThreshold": 10,
+      "ImageTextBoxingBulletListAdjustment": 20,
+      "Thresholds": {
+        "LeftAlignment": {
+          "Xthresholdratio": 1.0,
+          "Ythresholdratio": 1.0
+        },
+        "RightAlignment": {
+          "Xthresholdratio": 1.5,
+          "Ythresholdratio": 1.0
+        },
+        "CenteredAlignment": {
+          "Xthresholdratio": 1.5,
+          "Ythresholdratio": 1.0
+        }
+      }
+    },
+    "inch": {
+      "ImageTextBoxingXThreshold": 0.0625,
+      "ImageTextBoxingYThreshold": 0.1041666667,
+      "ImageTextBoxingBulletListAdjustment": 0.2083333333,
+      "Thresholds": {
+        "LeftAlignment": {
+          "Xthresholdratio": 1.0,
+          "Ythresholdratio": 1.0
+        },
+        "RightAlignment": {
+          "Xthresholdratio": 1.5,
+          "Ythresholdratio": 1.0
+        },
+        "CenteredAlignment": {
+          "Xthresholdratio": 1.5,
+          "Ythresholdratio": 1.0
+        }
+      }
+    }
+  }
+}

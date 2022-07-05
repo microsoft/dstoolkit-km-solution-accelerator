@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31612.314
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CognitiveSearch.UI", "CognitiveSearch.UI\CognitiveSearch.UI.csproj", "{857387B9-8F3D-4AF8-B2DC-49839BED7BA1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Knowledge.Services", "Knowledge.Services\Knowledge.Services.csproj", "{1FEAB1A9-4863-4A4E-B6B9-E3B8297B32D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Knowledge.API", "Knowledge.API\Knowledge.API.csproj", "{3B321681-C232-4341-88FF-E3EF8B327042}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{857387B9-8F3D-4AF8-B2DC-49839BED7BA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{857387B9-8F3D-4AF8-B2DC-49839BED7BA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{857387B9-8F3D-4AF8-B2DC-49839BED7BA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{857387B9-8F3D-4AF8-B2DC-49839BED7BA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FEAB1A9-4863-4A4E-B6B9-E3B8297B32D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FEAB1A9-4863-4A4E-B6B9-E3B8297B32D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FEAB1A9-4863-4A4E-B6B9-E3B8297B32D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FEAB1A9-4863-4A4E-B6B9-E3B8297B32D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B321681-C232-4341-88FF-E3EF8B327042}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B321681-C232-4341-88FF-E3EF8B327042}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B321681-C232-4341-88FF-E3EF8B327042}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B321681-C232-4341-88FF-E3EF8B327042}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1E7FF66A-22A0-4A1E-BB82-21E7AEE0B741}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
+		$0.StandardHeader = $2
+	EndGlobalSection
+EndGlobal

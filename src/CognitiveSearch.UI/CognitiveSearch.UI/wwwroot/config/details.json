@@ -1,0 +1,78 @@
+[
+  {
+    "id": "file",
+    "enable": true,
+    "active": true,
+    "renderingMethod": "Microsoft.Search.Results.RenderSearchResultPreview",
+    "fonticon": "bi bi-file-earmark",
+    "adaptiveIcon": true,
+    "viewerClass": "details-max-height-viewer",
+    "localization": {
+      "en": {
+        "name": "Document",
+        "title": "Preview your document or image"
+      }
+    }
+  },
+  {
+    "id": "transcript",
+    "enable": true,
+    "renderingMethod": "Microsoft.Search.Results.Transcript.RenderTranscriptHTML",
+    "fonticon": "bi bi-file-text",
+    "localization": {
+      "en": {
+        "name": "Transcript",
+        "title": "Transcript tab will show the orignal textual content plus its translated version for non-English documents."
+      }
+    }
+  },
+  {
+    "id": "metadata",
+    "enable": true,
+    "renderingMethod": "Microsoft.Search.Results.Metadata.render_tab",
+    "fonticon": "bi bi-list",
+    "localization": {
+      "en": {
+        "name": "Metadata",
+        "title": "Document metadata"
+      }
+    }
+  },
+  {
+    "id": "tables",
+    "enable": true,
+    "renderingMethod": "Microsoft.Tables.render_document_tables",
+    "fonticon": "bi bi-table",
+    "localization": {
+      "en": {
+        "name": "Tables",
+        "title": "Extracted tables"
+      }
+    }
+  },
+  {
+    "id": "images",
+    "enable": true,
+    "renderingMethod": "Microsoft.Search.Results.Embedded.render_tab",
+    "fonticon": "bi bi-image",
+    "localization": {
+      "en": {
+        "name": "Pages/Slides",
+        "title": "Show extracted images from the document"
+      }
+    }
+  },
+  {
+    "id": "parent",
+    "enable": true,
+    "renderingMethod": "Microsoft.Search.Results.Parent.render_tab",
+    "fonticon": "bi bi-file-earmark",
+    "viewerClass": "details-max-height-viewer",
+    "localization": {
+      "en": {
+        "name": "Source",
+        "title": "Preview parent document"
+      }
+    }
+  }
+]

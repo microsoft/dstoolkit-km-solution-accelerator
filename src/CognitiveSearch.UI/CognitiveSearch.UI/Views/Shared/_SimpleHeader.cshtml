@@ -1,0 +1,33 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+
+@using CognitiveSearch.UI.Configuration
+@inject OrganizationConfig OrgConfig
+
+<header class="parallax-header bg-black">
+    <div class="container">
+        <nav id="main-navbar" class="navbar navbar-expand-md">
+            <div class="container-fluid">
+                <div class="navbar-header container-fluid">
+                    <div class="row justify-content-between">
+                        <div class="col">
+                            <a class="navbar-brand-logo" asp-area="" asp-controller="Home" asp-action="Index">
+                                <img src="@OrgConfig.Logo" height="50px" id="navbar-img-start" alt="@OrgConfig.Name"
+                                    title="@OrgConfig.Name" class="logo-container logo-sgv rounded"
+                                    asp-append-version="true" />
+                                    Knowledge Mining Solution Accelerator
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Navigation Form -->
+    <form style="display: none" action="/url" method="POST" id="navigation-form">
+        <input type="hidden" id="navigation-q" name="q" value=""/>
+        <input type="hidden" id="navigation-facets" name="facets" value=""/>
+    </form>
+
+</header>

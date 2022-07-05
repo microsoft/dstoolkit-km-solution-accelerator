@@ -1,0 +1,113 @@
+[
+  {
+    "id": "images",
+    "name": "Visuals",
+    "type": "SearchResultsLayer",
+    "enabled": true,
+    "visible": true,
+    "clearable": true,
+    "color": "#7299b1",
+    "strokeColor": "#0c08f7",
+    "strokeWidth": 2,
+    "radius": 10,
+    "textcolor": "#000000",
+    "textoffset": [
+      1.5,
+      0
+    ],
+    "iconmarker": "marker-blue",
+    "iconoffset": [
+      -2,
+      -2
+    ],
+    "iconanchor": "top-left",
+    "dataSourceMethod": "Microsoft.Maps.FetchImages",
+    "sourceOptions": {
+      "cluster": true
+    }
+  },
+  {
+    "id": "images_facets",
+    "name": "Visuals Countries Distribution",
+    "type": "FacetExtrusionLayer",
+    "enabled": true,
+    "visible": true,
+    "clearable": true,
+    "level": "labels",
+    "sourceOptions": {}
+  },
+  {
+    "id": "earthquakes",
+    "name": "SHARE European Earthquake Catalogue 1000-1899",
+    "type": "OgcMapLayer",
+    "url": "https://www.emidius.eu/services/europe/wms/?service=WMS&request=getCapabilities",
+    "activeLayers": [
+      "SHEEC_1000_1899"
+    ],
+    "styles": [
+      "europe:SHEEC_circles_colors"
+    ],
+    "enabled": true,
+    "visible": false
+  },
+  {
+    "id": "world-geology",
+    "name": "World Geology Survey (GSC)",
+    "url": "https://mrdata.usgs.gov/services/gscworld",
+    "type": "OgcMapLayer",
+    "activeLayers": [
+      "geology"
+    ],
+    "enabled": true,
+    "visible": false,
+    "level": "transit"
+  },
+  {
+    "id": "winds",
+    "name": "Wind Analysis (CMEMS)",
+    "type": "OgcMapLayer",
+    "url": "https://nrt.cmems-du.eu/thredds/wms/CERSAT-GLO-BLENDED_WIND_L4-V6-OBS_FULL_TIME_SERIE?REQUEST=GetCapabilities&service=WMS",
+    "activeLayers": [
+      "wind_speed",
+      "wind_vector_curl"
+    ],
+    "styles": [
+      "boxfill/rainbow"
+    ],
+    "enabled": false,
+    "visible": false,
+    "level": "transit"
+  },
+  {
+    "id": "marine_regions",
+    "name": "Marine regions and subregions (MSFD)",
+    "type": "OgcMapLayer",
+    "url": "https://marine.discomap.eea.europa.eu/arcgis/services/Marine/Marine_regions_subregions/MapServer/WMSServer?request=GetCapabilities&service=WMS",
+    "activeLayers": [
+      "Marine_regions28802",
+      "Atlantic_subregions10730",
+      "Mediterranean_subregions11355"
+    ],
+    "styles": [
+      "default"
+    ],
+    "enabled": true,
+    "visible": false,
+    "level": "transit"
+  },
+  {
+    "id": "EPRTRDiffuseEmissionsAir_WGS84 ",
+    "name": "2008 CO2 emissions from road transport (EEA)",
+    "type": "OgcMapLayer",
+    "url": "https://air.discomap.eea.europa.eu/arcgis/services/Air/EPRTRDiffuseEmissionsAir_Dyna_WGS84/MapServer/WMSServer?request=GetCapabilities&service=WMS",
+    "activeLayers": [
+      "7"
+    ],
+    "styles": [
+      "default"
+    ],
+    "enabled": true,
+    "visible": false,
+    "level": "transit"
+  }
+]

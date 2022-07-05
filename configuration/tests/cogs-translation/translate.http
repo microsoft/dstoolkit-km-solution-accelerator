@@ -1,0 +1,9 @@
+### Trasnslate 
+POST  https://api-eur.cognitive.microsofttranslator.com/translate?api-version=3.0&to={{config.searchDefaultToLanguageCode}}&suggestedFrom={{config.searchDefaultFromLanguageCode}}
+content-type: application/json
+Ocp-Apim-Subscription-Key : {{param.cogServicesBundleKey}}
+Ocp-Apim-Subscription-Region: {{config.location}}
+
+[
+    {"Text":"Hello, what is your name?"}
+]

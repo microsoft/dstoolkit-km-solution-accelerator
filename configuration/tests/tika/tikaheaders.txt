@@ -1,0 +1,9 @@
+User-Agent:MicrosoftPOC/1.0
+X-Tika-PDFAllPagesAsImages:true
+X-Tika-PDFextractInlineImages:true
+X-Tika-PDFFirstPageAsCoverImage:true
+X-Tika-PDFSinglePagePDFAsImage:true
+X-Tika-PDFGraphicsToImage:true
+X-Tika-PDFGraphicsToImageThreshold:1000000
+X-Tika-PDFStripedImagesHandling:true
+X-Tika-PDFStripedImagesThreshold:5

@@ -1,0 +1,5 @@
+### Test empty data
+POST http://localhost:7071/vision/describe
+content-type: application/json
+
+{"values":[{"recordId":"0","data":{}}]}

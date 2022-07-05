@@ -1,0 +1,226 @@
+{
+  "UIConfig": {
+    "Language": "en",
+    "UploadData": "true",
+    "ColorPalette": [
+      "#D02075",
+      "#5D2BCE",
+      "#0082E6",
+      "#00ADEF",
+      "#F0F1F3"
+    ],
+    "LandingPage": {
+      "pageTitle": "DataScience Toolkit",
+      "path": "/Home/Search",
+      "WebFacet": false,
+      "Highlights": [
+        {
+          "id": "latest",
+          "enable": true,
+          "icon": "bi bi-bell-fill",
+          "Insights": [
+            {
+              "id": "livenews",
+              "enable": true,
+              "title": "Latest News",
+              "method": "Microsoft.News.FecthLiveNews",
+              "icon": "bi bi-bell-fill"
+            },
+            {
+              "id": "documents",
+              "enable": true,
+              "title": "Latest Documents",
+              "method": "Microsoft.Home.GetLatestDocuments",
+              "icon": "bi bi-file-earmark"
+            },
+            {
+              "id": "images",
+              "enable": true,
+              "title": "Latest Visuals",
+              "method": "Microsoft.Home.GetLatestImages",
+              "icon": "bi bi-files"
+            }
+          ]
+        }
+      ],
+      "Localizations": {
+        "en": {
+          "pageTitle": "Knowledge Mining",
+          "name": "Knowledge Mining",
+          "title": "Search across your data sources",
+          "placeHolder": "Search across your data sources..."
+        }
+      }
+    },
+    "Verticals": [
+      {
+        "id": "search",
+        "pageTitle": "Knowledge Mining - All",
+        "name": "All",
+        "title": "Search all data sources",
+        "enable": true,
+        "path": "/Home/Search",
+        "searchMethod": "Microsoft.All.Search",
+        "svgicon":"10834-icon-service-Search.svg",
+        "placeHolder": "Explore all data...",
+        "isSemanticCapable": true,
+        "enableOffcanvasNavigation": true,
+        "ResultsRenderings": [
+          {
+            "name": "allresults",
+            "title": "Search documents",
+            "fonticon": "bi bi-grid",
+            "isdefault": true,
+            "method": "Microsoft.All.UpdateResultsAsCard"
+          },
+          {
+            "name": "blank"
+          },
+          {
+            "name": "document",
+            "title": "Only search documents",
+            "fonticon": "bi bi-list",
+            "method": "Microsoft.All.UpdateResultsAsList",
+            "filter": "(document_embedded eq false)"
+          },
+          {
+            "name": "pages",
+            "title": "Only search document pages or slides",
+            "fonticon": "bi bi-files",
+            "method": "Microsoft.All.UpdateResultsAsCard",
+            "filter": "(document_embedded eq true)"
+          },
+          {
+            "name": "images",
+            "title": "Only search Images",
+            "fonticon": "bi bi-image",
+            "method": "Microsoft.Images.UpdateImagesResults",
+            "filter": "(document_embedded eq false and content_group eq 'Image')"
+          },
+          {
+            "name": "tables",
+            "title": "Only search extracted tables",
+            "fonticon": "bi bi-table",
+            "method": "Microsoft.Tables.UpdateTablesResults",
+            "filter": "(tables_count ge 1)"
+          }
+        ]
+      },
+      {
+        "id": "web",
+        "pageTitle": "Knowledge Mining - Web",
+        "name": "Bing",
+        "title": "Search across the web",
+        "enable": true,
+        "path": "/Web/Index",
+        "searchMethod": "Microsoft.Web.WebSearch",
+        "svgicon":"newBing_ic_16.svg",
+        "placeHolder": "Explore the web ...",
+        "isSemanticCapable": false,
+        "enableExcelExport": false,
+        "enableOffcanvasNavigation": true,
+        "ResultsRenderings": [
+          {
+            "name": "document",
+            "title": "View web pages as list",
+            "fonticon": "bi bi-list",
+            "method": "Microsoft.Web.UpdateWebResultsAsList",
+            "filter": "",
+            "isdefault": true
+          },
+          {
+            "name": "pages",
+            "title": "Only view document pages",
+            "fonticon": "bi bi-grid",
+            "method": "Microsoft.Web.UpdateWebResultsAsCard",
+            "filter": ""
+          }
+        ]
+      },
+      {
+        "id": "images",
+        "pageTitle": "Knowledge Mining - Visuals",
+        "name": "Visuals",
+        "title": "Search across all your visual information",
+        "enable": true,
+        "path": "/Images/Index",
+        "searchMethod": "Microsoft.Images.ImagesSearch",
+        "svgicon": "photo.svg",
+        "placeHolder": "Search your visual content...",
+        "isSemanticCapable": true,
+        "ResultsRenderings": [
+          {
+            "name": "pages",
+            "title": "Only view document pages or slides",
+            "fonticon": "bi bi-files",
+            "method": "Microsoft.All.UpdateResultsAsCard",
+            "filter": "(document_embedded eq true)",
+            "isdefault": true
+          },
+          {
+            "name": "images",
+            "title": "Only view standalones Images",
+            "fonticon": "bi bi-image",
+            "method": "Microsoft.Images.UpdateImagesResults",
+            "filter": "(document_embedded eq false)"
+          }
+        ]
+      },
+      {
+        "id": "map",
+        "pageTitle": "Knowledge Mining - Map",
+        "name": "Maps",
+        "title": "Search geo-located content",
+        "enable": true,
+        "path": "/Map/Index",
+        "searchMethod": "Microsoft.Maps.WorldMapSearch",
+        "svgicon": "10818-icon-service-Location.svg",
+        "placeHolder": "Search geo-located content...",
+        "infiniteScroll": false,
+        "isSemanticCapable": true,
+        "enableExcelExport": false
+      },
+      {
+        "id": "tables",
+        "pageTitle": "Knowledge Mining - Tables",
+        "name": "Tables",
+        "title": "Search across all data with extracted tables",
+        "enable": true,
+        "path": "/Tables/Index",
+        "searchMethod": "Microsoft.Tables.TablesSearch",
+        "svgicon": "10841-icon-service-Table.svg",
+        "placeHolder": "Search your tables content...",
+        "isSemanticCapable": true
+      },
+      {
+        "id": "graph",
+        "pageTitle": "Knowledge Mining - Graph",
+        "name": "Graph",
+        "title": "Search across the Entity Graph",
+        "enable": true,
+        "path": "/Graph/Index",
+        "searchMethod": "Microsoft.Graph.SearchEntities",
+        "fonticon": "bi bi-diagram-2-fill",
+        "placeHolder": "Visualize your data as graph...",
+        "infiniteScroll": false,
+        "isSemanticCapable": true,
+        "enableExcelExport": false,
+        "message": "Please select one or more Entities to view their relationships..."
+      },
+      {
+        "id": "news",
+        "pageTitle": "Knowledge Mining - News",
+        "name": "Live News",
+        "title": "Look out the latest news",
+        "enable": true,
+        "path": "/News/Index",
+        "searchMethod": "Microsoft.News.LiveNewsSearch",
+        "svgicon": "chat.svg",
+        "enableExcelExport": false,
+        "enableDateRange": false,
+        "placeHolder": "Explore the latest news...",
+        "message": "Please select one or more News sources in the dropdown menu to explore the latest news."
+      }
+    ]
+  }
+}

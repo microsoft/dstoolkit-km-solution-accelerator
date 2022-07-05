@@ -1,0 +1,40 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+
+<div class="row content-searchinput">
+    <div class="col-md-2" style="display:flex">
+        <button id="loading-indicator" class="btn btn-outline-success btn-sm" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading results...
+        </button>
+    </div>
+    <div class="col-md-10">
+        <div id="search-input-group" class="input-group">
+
+            <div id="scrollable-dropdown-menu" class="col-md-6">
+                <input type="text" class="form-control typeahead" name="q" id="q" placeholder="Search..." autocomplete="off" spellcheck="true">
+            </div>
+
+            <span class="input-group-btn col-md-2">
+                <button class="btn btn-dark" onclick="Microsoft.Search.ReSearch();">
+                    <span class="bi bi-search"></span>
+                </button>
+            </span>
+
+            <div class="col-md-4">
+                <h4 id="doc-count"></h4>
+            </div>
+        </div>
+@*        <div>
+            <h4 id="doc-count"></h4>
+        </div>*@
+        @*<div id="qpmgrdiv"></div>
+            <div id="querypipeline-injection">
+                <div><span id="stopwords-suggestions"></span></div>
+                <div><span id="QueryIntelligence-suggestions"></span></div>
+                <div><span id="synonyms-suggestions"></span></div>
+                <div><span id="thesaurus-suggestions"></span></div>
+                <div><span id="algebra-suggestions"></span></div>
+            </div>*@
+    </div>
+</div>

@@ -1,0 +1,25 @@
+###
+POST {{param.language.LanguageDetection}}
+Content-Type: application/json
+defaultCountryHint: us
+type: big
+
+< LanguageDetection.1.json
+
+###
+POST {{param.language.LanguageDetection}}
+Content-Type: application/json
+
+< LanguageDetection.2.json
+
+###
+POST {{param.language.LanguageDetection}}
+Content-Type: application/json
+
+< LanguageDetection.3.json
+
+###
+POST {{param.language.LanguageDetection}}
+Content-Type: application/json
+
+< LanguageDetection.4.json

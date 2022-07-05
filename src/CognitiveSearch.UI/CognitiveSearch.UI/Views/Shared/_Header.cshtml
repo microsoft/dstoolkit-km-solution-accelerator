@@ -1,0 +1,133 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+
+@using CognitiveSearch.UI.Configuration
+@using Knowledge.Services.Configuration
+@inject AppConfig AppConfig
+@inject UIConfig UIConfig
+@inject OrganizationConfig OrgConfig
+@inject SearchServiceConfig SearchConfig 
+
+<header class="sticky-top parallax-header">
+    <div class="container">
+        <nav id="main-navbar" class="navbar navbar-expand-md navbar-light">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand-logo" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="@OrgConfig.Logo" height="50px" id="navbar-img-start" alt="@OrgConfig.Name" title="@OrgConfig.Name" class="logo-container logo-sgv rounded" asp-append-version="true" />
+                    </a>
+                </div>
+                <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse flex-column" id="navbarNav">
+                    <div id="navbar-row-1" class="navbar-nav flex-row content-searchinput">
+                        <div class="col-md-9">
+                            <div id="search-input-group" class="input-group">
+
+                                <div id="scrollable-dropdown-menu" class="col-md-8 pl-0">
+                                    <input type="text" class="form-control typeahead" name="q" id="q" placeholder="Search..." autocomplete="off" spellcheck="true">
+                                </div>
+
+                                <span class="input-group-btn">
+                                    <button class="btn btn-dark" onclick="Microsoft.Search.ReSearch();" title="Search on all data sources">
+                                        <span class="bi bi-search"></span>
+                                    </button>
+                                    @if (UIConfig.UploadData)
+                                    {
+                                        <button class="btn btn-primary" title="Upload content to the Knowledge lake" onclick="location.href='@Url.Action("UploadData", "Admin")'">
+                                            <span class="bi bi-cloud-upload"></span>
+                                        </button>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="d-flex ms-2">
+                                <a class="navbar-brand-logo" asp-area="" asp-controller="Home" asp-action="Index">
+                                    <img src="@OrgConfig.LogoProvider" height="25" id="navbar-img-end" title="@OrgConfig.Name - @AppConfig.UIVersion" class="logo-container logo-sgv" asp-append-version="true" />
+                                </a>
+                                <h7 class="copyright navbar-text-color">&copy; @DateTime.Now.Year - @OrgConfig.Name</h7>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="navbar-row-2" class="navbar-nav flex-row content-searchinput pt-1 parallax-search">
+                        <div class="btn-group" role="group">
+
+                            @foreach (var vertical in UIConfig.GetPages())
+                            {
+                                @if (vertical.enable)
+                                {
+                                    @if (vertical.isSecured)
+                                    {
+                                        @if (User.Identity.IsAuthenticated && User.IsInRole(vertical.userRole))
+                                        {
+                                            <button id="navitem-@vertical.id" class="btn btn-default navitem-vertical navbar-header-button" title="@vertical.title" onclick="Microsoft.Utils.OpenSearchPagewithFacets('@vertical?.path');">
+                                                @if ( ! String.IsNullOrEmpty(vertical.fonticon) ) 
+                                                {
+                                                    <span class="@vertical.fonticon"></span>                                                   
+                                                    <span>@vertical.name</span>
+                                                }
+                                                else if ( ! String.IsNullOrEmpty(vertical.svgicon) ) 
+                                                {
+                                                    <span style="display:inline-block;">
+                                                        <img alt="@vertical.title" class="image-vertical-svg" src="/icons/@vertical.svgicon" title="@vertical.title"/> @vertical.name
+                                                    </span>
+                                                }
+                                            </button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <button id="navitem-@vertical.id" class="btn btn-default navitem-vertical navbar-header-button" title="@vertical.title" onclick="Microsoft.Utils.OpenSearchPagewithFacets('@vertical?.path');">
+                                            @if ( ! String.IsNullOrEmpty(vertical.fonticon) ) 
+                                            {
+                                                <span class="@vertical.fonticon"></span>                                                   
+                                                <span>@vertical.name</span>
+                                            }
+                                            else if ( ! String.IsNullOrEmpty(vertical.svgicon) ) 
+                                            {
+                                                <span style="display:inline-block;">
+                                                    <img alt="@vertical.title" class="image-vertical-svg" src="/icons/@vertical.svgicon" title="@vertical.title"/> @vertical.name
+                                                </span>
+                                            }
+                                        </button>                                        
+                                    }
+                                }
+                            }
+                        </div>                            
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(ViewBag.Message))
+    {
+        @if (!string.IsNullOrWhiteSpace(ViewBag.Style))
+        {
+            <div id="view-alert-message" class="container alert alert-dismissible fade show @ViewBag.Style" role="alert">
+                <span>@ViewBag.Message</span>            
+                <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        else
+        {
+            <div id="view-alert-message" class="container alert alert-dismissible fade show alert-info border-info" role="alert">
+                <span>@ViewBag.Message</span>            
+                <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    }
+
+    <!--Search Options Offcanvas-->
+    <partial name="_SearchOptionsPartial"/>
+
+    <!-- Navigation Form -->
+    <form style="display: none" action="/url" method="POST" id="navigation-form">
+        <input type="hidden" id="navigation-q" name="q" value=""/>
+        <input type="hidden" id="navigation-facets" name="facets" value=""/>
+    </form>
+
+</header>

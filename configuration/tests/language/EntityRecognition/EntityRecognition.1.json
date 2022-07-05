@@ -1,0 +1,18 @@
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "languageCode": "en",
+                "text": "Contoso Corporation was founded by Jean Martin. Paolo They can be reached at contact@contoso.com"
+            }
+        },
+        {
+            "recordId": "2",
+            "data": {
+                "languageCode": "de",
+                "text": "Microsoft Washington, D.C. Der Herbst in DC ist eine einzigartig schöne Jahreszeit. Die Blätter fallen von den Bäumen in einer Stadt voller Wälder, hinterlassen gelbe Blätter auf dem Boden und einen klareren Blick auf den blauen Himmel darüber..."
+            }
+        }
+    ]
+}

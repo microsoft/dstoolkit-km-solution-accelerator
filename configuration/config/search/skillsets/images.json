@@ -1,0 +1,918 @@
+﻿{
+    "name": "{{param.imagesSkillSet}}",
+    "description": "Extract entities, detect language and extract key-phrases",
+    "cognitiveServices": {
+        "@odata.type": "#Microsoft.Azure.Search.CognitiveServicesByKey",
+        "description": "Cognitive Skills Set for Images indexing",
+        "key": "{{param.cogServicesBundleKey}}"
+    },
+    "skills": [
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "ImageNormalization",
+            "description": "Workaround TIF/TIFF issue in Azure Cognitive Search",
+            "context": "/document",
+            "uri": "{{param.vision.Normalize}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 1,
+            "degreeOfParallelism": 3,
+            "inputs": [
+                {
+                    "name": "file_data",
+                    "source": "/document/file_data"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "image_metadata",
+                    "targetName": "image_metadata"
+                },
+                {
+                    "name": "normalized_images",
+                    "targetName": "normalized_images"
+                }
+            ],
+            "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "ImageAnalysis",
+            "description": "Extract Image Analysis.",
+            "uri": "{{param.vision.Analyze}}",
+            "context": "/document/normalized_images/*",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 1,
+            "degreeOfParallelism": 2,
+            "inputs": [
+                {
+                    "name": "file_data",
+                    "source": "/document/normalized_images/*"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "categories",
+                    "targetName": "raw_categories"
+                },
+                {
+                    "name": "tags",
+                    "targetName": "raw_tags"
+                },
+                {
+                    "name": "description",
+                    "targetName": "raw_description"
+                },
+                {
+                    "name": "faces",
+                    "targetName": "raw_faces"
+                },
+                {
+                    "name": "brands",
+                    "targetName": "raw_brands"
+                },
+                {
+                    "name": "objects",
+                    "targetName": "raw_objects"
+                }
+            ],
+            "httpHeaders": {
+                "defaultLanguageCode": "en"
+            }
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "ImagesAnalysisEntitiesDeduplication",
+            "description": "A custom skill to normalize and deduplicate values of entities.",
+            "context": "/document/normalized_images/*",
+            "uri": "{{param.entities.deduplication}}",
+            "httpMethod": "POST",
+            "timeout": "PT30S",
+            "batchSize": 1,
+            "degreeOfParallelism": null,
+            "inputs": [
+                {
+                    "name": "categories",
+                    "source": "/document/normalized_images/*/raw_categories/*/name",
+                    "sourceContext": null,
+                    "inputs": []
+                },
+                {
+                    "name": "tags",
+                    "source": "/document/normalized_images/*/raw_tags/*/name",
+                    "sourceContext": null,
+                    "inputs": []
+                },
+                {
+                    "name": "captions",
+                    "source": "/document/normalized_images/*/raw_description/captions/*/text",
+                    "sourceContext": null,
+                    "inputs": []
+                },
+                {
+                    "name": "brands",
+                    "source": "/document/normalized_images/*/raw_brands/*/name",
+                    "sourceContext": null,
+                    "inputs": []
+                },
+                {
+                    "name": "objects",
+                    "source": "/document/normalized_images/*/raw_objects/*/object",
+                    "sourceContext": null,
+                    "inputs": []
+                },
+                {
+                    "name": "celebrities",
+                    "source": "/document/normalized_images/*/raw_categories/*/detail/celebrities/*/name",
+                    "sourceContext": null,
+                    "inputs": []
+                },
+                {
+                    "name": "landmarks",
+                    "source": "/document/normalized_images/*/raw_categories/*/detail/landmarks/*/name",
+                    "sourceContext": null,
+                    "inputs": []
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "categories",
+                    "targetName": "image_categories"
+                },
+                {
+                    "name": "tags",
+                    "targetName": "image_tags"
+                },
+                {
+                    "name": "captions",
+                    "targetName": "image_captions"
+                },
+                {
+                    "name": "brands",
+                    "targetName": "brands"
+                },
+                {
+                    "name": "objects",
+                    "targetName": "objects"
+                },
+                {
+                    "name": "celebrities",
+                    "targetName": "celebrities"
+                },
+                {
+                    "name": "landmarks",
+                    "targetName": "landmarks"
+                }
+            ],
+            "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "OcrSkill",
+            "uri": "{{param.vision.Read}}",
+            "context": "/document/normalized_images/*",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 1,
+            "degreeOfParallelism": 2,
+            "inputs": [
+                {
+                    "name": "file_data",
+                    "source": "/document/normalized_images/*"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "read",
+                    "targetName": "ocrlayout"
+                }
+            ],
+            "httpHeaders": {
+                "lineEnding": "LineFeed",
+                "defaultLanguageCode": "en",
+                "detectOrientation": "true"
+            }
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "ocrlayout",
+            "description": "Invoke ocrlayout to re-order the text out of OCR",
+            "context": "/document/normalized_images/*",
+            "uri": "{{param.vision.azureocrlayout}}",
+            "httpMethod": "POST",
+            "timeout": "PT1M",
+            "batchSize": 5,
+            "degreeOfParallelism": null,
+            "inputs": [
+                {
+                    "name": "ocrlayout",
+                    "source": "/document/normalized_images/*/ocrlayout"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "text",
+                    "targetName": "ocrlayoutText"
+                }
+            ],
+            "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
+            "context": "/document",
+            "inputs": [
+                {
+                    "name": "metadata",
+                    "source": "/document/image_metadata"
+                },
+                {
+                    "name": "normalized_images",
+                    "sourceContext": "/document/normalized_images/*",
+                    "inputs": [
+                        {
+                            "name": "width",
+                            "source": "/document/normalized_images/*/width"
+                        },
+                        {
+                            "name": "height",
+                            "source": "/document/normalized_images/*/height"
+                        },
+                        {
+                            "name": "ocrlayout",
+                            "source": "/document/normalized_images/*/ocrlayout"
+                        },
+                        {
+                            "name": "text",
+                            "source": "/document/normalized_images/*/ocrlayoutText"
+                        }
+                    ]
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "output",
+                    "targetName": "image_layout"
+                }
+            ]
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "ContentMesh",
+            "description": "Send the document content for cleaning/meshing",
+            "context": "/document",
+            "uri": "{{param.text.TextMesh}}",
+            "httpMethod": "POST",
+            "timeout": "PT1M",
+            "batchSize": 5,
+            "degreeOfParallelism": 5,
+            "inputs": [
+                {
+                    "name": "content_lines",
+                    "source": "/document/image_layout/normalized_images/*/text"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "trimmed_content",
+                    "targetName": "merged_content"
+                },
+                {
+                    "name": "trimmed_content_lines_count",
+                    "targetName": "trimmed_content_lines_count"
+                },
+                {
+                    "name": "trimmed_content_lines_matches",
+                    "targetName": "trimmed_content_lines_matches"
+                }
+            ],
+            "httpHeaders": {
+                "content-already-trimmed": "true"
+            }
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "LanguageDetection",
+            "context": "/document",
+            "uri": "{{param.language.LanguageDetection}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 1,
+            "degreeOfParallelism": 2,
+            "inputs": [
+                {
+                    "name": "text",
+                    "source": "/document/merged_content"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "languageCode",
+                    "targetName": "language"
+                },
+                {
+                    "name": "languageName",
+                    "targetName": "myLanguageName"
+                },
+                {
+                    "name": "score",
+                    "targetName": "myLanguageScore"
+                }
+            ]
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Text.SplitSkill",
+            "name": "PagesSplit",
+            "description": "Split the content into pages of max 25K to fit Entity Extraction & Translation limits",
+            "context": "/document",
+            "textSplitMode": "pages",
+            "maximumPageLength": 21000,
+            "inputs": [
+                {
+                    "name": "text",
+                    "source": "/document/merged_content"
+                },
+                {
+                    "name": "languageCode",
+                    "source": "/document/language"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "textItems",
+                    "targetName": "pages"
+                }
+            ]
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "PagesTranslation",
+            "description": null,
+            "context": "/document/pages/*",
+            "uri": "{{param.language.Translator}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 5,
+            "degreeOfParallelism": 2,
+            "inputs": [
+                {
+                    "name": "text",
+                    "source": "/document/pages/*",
+                    "sourceContext": null,
+                    "inputs": []
+                },
+                {
+                    "name": "fromLanguageCode",
+                    "source": "/document/language",
+                    "sourceContext": null,
+                    "inputs": []
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "translatedText",
+                    "targetName": "translated_text"
+                },
+                {
+                    "name": "translatedFromLanguageCode",
+                    "targetName": "translatedFromLanguageCode"
+                },
+                {
+                    "name": "translatedToLanguageCode",
+                    "targetName": "translatedToLanguageCode"
+                }
+            ],
+            "httpHeaders": {
+                "defaultFromLanguageCode": "{{config.searchDefaultFromLanguageCode}}",
+                "defaultToLanguageCode": "{{config.searchDefaultToLanguageCode}}",
+                "suggestedFrom": "{{config.searchDefaultFromLanguageCode}}"
+            }
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "DocumentSummary",
+            "context": "/document",
+            "uri": "{{param.language.Summarization}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 1,
+            "degreeOfParallelism": 2,
+            "inputs": [
+                {
+                    "name": "language",
+                    "source": "/document/language"
+                },
+                {
+                    "name": "text",
+                    "source": "/document/pages/0/translated_text"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "summarizedText",
+                    "targetName": "summary"
+                }
+            ],
+            "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "PagesKeyPhrasesExtraction",
+            "context": "/document/pages/*",
+            "uri": "{{param.language.KeyPhrasesExtraction}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 5,
+            "degreeOfParallelism": 2,
+            "inputs": [
+                {
+                    "name": "text",
+                    "source": "/document/pages/*"
+                },
+                {
+                    "name": "languageCode",
+                    "source": "/document/language"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "keyPhrases",
+                    "targetName": "raw_keyPhrases"
+                }
+            ],
+            "httpHeaders": {
+                "defaultLanguageCode": "en",
+                "maxKeyPhraseCount": "20"
+            }
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "EntityRecognition",
+            "context": "/document/pages/*",
+            "uri": "{{param.language.EntityRecognition}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 1,
+            "degreeOfParallelism": 2,
+            "inputs": [
+                {
+                    "name": "text",
+                    "source": "/document/pages/*"
+                },
+                {
+                    "name": "languageCode",
+                    "source": "/document/language"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "persons",
+                    "targetName": "raw_persons"
+                },
+                {
+                    "name": "locations",
+                    "targetName": "raw_locations"
+                },
+                {
+                    "name": "organizations",
+                    "targetName": "raw_organizations"
+                },
+                {
+                    "name": "quantities",
+                    "targetName": "quantities"
+                },
+                {
+                    "name": "dateTimes",
+                    "targetName": "dateTimes"
+                },
+                {
+                    "name": "urls",
+                    "targetName": "links"
+                },
+                {
+                    "name": "emails",
+                    "targetName": "emails"
+                },
+                {
+                    "name": "namedEntities",
+                    "targetName": "named_entities"
+                }
+            ],
+            "httpHeaders": {
+                "defaultLanguageCode": "en",
+                "minimumPrecision": "0.75"
+            }
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "EntityLinking",
+            "context": "/document/pages/*",
+            "uri": "{{param.language.EntityLinking}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 1,
+            "degreeOfParallelism": 2,
+            "inputs": [
+                {
+                    "name": "text",
+                    "source": "/document/pages/*/translated_text"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "entities",
+                    "targetName": "linked_entities"
+                }
+            ],
+            "httpHeaders":{
+                "defaultLanguageCode": "en",
+                "minimumPrecision": "0.75"
+            }
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
+            "context": "/document",
+            "inputs": [
+                {
+                    "name": "text",
+                    "source": "/document/pages/*"
+                },
+                {
+                    "name": "named_entities",
+                    "source": "/document/pages/*/named_entities"
+                },
+                {
+                    "name": "linked_entities",
+                    "source": "/document/pages/*/linked_entities"
+                },
+                {
+                    "name": "tokens_entities",
+                    "source": "/document/pages/*/tokens_entities"
+                },
+                {
+                    "name": "custom_entities",
+                    "source": "/document/pages/*/custom_entities"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "output",
+                    "targetName": "entities"
+                }
+            ]
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "EntitiesDeduplication",
+            "description": "A custom skill to normalize and deduplicate values of entities.",
+            "context": "/document",
+            "uri": "{{param.entities.deduplication}}",
+            "httpMethod": "POST",
+            "timeout": "PT30S",
+            "batchSize": 1,
+            "degreeOfParallelism": null,
+            "inputs": [
+                {
+                    "name": "keyPhrases",
+                    "source": "/document/pages/*/raw_keyPhrases/*",
+                    "sourceContext": null,
+                    "inputs": []
+                },
+                {
+                    "name": "organizations",
+                    "source": "/document/pages/*/raw_organizations/*",
+                    "sourceContext": null,
+                    "inputs": []
+                },
+                {
+                    "name": "locations",
+                    "source": "/document/pages/*/raw_locations/*",
+                    "sourceContext": null,
+                    "inputs": []
+                },
+                {
+                    "name": "persons",
+                    "source": "/document/pages/*/raw_persons/*",
+                    "sourceContext": null,
+                    "inputs": []
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "keyPhrases",
+                    "targetName": "dedup_keyPhrases"
+                },
+                {
+                    "name": "organizations",
+                    "targetName": "organizations"
+                },
+                {
+                    "name": "locations",
+                    "targetName": "temp_locations"
+                },
+                {
+                    "name": "persons",
+                    "targetName": "persons"
+                }
+            ],
+            "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "geolocations",
+            "description": "Locations geo locations for the map support",
+            "context": "/document",
+            "uri": "{{param.geolocations.locations}}",
+            "httpMethod": "POST",
+            "timeout": "PT1M",
+            "batchSize": 5,
+            "degreeOfParallelism": null,
+            "inputs": [
+                {
+                    "name": "locations",
+                    "source": "/document/temp_locations"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "locations",
+                    "targetName": "locations"
+                },
+                {
+                    "name": "countries",
+                    "targetName": "countries"
+                },
+                {
+                    "name": "capitals",
+                    "targetName": "capitals"
+                },
+                {
+                    "name": "cities",
+                    "targetName": "cities"
+                }
+            ],
+            "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "EntitiesCleansing",
+            "description": "A custom skill to remove stopwords from keyphrases vs others entities",
+            "context": "/document",
+            "uri": "{{param.entities.keyphrases-cleansing}}",
+            "httpMethod": "POST",
+            "timeout": "PT30S",
+            "batchSize": 1,
+            "degreeOfParallelism": null,
+            "inputs": [
+                {
+                    "name": "keyPhrases",
+                    "source": "/document/dedup_keyPhrases",
+                    "sourceContext": null,
+                    "inputs": []
+                },
+                {
+                    "name": "organizations",
+                    "source": "/document/organizations"
+                },
+                {
+                    "name": "locations",
+                    "source": "/document/locations"
+                },
+                {
+                    "name": "countries",
+                    "source": "/document/countries"
+                },
+                {
+                    "name": "capitals",
+                    "source": "/document/capitals"
+                },
+                {
+                    "name": "cities",
+                    "source": "/document/cities"
+                },
+                {
+                    "name": "persons",
+                    "source": "/document/persons"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "keyPhrases",
+                    "targetName": "keyPhrases"
+                },
+                {
+                    "name": "acronyms",
+                    "targetName": "acronyms"
+                }
+            ],
+            "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "MergeTranslatedPages",
+            "context": "/document",
+            "uri": "{{param.text.TranslationMerge}}",
+            "httpMethod": "POST",
+            "timeout": "PT1M",
+            "batchSize": 5,
+            "degreeOfParallelism": null,
+            "inputs": [
+                {
+                    "name": "translated_pages",
+                    "source": "/document/pages/*/translated_text"
+                },
+                {
+                    "name": "fromLanguageCode",
+                    "source": "/document/language"
+                },
+                {
+                    "name": "toLanguageCode",
+                    "source": "/document/pages/0/translatedToLanguageCode"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "merged_translation",
+                    "targetName": "merged_translation"
+                }
+            ],
+            "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "MetadataExtraction",
+            "description": "Send the document references for Metadata extraction (TIKA)",
+            "context": "/document",
+            "uri": "{{param.mtdext.MetadataExtractionSkill}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 1,
+            "degreeOfParallelism": 1,
+            "inputs": [
+                {
+                    "name": "document_id",
+                    "source": "/document/document_id"
+                },
+                {
+                    "name": "document_filename",
+                    "source": "/document/document_filename"
+                },
+                {
+                    "name": "document_url",
+                    "source": "/document/document_url"
+                },
+                {
+                    "name": "imageparenturl",
+                    "source": "/document/imageparenturl"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "file_metadata",
+                    "targetName": "file_metadata"
+                }
+            ],
+            "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "TablesExtraction",
+            "description": "Extracts fields from a form using a pre-trained form recognition model",
+            "uri": "{{param.vision.ExtractTables}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "context": "/document",
+            "batchSize": 1,
+            "inputs": [
+                {
+                    "name": "formUrl",
+                    "source": "/document/metadata_storage_path"
+                },
+                {
+                    "name": "formSasToken",
+                    "source": "/document/metadata_storage_sas_token"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "tables",
+                    "targetName": "tables"
+                },
+                {
+                    "name": "tables_count",
+                    "targetName": "tables_count"
+                }
+            ]
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "MetadataAssignment",
+            "context": "/document",
+            "uri": "{{param.mtda.Assign}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 5,
+            "degreeOfParallelism": null,
+            "inputs": [
+                {
+                    "name": "document_filename",
+                    "source": "/document/document_filename"
+                },
+                {
+                    "name": "document_url",
+                    "source": "/document/document_url"
+                },
+                {
+                    "name": "file_metadata",
+                    "source": "/document/file_metadata"
+                },
+                {
+                    "name": "author",
+                    "source": "/document/metadata_author"
+                },
+                {
+                    "name": "metadata_title",
+                    "source": "/document/metadata_title"
+                },
+                {
+                    "name": "metadata_last_modified",
+                    "source": "/document/metadata_last_modified"
+                },
+                {
+                    "name": "metadata_creation_date",
+                    "source": "/document/metadata_creation_date"
+                },
+                {
+                    "name": "topics",
+                    "source": "/document/topics"
+                },
+                {
+                    "name": "tables",
+                    "source": "/document/tables"
+                },
+                {
+                    "name": "imageparentkey",
+                    "source": "/document/imageparentkey"
+                },
+                {
+                    "name": "imageparentid",
+                    "source": "/document/imageparentid"
+                },
+                {
+                    "name": "imageparenturl",
+                    "source": "/document/imageparenturl"
+                },
+                {
+                    "name": "imageparentfilename",
+                    "source": "/document/imageparentfilename"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "skill_metadata",
+                    "targetName": "skill_metadata"
+                }
+            ],
+            "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "TitleTranslation",
+            "context": "/document",
+            "uri": "{{param.language.Translator}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 5,
+            "degreeOfParallelism": 2,
+            "inputs": [
+                {
+                    "name": "text",
+                    "source": "/document/skill_metadata/title"
+                },
+                {
+                    "name": "fromLanguageCode",
+                    "source": "/document/language"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "translatedText",
+                    "targetName": "translated_title"
+                },
+                {
+                    "name": "translatedFromLanguageCode",
+                    "targetName": "title_translatedFromLanguageCode"
+                },
+                {
+                    "name": "translatedToLanguageCode",
+                    "targetName": "title_translatedToLanguageCode"
+                }
+            ],
+            "httpHeaders": {
+                "defaultFromLanguageCode": "{{config.searchDefaultFromLanguageCode}}",
+                "defaultToLanguageCode": "{{config.searchDefaultToLanguageCode}}",
+                "suggestedFrom": "{{config.searchDefaultFromLanguageCode}}"
+            }
+        }
+    ]
+}

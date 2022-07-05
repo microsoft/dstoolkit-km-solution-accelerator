@@ -1,0 +1,74 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+@model CognitiveSearch.UI.Models.SearchViewModel
+
+@using CognitiveSearch.UI.Configuration
+@inject AppConfig AppConfig
+@inject UIConfig UIConfig
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Pass controller data to view -->
+<script>
+    Microsoft["View"] = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+</script>
+
+<!-- Add references to the Azure Maps Map control JavaScript and CSS files. -->
+<link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
+<script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+
+<!-- Add references to the Azure Maps Map Drawing Tools JavaScript and CSS files. -->
+<link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/drawing/0/atlas-drawing.min.css" type="text/css" />
+<script src="https://atlas.microsoft.com/sdk/javascript/drawing/0/atlas-drawing.min.js"></script>
+
+<!-- Add reference to the Azure Maps Spatial IO module. -->
+<script src="https://atlas.microsoft.com/sdk/javascript/spatial/0/atlas-spatial.min.js"></script>
+
+<!-- Add references to the Azure Maps Selection Control module JavaScript and CSS files. -->
+<link rel="stylesheet" href="/maps/azure-maps-selection-control.min.css" type="text/css" asp-append-version="true"/>
+<script src="/maps/azure-maps-selection-control.min.js" asp-append-version="true"></script>
+
+<!-- Load in the JavaScript that has our custom control. -->
+<script src="/maps/azure-maps-fullscreen-control.min.js" asp-append-version="true"></script>
+<!-- Add a reference to the HTML Marker layer module. -->
+<script src="/maps/azure-maps-html-marker-layer.min.js" asp-append-version="true"></script>
+
+<!--Details Modal-->
+<partial name="_DetailsModal" />
+
+<!--Navigation Modal-->
+<partial name="_NavigationPartial" />
+
+<!--Search Filter -->
+<partial name="_SearchFilterPartial" />
+
+<!--World Map-->
+
+<div id="world-map">
+    <div id="results-container">
+        @if (AppConfig.MapConfig.IsEnabled) {
+            <div>
+                <div id="WorldMap"></div>
+                <div class="sidePanel-map">
+                    <fieldset id="map-layers"></fieldset>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            Microsoft.Maps.initMap(); 
+
+            Microsoft.Search.initSearchVertical(Microsoft.View.config);
+
+            Microsoft.Search.initSearch();
+
+        });
+    </script>
+}

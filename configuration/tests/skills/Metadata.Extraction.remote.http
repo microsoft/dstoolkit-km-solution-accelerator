@@ -1,0 +1,48 @@
+###
+POST {{param.mtdext.DurableMetadataExtractionSkill_HttpStart}}
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvVGVzdCUyMDElMjA0MzM3NC5wZGY",
+                "document_filename":"europe.pdf",
+                "document_url":"https://{{param.dataStorageAccountName}}.blob.core.windows.net/documents/europe.pdf"
+            }
+        }
+    ]
+}
+### 
+POST {{param.mtdext.MetadataExtractionSkill}}
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvVGVzdCUyMDElMjA0MzM3NC5wZGY",
+                "document_filename":"Test Video.mp4",
+                "document_url":"https://{{param.dataStorageAccountName}}.blob.core.windows.net/documents/Microsoft%20Flight%20Simulator%20(FS2020)%20vs%20Real%20Life%20_%20Landing%20in%20Gatwick%20UK.mp4"
+            }
+        }
+    ]
+}
+### Non-Recursive
+POST {{param.mtdext.MetadataExtractionSkill}}
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvVGVzdCUyMDElMjA0MzM3NC5wZGY",
+                "document_filename":"europe.pdf",
+                "document_url":"https://{{param.dataStorageAccountName}}.blob.core.windows.net/documents/europe.pdf"
+            }
+        }
+    ]
+}

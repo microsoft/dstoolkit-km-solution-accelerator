@@ -1,0 +1,154 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+      - main
+
+variables:
+  - name: tag
+    value: '$(Build.BuildId)'
+  - name: buildConfiguration
+    value: Release
+  - name: vmImageName
+    value: 'windows-latest'
+  - ${{ if eq(variables['build.SourceBranchName'], 'dev') }}:
+    - group: contoso-group
+
+stages:
+  - stage: Build_Docker_Images
+    displayName: Build Docker Images
+    jobs:
+    - job: Build
+      displayName: Contoso DEV Docker Images
+      pool:
+        vmImage: $(vmImageName)
+      steps:
+      - checkout: self
+        lfs: true
+      - task: UseDotNet@2
+        inputs:
+          packageType: 'sdk'
+          version: '6.0.x'
+      - task: FuncToolsInstaller@0
+        inputs:
+          version: 'latest'
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.9' 
+          addToPath: true 
+          architecture: 'x64' # Options: x86, x64 (this argument applies only on Windows agents)
+      - task: AzureCLI@2
+        displayName: 'Build All Docker Images'
+        inputs:
+          azureSubscription: '$(serviceConnectionName)'
+          scriptType: 'pscore'
+          scriptLocation: 'scriptPath'
+          scriptPath: '$(Build.SourcesDirectory)/deployment/scripts/21_Build-DockerImages.ps1'
+          arguments: '-EnvironmentName "$(environment)"'
+
+  - stage: Build_Skills
+    displayName: Build & Publish Functions
+    jobs:
+    - job: Build
+      displayName: Build Functions
+      pool:
+        vmImage: $(vmImageName)
+      steps:
+      - checkout: self
+        lfs: true
+      - task: UseDotNet@2
+        inputs:
+          packageType: 'sdk'
+          version: '6.0.x'
+      - task: FuncToolsInstaller@0
+        inputs:
+          version: 'latest'
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.9' 
+          addToPath: true 
+          architecture: 'x64' # Options: x86, x64 (this argument applies only on Windows agents)
+      - task: AzureCLI@2
+        displayName: 'Get Services Keys'
+        inputs:
+          azureSubscription: '$(serviceConnectionName)'
+          scriptType: 'pscore'
+          scriptLocation: 'scriptPath'
+          scriptPath: '$(Build.SourcesDirectory)/deployment/scripts/15_Get_Services_Keys.ps1'
+          arguments: '-EnvironmentName "$(environment)"'
+      - task: AzureCLI@2
+        displayName: 'Build & Deploy all functions Linux & Windows'
+        inputs:
+          azureSubscription: '$(serviceConnectionName)'
+          scriptType: 'pscore'
+          scriptLocation: 'scriptPath'
+          scriptPath: '$(Build.SourcesDirectory)/deployment/scripts/20_Deploy_Functions.ps1'
+          arguments: '-EnvironmentName "$(environment)" '
+
+  - stage: Build_WebApps
+    displayName: Contoso DEV WebApp(s)
+    jobs:
+    - job: Build
+      displayName: Contoso DEV WebApp(s)
+      pool:
+        vmImage: $(vmImageName)
+      steps:
+      - checkout: self
+        lfs: true
+      - task: UseDotNet@2
+        inputs:
+          packageType: 'sdk'
+          version: '6.0.x'
+      - task: AzureCLI@2
+        displayName: 'Get Services Keys'
+        inputs:
+          azureSubscription: '$(serviceConnectionName)'
+          scriptType: 'pscore'
+          scriptLocation: 'scriptPath'
+          scriptPath: '$(Build.SourcesDirectory)/deployment/scripts/15_Get_Services_Keys.ps1'
+          arguments: '-EnvironmentName "$(environment)"'
+      - task: AzureCLI@2
+        displayName: 'Build & Deploy all WebApps Linux & Windows'
+        inputs:
+          connectedServiceNameARM: $(serviceConnectionName)
+          scriptType: pscore
+          scriptLocation: scriptPath
+          scriptPath: '$(Build.SourcesDirectory)/deployment/scripts/30_Deploy_WebApps.ps1'
+          scriptArguments: '-EnvironmentName "$(environment)"'
+
+  - stage: Configure_Solution
+    displayName: Contoso DEV Configure & Restart
+    jobs:
+    - job: Configure
+      displayName: Contoso DEV Configure
+      pool:
+        vmImage: $(vmImageName)
+      steps:
+      - task: AzureCLI@2
+        displayName: 'Get Services Keys'
+        inputs:
+          azureSubscription: '$(serviceConnectionName)'
+          scriptType: 'pscore'
+          scriptLocation: 'scriptPath'
+          scriptPath: '$(Build.SourcesDirectory)/deployment/scripts/15_Get_Services_Keys.ps1'
+          arguments: '-EnvironmentName "$(environment)"'
+      - task: AzureCLI@2
+        displayName: 'Configure Azure Cognitive Search'
+        inputs:
+          connectedServiceNameARM: $(serviceConnectionName)
+          scriptType: pscore
+          scriptLocation: scriptPath
+          scriptPath: '$(Build.SourcesDirectory)/deployment/scripts/40_Initialize_Search.ps1'
+          scriptArguments: '-EnvironmentName "$(environment)"'
+      - task: AzureCLI@2
+        displayName: 'Restart the solution'
+        inputs:
+          connectedServiceNameARM: $(serviceConnectionName)
+          scriptType: pscore
+          scriptLocation: scriptPath
+          scriptPath: '$(Build.SourcesDirectory)/deployment/scripts/50_Restart_Solution.ps1'
+          scriptArguments: '-EnvironmentName "$(environment)"'

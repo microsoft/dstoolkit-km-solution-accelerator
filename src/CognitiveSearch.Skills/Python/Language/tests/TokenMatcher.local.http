@@ -1,0 +1,181 @@
+###
+POST http://localhost:7071/language/tokenmatcher/indexing
+Content-Type: application/json
+processing-type: small
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "language": "de",
+                "text": "Luxury"
+            }
+        },
+        {
+            "recordId": "2",
+            "data": {
+                "language": "de",
+                "text": "Microsoft inc. The WIND average ENERGY MSFT levelized price amg of wind power purchase agree-ments signed in 2013 was approximately 2.5 cents perkilowatt-hour, a price that is not only cost competitive with new gas-fired power plants but also compares favorably to a range of fuel cost projections of gas-fired generation extending out through 2040.1"
+            }
+        }
+    ]
+}
+
+###
+POST http://localhost:7071/language/tokenmatcher/editkeywords
+Content-Type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "text": "0"
+            }
+        }
+    ]
+}
+
+###
+POST http://localhost:7071/language/tokenmatcher/indexing
+Content-Type: application/json
+processing-type: small
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "language": "en",
+                "text": "Microsoft inc. The WIND average ENERGY MSFT levelized price amg of wind power purchase agree-\r\nments signed in 2013 was approximately 2.5 cents per\r\nkilowatt-hour, a price that is not only cost competitive with\r\nnew gas-fired power plants but also compares favorably\r\nto a range of fuel cost projections of gas-fired generation\r\nextending out through 2040.1 Public and private research\r\nand development (R&D) can provide continued technologi-\r\ncal advancements and further reduce wind energy costs"
+            }
+        }
+    ]
+}
+
+###
+POST http://localhost:7071/language/tokenmatcher/indexing
+Content-Type: application/json
+
+{
+  "values": [
+    {
+      "recordId": "1",
+            "data": {
+              "language": "en",
+              "text": "Wind energy PPP.123.456 development creates thousands of long-term,\r\nhigh-paying jobs in fields such as wind turbine component\r\nmanufacturing, construction and installation, maintenance\r\nand operations, legal and marketing services, transporta-\r\ntion and logistical services, XXX.123.987 and more."
+            }
+    },
+    {
+      "recordId": "12",
+            "data": {
+              "language": "en",
+              "text": "Solar energies PPP.999.WWW  systems power plants do not produce air pollution or greenhouse gases. Using solar energy can have a positive, indirect effect on the environment when solar energy replaces or reduces the use of other energy sources that have larger effects on the environment."
+            }
+    }
+  ]
+}
+
+### Spanish 
+POST http://localhost:7071/language/tokenmatcher
+Content-Type: application/json
+
+{
+  "values": [
+    {
+      "recordId": "1",
+            "data": {
+              "language": "es",
+              "text": "Electrical energy Oracle inc. is converted to mechanical energy (motors in refrigerators, air-conditioning units, vacuum cleaners), thermal energy (space heating, clothes dryers, water heating), or radiation (lighting, television, computer monitors.)"
+            }
+    }
+  ]
+}
+
+###
+POST http://localhost:7071/language/tokenmatcher/indexing
+Content-Type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "language": "de",
+                "text": "Handelspolitik Testing Testing testing the wind, with my new item. I work for Apple and Microsoft. I also love solar panel. a34.aaa.aaa a34.aaa.aaa b34.bbb.bbb b34.bbb.bbb b34.bbb.bbb U.S. U.S. U.S. U.S. U.S. U.S. U.S. U.S. U.S."
+            }
+        }
+    ]
+}
+
+###
+POST http://localhost:7071/language/tokenmatcher
+Content-Type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "language": "en",
+                "text": "HORUS ADVISORY GROUP 40 PRESTIGOUS COMPANIES OF VARIOUS INDUSTRIES PARTICIPATED IN STRATEGIC INTELLIGENCE SURVEY OF THIS YEAR Participating Companies by Industry Conglomerate; 5 Aluminium; 1 Automotive ; 1 Electrics; 1 Elevators; 1 Engineering industry; Steel; 4 PERI HILTI D - BASF We create chemistry REHAU BARRY (()CALLEBAUT KSB b. SEMPERIT S Crop Science AR OTTO FUCHS KWS Hapag-Lloyd thyssenkrupp Industrial insurance; 1 Optical Industry; 1 Packaging; 1 Print; 1 Pumps and Fittings; 1 As in 2020, the HORUS ADVISORY GROUP has conducted its annual Strategic Intelligence Study, together with the Universität der Bundeswehr München. The main points in question for this year were: - Identification of best practices, trends regarding organisation, governance of competitor -, market- and customer-intelligence Chemical industry; 4 Schindler voestalpine ONE STEP AHEAD HEIDELBERG Mercedes-Benz BOSCH Invented for life PALFINGER ZEISS Rubber; 1 Software; 1 Trucks; 1 - Tools and technologies used, for gathering strategic intelligence - Deepdive on current and potential sources of strategic intelligence White Goods; 1 This year's participants were a total of 40 different German, Austrian and Swiss enterprises. Automotive Supplier; 4 Construction Equipment; 2 Aircraft Supplier; 3 FCMG; 2 Crop & crop protection; 2 3 / 32 16.09.2021 Horus Advisory Group"
+            }
+        }
+    ]
+}
+
+###
+POST http://localhost:7071/language/tokenmatcher/indexing
+Content-Type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "language": "en",
+                "text": "Microsoft inc. The WIND average ENERGY MSFT levelized price of wind power purchase agree-\r\nments signed in 2013 was approximately 2.5 cents per\r\nkilowatt-hour, a price that is not only cost competitive with\r\nnew gas-fired power plants but also compares favorably\r\nto a range of fuel cost projections of gas-fired generation\r\nextending out through 2040.1 Public and private research\r\nand development (R&D) can provide continued technologi-\r\ncal advancements and further reduce wind energy costs"
+            }
+        }
+    ]
+}
+
+###
+POST http://localhost:7071/language/tokenmatcher
+Content-Type: application/json
+
+{
+  "values": [
+    {
+      "recordId": "1",
+            "data": {
+              "language": "en",
+              "text": "Wind energy PPP.123.456 development creates thousands of long-term,\r\nhigh-paying jobs in fields such as wind turbine component\r\nmanufacturing, construction and installation, maintenance\r\nand operations, legal and marketing services, transporta-\r\ntion and logistical services, XXX.123.987 and more."
+            }
+    },
+    {
+      "recordId": "12",
+            "data": {
+              "language": "en",
+              "text": "Solar energies PPP.999.WWW  systems power plants do not produce air pollution or greenhouse gases. Using solar energy can have a positive, indirect effect on the environment when solar energy replaces or reduces the use of other energy sources that have larger effects on the environment."
+            }
+    }
+  ]
+}
+
+### Spanish 
+POST http://localhost:7071/language/tokenmatcher/indexing
+Content-Type: application/json
+
+{
+  "values": [
+    {
+      "recordId": "1",
+            "data": {
+              "language": "es",
+              "text": "Electrical energy Oracle inc. is converted to mechanical energy (motors in refrigerators, air-conditioning units, vacuum cleaners), thermal energy (space heating, clothes dryers, water heating), or radiation (lighting, television, computer monitors.)"
+            }
+    }
+  ]
+}

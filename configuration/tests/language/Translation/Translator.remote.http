@@ -1,0 +1,27 @@
+###
+POST {{param.language.Translator}}
+Content-Type: application/json
+defaultToLanguageCode: en
+defaultFromLanguageCode: de
+suggestedFrom: de
+
+< Translator.1.json
+
+###
+POST {{param.language.Translator}}
+Content-Type: application/json
+defaultToLanguageCode: en
+defaultFromLanguageCode: de
+suggestedFrom: de
+
+< Translator.2.json
+
+###
+POST {{param.language.Translator}}
+Content-Type: application/json
+defaultToLanguageCode: en
+defaultFromLanguageCode: de
+suggestedFrom: de
+
+< Translator.3.json
+

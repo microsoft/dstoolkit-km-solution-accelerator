@@ -1,0 +1,12 @@
+[
+  {
+    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey/)",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureWebJobsStorage",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString/)",
+    "slotSetting": false
+  }
+]

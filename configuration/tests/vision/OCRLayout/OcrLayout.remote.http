@@ -1,0 +1,18 @@
+### Invalid Body
+POST {{param.vision.azureocrlayout}}
+content-type: application/json
+
+< OCRLayout.1.json
+
+### Empty
+POST {{param.vision.azureocrlayout}}
+content-type: application/json
+
+< OCRLayout.2.json
+
+###
+POST {{param.vision.azureocrlayout}}
+content-type: application/json
+
+< OCRLayout.3.json
+

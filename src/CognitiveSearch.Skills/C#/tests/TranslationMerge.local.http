@@ -1,0 +1,33 @@
+###
+POST http://localhost:7071/textext/TranslationMerge
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "fromLanguageCode": "en",
+                "toLanguageCode": "en",
+                "translated_pages": ["Microsoft inc. The average MSFT levelized price of wind power purchase agree-\r\nments signed in 2013 was approximately 2.5 cents per\r\nkilowatt-hour, a price that is not only cost competitive with\r\nnew gas-fired power plants but also compares favorably\r\nto a range of fuel cost projections of gas-fired generation\r\nextending out through 2040.1 Public and private research\r\nand development (R&D) can provide continued technologi-\r\ncal advancements and further reduce wind energy costs"]
+            }
+        }
+    ]
+}
+### 
+POST http://localhost:7071/textext/TranslationMerge
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "fromLanguageCode": "en",
+                "toLanguageCode": "de",
+                "translated_pages": ["Microsoft inc. The average MSFT levelized price of wind power purchase agree-\r\nments signed in 2013 was approximately 2.5 cents per\r\nkilowatt-hour, a price that is not only cost competitive with\r\nnew gas-fired power plants but also compares favorably\r\nto a range of fuel cost projections of gas-fired generation\r\nextending out through 2040.1 Public and private research\r\nand development (R&D) can provide continued technologi-\r\ncal advancements and further reduce wind energy costs"]
+            }
+        }
+    ]
+}
+

@@ -1,0 +1,60 @@
+﻿[
+  {
+    "source": "dcterms-created",
+    "target": [ "creation_date", "last_modified", "last_save_date" ]
+  },
+  {
+    "source": "dcterms-modified",
+    "target": [ "last_modified" ]
+  },
+  {
+    "source": "meta-save-date",
+    "target": [ "last_save_date" ]
+  },
+  {
+    "source": "title",
+    "target": [ "title" ]
+  },
+  {
+    "source": "dc-title",
+    "target": [ "title" ]
+  },
+  {
+    "source": "pdf-docinfo-title",
+    "target": [ "title" ]
+  },
+  {
+    "source": "dc-subject",
+    "target": [ "description" ]
+  },
+  {
+    "source": "Category",
+    "target": [ "user_categories" ],
+    "transform": "SplitSemiColumn"
+  },
+  {
+    "source": "meta-author",
+    "target": [ "authors" ],
+    "transform": "none"
+  },
+  {
+    "source": "meta-last-author",
+    "target": [ "authors" ],
+    "transform": "none"
+  },
+  {
+    "source": "meta-keyword",
+    "target": [ "user_keywords" ],
+    "transform": "SplitSemiColumn"
+  },
+  {
+    "source": "custom-Tags",
+    "target": [ "user_tags" ],
+    "transform": "SplitSPTaxonomy"
+  },
+  {
+    "source": "custom-Document-Type",
+    "target": [ "user_tags" ],
+    "transform": "SplitSPTaxonomy"
+  }
+]

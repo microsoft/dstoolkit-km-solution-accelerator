@@ -1,0 +1,31 @@
+POST {{param.imgext.DurableImageExtractionSkill_HttpStart}}
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvU2FtcGxlRGF0YTEwLVdpbmQvV2luZCBFbmVyZ3kgMTAxLnBkZg",
+                "document_filename":"Wind Energy 101.pdf",
+                "document_url":"https://{{param.dataStorageAccountName}}.blob.core.windows.net/documents/Wind Energy 101.pdf"
+            }
+        }
+    ]
+}
+###
+POST {{param.imgext.DurableImageExtractionSkill_HttpStart}}
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvVGVzdCUyMDElMjA0MzM3NC5wZGY",
+                "document_filename":"Test 1 43374.pdf",
+                "document_url":"https://{{param.dataStorageAccountName}}.blob.core.windows.net/documents/Test%201%2043374.pdf"
+            }
+        }
+    ]
+}

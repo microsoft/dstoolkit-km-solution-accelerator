@@ -1,0 +1,42 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+
+@using System.Security.Principal
+<nav class="nav navbar-expand-lg fs-5">
+    <ul class="navbar-nav">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <li class="nav-item nav-link dropdown">
+                <a class="nav-link dropdown-toggle text-truncate" id="navbarDropdown" data-toggle="dropdown" href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false">@User.Claims.Single(c => c.Type == "name").Value</a>
+                <div class="dropdown-menu" labelledby="navbarDropdown">
+                    <a class="nav-link text-dark" asp-controller="Account" asp-action="SignOut">Sign out</a>
+                </div>
+            </li>
+
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="AzureAD" asp-controller="Account" asp-action="SignIn">Sign in</a>
+            </li>
+        }
+    </ul>
+</nav>
+@if (User.Identity.IsAuthenticated)
+{
+    <div id="divForceSignout" class="modal sign-out-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Error</h5>
+                </div>
+                <div class="modal-body">
+                    <p>An error occurred or your session expired. Please sign out of the current session and re-login. If the error persists please contact support.</p>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" asp-controller="Account" asp-action="SignOut">Sign out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

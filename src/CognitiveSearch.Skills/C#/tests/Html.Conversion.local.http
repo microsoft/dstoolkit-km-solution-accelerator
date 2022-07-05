@@ -1,0 +1,81 @@
+### HTML Conversion Test Empty data
+POST http://localhost:7071/textext/HtmlConversion
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+            }
+        }
+    ]
+}
+
+### HTML Conversion 
+POST http://localhost:7071/textext/HtmlConversion
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvVGVzdCUyMDElMjA0MzM3NC5wZGY",
+                "document_filename":"europe.pdf",
+                "document_url":"https://{{param.dataStorageAccountName}}.blob.core.windows.net/documents/europe.pdf"
+            }
+        }
+    ]
+}
+### Document metadata
+POST http://localhost:7071/textext/HtmlConversion
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvVGVzdCUyMDElMjA0MzM3NC5wZGY",
+                "document_filename":"europe-energy.jpg",
+                "document_url":"https://{{param.dataStorageAccountName}}.blob.core.windows.net/documents/europe-energy.jpg"
+            }
+        }
+    ]
+}
+
+
+### Image Not Found
+POST http://localhost:7071/textext/HtmlConversion
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvVGVzdCUyMDElMjA0MzM3NC5wZGY",
+                "document_filename":"image-00001-00001.jpg",
+                "document_url":"https://{{param.dataStorageAccountName}}/images/documents/europe.pdf/image-00001-99999.png"
+            }
+        }
+    ]
+}
+
+### Image Html Conversion from parent
+POST http://localhost:7071/textext/HtmlConversion
+content-type: application/json
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvVGVzdCUyMDElMjA0MzM3NC5wZGY",
+                "document_filename":"image-00001-00001.jpg",
+                "document_url":"https://{{param.dataStorageAccountName}}/images/documents/europe.pdf/image-00001-99999.png"
+            }
+        }
+    ]
+}

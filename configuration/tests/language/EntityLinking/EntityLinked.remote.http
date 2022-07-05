@@ -1,0 +1,31 @@
+###
+POST {{param.language.EntityLinking}}
+Content-Type: application/json
+minimumPrecision: 0.2
+defaultLanguageCode: en
+type: small
+
+< EntityLinked.1.json
+
+###
+POST {{param.language.EntityLinking}}
+Content-Type: application/json
+minimumPrecision: 0.2
+defaultLanguageCode: en
+type: big
+
+< EntityLinked.2.json
+
+###
+POST {{param.language.EntityLinking}}
+Content-Type: application/json
+minimumPrecision: 0.1
+
+< EntityLinked.3.json
+
+###
+POST {{param.language.EntityLinking}}
+Content-Type: application/json
+minimumPrecision: 0.1
+
+< EntityLinked.4.json

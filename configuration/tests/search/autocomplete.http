@@ -1,0 +1,25 @@
+### See https://docs.microsoft.com/en-us/rest/api/searchservice/autocomplete#request-body
+
+### AutoCompletion Test 1 
+POST  https://{{param.searchServiceName}}.search.windows.net/indexes/{{param.indexName}}/docs/autocomplete?api-version={{config.searchVersion}}
+content-type: application/json
+api-key : {{param.searchServiceQueryKey}}
+
+{  
+    "search": "eu",
+    "top": 5,  
+    "suggesterName": "suggester1"  
+} 
+
+### AutoCompletion Test 2
+POST  https://{{param.searchServiceName}}.search.windows.net/indexes/{{param.indexName}}/docs/autocomplete?api-version={{config.searchVersion}}
+content-type: application/json
+api-key : {{param.searchServiceQueryKey}}
+
+{  
+    "search": "eu",
+    "top": 5,  
+    "fuzzy": true,
+    "suggesterName": "suggester1"  
+} 
+

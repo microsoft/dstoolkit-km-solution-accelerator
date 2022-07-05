@@ -1,0 +1,30 @@
+[
+  {
+    "name": "key_phrases",
+    "url": "/api/search/suggest?highlights=false&fuzzy=false",
+    "template": {
+      "header": "<h5 class=\"suggestions-group-name\">Key Phrases</h5>"
+    }
+  },
+  {
+    "name": "topics",
+    "url": "/api/search/suggest?highlights=false&fuzzy=false&targetField=topics",
+    "template": {
+      "header": "<h5 class=\"suggestions-group-name\">Topics</h5>"
+    }
+  },
+  {
+    "name": "countries",
+    "url": "/api/search/suggest?highlights=false&fuzzy=false&targetField=countries",
+    "template": {
+      "header": "<h5 class=\"suggestions-group-name\">Countries</h5>"
+    }
+  },
+  {
+    "name": "organizations",
+    "url": "/api/search/suggest?highlights=false&fuzzy=false&targetField=organizations",
+    "template": {
+      "header": "<h5 class=\"suggestions-group-name\">Organizations</h5>"
+    }
+  }
+]

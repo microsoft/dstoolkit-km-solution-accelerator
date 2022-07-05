@@ -1,0 +1,5 @@
+### Frame 
+POST {{param.vision.Normalize}}
+content-type: application/json
+
+< Image.2.json
