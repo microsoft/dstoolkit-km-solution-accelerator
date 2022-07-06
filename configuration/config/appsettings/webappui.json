@@ -266,7 +266,7 @@
   },
   {
     "name": "SpellCheckConfig:IsEnabled",
-    "value": true,
+    "value": "{{config.BingSpellCheckEnabled}}",
     "slotSetting": false
   },
   {

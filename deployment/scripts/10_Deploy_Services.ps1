@@ -183,7 +183,7 @@ function New-AzureMapsService()
 
 function New-BingSearchService()
 {
-    if ( $config.webSearchEnabled ) {
+    if ( $config.webSearchEnabled -or $config.BingSpellCheckEnabled ) {
         Write-Host "Provision Bing Search service manually. When provisionned..." -ForegroundColor Red    
         $bingKey = Read-Host "Provide Bing Search Key " -MaskInput
         Add-Param "bingServicesKey" $bingKey

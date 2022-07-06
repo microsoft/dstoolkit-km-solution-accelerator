@@ -15,6 +15,7 @@
     "resourceGroupName": "kmcontoso-rg",
     "searchDefaultFromLanguageCode": "en",
     "searchDefaultToLanguageCode": "en",
+    "BingSpellCheckEnabled":false,
     "webSearchEnabled": false,
     "webMarket": "en-uk",
     "mapSearchEnabled": false,

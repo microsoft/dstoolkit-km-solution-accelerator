@@ -67,6 +67,7 @@ The below **contoso.json** environment configuration file you can easily adjust 
     "resourceGroupName": "kmcontoso-rg",
     "searchDefaultFromLanguageCode": "en",
     "searchDefaultToLanguageCode": "en",
+    "BingSpellCheckEnabled":false,
     "webSearchEnabled": false,
     "webMarket": "en-uk",
     "mapSearchEnabled": false,
@@ -102,6 +103,7 @@ Below the list of most common entries your configuration file should contains:
 |resourceGroupName|Resource Group the KM solution would be deployed|
 |searchDefaultFromLanguageCode|Default FROM language code for translation|
 |searchDefaultToLanguageCode|Default TO language code for translation|
+|BingSpellCheckEnabled|Boolean indicating if your solution will use Bing as SpellCheck service.|
 |webSearchEnabled|Boolean indicating if your solution will use Bing as Web Search service.|
 |webMarket|When Web Search is enabled, indicates which market to use for querying.|
 |mapSearchEnabled|Boolean indicating if your solution will use Azure Maps.|
@@ -175,6 +177,7 @@ adminUser                     : admin@contoso.com
 resourceGroupName             : kmcontoso-rg
 searchDefaultFromLanguageCode : en
 searchDefaultToLanguageCode   : en
+BingSpellCheckEnabled         : False
 webSearchEnabled              : False
 webMarket                     : en-uk
 mapSearchEnabled              : False
