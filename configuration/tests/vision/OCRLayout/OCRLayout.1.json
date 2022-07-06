@@ -3,12 +3,14 @@
         {
             "recordId": "1",
             "data": {
-                "status": "succeeded",
-                "createdDateTime": "2021-11-14T09:34:01Z",
-                "lastUpdatedDateTime": "2021-11-14T09:34:01Z",
-                "analyzeResult": {
-                    "version": "3.2.0",
-                    "modelVersion": "2021-04-12",
+                "ocrlayout": {
+                    "status": "succeeded",
+                    "createdDateTime": "2021-11-14T09:34:01Z",
+                    "lastUpdatedDateTime": "2021-11-14T09:34:01Z",
+                    "analyzeResult": {
+                        "version": "3.2.0",
+                        "modelVersion": "2021-04-12"
+                    }    
                 }
             }
         }
