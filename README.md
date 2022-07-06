@@ -2,13 +2,11 @@
 
 __Knowledge Mining solution accelerator__
 
-This repository contains all the code for deploying and end-to-end Knowledge Mining solution based on Azure Cognitive Search.
+This repository contains all the code for deploying an end-to-end Knowledge Mining solution based on Azure Cognitive Search.
 
-It is built on top of standards Azure services like Functions, Web App Services, Congitive Services & Cognitive Search. 
+It is built on top of standards Azure services like Functions, Web App Services, Congitive Services & Cognitive Search. It provides a deployment pipeline allowing quick and easy setup of CI/CD pipelines for your projects.
 
-It is built on the MLOps Accelerator and provides end to end training and deployment pipelines allowing quick and easy setup of CI/CD pipelines for your projects.
-
-For detailed documentation please refer to the docs section of the repo containing the solution wiki.
+For detailed documentation please refer to the __docs__ section of the repo containing the solution wiki.
 
 # Before you start 
 
@@ -54,7 +52,7 @@ With this cloud-based accelerator you will get an end-to-end solution with the t
 In that respect, the solution provides 
 - Azure Web App Authentication support 
 - High configurability (json)
-- Extensibility 
+- Full Extensibility 
 - Operations (PowerShell-based)
 - Azure Pipelines for CI/CD 
 - Deployment framework (manual or through CI/CD)
@@ -101,7 +99,15 @@ Nevertheless, since its architecture is open, you could use it as a foundation f
 
 **This solution accelerator is not targeted to any domain although its extensibility would give you the tools to make it domain specific.**
 
-You may think of productization of such accelerator for your organization.  
+Some inspirational use-cases 
+- AI-driven Data & Web Exploration
+- Unstructured data Insights extraction (mine the unseen value)
+- AI-Driven Strategy planning tool
+- Intranet Semantic Search
+- R&D portal for data discovery, patterns extraction & patents exploration
+- etc.
+
+You may think of productization such accelerator for your organization.
 
 # Who is the target audience ?
 
@@ -151,13 +157,13 @@ The respository structure of this accelerator is as follows
 --------
 - **azure-pipelines** - Azure devops pipelines to set up your CI/CD
 - **[configuration](configuration/README.md)** - solution configuration 
-- **data** - sample data to validate solution deployment.
+- **data** - sample data to validate the solution deployment.
     - **documents** : sample documents for your KM solution 
 - **[deployment](deployment/README.md)** - Configuration & scripts for deployment & operations
     - **config** : contains the entire solution base configuration
     - **modules** : PowerShell modules
-    - **scripts** : deployment scripts
-    - **init_env.ps1** : Environment initialization script 
+    - **scripts** : Deployment scripts
+    - **init_env.ps1** : Environment initialization script
 - **[docs](docs/README.md)** - contains solution documentation wiki in .md format. Designed to be imported as an Azure DevOps wiki.
 - **overlay** - Source code
 - **[src](src/README.md)** - Source code
@@ -182,6 +188,7 @@ This solution is inspired from the original work of the
 Core contributors to this solution accelerator are 
 - [Nicolas Uthurriague](https://github.com/puthurr)
 - [Edoardo Quasso](https://github.com/EdoQuasso) for the Azure Cognitive Functions (Python)
+- [Timm Walz](https://github.com/nonstoptimm)
 
 # Special Thanks 
 
