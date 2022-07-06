@@ -345,7 +345,7 @@ Work in progress to export search results as CSV for Excel import.
 
 ## Semantic Search 
 
-Choose if you want your query to use the semantic search or not 
+Choose if you want your query to use the semantic search feature. 
 
 [Learn about ACS Semantic Search](https://docs.microsoft.com/en-us/azure/search/semantic-search-overview)
 
@@ -355,17 +355,21 @@ Choose if you want your query to use the semantic search or not
 |Semantic captions and highlights|	Extracts sentences and phrases from a document that best summarize the content, with highlights over key passages for easy scanning. Captions that summarize a result are useful when individual content fields are too dense for the results page. Highlighted text elevates the most relevant terms and phrases so that users can quickly determine why a match was considered relevant.|
 |Semantic answers|	An optional and additional substructure returned from a semantic query. It provides a direct answer to a query that looks like a question. It requires that a document have text with the characteristics of an answer.|
 
-
 ## Query Translation
 
-When enabled, each search query is translated to English before being sent to ACS. 
+When enabled, each search query is translated to English before being sent to ACS. The Translation service is enabled by default during the data enrichment phase of the indexing. 
 
-## Query Spellchecking 
+## Query Spell Checking 
 
-Spell checking using 
+When the spellcheck service is enabled by config.BingSpellCheckEnabled, this feature will leverage Microsoft Bing to spell check your search query. 
+
+Make sure to review [Microsoft Privacy Statement](https://go.microsoft.com/fwlink/?LinkId=521839)
 
 ## Suggestion as Filter 
 
+This setting is linked to the search suggestions. Each suggestion has an associated entity (search field) like Key Phrases or Organizations. 
+
+When enabled this setup will add the corresponding entity filter to the search query to restrict further potential matching documents or images. 
 
 # Document Details 
 

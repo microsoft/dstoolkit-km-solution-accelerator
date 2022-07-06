@@ -151,7 +151,7 @@
   },
   {
     "name": "SearchServiceConfig:SpellCheckQueryText",
-    "value": "true",
+    "value": "{{config.BingSpellCheckEnabled}}",
     "slotSetting": false
   },
   {
