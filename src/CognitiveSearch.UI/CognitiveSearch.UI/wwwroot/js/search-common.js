@@ -116,13 +116,17 @@ Microsoft.Search = {
 
         if (vertical.infiniteScroll) {
             $(window).scroll(function () {
-                // Trigger reload when the user reaches 85% of the height of the window
-                var tresholdHeight = document.body.offsetHeight * 0.85;
-                var scrollYPosition = typeof window.scrollY === "undefined" ? window.pageYOffset : window.scrollY;
-                if (!Microsoft.Search.isQueryInProgress && (window.innerHeight + scrollYPosition) >= tresholdHeight) {
-                    //Has more results
-                    if (Microsoft.Search.hasMoreResults()) {
-                        Microsoft.Utils.executeFunctionByName(Microsoft.View.config.searchMethod, window);
+                if (!Microsoft.Search.isQueryInProgress) {
+                    // console.log('scroll '+ document.body.scrollHeight + ' - ' + document.body.offsetHeight);
+                    // Trigger reload when the user reaches 85% of the height of the window
+                    var thresholdHeight = document.body.scrollHeight * 0.95;
+                    var scrollYPosition = typeof window.scrollY === "undefined" ? window.pageYOffset : window.scrollY;
+                    if ((window.innerHeight + scrollYPosition) >= thresholdHeight) {
+                        //Has more results
+                        if (Microsoft.Search.hasMoreResults()) {
+                            // console.log('has more results');
+                            Microsoft.Utils.executeFunctionByName(Microsoft.View.config.searchMethod, window);
+                        }
                     }
                 }
             });
