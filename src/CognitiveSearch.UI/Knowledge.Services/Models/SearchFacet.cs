@@ -18,6 +18,18 @@ namespace Knowledge.Services.Models
         {
             Values = Array.Empty<FacetValue>();
         }
+
+        public string GetTarget()
+        {
+            if (String.IsNullOrEmpty(Target))
+            {
+                return Key;
+            }
+            else
+            {
+                return Target;
+            }
+        }
     }
     public class FacetValue
     {

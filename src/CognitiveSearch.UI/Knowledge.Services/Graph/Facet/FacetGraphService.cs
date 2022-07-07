@@ -26,13 +26,6 @@ namespace Knowledge.Services.Graph.Facet
             this.graphcfg = gConfig;
         }
 
-        //public JsonGraphResponse GetGraphData(string query,
-        //                                            List<string> facetNames,
-        //                                            string graphType,
-        //                                            int maxLevels = 1,
-        //                                            int maxNodes = 10,
-        //                                            SearchFacet[] searchFacets = null,
-        //                                            string model = "Model2")
         public JsonGraphResponse GetGraphData(GraphRequest request)
         {
 
@@ -58,10 +51,10 @@ namespace Knowledge.Services.Graph.Facet
             int CurrentLevel = 1;
             int nodesCounter = 0;
 
-            Dictionary<string, JsonGraphEdge> EdgeList = new Dictionary<string, JsonGraphEdge>();
+            Dictionary<string, JsonGraphEdge> EdgeList = new();
 
             // Create a node map that will map a facet to a node - nodemap[0] always equals the q term
-            Dictionary<string, JsonGraphNode> NodeMap = new Dictionary<string, JsonGraphNode>();
+            Dictionary<string, JsonGraphNode> NodeMap = new();
 
             // If blank search, assume they want to search everything
             if (string.IsNullOrWhiteSpace(request.queryText))
@@ -231,7 +224,7 @@ namespace Knowledge.Services.Graph.Facet
                     IList<FacetResult> facetVals = (response.Facets)[facetName];
 
                     // Here we need to check if the facet value is already present in the incoming search facets
-                    var values = searchFacets.Where(n => n.Target.Equals(facetName)).Select(n => n.Values).SelectMany(n => n).Select(n => n.value).ToList();
+                    var values = searchFacets.Where(n => n.GetTarget().Equals(facetName)).Select(n => n.Values).SelectMany(n => n).Select(n => n.value).ToList();
 
                     // We will get typically maxNodes values per facet
                     foreach (FacetResult facet in facetVals)
@@ -393,8 +386,10 @@ namespace Knowledge.Services.Graph.Facet
                     // So when you filter on a facet value, the facets returned will 
                     // contain the value you were filtering one...
                     int facetCount = maxCount;
-                    //TODO new filter target support here
-                    facetCount+=searchFacets.Where(n => n.Target.Equals(f)).ToList().Count();
+
+                    // Add extra count if the entity is also included in searchFacets (filter query)
+                    facetCount+=searchFacets.Where(n => n.GetTarget().Equals(f)).Select(n => n.Values).ToList().Count;
+
                     options.Facets.Add($"{f}, count:{facetCount}, sort:count");
                 }
 
