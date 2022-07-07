@@ -113,6 +113,7 @@ d3_sankey = {
             const labels = svg.append("g")
                 .attr("font-family", "Segoe UI, sans-serif")
                 .attr("font-size", 12)
+                .attr("font-weight", "bold")
                 .selectAll("text")
                 .data(nodes)
                 .join("text")
