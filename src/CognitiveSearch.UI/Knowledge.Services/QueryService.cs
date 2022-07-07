@@ -68,8 +68,8 @@ namespace Knowledge.Services
 
             if (request.queryText != QUERY_ALL)
             {
-                // Query SpellChecking
-                //if (request.options.isQuerySpellCheck && config.SpellCheckQueryText)
+                // Bing Query SpellChecking
+                // TODO Support the new ACS built-in spellchecker
                 if (request.options.isQuerySpellCheck)
                 {
                     request.queryText = await spellcheckService.SpellCheckAsync(request.queryText);

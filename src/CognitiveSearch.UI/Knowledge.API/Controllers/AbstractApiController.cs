@@ -70,7 +70,7 @@ namespace Knowledge.API.Controllers
             }
             else
             {
-                return "test";
+                return string.Empty;
             }
         }
     }
