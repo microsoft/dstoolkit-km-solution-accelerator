@@ -5,7 +5,7 @@ defaultLanguageCode: en
 visualFeatures: ['brands', 'faces']
 details: ["landmarks", "celebrities"]
 
-< Image.1.json
+< ../Image.1.json
 
 ### Image bigger than 4MB ..a resize is happening to avoid this error
 POST {{param.vision.Analyze}}

@@ -1,17 +1,17 @@
-### Frame 0 Image W 747 H 475 Size Ratio 1.5726315789473684
+### Ratio > 2:1 image
 POST {{param.vision.Normalize}}
 content-type: application/json
 
-< Image.3.json
+< ImageNormalization.PNG.3.json
 
-### image-00005-00007.png - Small Image W 155 H 34 Size Ratio 4.5588235294117645
+### Small image
 POST {{param.vision.Normalize}}
 content-type: application/json
 
-< Image.4.json
+< ImageNormalization.PNG.4.json
 
-### image-00005-00005 Small Image W 208 H 45 Size Ratio 4.622222222222222
+### Small b&w image
 POST {{param.vision.Normalize}}
 content-type: application/json
 
-< Image.5.json
+< ImageNormalization.PNG.5.json
