@@ -6,7 +6,7 @@ _Table of Contents_
 
 | Topic  | Description | Documentation Link | 
 |----|----|----|
-| Pre-Requisites | What do you need to deploy & operate the solution | [README](docs/pre-reqs/README.md)| 
+| Pre-Requisites | What do you need to deploy & operate the solution | [README](pre-reqs/README.md)| 
 | Architecture | How the solution is architected|[README](architecture/README.md)| 
 | Deployment | How to deploy the solution accelerator |[README](deployment/README.md)| 
 | Configuration | All you need to know about the solution accelerator configuration |[README](configuration/README.md)| 

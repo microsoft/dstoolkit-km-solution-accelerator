@@ -39,7 +39,7 @@ pricing.json
 
 The file parameters.json contains a pre-defined list of services names to deploy. 
 
-services.json
+**services.json (example)**
 ```json
 {
     "searchServiceName": "{{config.name}}search",

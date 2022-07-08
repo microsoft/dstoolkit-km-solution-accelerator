@@ -41,7 +41,7 @@ To secure content, our solution accelerator would look up for the Security Group
 
 By default, SGs membership is not emitted in the ID token by Azure AD. 
 
-To emit Claim Security Groups, follow the [official documentation](https://docs.microsoft.com/en-us/azure/active-directory/hybrid/how-to-connect-fed-group-claims#configure-the-azure-ad-application-registration-for-group-attributes)
+To emit Security Groups claims, follow the [official documentation](https://docs.microsoft.com/en-us/azure/active-directory/hybrid/how-to-connect-fed-group-claims#configure-the-azure-ad-application-registration-for-group-attributes)
 
 In a nutshell,
 ```json

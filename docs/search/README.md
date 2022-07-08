@@ -10,9 +10,14 @@ ACS is at the core of this Knowledge Mining accelerator. It provides the necessa
 
 # Ingestion
 
-The solacc is configured to ingest data from an Azure Storage Data Lake.
+This accelerator is configured to ingest data from an Azure Storage Data Lake. By default your data pushed to the **documents** container.
 
-to pick up content from the documents container. 
+| Container | Description | Is indexed ? |
+|--|--|--|
+|**documents**|where you would push your data|Yes|
+|**images**|Where pages/slides images are extracted|Yes|
+|**metadata**|Where we stored all documents full metadata output and an HTML representation of a document.|No|
+||||
 
 # Search Configuration
 
@@ -22,13 +27,36 @@ All search configuration is JSON-based organized in folders
 
 Adding a new search index or datasource is as simple as dropping a new JSON file in the corresponding folder and run the following. 
 
+A quick table to understand the relationships between all Search components. 
+
+| Storage Container | Datasource(s) | Indexer(s) | Skillset(s) | Description |
+|--|--|--|--|--|
+| documents | documents | documents | documents | Index all types of documents except images files (extension exclusion configuration)
+| documents | documents | docimg | images | Index all images files from the documents container (extension inclusion configuration)|
+| images | images | images | images | Index all images files located in the images container.|
+|||||
+
+All search components in the Azure portal are prefixed with the configuration name parameter used as a prefix for all deployed services. 
+
+__Example of indexers prefixing__
+- {{config.name}}-documents
+- {{config.name}}-docimg
+- {{config.name}}-images
+
+To connect and operate your ACS instance, you would initialize your environment. 
+
 ```ps
 cd deployment
 ./init_env.ps1 -Name <envid>
+```
+
+To configure your search instance initially or after modifications, run the below cmdlet
+
+```ps
 Initialize-Search
 ```
 
-Initialize-Search will re-apply all existing configurations. If you need targeted updates, please refer to the below commands 
+**Initialize-Search** will re-apply all existing configurations. If you need targeted updates, please refer to the below commands 
 
 - Update-SearchAliases
 - Update-SearchDataSource                          
@@ -36,7 +64,6 @@ Initialize-Search will re-apply all existing configurations. If you need targete
 - Update-SearchIndexer
 - Update-SearchSkillSet
 - Update-SearchSynonyms                              
-
 
 # Enrichment concepts  
 
@@ -722,16 +749,111 @@ When you have critical applications and business processes relying on Azure reso
 
 [Documentation](https://docs.microsoft.com/en-us/azure/search/monitor-azure-cognitive-search)
 
-# Content Security Model
+# Basic Content Security Model
 
-Protecting your data of unwanted exposure is crucial Restricted
+Protecting your data of unwanted exposure is crucial. As ACS doesn't include any data security model for indexing and querying, our solution accelerator provides one for your convenience. 
 
-Protecting your content 
+The proposed model provides a concept of public documents and private documents. 
 
-- restricted : boolean to indicate if a document is restricted to certain audience defined by permissions.
-- permissions : list of Azure AD security groups ids representing the people authorized to search a document. 
+## During Content Indexing 
 
-Upon Query, the solution will capture the authenticated 
+The skill responsible to assign security permissions on your content is the Metadata Assign. 
 
-Groups memberships
+2 index fields support our basic model. 
 
+- **restricted**: boolean to indicate if a document is restricted to certain audience defined by permissions.
+- **permissions**: list of Azure AD security groups ids representing the people authorized to search a document.
+
+__index.json__ (snippet)
+```json
+    {
+      "name": "restricted",
+      "type": "Edm.Boolean",
+      "facetable": false,
+      "filterable": true,
+      "key": false,
+      "retrievable": true,
+      "searchable": false,
+      "sortable": false,
+      "analyzer": null,
+      "indexAnalyzer": null,
+      "searchAnalyzer": null,
+      "synonymMaps": [],
+      "fields": []
+    },
+    {
+      "name": "permissions",
+      "type": "Collection(Edm.String)",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": false,
+      "sortable": false,
+      "facetable": false,
+      "key": false,
+      "indexAnalyzer": null,
+      "searchAnalyzer": null,
+      "analyzer": null,
+      "synonymMaps": []
+    }
+```
+
+## During Content Querying 
+
+3 general parameters helps you control your content security implementation
+
+__webappui.json__ 
+```json
+  {
+    "name": "SearchServiceConfig:IsSecurityTrimmingEnabled",
+    "value": true,
+    "slotSetting": false
+  },
+  {
+    "name": "SearchServiceConfig:PermissionsPublicFilter",
+    "value": "restricted eq false",
+    "slotSetting": false
+  },
+  {
+    "name": "SearchServiceConfig:PermissionsProtectedFilter",
+    "value": "restricted eq true",
+    "slotSetting": false
+  }
+```
+
+|Content Security Setting|Description|
+|--|--|
+|IsSecurityTrimmingEnabled|Flag to add security filters to each query|
+|PermissionsPublicFilter|ACS filter ODATA syntax describing how to retrieve non secured documents|
+|PermissionsProtectedFilter|ACS filter ODATA syntax describing how to retrieve secured documents|
+
+**Capturing the user groups memberships** is possible when your UI is authenticated with an Azure AD Enterprise Application (EA). Upon authenticating an end-user, the security token will contain the list of groups memberships for the user. 
+
+Refer to the Authentication.md located in your config folder for more details on how to setup Azure AD EA Authentication.
+
+Our UI will go through those claims and generate the security filter accordingly. 
+
+__AbstractApiController.cs__ 
+```C#
+    protected SearchPermission[] GetUserPermissions()
+    {
+        List<SearchPermission> permissions = new();
+
+        permissions.Add(new SearchPermission() { group = GetUserId() });
+
+        if (User.Claims.Any(c => c.Type == "groups"))
+        {
+            foreach (var item in User.Claims.Where(c => c.Type == "groups"))
+            {
+                permissions.Add(new SearchPermission() { group = item.Value });
+            }
+        }
+
+        return permissions.ToArray();
+    }
+```
+
+__Example of query filter added for security__
+
+```odata
+(restricted eq false) or ((restricted eq true) and (permissions/any(t: search.in(t, 'group1,group2,group3', ','))))
+```
