@@ -64,7 +64,7 @@ Microsoft.Utils = {
         return (!id) ? null : id.replace(/(\/|:|\.|\\|\[|\+|\]|,|=|@)/g, '\\$1');
     },
 
-    replaceAll: function(str, find, replace) {
+    replaceAll: function (str, find, replace) {
         return str.replace(new RegExp(find, 'g'), replace);
     },
 
@@ -215,7 +215,6 @@ Microsoft.Utils = {
     GetParentPathFromImage: function (result) {
         return Base64.decode(result.image_parenturl)
     },
-
 
     MaxItemsPerPage: 500,
     MaxRowLimit: 500,
@@ -368,14 +367,6 @@ Microsoft.Utils = {
     GetIconPathFromExtension: function (pathExtension) {
         return Microsoft.Utils.MapLabelToIconFilename(pathExtension);
     },
-
-
-    // RotateImage:function(imgelement) {
-    //     var value = parseInt(imgelement.attr("rotate"));
-    //     value += 90;
-    //     imgelement.rotate({ animateTo: value });
-    //     imgelement.attr("rotate", String(value));
-    // },
 
     GetDocumentTitle: function (docresult, only_parent = false) {
 
