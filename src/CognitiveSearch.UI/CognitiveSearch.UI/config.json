@@ -145,7 +145,7 @@
         "enable": true,
         "path": "/Images/Index",
         "searchMethod": "Microsoft.Images.ImagesSearch",
-        "svgicon": "photo.svg",
+        "svgicon": "bi-image.svg",
         "placeHolder": "Search your visual content...",
         "isSemanticCapable": true,
         "ResultsRenderings": [
@@ -200,7 +200,7 @@
         "enable": true,
         "path": "/Graph/Index",
         "searchMethod": "Microsoft.Graph.SearchEntities",
-        "fonticon": "bi bi-diagram-2-fill",
+        "svgicon": "bi-diagram-3.svg",
         "placeHolder": "Visualize your data as graph...",
         "infiniteScroll": false,
         "isSemanticCapable": true,

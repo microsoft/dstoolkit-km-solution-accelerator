@@ -174,6 +174,16 @@ Microsoft.Search = {
             Microsoft.Facets.initDateRangeFilter();
         }
 
+        if(vertical.title) {
+            $('#search-button').attr('title', vertical.title);
+            $('#search-button-image').attr('title', vertical.title);
+            $('#search-button-image').attr('alt', vertical.title);    
+        }
+
+        if (vertical.svgicon) {
+            $('#search-button-image').attr('src', '/icons/'+vertical.svgicon);
+        }
+
         // Assign the default results rendering of that vertical when relevant
         if (Microsoft.View.config.resultsRenderings) {
             for (var i = 0; i < Microsoft.View.config.resultsRenderings.length; i++) {
