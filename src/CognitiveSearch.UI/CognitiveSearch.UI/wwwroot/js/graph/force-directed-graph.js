@@ -80,7 +80,9 @@ class d3_custom_graph extends base_graph {
         var container = d3.select("#graph-svg");
 
         var svg = container.append("svg")
-            .attr("viewBox", [0, 0, this.width, this.height]);
+            .attr("viewBox", [0, 0, this.width, this.height])
+            .attr("width", this.width)
+            .attr("height", this.height);
 
         // Zoom configuration
         var zoom = d3.zoom()
@@ -157,13 +159,18 @@ class d3_custom_graph extends base_graph {
         //    .text(this.fillText);
 
 
-        var nodelabels = rootNode.selectAll(".nodelabel")
+        var nodelabels = rootNode.append("g")
+            .attr("font-family", "Segoe UI, sans-serif")
+            .attr("font-size", 8)
+            .attr("font-weight", "bold")
+            .selectAll(".nodelabel")
             .data(this.nodes)
             .enter()
             .append("text")
             .attr("x", 16)
             .attr("y", 0)
             .attr("class", "nodelabel")
+            .attr("font-weight", "bold")
             .attr("stroke", label_stroke_color)
             .text(this.fillText);
 
@@ -345,8 +352,8 @@ class d3_fdgraph extends base_graph {
 
     constructor(data) {
         super(data);
-        this.width=1000;
-        this.height=800;
+        this.width=1200;
+        this.height=600;
     }
 
     chart() {
@@ -358,7 +365,9 @@ class d3_fdgraph extends base_graph {
         var container = d3.select("#graph-svg");
 
         var svg = container.append("svg")
-            .attr("viewBox", [0, 0, this.width, this.height]);
+            .attr("viewBox", [0, 0, this.width, this.height])
+            .attr("width", this.width)
+            .attr("height", this.height);
 
         // Zoom configuration
         const zoom = d3.zoom()
@@ -409,6 +418,7 @@ class d3_fdgraph extends base_graph {
         node.append("text")
             .attr("dx", 12)
             .attr("dy", ".35em")
+            .attr("font-weight", "bold")
             .text(function (d) { return d.label; });
 
         simulation.on("tick", () => {

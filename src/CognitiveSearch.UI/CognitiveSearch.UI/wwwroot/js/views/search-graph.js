@@ -128,13 +128,6 @@ Microsoft.Graph = {
             q = "*";
         }
 
-        // if (graphFacet.length > 0) {
-        //     $("#graph-message").html("Visual of <strong>" + graphFacet.join(',') + "</strong> with " + this.currentModel + ". ");
-        // }
-        // else {
-        //     $("#graph-message").html("Visual of <strong>all entities</strong> with " + this.currentModel + ". ");
-        // }
-
         $.postJSON("/api/graph/getgraphdata",
             {
                 queryText: q,
@@ -143,12 +136,13 @@ Microsoft.Graph = {
                 maxLevels: Microsoft.Graph.currentMaxLevels,
                 maxNodes: Microsoft.Graph.currentMaxNodes,
                 searchFacets: Microsoft.Facets.selectedFacets,
-                model: graphModel
+                model: graphModel,
+                options: Microsoft.Search.Options
             },
             function (data) {
                 var temp_nodes = Object.keys(data.graph.nodes).map((key) => data.graph.nodes[key]);
 
-                $("#graph-message").html(' Found ' + temp_nodes.length + ' Nodes & ' + data.graph.edges.length + ' Edges (' + Microsoft.Graph.currentModel + ')');
+                $("#graph-message").html(' Found ' + temp_nodes.length + ' Vertices & ' + data.graph.edges.length + ' Edges (' + Microsoft.Graph.currentModel + ')');
 
                 Microsoft.Graph.graph_data = data;
 
@@ -164,7 +158,7 @@ Microsoft.Graph = {
     changeModelType: function (value) {
         if (Microsoft.Graph.graphType != value) {
             Microsoft.Graph.currentModel = value;
-            SearchEntities($("#q").val());
+            Microsoft.Graph.SearchEntities($("#q").val());
         }
     },
 

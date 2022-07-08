@@ -943,13 +943,6 @@ h7 a {
         stroke-opacity: 1;
     }
 
-.nodelabel {
-    font: 8px sans-serif;
-    /*    font-size: 0.3em;
-    font-style: italic;*/
-    font-weight: 100;
-}
-
 /* GRAPH CSS */
 
 #doc-count {
