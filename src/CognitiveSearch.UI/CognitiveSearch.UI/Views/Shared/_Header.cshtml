@@ -30,13 +30,13 @@
                                 </div>
 
                                 <span class="input-group-btn">
-                                    <button class="btn btn-dark" onclick="Microsoft.Search.ReSearch();" title="Search on all data sources">
-                                        <span class="bi bi-search"></span>
+                                    <button id="search-button" class="btn btn-light border border-1 border-dark" onclick="Microsoft.Search.ReSearch();" title="Search across all data sources">
+                                        <img id="search-button-image" alt="Search across all data sources" class="image-vertical-svg" src="/icons/10834-icon-service-Search.svg" title="Search across all data sources">
                                     </button>
                                     @if (UIConfig.UploadData)
                                     {
-                                        <button class="btn btn-primary" title="Upload content to the Knowledge lake" onclick="location.href='@Url.Action("UploadData", "Admin")'">
-                                            <span class="bi bi-cloud-upload"></span>
+                                        <button class="btn btn-light border border-1 border-dark" title="Upload content to the Knowledge lake" onclick="location.href='@Url.Action("UploadData", "Admin")'">
+                                            <img src="/icons/bi-cloud-upload.svg" title="Upload content to the Knowledge lake" class="image-vertical-svg">
                                         </button>
                                     }
                                 </span>
