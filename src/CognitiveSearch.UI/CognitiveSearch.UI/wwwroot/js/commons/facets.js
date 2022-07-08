@@ -283,7 +283,7 @@ Microsoft.Facets = {
 
                             var title = Microsoft.Utils.GetFacetDisplayTitle(name);
                             var nameid = name.toLowerCase().replace(" ", "-");
-                            var facetid = nameid + "_" + Microsoft.Facets.EncodeFacetValue(item2.value).replaceAll("=", "");
+                            var facetid = Microsoft.Utils.jqid(nameid + "_" + Microsoft.Facets.EncodeFacetValue(item2.value).replaceAll("=", ""));
 
                             htmlString += '<button id="' + facetid +'-btn" type="button" class="btn btn-outline-danger btn-sm facet-button me-2">';
                             htmlString += item2.value + ' <a class="filter-anchor" title="Remove ' + title + ' filter ' + item2.value + '..." href="javascript:void(0)" onclick="Microsoft.Facets.RemoveFilter(\'' + name + '\', \'' + Microsoft.Facets.EncodeFacetValue(item2.value) + '\')"><span class="bi bi-x text-danger"></span></a><br>';

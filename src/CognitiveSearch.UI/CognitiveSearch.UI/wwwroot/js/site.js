@@ -62,7 +62,7 @@ Microsoft.Utils = {
 
     jqid: function (id) {
         // return (!id) ? null : '#' + id.replace(/(:|\.|\[|\]|,|=|@)/g, '\\$1');
-        return (!id) ? null : id.replace(/(\/|:|\.|\[|\]|,|=|@)/g, '\\$1');
+        return (!id) ? null : id.replace(/(\/|:|\.|\[|\+|\]|,|=|@)/g, '\\$1');
     },
 
     replaceAll: function(str, find, replace) {
