@@ -98,7 +98,8 @@ Microsoft.Suggestions = {
 
     },
     RemoveCharacters: function (query) {
-        return Microsoft.Utils.htmlEncode(query.replace('-', ' ').replace('_', ' ').replace('&', ' '));
+        return Microsoft.Utils.htmlEncode(query.replace(/-/g, ' ').replace(/_/g, ' ').replace(/&/g, ' '));
+        
     }
 }
 
