@@ -451,12 +451,12 @@ Microsoft.Web = {
             $(Microsoft.Web.view_tag).removeClass();
 
             if (has_column1_data) {
-                $(Microsoft.Web.view_tag_col1).addClass('col-md-2 reset-view');
-                $(Microsoft.Web.view_tag).addClass('col-md-10 reset-view')
+                $(Microsoft.Web.view_tag_col1).addClass('col-md-2');
+                $(Microsoft.Web.view_tag).addClass('col-md-10 reset-view');
             }
             else {
                 $(Microsoft.Web.view_tag_col1).addClass('d-none');
-                $(Microsoft.Web.view_tag).addClass('col-md-12 reset-view')
+                $(Microsoft.Web.view_tag).addClass('col-md-12 reset-view');
             }
         }
 
