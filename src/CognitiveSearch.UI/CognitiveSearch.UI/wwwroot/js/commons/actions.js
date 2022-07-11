@@ -66,16 +66,16 @@ Microsoft.Search.Actions = {
                 htmlDiv += '<button type="button" title="' + action.title + '" class="' + eltClass + ' btn btn-sm ' + action.class + '" onclick="' + action.method + '(\'' + paramBase64Str + '\');">';
                 if (action.icon) {
                     if (displayName) {
-                        htmlDiv += ' <span class="' + action.icon + ' me-2"/>'
+                        htmlDiv += ' <span class="' + action.icon + ' me-2"></span>'
                     }
                     else {
-                        htmlDiv += ' <span class="' + action.icon + '"/>'
+                        htmlDiv += ' <span class="' + action.icon + '"></span>'
                     }
                 }
 
                 if (displayName) {
                     if (action.name) {
-                        htmlDiv += action.name;
+                        htmlDiv += '<span>'+action.name+'</span>';
                     }    
                 }
 
