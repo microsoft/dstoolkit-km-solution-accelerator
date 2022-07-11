@@ -271,12 +271,6 @@
     border-right-color: #da291c !important;
 }
 
-.search-result-page-divider {
-    background-color: #da291c !important;
-    border-top: solid;
-    border-top-color: #da291c;
-}
-
 .news-feed-row:hover {
     background-color: #f3f3f3 !important;
 }
