@@ -87,10 +87,10 @@ Microsoft.Utils = {
 
         if (query === null || query === undefined) {
             query = $("#q").val();
-
-            $("#navigation-q").val(query);
         }
 
+        $("#navigation-q").val(query);
+        
         if (Microsoft.Facets.selectedFacets && Microsoft.Facets.selectedFacets.length > 0) {
             var searchFacetsAsString = JSON.stringify(Microsoft.Facets.selectedFacets)
             $("#navigation-facets").val(Base64.encode(searchFacetsAsString));
