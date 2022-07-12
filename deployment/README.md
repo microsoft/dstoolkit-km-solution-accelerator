@@ -288,6 +288,16 @@ This step would validate the deployment of all functions by sending an empty rec
 Test-Functions
 ```
 
+**Note** Linux-based Azure Functions first publication process relies on a remote build. It is not uncommon to receive a timeout.  
+
+Timed out waiting for SCM to update the Environment Settings
+
+In that case simply re-run the script with a NoProvision switch as shown below. 
+```ps
+.\scripts\20_Deploy_Functions.ps1 -NoProvision
+```
+The command will build and publish all Azure functions again. 
+
 ## 6 Deploy Azure Web Applications 
 
 ```ps
