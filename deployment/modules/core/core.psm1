@@ -1473,7 +1473,7 @@ function New-WebApps {
                             --name $webApp.Name `
                             --plan $plan.Name `
                             --resource-group $plan.ResourceGroup `
-                            --runtime 'DOTNETCORE"|"3.1'
+                            --runtime 'dotnet:6'
 
                         if ($config.stagingUIEnabled) {
                             az webapp deployment slot create --name $webApp.Name `
