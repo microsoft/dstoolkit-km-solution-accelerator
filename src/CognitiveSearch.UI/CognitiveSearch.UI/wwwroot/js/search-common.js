@@ -654,18 +654,18 @@ Microsoft.Search.Results = {
                 fileContainerHTML += '      Your browser does not support the video tag.';
                 fileContainerHTML += '</video>';
             }
-            // Office Viewer requires public access to the data which we won't have in eXtollo
-            // else if (Microsoft.Utils.IsOfficeDocument(pathExtension)) {
+            // SECURITY WARNING - Office Viewer requires public access to the data !! 
+            else if (Microsoft.Utils.IsOfficeDocument(pathExtension)) {
 
-            //     var src = "https://view.officeapps.live.com/op/view.aspx?src=" + encodeURIComponent(Microsoft.Search.GetSASTokenFromPath(path));
+                var src = "https://view.officeapps.live.com/op/view.aspx?src=" + encodeURIComponent(Microsoft.Search.GetSASTokenFromPath(path));
 
-            //     fileContainerHTML =
-            //         '<iframe class="file-container" src="' + src + '"></iframe>';
-            // }
-            // else {
-            //     //    fileContainerHTML =
-            //     //        '<div>This file cannot be previewed. Download it here to view: <a href="' + Microsoft.Search.GetSASTokenFromPath(path) + '">Download</a></div>';
-            // }
+                fileContainerHTML =
+                    '<iframe class="file-container" src="' + src + '"></iframe>';
+            }
+            else {
+                //    fileContainerHTML =
+                //        '<div>This file cannot be previewed. Download it here to view: <a href="' + Microsoft.Search.GetSASTokenFromPath(path) + '">Download</a></div>';
+            }
         }
         else {
             //    fileContainerHTML =
