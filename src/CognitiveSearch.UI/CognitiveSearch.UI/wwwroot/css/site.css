@@ -503,9 +503,6 @@ pre {
     box-shadow: none;
 }
 
-#transcript-search-box {
-}
-
 .tag {
     background-color: lightgray;
     border: 1px solid transparent;
@@ -813,6 +810,10 @@ body {
     max-width: fit-content;*/
     text-overflow: ellipsis;
     font-weight: 500;
+}
+
+.image-result-img {
+    cursor: pointer;
 }
 
 .entity-click {
