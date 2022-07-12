@@ -63,8 +63,6 @@
         "searchMethod": "Microsoft.All.Search",
         "svgicon":"10834-icon-service-Search.svg",
         "placeHolder": "Explore all data...",
-        "isSemanticCapable": true,
-        "enableOffcanvasNavigation": true,
         "ResultsRenderings": [
           {
             "name": "allresults",
@@ -118,7 +116,7 @@
         "placeHolder": "Explore the web ...",
         "isSemanticCapable": false,
         "enableExcelExport": false,
-        "enableOffcanvasNavigation": true,
+        "enableDynamicFacets": false,
         "ResultsRenderings": [
           {
             "name": "document",
@@ -147,7 +145,6 @@
         "searchMethod": "Microsoft.Images.ImagesSearch",
         "svgicon": "bi-image.svg",
         "placeHolder": "Search your visual content...",
-        "isSemanticCapable": true,
         "ResultsRenderings": [
           {
             "name": "pages",
@@ -177,7 +174,6 @@
         "svgicon": "10818-icon-service-Location.svg",
         "placeHolder": "Search geo-located content...",
         "infiniteScroll": false,
-        "isSemanticCapable": true,
         "enableExcelExport": false
       },
       {
@@ -189,8 +185,7 @@
         "path": "/Tables/Index",
         "searchMethod": "Microsoft.Tables.TablesSearch",
         "svgicon": "10841-icon-service-Table.svg",
-        "placeHolder": "Search your tables content...",
-        "isSemanticCapable": true
+        "placeHolder": "Search your tables content..."
       },
       {
         "id": "graph",
@@ -203,7 +198,8 @@
         "svgicon": "bi-diagram-3.svg",
         "placeHolder": "Visualize your data as graph...",
         "infiniteScroll": false,
-        "isSemanticCapable": true,
+        "isSemanticCapable": false,
+        "enableOffcanvasNavigation": false,
         "enableExcelExport": false,
         "message": "Please select one or more Entities to view their relationships..."
       },

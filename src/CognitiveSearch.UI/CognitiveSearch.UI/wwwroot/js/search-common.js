@@ -69,11 +69,17 @@ Microsoft.Search = {
             Microsoft.Search.MaxPageCount = 1;
         }
         else {
-            Microsoft.Search.MaxPageCount = Math.ceil(Microsoft.Search.TotalCount / numberOfItemPerPage);
+            if (numberOfItemPerPage === undefined || numberOfItemPerPage === null) {
+                Microsoft.Search.MaxPageCount = 1;
+            }
+            else {
+                Microsoft.Search.MaxPageCount = Math.ceil(Microsoft.Search.TotalCount / numberOfItemPerPage);
+            }
         }
 
         Microsoft.Search.UpdateDocCount(data.count);
 
+        // Facets
         Microsoft.Facets.RenderFacets();
         Microsoft.Facets.UpdateFilterReset();
 
@@ -202,12 +208,6 @@ Microsoft.Search = {
                 Microsoft.Utils.executeFunctionByName(Microsoft.View.config.searchMethod, window, e.target.value);
             }
         });
-
-        //$("#transcript-search-input").keyup(function (e) {
-        //    if (e.keyCode === 13) {
-        //        Microsoft.Search.Results.Transcript.SearchTranscript($('#transcript-search-input').val());
-        //    }
-        //});
 
     },
 
