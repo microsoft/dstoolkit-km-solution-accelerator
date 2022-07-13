@@ -923,7 +923,8 @@ function Get-SearchIndexerStatus {
 }
 
 function Get-SearchServiceDetails() {
-    az rest --method GET --url ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName + "?api-version=" + $config.searchManagementVersion)
+    # az rest --method GET --url ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName + "?api-version=" + $config.searchManagementVersion)
+    az rest --method GET --url ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName + "?api-version=2021-04-01-Preview")
 }
 
 # https://docs.microsoft.com/en-us/rest/api/searchservice/preview-api/reset-documents
