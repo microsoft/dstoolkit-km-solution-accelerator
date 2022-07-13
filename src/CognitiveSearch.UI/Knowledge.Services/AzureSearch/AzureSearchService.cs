@@ -180,6 +180,10 @@ namespace Knowledge.Services.AzureSearch
         {
             throw new NotImplementedException();
         }
+        public Task<SearchResponse> GetDocumentCoverImageByIndexKey(IngressSearchRequest request)
+        {
+            throw new NotImplementedException();
+        }
 
         public Task<SearchResponse> GetLatestDocumentsAsync(IngressSearchRequest request)
         {

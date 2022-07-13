@@ -20,6 +20,8 @@ namespace Knowledge.Services
 
         public Task<SearchResponse> GetDocumentCoverImage(IngressSearchRequest request);
 
+        public Task<SearchResponse> GetDocumentCoverImageByIndexKey(IngressSearchRequest request);
+
         public Task<SearchResponse> GetDocumentSiblings(IngressSearchRequest request);
 
         public Task<SearchResponse> GetLatestDocumentsAsync(IngressSearchRequest request);

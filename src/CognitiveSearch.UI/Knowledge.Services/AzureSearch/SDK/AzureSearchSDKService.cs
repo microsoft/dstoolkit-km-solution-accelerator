@@ -280,16 +280,6 @@ namespace Knowledge.Services.AzureSearch.SDK
 
         private async Task<string> GenerateSearchId(string searchText, SearchOptions options)
         {
-            //var client = new SearchClient(new Uri($"https://{this.serviceConfig.ServiceName}.search.windows.net/"), this.serviceConfig.IndexName, new AzureKeyCredential(this.serviceConfig.QueryKey));
-            //var response = await client.SearchAsync<SearchDocument>(searchText: searchText, options);
-            //IEnumerable<string> headerValues;
-            //string searchId = string.Empty;
-            //if (response.GetRawResponse().Headers.TryGetValues("x-ms-azs-searchid", out headerValues))
-            //{
-            //    searchId = headerValues.FirstOrDefault();
-            //}
-            //return searchId;
-
             return Guid.NewGuid().ToString();
         }
 
@@ -537,11 +527,13 @@ namespace Knowledge.Services.AzureSearch.SDK
 
         public async Task<SearchResponse> GetDocumentCoverImage(IngressSearchRequest request)
         {
-            var embeddedfilter = $"image_parentid eq '{request.document_id}' and ((page_number ge 1) or (document_filename eq 'thumbnail.jpeg'))";
+            var embeddedfilter = $"(image_parentid eq '{request.document_id}' and ((page_number ge 1) or (document_filename eq 'thumbnail.jpeg')))";
+            // Support for document itself if it is an image...
+            embeddedfilter += $" or (document_id eq '{request.document_id}' and content_group eq 'Image')";
 
             QueryParameters queryParameters = request.parameters ?? (new());
             queryParameters.RowCount = 1;
-            queryParameters.inOrderBy = new List<string> { "page_number asc" };
+            //queryParameters.inOrderBy = new List<string> { "page_number asc" };
 
             UserOptions userOptions = new();
 
@@ -558,6 +550,24 @@ namespace Knowledge.Services.AzureSearch.SDK
             SearchResponse result = this.CreateSearchResponse(response, searchId, request.indexName, false);
 
             return result;
+        }
+
+        public async Task<SearchResponse> GetDocumentCoverImageByIndexKey(IngressSearchRequest request)
+        {
+            SearchDocument response = await this.LookUp(request.indexName, request.index_key);
+
+            object document_id = null;
+
+            if (response.TryGetValue("document_id", out document_id))
+            {
+                request.document_id = (string)document_id; 
+
+                return await GetDocumentCoverImage(request);
+            }
+            else
+            {
+                return new SearchResponse();
+            }
         }
 
         public async Task<SearchResponse> GetLatestImagesAsync(IngressSearchRequest request)

@@ -114,6 +114,46 @@ namespace Knowledge.API.Controllers
             return new BadRequestResult();
         }
 
+        [HttpGet("getdocumentcoverimagebyindexkey")]
+        public async Task<IActionResult> GetDocumentCoverImageByIndexKeyAsync(string key)
+        {
+            if (!string.IsNullOrEmpty(key))
+            {
+                ApiSearchRequest request = new ApiSearchRequest
+                {
+                    index_key = key
+                };
+                request.indexName = DEFAULT_INDEX_NAME;
+                request.permissions = GetUserPermissions();
+
+                var result = await _queryService.GetDocumentCoverImageByIndexKey(request);
+
+                if (result.Count > 0)
+                {
+                    JObject document = (JObject)result.Results[0]["Document"];
+
+                    JObject image = (JObject)document.GetValue("image");
+
+                    if (String.IsNullOrEmpty((string)image.GetValue("thumbnail_medium")))
+                    {
+                        //TODO return a no preview watermark image (base64)
+                        return Content(WHITE_IMAGE_BASE64);
+                    }
+                    else
+                    {
+                        return new FileContentResult(System.Convert.FromBase64String((string)image.GetValue("thumbnail_medium")), "image/jpeg");
+                    }
+                }
+                else
+                {
+                    //TODO return a no preview watermark image (base64)
+                    return Content(WHITE_IMAGE_BASE64);
+                }
+            }
+
+            return new BadRequestResult();
+        }
+
         [HttpPost("getlatestdocuments")]
         public async System.Threading.Tasks.Task<IActionResult> GetLatestDocumentsAsync(ApiSearchRequest request)
         {

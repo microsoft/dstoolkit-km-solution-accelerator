@@ -38,7 +38,9 @@ Microsoft.Answers = {
                 answersHtml += '<h6 class="mt-2 text-success"><span class="bi bi-chat"></span> Semantic Answers</h6>';
 
                 answersHtml += '<div class="">';
-                answersHtml += '<div class="list-group mb-3">'
+                answersHtml += '<div class="list-group list-group-horizontal mb-3">'
+
+                var iconPath = Microsoft.Utils.GetIconPathFromExtension();
 
                 for (var i = 0; i < semantic_answers.length; i++) {
                     var item = semantic_answers[i];
@@ -46,11 +48,17 @@ Microsoft.Answers = {
                     var index_key = item.key;
 
                     if (item.highlights) {
-                        answersHtml += '    <a href="javascript:void(0)" onclick="Microsoft.Results.Details.ShowDocument(\'' + index_key + '\',0);" class="list-group-item list-group-item-action" style="color:inherit !important">...' + item.highlights + ' </a>';
+                        answersHtml += ' <a title="'+item.text+'" href="javascript:void(0)" onclick="Microsoft.Results.Details.ShowDocument(\'' + index_key + '\',0);" class="list-group-item list-group-item-action d-flex" style="color:inherit !important">' ;
+                        answersHtml += '   <img title="'+item.text+'" class="image-result img-thumbnail" src="/api/search/getdocumentcoverimagebyindexkey?key=' + index_key + '" " onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                        answersHtml += ' <span class="ms-1">' + item.highlights + '</span>';
+                        answersHtml += ' </a>';
                     }
                     else {
                         if (item.text) {
-                            answersHtml += '    <a href="javascript:void(0)" onclick="Microsoft.Results.Details.ShowDocument(\'' + index_key + '\',0);" class="list-group-item list-group-item-action" style="color:inherit !important">...' + item.text + ' </a>';
+                            answersHtml += ' <a title="'+item.text+'" href="javascript:void(0)" onclick="Microsoft.Results.Details.ShowDocument(\'' + index_key + '\',0);" class="list-group-item list-group-item-action d-flex" style="color:inherit !important">' ;
+                            answersHtml += '   <img title="'+item.text+'" class="image-result img-thumbnail" src="/api/search/getdocumentcoverimagebyindexkey?key=' + index_key + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                            answersHtml += ' <span class="ms-1">' + item.text + '</span>';
+                            answersHtml += ' </a>';
                         }
                     }
                 }
@@ -140,7 +148,8 @@ Microsoft.Answers = {
                 queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
                 searchFacets: Microsoft.Facets.selectedFacets,
                 currentPage: ++Microsoft.Search.currentPage,
-                parameters: Microsoft.Search.Parameters
+                parameters: Microsoft.Search.Parameters,
+                options: Microsoft.Search.Options
             },
             function (data) {
                 Microsoft.Answers.AnswersUpdate(data, Microsoft.Search.currentPage);

@@ -162,6 +162,13 @@ namespace Knowledge.Services
             return await this.searchService.GetDocumentCoverImage(request);
         }
 
+        public async Task<SearchResponse> GetDocumentCoverImageByIndexKey(IngressSearchRequest request)
+        {
+            QueryHelper.EnsureDefaultValues(request);
+
+            return await this.searchService.GetDocumentCoverImageByIndexKey(request);
+        }
+
         public async Task<SearchResponse> GetImagesAsync(IngressSearchRequest request)
         {
             await TransformQuery(request);

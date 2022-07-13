@@ -734,7 +734,6 @@ Microsoft.Search.Results = {
         Microsoft.Search.results_keys_index.push(docresult.index_key);
         docresult.idx = Microsoft.Search.results_keys_index.length - 1;
 
-        var id = docresult.index_key;
         var path = docresult.metadata_storage_path;
         var name = docresult.metadata_storage_name;
 

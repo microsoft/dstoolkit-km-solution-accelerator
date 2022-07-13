@@ -320,10 +320,10 @@ Microsoft.News = {
                 facetResultsHTML += '</h2>';
 
                 if (alwaysOpen) {
-                    facetResultsHTML += '<div id="' + nameid + '" class="accordion-collapse collapse" aria-labelledby="' + facetId + '">';
+                    facetResultsHTML += '<div id="' + nameid + '" class="accordion-collapse collapse" role="option" aria-labelledby="' + facetId + '">';
                 }
                 else {
-                    facetResultsHTML += '<div id="' + nameid + '" class="accordion-collapse collapse" aria-labelledby="' + facetId + '" data-bs-parent="#facets-accordion">';
+                    facetResultsHTML += '<div id="' + nameid + '" class="accordion-collapse collapse" role="option" aria-labelledby="' + facetId + '" data-bs-parent="#facets-accordion">';
                 }
 
                 facetResultsHTML += '<div class="accordion-body">';

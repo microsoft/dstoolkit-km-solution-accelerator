@@ -17,13 +17,14 @@ using Knowledge.Services.Translation;
 using Knowledge.Services.WebSearch;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
+using Microsoft.Net.Http.Headers;
 using System.IO;
+using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
 namespace CognitiveSearch.UI
 {
@@ -156,8 +157,25 @@ namespace CognitiveSearch.UI
 
             app.UseWebOptimizer();
 
-            app.UseStaticFiles();
+            // app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = context =>
+                {
+                    const int durationInSeconds = 60 * 60 * 24;
+                    context.Context.Response.Headers[HeaderNames.CacheControl] =
+                        "public,max-age=" + durationInSeconds;
+                }
+            });
+
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add(HeaderNames.XContentTypeOptions, "nosniff");
+                await next();
+            });
+
             app.UseCookiePolicy();
+
             app.UseMvcWithDefaultRoute();
         }
     }
