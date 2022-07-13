@@ -2,19 +2,17 @@
 
 # Operations
 
-Our solution accelerator ships very useful PowerShell cmdlets & scripts to deploy or operate your   
+Our solution accelerator ships very useful PowerShell cmdlets & scripts to deploy or operate your solution.   
 
 ## Deployment Scripts 
 
 ![](media/deploy.png)
 
-All scripts are using a set of cmdlets 
-
-## PS Cmdlets 
-
-The init_env.ps1 is loading two modules 
+All scripts are using a set of cmdlets defined in two modules.  
 -core : cmdlets to deploy, operate & monitor your solution
 -vnet : ad-hoc cmdlets to support a VNET deployment
+
+The __init_env.ps1__ is loading two modules at startup. 
 
 The list of all cmdlets can be done via the below command 
 ```ps
@@ -23,10 +21,9 @@ get-command -Module core
 
 | Command | Description |
 |--|--|
-| Initialize-Search | | 
-| Start-SearchIndexer | |
-| Reset-SearchIndexer | |
-
+| Initialize-Search | Push the entire search configuration to Azure Cognitive Search| 
+| Start-SearchIndexer | Start all indexers |
+| Reset-SearchIndexer | Reset all indexers |
 
 ## Core PowerShell module
 
@@ -60,9 +57,38 @@ Get-Command -Module core
 
 I would encourage you to review and adapt the vnet commands to your needs and Azure security policies.
 
-### Azure Functions 
+
+## Operating your Azure Cognitive Search instance
+
+**Remove Search index**
 
 ```ps
+Update-SearchAliases -method DELETE
+Remove-SearchIndex -name {{config.name}}-index
+Update-SearchIndex
+```
 
+**Start a specific indexer** 
+
+```ps
+Start-SearchIndexer documents
+```
+
+**Get all indexers status**
+
+```ps
+Get-SearchIndexersStatus
+```
+
+**Get status of a specific indexer**
+
+```ps
+Get-SearchIndexerStatus documents
+```
+
+## Azure Functions 
+
+```ps
+Test-Functions
 ```
 
