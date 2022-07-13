@@ -5,7 +5,7 @@
       "name": "index_key",
       "type": "Edm.String",
       "searchable": true,
-      "filterable": false,
+      "filterable": true,
       "retrievable": true,
       "sortable": false,
       "facetable": false,
