@@ -47,6 +47,21 @@
     "styles": [
       "europe:SHEEC_circles_colors"
     ],
+    "enabled": false,
+    "visible": false
+  },
+  {
+    "id": "droughts",
+    "name": "Projected dry spells length btw 2071-2100 & 1971-2000 [days]",
+    "description":"Projected change in the length of dry spells between periods 2071-2100 and 1971-2000 [days]",
+    "type": "OgcMapLayer",
+    "url": "https://climate.discomap.eea.europa.eu/arcgis/services/Drought/Droughts/MapServer/WMSServer?request=GetCapabilities&service=WMS",
+    "activeLayers": [
+      "0"
+    ],
+    "styles": [
+      "default"
+    ],
     "enabled": true,
     "visible": false
   },
