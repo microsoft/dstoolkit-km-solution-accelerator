@@ -3,9 +3,8 @@
 
 //CREDITS https://observablehq.com/@d3/zoomable-icicle
 
-var d3_icicle = d3_icicle || {};
-
-d3_icicle = {
+Microsoft.d3_icicle = Microsoft.d3_icicle || {};
+Microsoft.d3_icicle = {
     margin: {
         top: 1,
         right: 1,
@@ -144,3 +143,5 @@ d3_icicle = {
         });
     }
 }
+
+export default Microsoft.d3_icicle;

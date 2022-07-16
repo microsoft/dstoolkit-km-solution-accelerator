@@ -21,15 +21,15 @@
 <partial name="_SearchFilterPartial" />
 
 <!--Search, Filters, and Facets-->
-<div id="results-container">
-    <div class="row content-results">
+<div id="results-container" class="container">
+    <div class="row">
         <div id="qna-answer-content" class="reset-view d-none row border border-1 rounded"></div>
         <div id="semantic-answer-content" class="reset-view d-none row border border-1 rounded"></div>
     </div>
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
 
             Microsoft.Search.initSearchVertical(Microsoft.View.config);

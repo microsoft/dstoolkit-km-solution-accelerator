@@ -150,6 +150,8 @@ Microsoft.Facets = {
 
                             var facet_value = this.EncodeFacetValue(data[j].value);
 
+                            var clickMethod = null;
+
                             if (facet_target) {
                                 clickMethod = '"Microsoft.Facets.ChooseFacet(\'' + nameid + '\',\'' + facet_value + '\', \'' + j + '\',\'' + item.type + '\',\'' + facet_target + '\');"';
                             }
@@ -199,6 +201,7 @@ Microsoft.Facets = {
                         for (var j = 0; j < data.length; j++) {
                             facetResultsHTML += '<div class="form-check">';
                             var facet_value = this.EncodeFacetValue(data[j].value);
+                            var clickMethod = null;
 
                             if (facet_target) {
                                 selectMethod = '"Microsoft.Facets.ChooseFacet(\'' + nameid + '\',\'' + facet_value + '\', \'' + j + '\',\'' + item.type + '\',\'' + facet_target + '\',search=false);"';
@@ -418,6 +421,7 @@ Microsoft.Facets = {
                     for (var j = 0; j < data.length; j++) {
                         facet_body_html += '<div class="form-check">';
                         var facet_value = this.EncodeFacetValue(data[j].value);
+                        var clickMethod = null;
 
                         // Support for target on specific values
                         if (data[j].target) {
@@ -473,6 +477,7 @@ Microsoft.Facets = {
     ChooseFacetWithQueryAll: function (facet_key, value) {
         this.ChooseFacet(facet_key, value, null, "dynamic", null, true, '')
     },
+    
     ChooseFacet: function (facet_key, value, valueIdx, facet_type = "dynamic", target = null, search = true, query = null) {
 
         value = Base64.decode(value);
@@ -530,3 +535,5 @@ Microsoft.Facets = {
         }
     }
 }
+
+export default Microsoft.Facets;

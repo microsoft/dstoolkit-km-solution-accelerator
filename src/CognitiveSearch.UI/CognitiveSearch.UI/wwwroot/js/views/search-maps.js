@@ -4,7 +4,6 @@
 //
 // Maps
 //
-Microsoft = Microsoft || {};
 Microsoft.Maps = Microsoft.Maps || {};
 Microsoft.Maps = {
 
@@ -267,7 +266,7 @@ Microsoft.Maps = {
         html.push('<div id="hideable-map-layers-panel">');
 
         for (var i = 0; i < Microsoft.Maps.layers.length; i++) {
-            layer = Microsoft.Maps.layers[i];
+            var layer = Microsoft.Maps.layers[i];
 
             if (layer.enabled) {
                 html.push('<div id="', layer.id, '">');
@@ -451,7 +450,7 @@ Microsoft.Maps = {
 
                 // PRE-DEFINED LAYERS
                 for (var i = 0; i < Microsoft.Maps.layers.length; i++) {
-                    layer = Microsoft.Maps.layers[i];
+                    var layer = Microsoft.Maps.layers[i];
                     if (layer.enabled) {
                         switch (layer.type) {
                             case "SearchResultsLayer":
@@ -590,7 +589,7 @@ Microsoft.Maps = {
         var checkBox = document.getElementById(checkboxid);
 
         for (var i = 0; i < Microsoft.Maps.layers.length; i++) {
-            layer = Microsoft.Maps.layers[i];
+            var layer = Microsoft.Maps.layers[i];
             if (layerid === layer.id) {
                 for (var j = 0; j < layer.maplayerid.length; j++) {
                     var id = layer.maplayerid[j];
@@ -753,7 +752,7 @@ Microsoft.Maps = {
 
     UpdateFacetsExtrusions: function (facets, targetDataSource) {
         if (facets) {
-            for (item in facets) {
+            for (var item in facets) {
                 if (this.geofacets.includes(item)) {
                     var data = facets[item];
                     if (data !== null) {
@@ -810,164 +809,11 @@ Microsoft.Maps = {
                 }
             }
         }
-    },
-
-    // GetMap: function (maptag, locations) {
-
-    //     var navigationBarMode = Microsoft.Maps.NavigationBarMode;
-
-    //     var map = new Microsoft.Maps.Map(maptag, {
-    //         showSearchBar: true,
-    //         navigationBarMode: navigationBarMode.compact,
-    //         supportedMapTypes: [Microsoft.Maps.MapTypeId.road, Microsoft.Maps.MapTypeId.aerial, Microsoft.Maps.MapTypeId.grayscale, Microsoft.Maps.MapTypeId.canvasLight]
-    //         //navigationBarMode: navigationBarMode.square,
-    //     });
-
-    //     var center = map.getCenter();
-
-    //     if (locations) {
-    //         mapsearch_locations(map, locations.split('|'));
-    //     }
-    //     else {
-    //         inputquery = $("#q").val();
-
-    //         if (inputquery) {
-    //             mapsearch(map, inputquery);
-    //         }
-    //         else {
-    //             mapsearch(map);
-    //         }
-    //     }
-
-    //     //Add layer to map.
-    //     map.layers.insert(baseLayer);
-
-    //     //Register and load the GeoJSON Module 
-    //     Microsoft.Maps.registerModule("GeoJSONModule", "/js/maps/GeoJSONModule.min.js");
-    //     Microsoft.Maps.loadModule("GeoJSONModule", {
-    //         callback: LoadCountryData
-    //     });
-
-    // },
-
-    //
-    // BING old stuff
-    //
-
-    // searchManager,
-
-    // mapsearch: function (map, query) {
-    //     //Create an instance of the search manager and perform the search.
-
-    //     Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
-    //         this.searchManager = new Microsoft.Maps.Search.SearchManager(map);
-    //         geocodeQuery(map, query);
-    //     });
-    // },
-
-    // mapsearch_locations: function (map, locations) {
-    //     //Create an instance of the search manager and perform the search.
-    //     Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
-    //         this.searchManager = new Microsoft.Maps.Search.SearchManager(map);
-    //         var geo_locations = [];
-    //         for (var i = 0; i < locations.length; i++) {
-    //             geocodeQuery(map, locations[i], geo_locations);
-    //         }
-
-    //         try {
-    //             //Determine a bounding box to best view the results.
-    //             var bounds;
-    //             //Use the locations from the results to calculate a bounding box.
-    //             bounds = Microsoft.Maps.LocationRect.fromLocations(geo_locations);
-    //             map.setView({ bounds: bounds });
-    //         }
-    //         catch (exception) {
-
-    //         }
-    //     });
-    // },
-
-    // geocodeQuery: function (map, query, geo_locations) {
-    //     var searchRequest = {
-    //         where: query,
-    //         count: 1,
-    //         callback: function (r) {
-    //             if (r && r.results && r.results.length > 0) {
-    //                 var pin, pins = [], locs = [], output = 'Results:<br/>';
-    //                 for (var i = 0; i < r.results.length; i++) {
-    //                     //Create a pushpin for each result. 
-    //                     pin = new Microsoft.Maps.Pushpin(r.results[i].location, {
-    //                         //icon: "/icons/SharePoint_48x48.png",
-    //                         title: r.results[i].name,
-    //                         subtitle: 'Result' + i + '',
-    //                         enableClickedStyle: true,
-    //                         enableHoverStyle: true,
-    //                         text: i + ''
-    //                     });
-    //                     pins.push(pin);
-    //                     locs.push(r.results[i].location);
-    //                     geo_locations.push(r.results[i].location);
-    //                     //output += i + ') ' + r.results[i].name + '<br/>';
-
-    //                     Microsoft.Maps.Events.addHandler(pin, 'click', function (pin) { Microsoft.Search.Results.Transcript.SearchTranscript(pin.target.entity.title); });
-
-    //                 }
-
-    //                 //Add the pins to the map
-    //                 map.entities.push(pins);
-
-    //                 //////Display list of results
-    //                 //document.getElementById('printoutPanel').innerHTML = output;
-
-    //                 if (!geo_locations) {
-    //                     //Determine a bounding box to best view the results.
-    //                     var bounds;
-    //                     if (r.results.length === 1) {
-    //                         bounds = r.results[0].bestView;
-    //                     }
-    //                     else {
-    //                         //Use the locations from the results to calculate a bounding box.
-    //                         bounds = Microsoft.Maps.LocationRect.fromLocations(locs);
-    //                     }
-    //                     map.setView({ bounds: bounds });
-    //                 }
-    //             }
-    //         },
-    //         errorCallback: function (e) {
-    //             //If there is an error, alert the user about it.
-    //             //document.getElementById('printoutPanel').innerHTML = 'No results found.';
-    //         }
-    //     };
-
-    //     //Make the geocode request.
-
-    //     this.searchManager.geocode(searchRequest);
-    // },
-
-    // backgroundColor : 'white',
-    // countryColor : 'rgba(255,0,0,0.5)',
-
-    // countryGeoJsonUrl : "/js/maps/Countries.js",
-
-    // LoadCountryData: function () {
-    //     //Define default shape options 
-    //     var polygonOptions = {
-    //         fillColor: this.countryColor,
-    //         strokeColor: this.backgroundColor,
-    //         strokeThickness: 2
-    //     };
-
-    //     new GeoJSONModule().ImportGeoJSON(countryGeoJsonUrl, GeoJSONImportedCallback, { polygonOptions: polygonOptions });
-    // },
-
-    // GeoJSONImportedCallback: function (items, bounds) {
-    //     //Add countries to map 
-    //     baseLayer.add(items);
-    // }
-
+    }
 }
 
 Microsoft.Maps.init().then(() => {
     Microsoft.Maps.loadCountries();
 });
 
+export default Microsoft.Maps;

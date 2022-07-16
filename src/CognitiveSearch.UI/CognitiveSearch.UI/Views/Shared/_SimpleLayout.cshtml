@@ -68,35 +68,36 @@
     <script src="~/lib/jquery-typeahead/typeahead.bundle.min.js" asp-append-version="true"></script>
 
     <environment exclude="Development">
-        <script src="~/js/bundle.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/bundle.js" asp-append-version="true"></script>
     </environment>
 
     <environment include="Development">
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        <script src="~/js/search-common.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/site.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/utils.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/search-common.js" asp-append-version="true"></script>
 
-        <script src="~/js/commons/actions.js" asp-append-version="true"></script>
-        <script src="~/js/commons/facets.js" asp-append-version="true"></script>
-        <script src="~/js/commons/suggestions.js" asp-append-version="true"></script>
-        <script src="~/js/commons/tags.js" asp-append-version="true"></script>
-        <script src="~/js/commons/telemetry.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/commons/actions.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/commons/facets.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/commons/suggestions.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/commons/tags.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/commons/telemetry.js" asp-append-version="true"></script>
 
-        <script src="~/js/search-details.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/search-details.js" asp-append-version="true"></script>
 
-        <script src="~/js/views/search-all.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-answers.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-graph.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-home.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-images.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-maps.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-news.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-tables.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-web.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-all.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-answers.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-graph.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-home.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-images.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-maps.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-news.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-tables.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-web.js" asp-append-version="true"></script>
     </environment>
 
-    <script type="text/javascript" src="~/lib/boolie/moment.min.js" asp-append-version="true"></script>
+    <script src="~/lib/boolie/moment.min.js" asp-append-version="true"></script>
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

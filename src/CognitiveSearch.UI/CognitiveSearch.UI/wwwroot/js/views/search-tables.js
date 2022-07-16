@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 // TABLES
-Microsoft = Microsoft || {};
 Microsoft.Tables = Microsoft.Tables || {};
 Microsoft.Tables = {
     MAX_NUMBER_ITEMS_PER_PAGE: 10,
@@ -40,7 +39,7 @@ Microsoft.Tables = {
             }
 
             resultsHtml += '</a>';
-            resultsHtml += Microsoft.Search.Actions.renderActions(docresult, initialStyle = "unset");
+            resultsHtml += Microsoft.Search.Actions.renderActions(docresult, false, "unset");
             resultsHtml += '</div>';
 
             // Tables list 
@@ -87,7 +86,7 @@ Microsoft.Tables = {
 
                 // fill up a matrix of cells
                 for (var j = 0; j < table.cells.length; j++) {
-                    cell = table.cells[j];
+                    var cell = table.cells[j];
                     table_matrix[cell.rowIndex][cell.colIndex] = cell;
                     if (cell.is_header) {
                         // Row index is an header row
@@ -100,7 +99,7 @@ Microsoft.Tables = {
                 // Process the headers
                 if (headers_row_indexes.length > 0) {
                     for (var k = 0; k < headers_row_indexes.length; k++) {
-                        row = table_matrix[headers_row_indexes[k]];
+                        var row = table_matrix[headers_row_indexes[k]];
                         extraMetadataContainerHTML += '<tr>';
                         for (var j = 0; j < table.column_count; j++) {
                             cell = row[j];
@@ -129,7 +128,7 @@ Microsoft.Tables = {
                 // for each row (excl header row)
                 for (var k = 0; k < table.row_count; k++) {
                     if (!headers_row_indexes.includes(k)) {
-                        row = table_matrix[k];
+                        var row = table_matrix[k];
                         extraMetadataContainerHTML += '<tr>';
                         for (var j = 0; j < table.column_count; j++) {
                             cell = row[j];
@@ -235,3 +234,5 @@ Microsoft.Tables = {
         return '';
     }
 }
+
+export default Microsoft.Tables;

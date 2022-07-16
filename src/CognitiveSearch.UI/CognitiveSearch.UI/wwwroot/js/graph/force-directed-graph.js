@@ -4,13 +4,15 @@
 // Base Graph class & functions
 
 class base_graph {
-    constructor(data) {
+    constructor() {
+        // Common attributes
+        this.nodeRadius = 10;
+    }
+
+    set_data(data) {
         this.stats = data.graph.metadata;
         this.nodes = Object.keys(data.graph.nodes).map((key) => data.graph.nodes[key]);
         this.links = data.graph.edges;
-
-        // Common attributes
-        this.nodeRadius = 10;
     }
 
     get_stats() {
@@ -61,8 +63,8 @@ class base_graph {
 
 class d3_custom_graph extends base_graph {
 
-    constructor(data) {
-        super(data);
+    constructor() {
+        super();
         this.width = 1200;
         this.height = 600;
 
@@ -73,7 +75,9 @@ class d3_custom_graph extends base_graph {
 
     }
 
-    chart() {
+    chart(data) {
+
+        this.set_data(data);
 
         var stats = this.get_stats();
 
@@ -350,13 +354,14 @@ class d3_custom_graph extends base_graph {
 
 class d3_fdgraph extends base_graph {
 
-    constructor(data) {
-        super(data);
+    constructor() {
+        super();
         this.width=1200;
         this.height=600;
     }
 
-    chart() {
+    chart(data) {
+        this.set_data(data);
         //// Convert the JSON Graph to expected format for D3 FD Graph
         //var nodes = Object.keys(data.graph.nodes).map((key) => data.graph.nodes[key]);
         //var links = data.graph.edges;
@@ -479,3 +484,7 @@ class d3_fdgraph extends base_graph {
         }
     }
 }
+
+Microsoft.d3_custom_graph = Microsoft.d3_custom_graph || new d3_custom_graph();
+
+Microsoft.d3_fdgraph = Microsoft.d3_fdgraph || new d3_fdgraph();

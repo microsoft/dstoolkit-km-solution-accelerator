@@ -58,7 +58,7 @@ Microsoft.Tags = {
                 targeted_tags = selectTags;
             }
 
-            for (item in targeted_tags) {
+            for (var item in targeted_tags) {
 
                 var name = targeted_tags[item];
 
@@ -100,12 +100,10 @@ Microsoft.Tags = {
                                             if (tagValue.length > 0) {
                                                 if ($.inArray(tagValue, dedupedEntities) === -1) { //! in array
                                                     dedupedEntities.push(tagValue);
+                                                    var tagDisplayValue = tagValue;
                                                     if (tagValue.length > Microsoft.Tags.MaxTagValueLengthToDisplay) { // check tag name length
                                                         // create substring of tag name length if too long
                                                         tagDisplayValue = tagValue.substring(0, Microsoft.Tags.MaxTagValueLengthToDisplay) + '...';
-                                                    }
-                                                    else {
-                                                        tagDisplayValue = tagValue;
                                                     }
 
                                                     var tagclasses = "tag tag-" + Microsoft.Utils.jqid(name);
@@ -144,12 +142,9 @@ Microsoft.Tags = {
                             }
                             else {
                                 tagsHTML += '<' + htmlTagElt + ' class="tdcolumn">'
-
+                                var tagDisplayValue = tagEntry;
                                 if (tagEntry.length > Microsoft.Tags.MaxTagValueLengthToDisplay) {
                                     tagDisplayValue = tagEntry.substring(0, Microsoft.Tags.MaxTagValueLengthToDisplay) + '...';
-                                }
-                                else {
-                                    tagDisplayValue = tagEntry;
                                 }
                                 tagsHTML += '<button title="' + tagEntry + '" class="tag tag-' + name + '" onclick="Microsoft.Tags.FacetTag(event,\'' + name + '\');">' + tagDisplayValue + '</button>';
 
@@ -212,3 +207,5 @@ Microsoft.Tags = {
         return htmlDiv;
     }
 }
+
+export default Microsoft.Tags;

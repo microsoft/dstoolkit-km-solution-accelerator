@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-Microsoft = Microsoft || {};
 Microsoft.Search = Microsoft.Search || {};
-
 Microsoft.Search = {
     isQueryInProgress: false,
     setQueryInProgress: function () {
@@ -95,19 +93,8 @@ Microsoft.Search = {
     hasMoreResults: function () {
         return Microsoft.Search.currentPage < Microsoft.Search.MaxPageCount;
     },
+    
     UpdateDocCount: function (resultsCount) {
-        if (resultsCount !== 0) {
-            startDocCount = 1;
-        }
-        var currentDocCount = Microsoft.Search.currentPage * 10;
-
-        if (Microsoft.Search.currentPage > 1) {
-            startDocCount = ((Microsoft.Search.currentPage - 1) * 10) + 1;
-        }
-        if (currentDocCount > resultsCount) {
-            currentDocCount = resultsCount;
-        }
-
         if (resultsCount === 0) {
             $("#doc-count").addClass('bg-danger');
             $("#doc-count").html('No result !');
@@ -1043,7 +1030,7 @@ Microsoft.Search.Results.Embedded = {
 
                 // List of embedded images 
                 if (data && data.count > 0) {
-                    results = data.results;
+                    var results = data.results;
 
                     containerHTML += '<div class="imagesResults">';
 
@@ -1223,7 +1210,7 @@ Microsoft.Search.Results.Transcript = {
         var full_content = '';
         var lines = content.trim().split('\n');
         lines.forEach((line, idx) => {
-            classname = "p-highlight-" + idx;
+            var classname = "p-highlight-" + idx;
             full_content += '<p class="p-highlight ' + classname + ' text-break" onmouseover="Microsoft.Results.Details.pMouseOver(\'' + classname + '\');" onmouseout="Microsoft.Results.Details.pMouseOut(\'' + classname + '\');" >' + Microsoft.Utils.htmlDecode(line).trim() + '</p>';
         });
 
@@ -1277,7 +1264,7 @@ Microsoft.Search.Results.Transcript = {
         // Round #1
         // for each line try to find PhraseSearch reference first
         lines.forEach((line, lineidx) => {
-            line_response = this.FindMatches(regex, line);
+            var line_response = this.FindMatches(regex, line);
             if (line_response.count > 0) response.push(line_response);
         });
 
@@ -1288,7 +1275,7 @@ Microsoft.Search.Results.Transcript = {
                 var tokens = searchText.split(' ');
                 if (tokens.length > 1) {
                     regex = new RegExp("(" + tokens.join('|') + ")", 'gi');
-                    line_response = this.FindMatches(regex, line);
+                    var line_response = this.FindMatches(regex, line);
                     if (line_response.count > 0) response.push(line_response);
                 }
             });
@@ -1315,7 +1302,7 @@ Microsoft.Search.Results.Transcript = {
             transcriptText = $(targetTag).text();
             if (transcriptText.length > 0) {
                 lines.forEach((line, lineidx) => {
-                    line_response = this.FindMatches(regex, line);
+                    var line_response = this.FindMatches(regex, line);
                     if (line_response.count > 0) response.push(line_response);
                 });
             }
@@ -1420,3 +1407,5 @@ Microsoft.Search.Results.Transcript = {
     }
 
 }
+
+export default Microsoft.Search;

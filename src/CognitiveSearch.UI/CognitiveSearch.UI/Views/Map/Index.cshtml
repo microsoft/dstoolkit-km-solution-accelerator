@@ -47,7 +47,7 @@
 <!--World Map-->
 
 <div id="world-map">
-    <div id="results-container">
+    <div id="results-container" class="container-fluid">
         @if (AppConfig.MapConfig.IsEnabled) {
             <div>
                 <div id="WorldMap"></div>
@@ -60,7 +60,7 @@
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
 
             Microsoft.Maps.initMap();

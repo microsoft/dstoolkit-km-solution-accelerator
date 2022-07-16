@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-var sankey = d3.sankey();
-var d3_sankey = d3_sankey || {};
-d3_sankey = {
+Microsoft.d3_sankey = Microsoft.d3_sankey || {};
+Microsoft.d3_sankey = {
     margin: {
         top: 1,
         right: 1,
@@ -166,3 +165,5 @@ d3_sankey = {
         return ("" + d.source.label + " " + d.target.label + "\n" + d.value);
     }
 };
+
+export default Microsoft.d3_sankey;

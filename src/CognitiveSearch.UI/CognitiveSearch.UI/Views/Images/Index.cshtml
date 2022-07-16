@@ -25,14 +25,14 @@
 <!--Search Filter -->
 <partial name="_SearchFilterPartial" />
 
-<div id="results-container">
-    <div class="row content-results">
+<div id="results-container" class="container">
+    <div class="row">
         <div class="imagesResults reset-view" id="search-results-content"></div>
     </div>
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
 
             Microsoft.Search.initSearchVertical(Microsoft.View.config);

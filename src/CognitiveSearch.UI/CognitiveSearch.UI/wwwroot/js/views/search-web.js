@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-Microsoft = Microsoft || {};
 Microsoft.Web = Microsoft.Web || {};
 Microsoft.Web = {
 
@@ -625,12 +624,12 @@ Microsoft.Web = {
         $(Microsoft.Web.view_tag).empty();
     },
 
-    renderWebResultActions: function (id, url, webpage = null, static = false, initialStyle = "flex") {
+    renderWebResultActions: function (id, url, webpage = null, staticActions = false, initialStyle = "flex") {
         var htmlDiv = ''
 
         // Actions
         htmlDiv += '<div class="row">';
-        if (static) {
+        if (staticActions) {
             htmlDiv += '<div class="search-result-actions">';
         }
         else {
@@ -653,12 +652,12 @@ Microsoft.Web = {
         return htmlDiv;
     },
 
-    renderDownloadAction: function (id, url, static = false, initialStyle = "flex") {
+    renderDownloadAction: function (id, url, staticActions = false, initialStyle = "flex") {
         var htmlDiv = '';
 
         // Actions
         htmlDiv += '<div class="row">';
-        if (static) {
+        if (staticActions) {
             htmlDiv += '<div class="search-result-actions">';
         }
         else {
@@ -722,3 +721,5 @@ Microsoft.Web = {
             });
     },
 }
+
+export default Microsoft.Web;

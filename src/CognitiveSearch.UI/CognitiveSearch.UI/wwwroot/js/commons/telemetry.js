@@ -40,3 +40,5 @@ Microsoft.Telemetry = {
         });
     }
 }
+
+export default Microsoft.Telemetry;

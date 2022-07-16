@@ -85,13 +85,13 @@ Microsoft.Search.Actions = {
         return htmlDiv;
     },
 
-    renderActions: function (docresult, static = false, initialStyle = "none") {
+    renderActions: function (docresult, staticActions = false, initialStyle = "none") {
         var htmlDiv = ''
 
         // Actions
         htmlDiv += '<div class="row">';
 
-        if (static) {
+        if (staticActions) {
             htmlDiv += '<div class="search-result-actions">';
         }
         else {
@@ -119,7 +119,7 @@ Microsoft.Search.Actions = {
         return htmlDiv;
     },
 
-    renderActionsAsMenu: function (docresult, static = false, initialStyle = "none") {
+    renderActionsAsMenu: function (docresult, staticActions = false, initialStyle = "none") {
         var htmlDiv = ''
 
         // Actions
@@ -174,3 +174,4 @@ Microsoft.Search.Actions = {
 
 Microsoft.Search.Actions.init();
 
+export default Microsoft.Search.Actions;

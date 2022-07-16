@@ -4,7 +4,6 @@
 //
 // NEWS FEED Methods
 //
-Microsoft = Microsoft || {};
 Microsoft.News = Microsoft.News || {};
 Microsoft.News = {
     MAX_NUMBER_ITEMS_PER_PAGE: 20,
@@ -306,7 +305,7 @@ Microsoft.News = {
 
         if (facets) {
 
-            for (item in facets) {
+            for (var item in facets) {
                 var name = item;
                 var nameid = Microsoft.News.normalizeFacetId(item);
                 var data = facets[item];
@@ -451,7 +450,7 @@ Microsoft.News = {
     },
 
     // NEWS QUICK ACTIONS 
-    renderNewsQuickActions: function (feed_entry, static = false, initialStyle = "flex") {
+    renderNewsQuickActions: function (feed_entry) {
         var htmlDiv = ''
 
         htmlDiv += '    <div class="col-md-12" style="padding: 5px;">';
@@ -476,3 +475,5 @@ Microsoft.News = {
     }
 
 }
+
+export default Microsoft.News;

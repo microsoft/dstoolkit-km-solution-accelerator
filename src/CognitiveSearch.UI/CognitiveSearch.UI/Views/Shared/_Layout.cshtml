@@ -55,10 +55,10 @@
     <!-- Datatables --> 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.11.4/b-2.2.2/b-colvis-2.2.2/b-html5-2.2.2/b-print-2.2.2/fc-4.0.1/fh-3.2.1/sc-2.0.5/sl-1.3.4/datatables.min.css"/>
     
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.11.4/b-2.2.2/b-colvis-2.2.2/b-html5-2.2.2/b-print-2.2.2/fc-4.0.1/fh-3.2.1/sc-2.0.5/sl-1.3.4/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.11.4/b-2.2.2/b-colvis-2.2.2/b-html5-2.2.2/b-print-2.2.2/fc-4.0.1/fh-3.2.1/sc-2.0.5/sl-1.3.4/datatables.min.js"></script>
 
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
@@ -80,37 +80,38 @@
     <!-- Scripts Injection-->
     <script src="~/lib/jquery-typeahead/typeahead.bundle.min.js" asp-append-version="true"></script>
 
-    <script type="text/javascript" src="~/lib/boolie/moment.min.js" asp-append-version="true"></script>
-    <script type="text/javascript" src="~/lib/boolie/daterangepicker.js" asp-append-version="true"></script>
+    <script src="~/lib/boolie/moment.min.js" asp-append-version="true"></script>
+    <script src="~/lib/boolie/daterangepicker.js" asp-append-version="true"></script>
 
     <environment exclude="Development">
-        <script src="~/js/bundle.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/bundle.js" asp-append-version="true"></script>
     </environment>
 
     <environment include="Development">
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        <script src="~/js/search-common.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/site.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/utils.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/search-common.js" asp-append-version="true"></script>
 
-        <script src="~/js/commons/actions.js" asp-append-version="true"></script>
-        <script src="~/js/commons/facets.js" asp-append-version="true"></script>
-        <script src="~/js/commons/suggestions.js" asp-append-version="true"></script>
-        <script src="~/js/commons/tags.js" asp-append-version="true"></script>
-        <script src="~/js/commons/telemetry.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/commons/actions.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/commons/facets.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/commons/suggestions.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/commons/tags.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/commons/telemetry.js" asp-append-version="true"></script>
 
-        <script src="~/js/search-details.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/search-details.js" asp-append-version="true"></script>
 
-        <script src="~/js/views/search-all.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-answers.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-graph.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-home.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-images.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-maps.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-news.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-tables.js" asp-append-version="true"></script>
-        <script src="~/js/views/search-web.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-all.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-answers.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-graph.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-home.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-images.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-maps.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-news.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-tables.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/views/search-web.js" asp-append-version="true"></script>
     </environment>
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

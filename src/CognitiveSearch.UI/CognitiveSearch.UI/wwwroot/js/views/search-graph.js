@@ -166,11 +166,11 @@ Microsoft.Graph = {
 
         d3.select("svg").remove();
 
-        // if (Microsoft.Graph.graphType === "icicle") d3_icicle.chart();
-        // if (Microsoft.Graph.graphType === "sunburst") d3_sunburst.chart();
-        if (Microsoft.Graph.graphType === "sankey") d3_sankey.chart(this.graph_data);
-        if (Microsoft.Graph.graphType === "customgraph") new d3_custom_graph(this.graph_data).chart();
-        if (Microsoft.Graph.graphType === "fdgraph") new d3_fdgraph(this.graph_data).chart();
+        // if (Microsoft.Graph.graphType === "icicle") Microsoft.Graph.d3_icicle.chart();
+        // if (Microsoft.Graph.graphType === "sunburst") Microsoft.Graph.d3_sunburst.chart();
+        if (Microsoft.Graph.graphType === "sankey") Microsoft.d3_sankey.chart(this.graph_data);
+        if (Microsoft.Graph.graphType === "customgraph") Microsoft.d3_custom_graph.chart(this.graph_data);
+        if (Microsoft.Graph.graphType === "fdgraph") Microsoft.d3_fdgraph.chart(this.graph_data);
     },
 
     changeGraphType: function (value) {
@@ -298,3 +298,4 @@ Microsoft.Graph = {
 
 }
 
+export default Microsoft.Graph;

@@ -29,9 +29,9 @@
 <!--Search Filter -->
 <partial name="_SearchFilterPartial" />
 
-<div id="results-container">
+<div id="results-container" class="container">
     @if (AppConfig.WebSearchConfig.IsEnabled) {
-        <div class="row content-results">
+        <div class="row">
             <!-- Facets -->
             <div id="web-results-content-col1" class="col-md-2">
                 <div>
@@ -48,7 +48,7 @@
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
 
             Microsoft.Search.initSearchVertical(Microsoft.View.config);

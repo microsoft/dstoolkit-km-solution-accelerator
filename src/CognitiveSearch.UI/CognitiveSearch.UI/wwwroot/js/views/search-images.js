@@ -4,7 +4,6 @@
 //
 // IMAGES 
 //
-Microsoft = Microsoft || {};
 Microsoft.Images = Microsoft.Images || {};
 Microsoft.Images = {
     MAX_NUMBER_ITEMS_PER_PAGE: 50,
@@ -34,7 +33,9 @@ Microsoft.Images = {
                 resultsHtml += '        </div>';
 
                 resultsHtml += '    <div class="image-result-path" >';
-                resultsHtml += '        <a target="_blank" href="' + Microsoft.Search.GetSASTokenFromPath(containerPath) + '">' + Microsoft.Utils.GetImageFileTitle(docresult) + '</a>';
+                resultsHtml += '        <a target="_blank" href="' + Microsoft.Search.GetSASTokenFromPath(containerPath) + '">';
+                resultsHtml += '            <span class="text-break">' + Microsoft.Utils.GetImageFileTitle(docresult) + '</span>';
+                resultsHtml += '        </a>';
                 resultsHtml += '    </div>';
 
                 resultsHtml += '</div>';
@@ -47,7 +48,9 @@ Microsoft.Images = {
                 resultsHtml += '        </div>';
 
                 resultsHtml += '    <div class="image-result-path" >';
-                resultsHtml += '        <a target="_blank" href="' + Microsoft.Search.GetSASTokenFromPath(path) + '">' + name + '</a>';
+                resultsHtml += '        <a target="_blank" href="' + Microsoft.Search.GetSASTokenFromPath(path) + '">';
+                resultsHtml += '            <span class="text-break">' + name + '</span>';
+                resultsHtml += '        </a>';
                 resultsHtml += '    </div>';
                 resultsHtml += '</div>';
             }
@@ -125,3 +128,5 @@ Microsoft.Images = {
         return '';
     }
 }
+
+export default Microsoft.Images;

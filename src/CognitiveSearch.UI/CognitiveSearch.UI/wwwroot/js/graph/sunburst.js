@@ -3,8 +3,8 @@
 
 //CREDITS https://observablehq.com/@d3/zoomable-sunburst
 
-var d3_sunburst = d3_sunburst || {};
-d3_sunburst = {
+Microsoft.d3_sunburst = Microsoft.d3_sunburst || {};
+Microsoft.d3_sunburst = {
     margin: {
         top: 1,
         right: 1,
@@ -15,7 +15,7 @@ d3_sunburst = {
     height: 1000,
     flaredata: null,
     format: d3.format(",d"),
-    radius: (Math.min(this.width, this.height) / 5) - 10,
+    radius: 0,
     init: function () {
         return new Promise((resolve, reject) => {
             $.ajax({
@@ -170,3 +170,5 @@ d3_sunburst = {
         });
     }
 }
+
+export default Microsoft.d3_sunburst;

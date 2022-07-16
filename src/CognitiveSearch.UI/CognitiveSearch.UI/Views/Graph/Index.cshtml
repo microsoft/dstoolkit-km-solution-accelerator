@@ -18,9 +18,9 @@
 </script>
 
 <environment include="Development">
-    <script src="~/js/graph/sunburst.js" asp-append-version="true"></script>
-    <script src="~/js/graph/sankey.js" asp-append-version="true"></script>
-    <script src="~/js/graph/force-directed-graph.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/graph/sunburst.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/graph/sankey.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/graph/force-directed-graph.js" asp-append-version="true"></script>
 </environment>
 
 <!-- D3 Components -->
@@ -145,7 +145,7 @@
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             Microsoft.Search.initSearchVertical(Microsoft.View.config);
             Microsoft.Graph.initEntityGraph();

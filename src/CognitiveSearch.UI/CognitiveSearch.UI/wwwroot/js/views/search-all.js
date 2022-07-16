@@ -3,7 +3,6 @@
 //
 // Home 
 //
-Microsoft = Microsoft || {};
 Microsoft.All = Microsoft.All || {};
 Microsoft.All = {
     MAX_NUMBER_ITEMS_PER_PAGE: 10,
@@ -359,3 +358,5 @@ Microsoft.All = {
         return resultsHtml;
     }
 }
+
+export default Microsoft.All;

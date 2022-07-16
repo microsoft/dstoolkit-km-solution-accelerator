@@ -3,7 +3,6 @@
 
 // Details aka Document Preview configuration
 
-Microsoft = Microsoft || {};
 Microsoft.Results = Microsoft.Results || {};
 Microsoft.Results.Details = Microsoft.Results.Details || {};
 Microsoft.Results.Details = {
@@ -73,7 +72,7 @@ Microsoft.Results.Details = {
 
     adjust_active_tab: function () {
         for (var i = 0; i < this.tabulars.length; i++) {
-            tabular = this.tabulars[i];
+            var tabular = this.tabulars[i];
             if (tabular.enable) {
                 if (tabular.content_length > 0) {
                     var triggerEl = document.querySelector('#details-pivot-links a[href="#' + tabular.id + '-pivot"]');
@@ -118,7 +117,7 @@ Microsoft.Results.Details = {
         var pivotsContentHtml = '';
 
         for (var i = 0; i < this.tabulars.length; i++) {
-            tabular = this.tabulars[i];
+            var tabular = this.tabulars[i];
             pivotsContentHtml += this.create_tab_pane(tabular);
             tabular.content_length = 0;
         }
@@ -129,8 +128,7 @@ Microsoft.Results.Details = {
         var pivotLinksHTML = '';
 
         for (var i = 0; i < this.tabulars.length; i++) {
-            tabular = this.tabulars[i];
-            active_tab = false;
+            var tabular = this.tabulars[i];
             if (tabular.enable) {
                 pivotLinksHTML += this.create_tab_link(tabular.id, tabular.localization["en"].name, tabular.fonticon, tabular.localization["en"].title);
             }
@@ -140,10 +138,10 @@ Microsoft.Results.Details = {
 
     render_tab_content: function (result) {
         for (var i = 0; i < this.tabulars.length; i++) {
-            tabular = this.tabulars[i];
+            var tabular = this.tabulars[i];
             if (tabular.enable) {
                 if (tabular.renderingMethod) {
-                    content = Microsoft.Utils.executeFunctionByName(tabular.renderingMethod, window, result, tabular);
+                    var content = Microsoft.Utils.executeFunctionByName(tabular.renderingMethod, window, result, tabular);
                     if (content !== undefined)
                     {
                         if (content.length > 0) {
@@ -254,7 +252,7 @@ Microsoft.Results.Details = {
     
     GetDocumentHeader: function(docresult, idx) {
     
-        headerContainerHTML = '';
+        var headerContainerHTML = '';
     
         var pathExtension = docresult.metadata_storage_path.toLowerCase().split('.').pop();
         var iconPath = Microsoft.Utils.GetIconPathFromExtension(pathExtension);
@@ -301,3 +299,4 @@ $('#prev-control').click(function () {
     }
 });
 
+export default Microsoft.Results;

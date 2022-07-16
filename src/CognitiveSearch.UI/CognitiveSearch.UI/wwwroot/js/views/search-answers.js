@@ -4,7 +4,6 @@
 //
 // ANSWERS 
 //
-Microsoft = Microsoft || {};
 Microsoft.Answers = Microsoft.Answers || {};
 Microsoft.Answers = {
 
@@ -260,7 +259,7 @@ Microsoft.Answers = {
                     }
     
                     // Actions
-                    answersHtml += Microsoft.Search.Actions.renderActions(docresult, "flex");
+                    answersHtml += Microsoft.Search.Actions.renderActions(docresult, false, "flex");
     
                     answersHtml += '</div>';
                     answersHtml += '</div>';
@@ -277,3 +276,5 @@ Microsoft.Answers = {
     }
 
 }
+
+export default Microsoft.Answers;

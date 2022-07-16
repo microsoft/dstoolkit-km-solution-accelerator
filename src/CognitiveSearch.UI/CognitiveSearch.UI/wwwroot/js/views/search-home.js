@@ -4,7 +4,6 @@
 //
 // Home 
 //
-Microsoft = Microsoft || {};
 Microsoft.Home = Microsoft.Home || {};
 Microsoft.Home = {
     LATEST_DOCUMENTS_TAG : "#documents-feed",
@@ -342,5 +341,4 @@ Microsoft.Home = {
     }
 }
 
-
-
+export default Microsoft.Home;
