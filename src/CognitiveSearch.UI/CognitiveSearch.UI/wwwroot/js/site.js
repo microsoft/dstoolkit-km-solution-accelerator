@@ -40,5 +40,3 @@ jQuery["postXML"] = function (url, data, callback) {
         success: callback
     });
 };
-
-export default Microsoft;

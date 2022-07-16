@@ -41,4 +41,4 @@ Microsoft.Telemetry = {
     }
 }
 
-export default Microsoft.Telemetry;
+// export { Microsoft.Telemetry };

@@ -816,4 +816,4 @@ Microsoft.Maps.init().then(() => {
     Microsoft.Maps.loadCountries();
 });
 
-export default Microsoft.Maps;
+// export default Microsoft.Maps;

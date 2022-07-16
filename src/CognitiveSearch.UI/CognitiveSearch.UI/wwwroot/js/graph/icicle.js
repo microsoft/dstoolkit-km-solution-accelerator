@@ -41,6 +41,8 @@ Microsoft.d3_icicle = {
     },
     chart: function (tagid, customClickHandling) {
 
+        var data = null;
+        
         if (!this.flaredata) {
             return;
         }
@@ -144,4 +146,4 @@ Microsoft.d3_icicle = {
     }
 }
 
-export default Microsoft.d3_icicle;
+// export default Microsoft.d3_icicle;

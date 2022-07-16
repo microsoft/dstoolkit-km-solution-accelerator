@@ -1390,7 +1390,7 @@ Microsoft.Search.Results.Transcript = {
         var copy = q;
 
         copy = copy.replace(/~\d+/gi, "");
-        matches = this.GetMatches(copy, /\w+/gi, 0);
+        var matches = this.GetMatches(copy, /\w+/gi, 0);
 
         matches.forEach(function (match) {
             Microsoft.Search.Transcript.GetReferences(match, true);
@@ -1408,4 +1408,4 @@ Microsoft.Search.Results.Transcript = {
 
 }
 
-export default Microsoft.Search;
+// export default Microsoft.Search;

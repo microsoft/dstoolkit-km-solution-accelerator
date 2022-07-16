@@ -129,4 +129,4 @@ Microsoft.Images = {
     }
 }
 
-export default Microsoft.Images;
+// export default Microsoft.Images;

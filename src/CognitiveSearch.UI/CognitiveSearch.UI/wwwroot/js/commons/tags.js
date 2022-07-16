@@ -181,7 +181,7 @@ Microsoft.Tags = {
         }
         else {
             event.stopPropagation();
-            query = searchText.replace("-", " ");
+            var query = searchText.replace("-", " ");
             $('#q').val(query);
             Search();
         }
@@ -208,4 +208,4 @@ Microsoft.Tags = {
     }
 }
 
-export default Microsoft.Tags;
+// export default Microsoft.Tags;

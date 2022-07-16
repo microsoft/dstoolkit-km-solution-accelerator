@@ -298,4 +298,4 @@ Microsoft.Graph = {
 
 }
 
-export default Microsoft.Graph;
+// export default Microsoft.Graph;

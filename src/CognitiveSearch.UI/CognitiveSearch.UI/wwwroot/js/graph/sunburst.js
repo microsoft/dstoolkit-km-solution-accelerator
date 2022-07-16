@@ -42,6 +42,8 @@ Microsoft.d3_sunburst = {
     },
     chart: function (tagid) {
 
+        var data = null;
+
         if (!this.flaredata) {
             return;
         }
@@ -171,4 +173,4 @@ Microsoft.d3_sunburst = {
     }
 }
 
-export default Microsoft.d3_sunburst;
+// export default Microsoft.d3_sunburst;

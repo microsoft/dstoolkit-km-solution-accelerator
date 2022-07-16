@@ -201,6 +201,7 @@ Microsoft.Facets = {
                         for (var j = 0; j < data.length; j++) {
                             facetResultsHTML += '<div class="form-check">';
                             var facet_value = this.EncodeFacetValue(data[j].value);
+                            var selectMethod = null;
                             var clickMethod = null;
 
                             if (facet_target) {
@@ -269,6 +270,7 @@ Microsoft.Facets = {
                 if (item.type === "daterange") {
 
                     htmlString += '<button id="filter-daterange-btn" type="button" class="btn btn-outline-danger btn-sm facet-button me-2">';
+                    var display_range_value = null;
                     if (item.values && item.values.length > 0) {
                         if (item.label) {
                             display_range_value = item.label
@@ -536,4 +538,4 @@ Microsoft.Facets = {
     }
 }
 
-export default Microsoft.Facets;
+// export default Microsoft.Facets;

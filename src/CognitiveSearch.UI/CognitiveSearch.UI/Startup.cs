@@ -132,7 +132,7 @@ namespace CognitiveSearch.UI
             services.AddWebOptimizer(pipeline =>
             {
                 pipeline.AddCssBundle("/css/bundle.css", "css/site.css","css/colors.css");
-                pipeline.AddJavaScriptBundle("/js/bundle.js", "js/site.js","js/utils.js","js/search-common.js", "js/commons/*.js", "js/graph/*.js", "js/search-details.js","js/views/*.js");
+                pipeline.AddJavaScriptBundle("/js/bundle.js", "js/site.js","js/utils.js","js/search-common.js", "js/commons/*.js", "js/graph/*.js", "js/search-details.js","js/views/*.js","js/export.js");
             });
         }
 

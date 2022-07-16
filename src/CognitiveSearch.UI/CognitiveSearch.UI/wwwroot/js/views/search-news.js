@@ -476,4 +476,4 @@ Microsoft.News = {
 
 }
 
-export default Microsoft.News;
+// export default Microsoft.News;

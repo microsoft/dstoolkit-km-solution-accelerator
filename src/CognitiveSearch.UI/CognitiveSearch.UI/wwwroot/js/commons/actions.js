@@ -174,4 +174,4 @@ Microsoft.Search.Actions = {
 
 Microsoft.Search.Actions.init();
 
-export default Microsoft.Search.Actions;
+// export default Microsoft.Search.Actions;

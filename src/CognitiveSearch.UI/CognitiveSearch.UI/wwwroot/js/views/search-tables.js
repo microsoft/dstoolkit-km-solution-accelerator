@@ -235,4 +235,4 @@ Microsoft.Tables = {
     }
 }
 
-export default Microsoft.Tables;
+// export default Microsoft.Tables;

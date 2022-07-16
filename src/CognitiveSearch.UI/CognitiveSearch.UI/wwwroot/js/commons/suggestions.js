@@ -106,4 +106,4 @@ Microsoft.Suggestions = {
 //Microsoft.Suggestions.init().then(() => Microsoft.Suggestions.configure());
 Microsoft.Suggestions.init();
 
-export default Microsoft.Suggestions;
+// export default Microsoft.Suggestions;

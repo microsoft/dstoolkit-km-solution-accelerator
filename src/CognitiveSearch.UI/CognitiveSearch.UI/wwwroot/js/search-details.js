@@ -299,4 +299,4 @@ $('#prev-control').click(function () {
     }
 });
 
-export default Microsoft.Results;
+// export default Microsoft.Results;
