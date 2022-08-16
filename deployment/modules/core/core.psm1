@@ -100,19 +100,48 @@ function Import-Config() {
     return $global:config
 }
 
+function ConvertTo-String {
+    param(
+      [Security.SecureString] $secureString
+    )
+
+    # [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR((($secureString))))
+
+    try {
+      $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureString)
+      [Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
+    }
+    finally {
+      if ( $bstr -ne [IntPtr]::Zero ) {
+        [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
+      }
+    }
+}
+
 function Import-Params([switch] $Reload) {
     # Loading Environment Parameters
     $global:params = [string] (Get-Content -Path (join-path $global:envpath "parameters.json") -ErrorAction SilentlyContinue)
+
     if ( $global:params ) {
         $global:params = ConvertFrom-Json $global:params
         Add-ServicesParameters
-        return $global:params
     }
     else {
         $global:params = New-Object -TypeName PSObject
         Add-ServicesParameters
-        return $global:params
     }
+
+    # Decrypt secured string
+    $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
+
+    foreach ($prop in $parameterslist) {
+        if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
+            $propValue = Get-ParamValue $prop.Name | ConvertTo-SecureString -AsPlainText -Force
+            Add-Param $prop.Name ConvertTo-String $propValue
+        }
+    }
+
+    return $global:params
 }
 function Add-ExtendedParameters {
     param (
@@ -183,16 +212,39 @@ function Add-ServicesParameters {
 }
 
 function Add-Param($name, $value) {
+    
     if ( $global:params.PSobject.Properties.name -eq $name) {
         $global:params.$name = $value
     }
     else {
         $global:params | Add-Member -MemberType NoteProperty -Name $name -Value $value -ErrorAction Ignore
-    }
+    }    
+}
+
+function Get-ParamValue($name) {
+
+    return $global:params | Select-Object -ExpandProperty $name
 }
 
 function Save-Parameters() {
-    $global:params | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath $global:envpath\"parameters.json" -Force    
+    
+    # Create a blank object 
+    $securedparams = New-Object -TypeName PSObject
+
+    $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
+
+    foreach ($prop in $parameterslist) {
+
+        $propValue = Get-ParamValue $prop.Name
+
+        if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
+            $propValue = ConvertTo-SecureString -String $propValue -AsPlainText -Force | ConvertFrom-SecureString
+        }
+
+        $securedparams | Add-Member -MemberType NoteProperty -Name $prop.Name -Value $propValue -ErrorAction Ignore
+    }
+
+    $securedparams | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath $global:envpath\"parameters.json" -Force    
 }
 
 function Save-Config() {
@@ -242,7 +294,8 @@ function Sync-Parameters() {
         foreach ($temp in $templates) {
             $jsontemp = Get-Content -Path $temp.FullName
             foreach ($prop in $parameterslist) {
-                $propValue = $global:params | Select-Object -ExpandProperty $prop.Name
+                $propValue = Get-ParamValue $prop.Name
+                # $propValue = $global:params | Select-Object -ExpandProperty $prop.Name
                 $jsontemp = $jsontemp -replace ("{{param." + $prop.Name + "}}"), $propValue 
             }
             $jsontemp | Out-File -FilePath $temp.FullName -Force
@@ -253,7 +306,7 @@ function Sync-Parameters() {
 }
 
 function Sync-Modules() {
-    $folders = @("modules", "deploy")
+    $folders = @("modules", "scripts")
 
     foreach ($folder in $folders) {
         $modulepath = Join-Path $global:envpath $folder
@@ -1354,7 +1407,7 @@ function Test-Functions() {
         [switch] $Local
     )
 
-    $results=@()
+    # $results=@()
 
     foreach ($plan in $functionscfg.AppPlans) {
         Write-Host "--------------------"
