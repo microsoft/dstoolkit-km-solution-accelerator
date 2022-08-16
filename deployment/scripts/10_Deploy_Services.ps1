@@ -125,16 +125,61 @@ function New-DataStorageAccountAndContainer
 
 function New-CognitiveServices
 {
-    #TODO handle non bundle services
+    if ($config.cogServicesBundleDisabled) {
 
-    Write-Host "Creating Bundle Cognitive Services";
-    az cognitiveservices account create `
-    -n $params.cogServicesBundle `
-    -g $config.resourceGroupName `
-    --kind CognitiveServices `
-    --sku S0 `
-    --location $config.location `
-    --yes
+        # az cognitiveservices account list-kinds
+
+        # Language 
+        Write-Host "Creating TextAnalytics Cognitive Service";
+        az cognitiveservices account create `
+        -n $params.cogServiceLanguage `
+        -g $config.resourceGroupName `
+        --kind TextAnalytics `
+        --sku S `
+        --location $config.location `
+        --yes
+
+        # Vision
+        Write-Host "Creating ComputerVision Cognitive Service";
+        az cognitiveservices account create `
+        -n $params.cogServiceVision `
+        -g $config.resourceGroupName `
+        --kind ComputerVision `
+        --sku S1 `
+        --location $config.location `
+        --yes
+
+        # Form
+        Write-Host "Creating FormRecognizer Cognitive Service";
+        az cognitiveservices account create `
+        -n $params.cogServiceForm `
+        -g $config.resourceGroupName `
+        --kind FormRecognizer `
+        --sku S0 `
+        --location $config.location `
+        --yes
+
+        # Translation
+        Write-Host "Creating Translation Cognitive Service";
+        az cognitiveservices account create `
+        -n $params.cogServiceTranslate `
+        -g $config.resourceGroupName `
+        --kind TextTranslation `
+        --sku S1 `
+        --location $config.location `
+        --yes
+        
+    }
+    else {
+        Write-Host "Creating Bundle Cognitive Services";
+        az cognitiveservices account create `
+        -n $params.cogServicesBundle `
+        -g $config.resourceGroupName `
+        --kind CognitiveServices `
+        --sku S0 `
+        --location $config.location `
+        --yes    
+    }
 
     Get-CognitiveServiceKey;
 }
