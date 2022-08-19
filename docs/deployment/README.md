@@ -128,7 +128,7 @@ stages:
           azureSubscription: '$(serviceConnectionName)'
           scriptType: 'pscore'
           scriptLocation: 'scriptPath'
-          scriptPath: '$(Build.SourcesDirectory)/deployment/scripts/21_Build-DockerImages.ps1'
+          scriptPath: '$(Build.SourcesDirectory)/deployment/scripts/21_Build_DockerImages.ps1'
           arguments: '-EnvironmentName "$(environment)"'
 
   - stage: Build_Skills
