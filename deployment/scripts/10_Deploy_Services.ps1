@@ -2,8 +2,12 @@ Start-Transcript
 
 # Set the extension to use dynamic installation
 az config set extension.use_dynamic_install=yes_without_prompt
+
 # Add the extension for Azure Web App AuthV2
 az extension add --name authV2
+
+# Add Application Insights Extension
+az extension add --name application-insights
 
 function Set-Subscription
 {
