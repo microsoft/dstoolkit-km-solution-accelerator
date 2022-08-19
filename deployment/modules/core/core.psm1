@@ -102,20 +102,24 @@ function Import-Config() {
 
 function ConvertTo-String {
     param(
-      [Security.SecureString] $secureString
+        [Security.SecureString] $secureString
     )
 
-    # [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR((($secureString))))
+    return [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR((($secureString))))
 
-    try {
-      $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureString)
-      [Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
-    }
-    finally {
-      if ( $bstr -ne [IntPtr]::Zero ) {
-        [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
-      }
-    }
+    # $result = $null
+
+    # try {
+    #     $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureString)
+    #     $result = [Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
+    # }
+    # catch {
+    #     if ( $bstr -ne [IntPtr]::Zero ) {
+    #         $result = [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
+    #     }
+    # }
+
+    # return $result
 }
 
 function Import-Params([switch] $Reload) {
@@ -136,8 +140,10 @@ function Import-Params([switch] $Reload) {
 
     foreach ($prop in $parameterslist) {
         if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
-            $propValue = Get-ParamValue $prop.Name | ConvertTo-SecureString -AsPlainText -Force
-            Add-Param $prop.Name ConvertTo-String $propValue
+            $propValue = Get-ParamValue $prop.Name -AsSecureString
+            if ($propValue) {
+                Add-Param $prop.Name (ConvertTo-String -secureString $propValue)
+            }
         }
     }
 
@@ -170,7 +176,7 @@ function Get-Parameters {
     param (
         [string] $prefix
     )
-    $values=@()
+    $values = @()
     foreach ($property in $global:params.PSobject.Properties) {
 
         if (($property.name.indexOf($prefix) -ge 0) -and ($property.name.indexOf("Key") -lt 0)) {
@@ -182,15 +188,15 @@ function Get-Parameters {
 
 function Add-ServicesParameters {
 
-    if ( Test-FileExistence (Join-path $global:envpath ("pricing."+$config.id+".json"))) {
-        Add-ExtendedParameters ("pricing."+$config.id+".json")
+    if ( Test-FileExistence (Join-path $global:envpath ("pricing." + $config.id + ".json"))) {
+        Add-ExtendedParameters ("pricing." + $config.id + ".json")
     }
     else {
         Add-ExtendedParameters "pricing.json"
     }
 
-    if ( Test-FileExistence (Join-path $global:envpath ("services."+$config.id+".json"))) {
-        Add-ExtendedParameters ("services."+$config.id+".json")
+    if ( Test-FileExistence (Join-path $global:envpath ("services." + $config.id + ".json"))) {
+        Add-ExtendedParameters ("services." + $config.id + ".json")
     }
     else {
         Add-ExtendedParameters "services.json"
@@ -201,12 +207,12 @@ function Add-ServicesParameters {
     Add-Param "dataStorageContainerName" $dataStorageContainerName
 
     # Create the containers entries for UI SAS access
-    $StorageContainerAddresses=@()
+    $StorageContainerAddresses = @()
     foreach ($container in $config.storageContainers) {
-        $url = "https://"+$global:params.dataStorageAccountName+".blob.core.windows.net/"+$container
-        $StorageContainerAddresses+=$url
+        $url = "https://" + $global:params.dataStorageAccountName + ".blob.core.windows.net/" + $container
+        $StorageContainerAddresses += $url
     }
-    Add-Param "StorageContainerAddressesAsString" $([String]::Join(',',$StorageContainerAddresses))
+    Add-Param "StorageContainerAddressesAsString" $([String]::Join(',', $StorageContainerAddresses))
 
     Initialize-SearchConfig
 }
@@ -221,9 +227,20 @@ function Add-Param($name, $value) {
     }    
 }
 
-function Get-ParamValue($name) {
+function Get-ParamValue() {
+    param (
+        [string] $name,
+        [switch] $AsSecureString
+    )
+    $value = $global:params | Select-Object -ExpandProperty $name
 
-    return $global:params | Select-Object -ExpandProperty $name
+    if ($value) {
+        if ($AsSecureString) {
+            $value = ConvertTo-SecureString -String $value
+        }    
+    }
+
+    return $value
 }
 
 function Save-Parameters() {
@@ -236,13 +253,17 @@ function Save-Parameters() {
     foreach ($prop in $parameterslist) {
 
         $propValue = Get-ParamValue $prop.Name
-
+        
         if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
-            $propValue = ConvertTo-SecureString -String $propValue -AsPlainText -Force | ConvertFrom-SecureString
+            if ($propValue) {
+                $propValue = ConvertTo-SecureString -String $propValue -AsPlainText -Force | ConvertFrom-SecureString
+            }
         }
 
         $securedparams | Add-Member -MemberType NoteProperty -Name $prop.Name -Value $propValue -ErrorAction Ignore
     }
+
+    $securedparams | Add-Member -MemberType NoteProperty -Name "LastModifiedDate" -Value (Get-Date) -ErrorAction Ignore
 
     $securedparams | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath $global:envpath\"parameters.json" -Force    
 }
@@ -327,7 +348,7 @@ function Get-DeploymentOverlayPath() {
     $overridepath = join-path $global:workpath "config" $config.id  $relpath "*"
 
     if ($config.overlayPath) {
-        Write-Debug -Message ("Using configured overlay path "+$config.overlayPath)
+        Write-Debug -Message ("Using configured overlay path " + $config.overlayPath)
         $overridepath = join-path $global:workpath $config.overlayPath $relpath "*"
     }
 
@@ -353,7 +374,7 @@ function Initialize-Config() {
 
     $originalConfigPath = (join-path $WorkDir ".." "configuration" "*")
     Copy-Item -Path $originalConfigPath -Destination (join-path $configpath "\") -Recurse -Force -ErrorAction SilentlyContinue
-    Write-Debug -Message ("Config created and copied on "+$configpath)
+    Write-Debug -Message ("Config created and copied on " + $configpath)
     
     # Override - Only relevant when initializing a deployment
     $overridepath = Get-DeploymentOverlayPath "configuration"
@@ -691,7 +712,7 @@ function Invoke-SearchAPI {
     $baseSearchUrl = "https://" + $params.searchServiceName + ".search.windows.net"
     $fullUrl = $baseSearchUrl + $url
 
-    Write-Host -Message ("Calling Search API "+$method+": '"+$fullUrl+"'")
+    Write-Host -Message ("Calling Search API " + $method + ": '" + $fullUrl + "'")
 
     Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method $method -Body $body | ConvertTo-Json -Depth 100
 }
@@ -750,7 +771,7 @@ function Update-SearchIndex {
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        Invoke-SearchAPI -url ("/indexes/" + $jsonobj.name + "?api-version=" + $config.searchVersion+"&allowIndexDowntime="+$AllowIndexDowntime) -body $configBody
+        Invoke-SearchAPI -url ("/indexes/" + $jsonobj.name + "?api-version=" + $config.searchVersion + "&allowIndexDowntime=" + $AllowIndexDowntime) -body $configBody
     }
 }
 
@@ -841,7 +862,7 @@ function Search-Query {
     $baseSearchUrl = "https://" + $params.searchServiceName + ".search.windows.net"
     $fullUrl = $baseSearchUrl + "/indexes/" + $params.indexName + "/docs?search=" + $query + "&api-version=" + $config.searchVersion
 
-    Write-Debug -Message ("CallingGet  api: '"+$fullUrl+"'")
+    Write-Debug -Message ("CallingGet  api: '" + $fullUrl + "'")
     Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method Get
 };
 
@@ -1247,7 +1268,7 @@ function Build-Functions () {
                         Write-Host ("Building Linux-Python Function App" + $functionApp.Name) -ForegroundColor DarkCyan
                         # Linux - Python 
                         # $respath = $deploymentdir+"\linux\"+$functionApp.Name+".publish."+$now
-                        $respath = join-path $deploymentdir "linux" ($functionApp.Name+".publish."+$now)
+                        $respath = join-path $deploymentdir "linux" ($functionApp.Name + ".publish." + $now)
             
                         Remove-Item $respath -Recurse -ErrorAction SilentlyContinue
 
@@ -1433,7 +1454,7 @@ function Test-Functions() {
                     Write-Host $furl
 
                     try {
-                        $response = Invoke-WebRequest -Uri $furl -Method Post -Body '{"values":[{"recordId":"0","data":{}}]}' -Headers @{'Content-Type'='application/json'}
+                        $response = Invoke-WebRequest -Uri $furl -Method Post -Body '{"values":[{"recordId":"0","data":{}}]}' -Headers @{'Content-Type' = 'application/json' }
     
                         if ($response.StatusCode -eq 200) {
                             Write-Host "Function is OK!" -ForegroundColor Green
