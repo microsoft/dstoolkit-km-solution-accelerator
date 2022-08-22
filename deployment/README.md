@@ -193,7 +193,7 @@ vnetEnable                    : False
 
 ```
 
-A default parameter variable $params will also be available 
+A default variable $params will also be available 
 
 ```ps
 PS> $params
@@ -245,6 +245,20 @@ You will see a default list of services names, search related parameters mostly 
 
 Some Azure services have names length restrictions. Refer to our [documentation](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules) with that respect. 
 
+The $params variable is persisted in the parameters.json file located in your environement prefixed by 99-. 
+
+Service keys and connection strings are also stored in the $params in plain text to be used in deployment scripts but stored as secure string (PowerShell) in the parameters.json. 
+
+__Note__ Any parameter you set ending with the suffix **Key** or **ConnectionString** is automatically considered a secure string and added to your KeyVault during deployment. 
+
+Secure String in PowerShell implies the encrypted keys can't be shared across platforms. This provides another level of protection than storing the keys in plain text in json file.
+
+If you are loading your environment cross-platform To load all services keys back to the $params variable (and parameters.json) you may want to execute the below commands. 
+
+```ps
+Get-AllServicesKeys
+```
+The above can be generalized to avoid service keys and connection strings to be even stored in the parameters.json.
 
 ## 4 Deploy Azure core Services
 

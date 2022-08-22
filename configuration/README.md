@@ -37,7 +37,7 @@ pricing.json
 
 ## Services configuration 
 
-The file parameters.json contains a pre-defined list of services names to deploy. 
+The file services.json contains a pre-defined list of services names to deploy. 
 
 **services.json (example)**
 ```json

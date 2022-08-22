@@ -31,13 +31,9 @@ Once loaded, you can operate the solution through pre-defined powershell cmdlets
 |services.json|services.json|Service configuration file listing all services names you need for deployment|
 
 
-
-
-
-
 ## Parameters configuration 
 
-The file parameters.json contains a pre-defined list of services names to deploy. 
+The file services.json contains a pre-defined list of services names to deploy. 
 
 ```json
 {
