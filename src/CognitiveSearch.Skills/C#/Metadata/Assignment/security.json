@@ -1,14 +1,14 @@
 ﻿[
   {
     "source": [ "folder1", "restricted" ],
-    "target": [ "group1" ]
+    "target": [ "securitygroup1","securitygroup2" ]
   },
   {
     "source": [ "folder2" , "restricted"],
-    "target": [ "group2" ]
+    "target": [ "securitygroup2" ]
   },
   {
     "source": [ "folder3", "restricted" ],
-    "target": [ "group3" ]
+    "target": [ "securitygroup3" ]
   }
 ]
