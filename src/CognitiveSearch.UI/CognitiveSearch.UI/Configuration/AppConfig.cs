@@ -3,14 +3,16 @@
 
 using Knowledge.Services.Configuration;
 using Knowledge.Services.Graph;
-using Knowledge.Services.WebSearch;
 using Knowledge.Services.Maps;
+using Knowledge.Services.WebSearch;
 
 namespace CognitiveSearch.UI.Configuration
 {
     public class AppConfig
     {
         public OrganizationConfig Organization { get; set; }
+
+        public ClarityConfig Clarity { get; set; }
 
         public UIConfig UIConfig { get; set; }
 

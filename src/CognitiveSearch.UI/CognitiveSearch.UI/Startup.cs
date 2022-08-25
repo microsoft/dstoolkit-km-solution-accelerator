@@ -99,12 +99,17 @@ namespace CognitiveSearch.UI
             MapConfig mapConfigData = Configuration.GetSection("MapConfig").Get<MapConfig>();
             services.AddSingleton<MapConfig>(_ => mapConfigData);
 
+            // Microsoft Clarity Support
+            ClarityConfig clarityConfig = Configuration.GetSection("ClarityConfig").Get<ClarityConfig>();
+            services.AddSingleton<ClarityConfig>(_ => clarityConfig);
+
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 
             // Global Configuration singleton 
             var appConfig = new AppConfig
             {
                 Organization = orgConfig,
+                Clarity = clarityConfig,
                 UIConfig = uiConfig,
                 SearchConfig = configData,
                 GraphConfig = gconfigData,
