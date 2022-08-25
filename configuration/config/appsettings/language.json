@@ -1,17 +1,17 @@
 [
     {
         "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey/)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey)",
         "slotSetting": true
     },
     {
         "name": "AzureWebJobsStorage",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString/)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString)",
         "slotSetting": false
     },
     {
         "name": "BLOB_CONNECT_STRING",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/storageConnectionString/)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/storageConnectionString)",
         "slotSetting": false
     },
     {
@@ -26,7 +26,7 @@
     },
     {
         "name": "TEXT_ANALYTICS_KEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey/)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey)",
         "slotSetting": false
     },
     {
@@ -36,7 +36,7 @@
     },
     {
         "name": "TRANSLATOR_KEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey/)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey)",
         "slotSetting": false
     },
     {
@@ -71,7 +71,7 @@
     },
     {
         "name": "StorageKey",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/storageAccountKey/)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/storageAccountKey)",
         "slotSetting": false
     },
     {
