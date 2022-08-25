@@ -1,7 +1,7 @@
 [
   {
     "name": "key_phrases",
-    "url": "/api/search/suggest?highlights=false&fuzzy=false",
+    "url": "/api/search/suggest?highlights=false&fuzzy=false&targetField=key_phrases",
     "template": {
       "header": "<h5 class=\"suggestions-group-name\">Key Phrases</h5>"
     }
