@@ -908,6 +908,7 @@ h7 a {
 
 #doc-count {
     font-size: 12px !important;
+    min-width: 250px
 }
 
 h7 {

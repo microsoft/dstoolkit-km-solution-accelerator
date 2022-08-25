@@ -420,7 +420,7 @@ Microsoft.Web = {
                 entitiesHtml += '</button>';
                 entitiesHtml += '</h2>';
 
-                entitiesHtml += '<div id="web-bing-entity" class="accordion-collapse collapse" role="option" aria-labelledby="web-bing-entities-id">';
+                entitiesHtml += '<div id="web-bing-entity" class="accordion-collapse collapse" role="group" aria-labelledby="web-bing-entities-id">';
 
                 entitiesHtml += '<div class="accordion-body">';
                 entitiesHtml += '<ul>';

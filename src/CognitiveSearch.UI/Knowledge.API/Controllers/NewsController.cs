@@ -81,7 +81,7 @@ namespace Knowledge.API.Controllers
             return new ContentResult
             {
                 Content = sw.ToString(),
-                ContentType = "application/xml",
+                ContentType = "text/xml",
                 StatusCode = 200
             };
         }
@@ -144,7 +144,7 @@ namespace Knowledge.API.Controllers
             return new ContentResult
             {
                 Content = sw.ToString(),
-                ContentType = "application/xml",
+                ContentType = "text/xml",
                 StatusCode = 200
             };
         }

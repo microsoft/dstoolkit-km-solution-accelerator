@@ -7,20 +7,22 @@ Microsoft.Search = {
     setQueryInProgress: function () {
         this.isQueryInProgress = true;
         $(".tt-menu").hide();
-        $('#doc-count').hide();
-        $('#loading-indicator').attr("style", "display: flex !important");
+        $('#doc-count').addClass("d-none");
+        $('#loading-indicator').removeClass('d-none');
+        $('#loading-indicator').addClass('d-flex');
     },
     setQueryCompleted: function () {
         this.isQueryInProgress = false;
         $(".tt-menu").hide();
-        $('#doc-count').show();
-        $('#loading-indicator').attr("style", "display: none !important");
+        $('#doc-count').removeClass('d-none');
+        $('#loading-indicator').removeClass('d-flex');
+        $('#loading-indicator').addClass("d-none");
 
     },
     disableSearchBox: function () {
 
-        $("#navbar-row-1").attr("style", "display: none !important");
-        $("#filter-navbar").attr("style", "display: none !important");
+        $("#navbar-row-1").addClass("d-none");
+        $("#filter-navbar").addClass("d-none");
 
         if (Microsoft.View && Microsoft.View.config) {
             $('#navitem-' + Microsoft.View.config.id).addClass('navbar-highlight');
@@ -601,10 +603,10 @@ Microsoft.Search.Results = {
                 fileContainerHTML += '</div>';
 
                 if (Microsoft.Utils.IsTIFFImage(pathExtension)) {
-                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" src="data:image/png;base64, ' + image_data + '"/>';
+                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" title="File Viewer" src="data:image/png;base64, ' + image_data + '"/>';
                 }
                 else {
-                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" src="' + Microsoft.Search.GetSASTokenFromPath(path) + '"/>';
+                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" title="File Viewer" src="' + Microsoft.Search.GetSASTokenFromPath(path) + '"/>';
                 }
 
                 fileContainerHTML += '<div id="extendable-image-after-container">';
@@ -692,10 +694,10 @@ Microsoft.Search.Results = {
 
                 fileContainerHTML += '  <div class="image-container">';
                 if (Microsoft.Utils.IsTIFFImage(pathExtension)) {
-                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" src="data:image/png;base64, ' + docresult.image.image_data + '"/>';
+                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" title="Next Page" src="data:image/png;base64, ' + docresult.image.image_data + '"/>';
                 }
                 else {
-                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" src="' + Microsoft.Search.GetSASTokenFromPath(path) + '"/>';
+                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" title="Next Page" src="' + Microsoft.Search.GetSASTokenFromPath(path) + '"/>';
                 }
                 fileContainerHTML += '  </div>';
 
@@ -1108,10 +1110,10 @@ Microsoft.Search.Results.Siblings = {
                 fileContainerHTML += '  <div class="image-container border border-1 mb-2">';
 
                 if (Microsoft.Utils.IsTIFFImage(pathExtension)) {
-                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" src="data:image/png;base64, ' + docresult.image.image_data + '"/>';
+                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" title="Sibling Viewer" src="data:image/png;base64, ' + docresult.image.image_data + '"/>';
                 }
                 else {
-                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" src="' + Microsoft.Search.GetSASTokenFromPath(path) + '"/>';
+                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" title="Sibling Viewer" src="' + Microsoft.Search.GetSASTokenFromPath(path) + '"/>';
                 }
 
                 fileContainerHTML += '  </div>';

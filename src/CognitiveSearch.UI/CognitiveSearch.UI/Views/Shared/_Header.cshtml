@@ -71,7 +71,7 @@
                                                 }
                                                 else if ( ! String.IsNullOrEmpty(vertical.svgicon) ) 
                                                 {
-                                                    <span style="display:inline-block;">
+                                                    <span class="d-inline-block">
                                                         <img alt="@vertical.title" class="image-vertical-svg" src="/icons/@vertical.svgicon" title="@vertical.title"/> @vertical.name
                                                     </span>
                                                 }
@@ -88,7 +88,7 @@
                                             }
                                             else if ( ! String.IsNullOrEmpty(vertical.svgicon) ) 
                                             {
-                                                <span style="display:inline-block;">
+                                                <span class="d-inline-block">
                                                     <img alt="@vertical.title" class="image-vertical-svg" src="/icons/@vertical.svgicon" title="@vertical.title"/> @vertical.name
                                                 </span>
                                             }
@@ -125,7 +125,7 @@
     <partial name="_SearchOptionsPartial"/>
 
     <!-- Navigation Form -->
-    <form style="display: none" action="/url" method="POST" id="navigation-form">
+    <form class="d-none" action="/url" method="POST" id="navigation-form">
         <input type="hidden" id="navigation-q" name="q" value=""/>
         <input type="hidden" id="navigation-facets" name="facets" value=""/>
     </form>

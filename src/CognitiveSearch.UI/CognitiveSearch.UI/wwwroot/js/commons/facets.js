@@ -188,7 +188,7 @@ Microsoft.Facets = {
                     facetResultsHTML += title;
                     facetResultsHTML += '</button>';
                     facetResultsHTML += '</h2>';
-                    facetResultsHTML += '<div id="' + nameid + '" class="accordion-collapse collapse" role="option" aria-labelledby="' + facetId + '" data-bs-parent="#parent-' + nameid + '">';
+                    facetResultsHTML += '<div id="' + nameid + '" class="accordion-collapse collapse" role="group" aria-labelledby="' + facetId + '" data-bs-parent="#parent-' + nameid + '">';
 
                     if (item.target) {
                         facetResultsHTML += '<div id="' + item.target + '-accordion-body" class="accordion-body">';
@@ -407,7 +407,7 @@ Microsoft.Facets = {
                     facet_html += '<div id="' + nameid + '" class="accordion-collapse " aria-labelledby="' + facetId + '" data-bs-parent="#' + rendering_type + '-facets-accordion">';
                 }
                 else {
-                    facet_html += '<div id="' + nameid + '" class="accordion-collapse collapse" role="option" aria-labelledby="' + facetId + '" data-bs-parent="#' + rendering_type + '-facets-accordion">';
+                    facet_html += '<div id="' + nameid + '" class="accordion-collapse collapse" role="group" aria-labelledby="' + facetId + '" data-bs-parent="#' + rendering_type + '-facets-accordion">';
                 }
 
                 facet_html += '<div id="' + nameid + '-accordion-body" class="accordion-body">';
