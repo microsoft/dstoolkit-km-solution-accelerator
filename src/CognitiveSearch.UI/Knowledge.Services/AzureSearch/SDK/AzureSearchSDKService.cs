@@ -533,7 +533,7 @@ namespace Knowledge.Services.AzureSearch.SDK
 
             QueryParameters queryParameters = request.parameters ?? (new());
             queryParameters.RowCount = 1;
-            //queryParameters.inOrderBy = new List<string> { "page_number asc" };
+            queryParameters.inOrderBy = new List<string> { "page_number asc" };
 
             UserOptions userOptions = new();
 
