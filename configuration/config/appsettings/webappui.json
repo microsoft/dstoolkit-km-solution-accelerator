@@ -1,12 +1,12 @@
 [
   {
     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey/)",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey)",
     "slotSetting": true
   },
   {
     "name": "AzureWebJobsStorage",
-    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString/)",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString)",
     "slotSetting": false
   },
   {
@@ -38,6 +38,11 @@
     "name": "InstrumentationEngine_EXTENSION_VERSION",
     "value": "disabled",
     "slotSetting": true
+  },
+  {
+    "name": "ClarityConfig:ProjectId",
+    "value": "{{config.clarityProjectId}}",
+    "slotSetting": false
   },
   {
     "name": "ModelConfig:IsEnabled",
@@ -76,7 +81,7 @@
   },
   {
     "name": "SearchServiceConfig:AdminKey",
-    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/searchServiceKey/)",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/searchServiceKey)",
     "slotSetting": false
   },
   {
@@ -91,7 +96,7 @@
   },
   {
     "name": "MapConfig:AzureMapsSubscriptionKey",
-    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/mapsSubscriptionKey/)",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/mapsSubscriptionKey)",
     "slotSetting": false
   },
   {
@@ -131,7 +136,7 @@
   },
   {
     "name": "SearchServiceConfig:InstrumentationKey",
-    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey/)",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey)",
     "slotSetting": false
   },
   {
@@ -161,7 +166,7 @@
   },
   {
     "name": "SearchServiceConfig:QueryKey",
-    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/searchServiceQueryKey/)",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/searchServiceQueryKey)",
     "slotSetting": false
   },
   {
@@ -211,7 +216,7 @@
   },
   {
     "name": "Storageconfig:StorageAccountKey",
-    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/storageAccountKey/)",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/storageAccountKey)",
     "slotSetting": false
   },
   {
@@ -246,7 +251,7 @@
   },
   {
     "name": "TranslationConfig:SubscriptionKey",
-    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey/)",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey)",
     "slotSetting": false
   },
   {
@@ -281,7 +286,7 @@
   },
   {
     "name": "SpellCheckConfig:SubscriptionKey",
-    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/bingServicesKey/)",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/bingServicesKey)",
     "slotSetting": false
   },
   {
@@ -341,7 +346,7 @@
   },
   {
     "name": "WebSearchConfig:SubscriptionKey",
-    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/bingServicesKey/)",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/bingServicesKey)",
     "slotSetting": false
   },
   {
