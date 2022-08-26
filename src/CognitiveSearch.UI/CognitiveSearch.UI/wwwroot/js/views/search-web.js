@@ -222,7 +222,7 @@ Microsoft.Web = {
                     resultsHtml += '<div class="web-carousel-item-image">'
 
                     resultsHtml += '<a target="_blank" href=\'' + imageresult.contentUrl + '\'>';
-                    resultsHtml += '<img class="web-carousel-item-image" src="' + imageresult.thumbnailUrl + '"/>';
+                    resultsHtml += '<img title="' + imageresult.name + '" class="web-carousel-item-image" src="' + imageresult.thumbnailUrl + '"/>';
                     resultsHtml += '</a>';
 
                     resultsHtml += '<a target="_blank" href=\'' + imageresult.hostPageUrl + '\'>';
@@ -274,7 +274,7 @@ Microsoft.Web = {
                     resultsHtml += '<div class="web-carousel-item-image">'
 
                     resultsHtml += '<a target="_blank" href=\'' + imageresult.contentUrl + '\'>';
-                    resultsHtml += '<img class="web-carousel-item-image" src="' + imageresult.thumbnailUrl + '"/>';
+                    resultsHtml += '<img title="' + imageresult.name + '" class="web-carousel-item-image" src="' + imageresult.thumbnailUrl + '"/>';
                     resultsHtml += '</a>';
 
                     resultsHtml += '<a target="_blank" href=\'' + imageresult.hostPageUrl + '\'>';
@@ -640,7 +640,7 @@ Microsoft.Web = {
         htmlDiv += '            <div class="d-grid gap-2 d-md-flex" >';
 
         if (url && url.endsWith('.pdf')) {
-            htmlDiv += '                <button type="button" class="btn btn-outline-danger btn-sm" onclick="Microsoft.Web.UrlUpload(\'' + Base64.encode(url) + '\');">';
+            htmlDiv += '                <button type="button" title="Upload to your data lake" class="btn btn-outline-danger btn-sm" onclick="Microsoft.Web.UrlUpload(\'' + Base64.encode(url) + '\');">';
             htmlDiv += '                    <span class="bi bi-cloud-download"/>';
             htmlDiv += '                </button>';
         }
@@ -666,7 +666,7 @@ Microsoft.Web = {
         }
         htmlDiv += '    <div class="col-md-12" style="padding: 5px;">';
         htmlDiv += '            <div class="d-grid gap-2 d-md-flex" >';
-        htmlDiv += '                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="Microsoft.Web.UrlUpload(\'' + Base64.encode(url) + '\');">';
+        htmlDiv += '                <button type="button" title="Upload to your data lake" class="btn btn-outline-secondary btn-sm" onclick="Microsoft.Web.UrlUpload(\'' + Base64.encode(url) + '\');">';
         htmlDiv += '                    <span class="bi bi-cloud-download"/>';
         htmlDiv += '                </button>';
         htmlDiv += '            </div>';

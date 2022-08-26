@@ -184,6 +184,12 @@ a {
     text-decoration: none !important;
 }
 
+ /* Accessibility color contrast #6c757d => #717a83 */
+ .news-carousel-ìtem-title a {
+    color: #717a83 !important;
+    text-decoration: none !important;
+}
+
 .highlight {
     background-color: rgb(160, 197, 232);
     padding: 0 2px;
@@ -818,7 +824,7 @@ body {
 
 .modification-line {
     font-style: italic;
-    color: darkgray;
+    color: #6d6d6d;
 }
 
 .document-details-header {

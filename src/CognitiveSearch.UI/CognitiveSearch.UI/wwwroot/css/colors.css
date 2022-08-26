@@ -306,6 +306,11 @@
     color: white !important;
     font-weight: 500
 }
+
+.news-carousel-item-date {
+    color: white !important;
+}
+
 .news-carousel-item-description {
     color: white !important;
 }

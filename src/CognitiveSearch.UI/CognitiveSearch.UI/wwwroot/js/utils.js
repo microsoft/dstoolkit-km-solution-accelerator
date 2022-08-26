@@ -379,8 +379,8 @@ Microsoft.Utils = {
         if (mdate) {
             var d = new Date(mdate);
             resultHtml += '<div class="col">';
-            resultHtml += '<label class="modification-line me-2" for="floatingInputValue">Last Modified</label>';
-            resultHtml += '<input type="text" readonly class="p-0 border-0 bg-light" id="floatingInputValue" title="' + d.toLocaleString() + '" value="' + d.toLocaleString() + '">';
+            resultHtml += '<label class="modification-line me-2" for="date'+docresult.index_key+'">Last Modified</label>';
+            resultHtml += '<input type="text" readonly class="p-0 border-0 bg-light" id="date'+docresult.index_key+'" title="' + d.toLocaleString() + '" value="' + d.toLocaleString() + '">';
             resultHtml += '</div>';
         }
 
@@ -389,15 +389,15 @@ Microsoft.Utils = {
                 var author = docresult.authors[0];
 
                 resultHtml += '<div class="col">';
-                resultHtml += '<label class="modification-line me-2" for="floatingInputValue">Author(s)</label>';
+                resultHtml += '<label class="modification-line me-2" for="authors'+docresult.index_key+'">Author(s)</label>';
 
                 if (author.length > 60) {
                     // resultHtml += ' Author(s) ' + author.substring(0, 50) + "..."
-                    resultHtml += '<input type="text" readonly class="p-0 border-0 bg-light" id="floatingInputValue" title="' + author + '" value="' + author.substring(0, 50) + '...">';
+                    resultHtml += '<input type="text" readonly class="p-0 border-0 bg-light" id="authors'+docresult.index_key+'" title="' + author + '" value="' + author.substring(0, 50) + '...">';
                 }
                 else {
                     // resultHtml += ' Author(s) ' + author
-                    resultHtml += '<input type="text" readonly class="p-0 border-0 bg-light" id="floatingInputValue" title="' + author + '" value="' + author + '...">';
+                    resultHtml += '<input type="text" readonly class="p-0 border-0 bg-light" id="authors'+docresult.index_key+'" title="' + author + '" value="' + author + '...">';
                 }
                 resultHtml += '</div>';
             }

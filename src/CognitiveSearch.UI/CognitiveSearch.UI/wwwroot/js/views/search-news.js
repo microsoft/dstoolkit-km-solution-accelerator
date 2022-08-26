@@ -119,13 +119,14 @@ Microsoft.News = {
             resultsHtml += '<div class="news-carousel-item">'
 
             resultsHtml += '<div class="news-carousel-item-body rounded">'
+
             resultsHtml += '<h4 class="news-carousel-ìtem-title" id="item-' + i + '">';
             resultsHtml += '<a target="_blank" href="' + feed_entry.link + '">' + feed_entry.title + '</a>';
             resultsHtml += '</h4>';
 
             if (feed_entry.pubDate) {
                 var d = new Date(feed_entry.pubDate);
-                resultsHtml += '<h6 class="news-carousel-item-title">' + d.toLocaleString() + '</h6>';
+                resultsHtml += '<h6 class="news-carousel-item-date">' + d.toLocaleString() + '</h6>';
 
                 if (feed_entry.description) {
                     resultsHtml += '<span class="news-carousel-item-description">';
@@ -280,7 +281,7 @@ Microsoft.News = {
                     resultsHtml += '<img title="' + feed_entry['media:description'] + '" src="' + feed_entry['media:content'] + '" class="img-fluid rounded float-right" onError="this.onerror=null;this.src=\'/images/blank.png\';" ></img>';
                 }
                 else {
-                    resultsHtml += '<img src="' + feed_entry['media:content'] + '" class="img-fluid rounded float-right" onError="this.onerror=null;this.src=\'/images/blank.png\';" ></img>';
+                    resultsHtml += '<img title="'+feed_entry.title+'" src="' + feed_entry['media:content'] + '" class="img-fluid rounded float-right" onError="this.onerror=null;this.src=\'/images/blank.png\';" ></img>';
                 }
             }
 
