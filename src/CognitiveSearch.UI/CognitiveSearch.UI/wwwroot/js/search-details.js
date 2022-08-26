@@ -260,7 +260,7 @@ Microsoft.Results.Details = {
         } else {
             // If embedded images tab is not relevant then skip
             if (!Microsoft.Utils.IsImageExtension(pathExtension)) {
-                headerContainerHTML += '<img style="width: 32px;height: 32px;margin-left: 15px;" title="'+Microsoft.Utils.GetDocumentTitle(docresult)+'" src="' + iconPath + '" />';
+                headerContainerHTML += '<img style="width: 32px;height: 32px;margin-left: 15px;" title="'+docresult.title+'" src="' + iconPath + '" />';
             }
         }
     
