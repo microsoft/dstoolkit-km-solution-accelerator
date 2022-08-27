@@ -90,63 +90,7 @@ namespace Knowledge.API.Controllers
         {
             selector.SourceFeed = feed;
 
-            //SyndicationElementExtension = new SyndicationElementExtension()
-            //selector.ElementExtensions.Add(new SyndicationElementExtension());
             return selector;
-        }
-
-        [HttpPost("getlivefeed")]
-        public IActionResult GetLiveFeed(FeedFacet[] feeds)
-        {
-            List<SyndicationItem> finalItems = new List<SyndicationItem>();
-
-            try
-            {
-                foreach (FeedFacet feed in feeds)
-                {
-                    XmlReaderSettings settings = new XmlReaderSettings
-                    {
-                        DtdProcessing = DtdProcessing.Ignore
-                    };
-
-                    XmlReader reader = XmlReader.Create(feed.RSSFeedURL, settings);
-                    Rss20FeedFormatter formatter = new Rss20FeedFormatter();
-                    formatter.ReadFrom(reader);
-                    reader.Close();
-
-                    finalItems.AddRange(formatter.Feed.Items);
-                }
-                // Sort the feed items by date
-                finalItems.Sort(CompareDates);
-            }
-            catch (Exception ex)
-            {
-                this.telemetryClient.TrackException(ex);
-            }
-
-            // Create the feeds aggregated feed ...
-            SyndicationFeed finalFeed = new SyndicationFeed
-            {
-                Title = new TextSyndicationContent("Aggregated Feed"),
-                Copyright = new TextSyndicationContent("Copyright (C) 2021. All rights reserved."),
-                Description = new TextSyndicationContent("RSS Feed Generated .NET Syndication Classes"),
-                Generator = "Aggregated Feed Generator",
-                Items = finalItems
-            };
-
-            StringWriter sw = new StringWriter();
-            XmlWriter writer = XmlWriter.Create(sw);
-            Rss20FeedFormatter finalFormatter = new Rss20FeedFormatter(finalFeed);
-            finalFormatter.WriteTo(writer);
-            writer.Close();
-            sw.Flush();
-
-            return new ContentResult
-            {
-                Content = sw.ToString(),
-                ContentType = "text/xml",
-                StatusCode = 200
-            };
         }
 
         private int CompareDates(SyndicationItem x, SyndicationItem y)

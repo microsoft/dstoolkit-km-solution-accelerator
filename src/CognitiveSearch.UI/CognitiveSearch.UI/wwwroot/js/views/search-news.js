@@ -32,21 +32,6 @@ Microsoft.News = {
         });
     },
 
-    GetHomeNewsFeeds: function () {
-        var feedKeys = Object.keys(this.news_facets);
-
-        var allFeeds = [];
-        for (var j = 0; j < feedKeys.length; j++) {
-            var feed_key=feedKeys[j];
-            for (var i = 0; i < this.news_facets[feed_key].length; i++) {
-                var feed = this.news_facets[feed_key][i];
-                if (feed.includeHomePage) {
-                    allFeeds.push(feed);
-                }
-            }
-        }
-        return allFeeds;
-    },
     GetAllNewsFeeds: function () {
         var feedKeys = Object.keys(this.news_facets);
 
@@ -60,24 +45,32 @@ Microsoft.News = {
         }
         return allFeeds;
     },
+    
+    GetHomeNewsFeeds: function () {
+        // filter out feeds that are not included on the home page 
+        var allFeeds = this.GetAllNewsFeeds().filter(function (feed) { return feed.includeHomePage }); 
 
-    FecthLiveNews: function () {
+        return allFeeds;
+    },
+
+    FetchHomeNews: function () {
         this.init().then(() => {
             this.GetLiveNews();
         });
     },
 
     GetLiveNews: function () {
-        this.GetLiveNewsFeed(this.UpdateLiveNews);
+        this.GetLiveNewsFeed(this.RenderHomeNewsList);
     },
 
     GetLiveNewsFeed: function (update_method) {
         var selectedFeeds = this.GetHomeNewsFeeds();
 
-        $.postXML('/api/news/getlivefeed', selectedFeeds, update_method);
+        $.postXML('/api/news/getliveaggregatedfeed', selectedFeeds, update_method);
     },
 
-    UpdateLiveNews: function (data, status, xhr) {
+    // Carousel aren't accessible friendly.
+    RenderHomeNewsCarousel: function (data, status, xhr) {
         var resultsHtml = '';
 
         var feeds = [];
@@ -163,6 +156,44 @@ Microsoft.News = {
         });
     },
 
+    RenderHomeNewsList: function (data, status, xhr) {
+
+        var feeds = [];
+
+        var xmlDoc = xhr.responseXML;
+
+        // access to XML nodes and get node values
+        var channel = xmlDoc.getElementsByTagName('channel');
+        var items = xmlDoc.getElementsByTagName('item');
+
+        for (var i = 0; i < items.length; i++) {
+            var entry = items[i];
+
+            var feed_entry = {};
+
+            for (var j = 0; j < entry.children.length; j++) {
+                var tag = entry.children[j];
+
+                if (feed_entry[tag.tagName]) {
+                    feed_entry[tag.tagName] += '||' + tag.textContent;
+                }
+                else {
+                    if (tag.tagName === "media:content") {
+                        feed_entry[tag.tagName] = tag.getAttribute('url');
+                    }
+                    else {
+                        feed_entry[tag.tagName] = tag.textContent;
+                    }
+                }
+            }
+
+            feeds.push(feed_entry);
+        }
+
+        Microsoft.News.RenderLiveNewsList(feeds, false, Microsoft.News.LIVE_NEWS_TAG);
+
+    },
+
     ClearFeed: function () {
         $(Microsoft.News.LATEST_NEWS_TAG).empty();
     },
@@ -222,6 +253,13 @@ Microsoft.News = {
     },
 
     RenderLiveNewsResults: function (nav_feeds, feeds, quickactions = false) {
+
+        this.RenderLiveNewsNavigation(nav_feeds);
+
+        this.RenderLiveNewsList(feeds, quickactions);
+    },
+
+    RenderLiveNewsNavigation: function (nav_feeds, targetTag = '#navbar-feeds') {
         var resultsHtml = '';
 
         resultsHtml += '<a class="navbar-brand" href="javascript:void(0)">Latest News</a>';
@@ -238,11 +276,13 @@ Microsoft.News = {
         }
 
         resultsHtml += '</nav>';
-        $('#navbar-feeds').html(resultsHtml);
 
-        resultsHtml = '';
+        $(targetTag).html(resultsHtml);
+    },
 
-        resultsHtml += '<div data-bs-spy="scroll" data-bs-target="#navbar-feeds" data-bs-offset="0" tabindex="0">';
+    RenderLiveNewsList: function (feeds, quickactions = false, targetTag = Microsoft.News.view_result_tag) {
+
+        var resultsHtml = '<div data-bs-spy="scroll" data-bs-target="#navbar-feeds" data-bs-offset="0" tabindex="0">';
 
         for (var i = 0; i < feeds.length; i++) {
             var feed_entry = feeds[i];
@@ -291,11 +331,11 @@ Microsoft.News = {
         }
         resultsHtml += '</div>';
 
-        $(Microsoft.News.view_result_tag).html(resultsHtml);
+        $(targetTag).html(resultsHtml);
     },
 
-    ClearNewsResults: function () {
-        $(view_result_tag).empty();
+    ClearNewsResults: function (targetTag = Microsoft.News.view_result_tag) {
+        $(targetTag).empty();
     },
 
     UpdateNewsFacets: function (facets, alwaysOpen = true) {

@@ -78,7 +78,7 @@ Highlights is a sequence of sections, similar to the parallax layout.
             "id": "livenews",
             "enable": true,
             "title": "Latest News",
-            "method": "Microsoft.News.FecthLiveNews",
+            "method": "Microsoft.News.FetchHomeNews",
             "icon": "bi bi-bell-fill"
         },
         {

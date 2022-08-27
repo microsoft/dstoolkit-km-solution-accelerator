@@ -271,11 +271,6 @@
     border-right-color: #da291c !important;
 }
 
-.news-feed-row:hover {
-    background-color: #f3f3f3 !important;
-}
-
-
 .web-facet-menu-header {
     color: white;
 }
@@ -291,6 +286,30 @@
     background-color: black !important;
 }
 
+/* Live News */
+
+.livenews-feed-content a {
+    color: #777777  !important;
+}
+
+.livenews-feed-content h1,h2,h3,h4,h5,h6 {
+    color: #777777 !important;
+}
+
+.livenews-feed-content button {
+    display: none !important;
+}
+.livenews-feed-content p {
+    color: #777777 !important;
+}
+
+.livenews-feed-content .news-feed-row:hover {
+    background-color: none !important;
+}
+
+.news-feed-row:hover {
+    background-color: #f3f3f3 !important;
+}
 
 /* SLICK CAROUSEL */
 

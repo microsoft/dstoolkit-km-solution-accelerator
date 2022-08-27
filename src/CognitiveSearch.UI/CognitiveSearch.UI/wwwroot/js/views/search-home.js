@@ -18,8 +18,6 @@ Microsoft.Home = {
             }
         });
     
-        //$('#q').attr('placeholder', Microsoft.View.config.placeHolder);
-    
         window.document.title = Microsoft.View.config.pageTitle;
     
         $("#search-input-button").click(function (event) {
@@ -261,84 +259,8 @@ Microsoft.Home = {
                 adaptiveHeight: false
             });
         }
-    },
-    
-    // NEWS 
-    
-    GetLatestNews:function (parameters) {
-    
-        $.postJSON('/api/news/getlatest',
-            {
-                queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
-                searchFacets: parameters?.facets,
-                parameters: { RowCount: 12 },
-                content_sources: []
-            },
-            function (data) {
-                if (parameters.update_method) {
-                    Microsoft.Utils.executeFunctionByName(parameters.update_method, window, parameters, data);
-                }
-                else {
-                    Microsoft.Home.HomeUpdateLatestNews(data?.results, parameters?.tag_id, parameters?.tag_class, false);
-                }
-            }
-        );
-    },
-    
-    HomeUpdateLatestNews:function (results, target_tag = Microsoft.News.LATEST_NEWS_TAG, slick_class = '.news-feed-content', slide_show = true) {
-    
-        var resultsHtml = '';
-        var has_carousel_data = false;
-    
-        $(target_tag).html(resultsHtml);
-    
-        if (results && results.length > 0) {
-    
-            has_carousel_data = true;
-    
-            resultsHtml += '<div class="news-feed-content row row-cols-3">';
-    
-            for (var i = 0; i < results.length; i++) {
-    
-                var docresult = results[i].Document !== undefined ? results[i].Document : results[i];
-    
-                resultsHtml += '<div class="news-carousel-item col">'
-    
-                resultsHtml += '<div class="news-carousel-item-body rounded">'
-                resultsHtml += '<div class="news-carousel-item-title">';
-                resultsHtml += '<a target="_blank" class="text-white" href=\'' + docresult.document_url + '\'> ' + docresult.title + '</a>';
-                resultsHtml += '</h6>';
-                resultsHtml += Microsoft.Utils.GetModificationTime(docresult, 'text-secondary');
-                if (docresult.content_source) {
-                    resultsHtml += '<span class="fst-italic">' + docresult.content_source + '</span>';
-                }
-                resultsHtml += '</div>';
-                resultsHtml += '</div>';
-    
-                resultsHtml += '</div>';
-            }
-    
-            resultsHtml += '</div>';
-        }
-    
-        $(target_tag).html(resultsHtml);
-    
-        if (has_carousel_data > 0) {
-            if (slide_show) {
-                $(slick_class).not('.slick-initialized').slick({
-                    infinite: true,
-                    slidesToShow: 3,
-                    slidesToScroll: 2,
-                    nextArrow: '<span class="bi bi-chevron-right nextArrowBtn btn btn-dark"></span>',
-                    prevArrow: '<span class="bi bi-chevron-left prevArrowBtn btn btn-dark"></span>',
-                    variableWidth: true,
-                    adaptiveHeight: false,
-                    autoplay: true,
-                    autoplaySpeed: 3000
-                });
-            }
-        }
     }
+    
 }
 
 // export default Microsoft.Home;
