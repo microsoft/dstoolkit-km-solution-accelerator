@@ -8,6 +8,5 @@ namespace Knowledge.Services.SpellChecking
     public interface ISpellCheckingService
     {
         public Task<string> SpellCheckAsync(string text);
-
     }
 }

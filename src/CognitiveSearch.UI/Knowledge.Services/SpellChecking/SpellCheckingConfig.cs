@@ -4,14 +4,16 @@
 namespace Knowledge.Services.SpellChecking
 {
     public class SpellCheckingConfig : AbstractServiceConfig
-{
+    {
+        public string Provider { get; set; }
+
         public string SubscriptionKey { get; set; }
 
         public string Endpoint { get; set; }
-
         public string SupportedLanguages { get; set; }
         public string Market { get; set; }
         public string Mode { get; set; }
+
         public int CacheExpirationTime { get; set; }
     }
 }

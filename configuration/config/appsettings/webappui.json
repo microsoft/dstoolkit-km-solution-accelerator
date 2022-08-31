@@ -156,7 +156,7 @@
   },
   {
     "name": "SearchServiceConfig:SpellCheckQueryText",
-    "value": "{{config.BingSpellCheckEnabled}}",
+    "value": "{{config.spellCheckEnabled}}",
     "slotSetting": false
   },
   {
@@ -271,7 +271,12 @@
   },
   {
     "name": "SpellCheckConfig:IsEnabled",
-    "value": "{{config.BingSpellCheckEnabled}}",
+    "value": "{{config.spellCheckEnabled}}",
+    "slotSetting": false
+  },
+  {
+    "name": "SpellCheckConfig:Provider",
+    "value": "{{config.spellCheckProvider}}",
     "slotSetting": false
   },
   {

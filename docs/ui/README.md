@@ -359,11 +359,13 @@ Choose if you want your query to use the semantic search feature.
 
 When enabled, each search query is translated to English before being sent to ACS. The Translation service is enabled by default during the data enrichment phase of the indexing. 
 
-## Query Spell Checking 
+## Query SpellChecking 
 
-When the spellcheck service is enabled by config.BingSpellCheckEnabled, this feature will leverage Microsoft Bing to spell check your search query. 
+When the spellcheck service is enabled by config.spellCheckEnabled and that the config.spellCheckProvider is set to "Bing", this feature will leverage Microsoft Bing to spell check your search query. 
 
 Make sure to review [Microsoft Privacy Statement](https://go.microsoft.com/fwlink/?LinkId=521839)
+
+You can add your own SpellChecking service. Review the KnowledgeServices project SpellChecking folder to evaluate how to create your own.
 
 ## Suggestion as Filter 
 

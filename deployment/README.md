@@ -67,7 +67,8 @@ The below **contoso.json** environment configuration file you can easily adjust 
     "resourceGroupName": "kmcontoso-rg",
     "searchDefaultFromLanguageCode": "en",
     "searchDefaultToLanguageCode": "en",
-    "BingSpellCheckEnabled":false,
+    "spellCheckEnabled":false,
+    "spellCheckProvider":"Bing",
     "webSearchEnabled": false,
     "webMarket": "en-uk",
     "mapSearchEnabled": false,
@@ -103,7 +104,8 @@ Below the list of most common entries your configuration file should contains:
 |resourceGroupName|Resource Group the KM solution would be deployed|
 |searchDefaultFromLanguageCode|Default FROM language code for translation|
 |searchDefaultToLanguageCode|Default TO language code for translation|
-|BingSpellCheckEnabled|Boolean indicating if your solution will use Bing as SpellCheck service.|
+|spellCheckEnabled|Boolean indicating if your solution supports a spellChecking service.|
+|spellCheckProvider|String indicating which SpellChecking service you will use. By deafult we support "Bing". You may add your own.|
 |webSearchEnabled|Boolean indicating if your solution will use Bing as Web Search service.|
 |webMarket|When Web Search is enabled, indicates which market to use for querying.|
 |mapSearchEnabled|Boolean indicating if your solution will use Azure Maps.|
@@ -177,7 +179,7 @@ adminUser                     : admin@contoso.com
 resourceGroupName             : kmcontoso-rg
 searchDefaultFromLanguageCode : en
 searchDefaultToLanguageCode   : en
-BingSpellCheckEnabled         : False
+spellCheckEnabled             : False
 webSearchEnabled              : False
 webMarket                     : en-uk
 mapSearchEnabled              : False
@@ -282,7 +284,7 @@ As a result, if Bing is a requirement for your deployment, you will be asked to 
 
 | Services | Configuration parameter | Impact |
 | ------------- | ----------- | ----------- | 
-| Bing | webSearchEnabled or BingSpellCheckEnabled | A value of true in your config will ask you to manually input the Bing Search Key while deploying |
+| Bing | webSearchEnabled or (config.spellCheckEnabled and config.spellCheckProvider is set to "Bing") | A value of true in your config will ask you to manually input the Bing Search Key while deploying |
 
 ## 5 Deploy Azure Functions
 

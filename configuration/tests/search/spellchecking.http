@@ -1,0 +1,11 @@
+### Spell Checking query (standalone)
+POST https://{{param.searchServiceName}}.search.windows.net/indexes/{{param.indexName}}/docs/search?api-version={{config.searchVersion}}
+content-type: application/json
+api-key : {{param.searchServiceQueryKey}}
+
+{
+    "search": "famly acitvites",
+    "speller": "lexicon",
+    "queryLanguage": "en-us",
+    "queryType": "simple"
+}
