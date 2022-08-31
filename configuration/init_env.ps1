@@ -1,6 +1,7 @@
 $global:envpath="."
 
 $env:PSModulePath = $env:PSModulePath + "$([System.IO.Path]::PathSeparator)modules"
+Import-Module infra -Global -DisableNameChecking -Force
 Import-Module core -Global -DisableNameChecking -Force
 Import-Module vnet -Global -DisableNameChecking -Force
 

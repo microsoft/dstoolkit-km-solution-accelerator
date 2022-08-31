@@ -16,8 +16,6 @@ if ($EnvironmentName)
     .  $initPath -Name $EnvironmentName -NoLogin
 }
 
-Write-Host "Start script..."
-
 Start-Transcript
 
 if ($DockerBuild) {

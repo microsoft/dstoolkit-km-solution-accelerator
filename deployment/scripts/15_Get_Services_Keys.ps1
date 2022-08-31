@@ -8,7 +8,6 @@ if ($EnvironmentName)
     $initPath=Join-Path $ScriptDir ".." "init_env.ps1"
     .  $initPath -Name $EnvironmentName -NoLogin
 }
-Write-Host "Get Services"
 
 Start-Transcript
 

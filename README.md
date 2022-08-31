@@ -155,7 +155,7 @@ You may refer to the solution accelerator documentation as follows:
 The respository structure of this accelerator is as follows 
 
 --------
-- **azure-pipelines** - Azure devops pipelines to set up your CI/CD
+- **azure-pipelines** - Azure DevOps pipelines to set up your CI/CD
 - **[configuration](configuration/README.md)** - solution configuration 
 - **data** - sample data to validate the solution deployment.
     - **documents** : sample documents for your KM solution 

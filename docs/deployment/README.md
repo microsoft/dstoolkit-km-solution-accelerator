@@ -244,7 +244,7 @@ More information on [Azure DevOps Triggers](https://docs.microsoft.com/en-us/azu
 
 # Operations
 
-This **init_env.ps1** script is initializing your solution environment by loading a **core** powershell module, sources the configuration and parameters. 
+This **init_env.ps1** script is initializing your solution environment by loading a **core** powershell module & sourcing its configuration and parameters. 
 
 Once loaded, you can operate the solution through pre-defined powershell cmdlets. 
 

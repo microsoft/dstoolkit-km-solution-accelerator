@@ -17,6 +17,7 @@ $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
 $modulePath = Join-Path $ScriptDir "modules"
 
 # Load the core module
+Import-Module (join-path $modulePath "infra") -Global -DisableNameChecking -Force
 Import-Module (join-path $modulePath "core") -Global -DisableNameChecking -Force
 Import-Module (join-path $modulePath "vnet") -Global -DisableNameChecking -Force
 
