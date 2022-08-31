@@ -23,8 +23,8 @@ spec:
         - containerPort: 5000
         args: [
           "Eula=accept",
-          "Billing=https://{{param.cogServiceLanguage}}.cognitiveservices.azure.com/",
-          "ApiKey={{param.cogServiceLanguageKey}}",
+          "Billing=https://{{param.cogSvcLanguage}}.cognitiveservices.azure.com/",
+          "ApiKey={{param.cogSvcLanguageKey}}",
           "ApplicationInsights:InstrumentationKey={{param.appInsightsServiceKey}}"
         ]
         resources:

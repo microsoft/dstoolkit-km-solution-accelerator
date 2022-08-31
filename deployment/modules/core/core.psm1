@@ -188,15 +188,15 @@ function Get-Parameters {
 
 function Add-ServicesParameters {
 
-    if ( Test-FileExistence (Join-path $global:envpath ("pricing." + $config.id + ".json"))) {
-        Add-ExtendedParameters ("pricing." + $config.id + ".json")
+    if ( Test-FileExistence (Join-path $global:envpath ("pricing."+$config.id+".json"))) {
+        Add-ExtendedParameters ("pricing."+$config.id+".json")
     }
     else {
         Add-ExtendedParameters "pricing.json"
     }
 
-    if ( Test-FileExistence (Join-path $global:envpath ("services." + $config.id + ".json"))) {
-        Add-ExtendedParameters ("services." + $config.id + ".json")
+    if ( Test-FileExistence (Join-path $global:envpath ("services."+$config.id+".json"))) {
+        Add-ExtendedParameters ("services."+$config.id+".json")
     }
     else {
         Add-ExtendedParameters "services.json"
@@ -207,18 +207,17 @@ function Add-ServicesParameters {
     Add-Param "dataStorageContainerName" $dataStorageContainerName
 
     # Create the containers entries for UI SAS access
-    $StorageContainerAddresses = @()
+    $StorageContainerAddresses=@()
     foreach ($container in $config.storageContainers) {
-        $url = "https://" + $global:params.dataStorageAccountName + ".blob.core.windows.net/" + $container
-        $StorageContainerAddresses += $url
+        $url = "https://"+$global:params.dataStorageAccountName+".blob.core.windows.net/"+$container
+        $StorageContainerAddresses+=$url
     }
-    Add-Param "StorageContainerAddressesAsString" $([String]::Join(',', $StorageContainerAddresses))
+    Add-Param "StorageContainerAddressesAsString" $([String]::Join(',',$StorageContainerAddresses))
 
     Initialize-SearchConfig
 }
 
 function Add-Param($name, $value) {
-    
     if ( $global:params.PSobject.Properties.name -eq $name) {
         $global:params.$name = $value
     }
@@ -348,7 +347,7 @@ function Get-DeploymentOverlayPath() {
     $overridepath = join-path $global:workpath "config" $config.id  $relpath "*"
 
     if ($config.overlayPath) {
-        Write-Debug -Message ("Using configured overlay path " + $config.overlayPath)
+        Write-Debug -Message ("Using configured overlay path "+$config.overlayPath)
         $overridepath = join-path $global:workpath $config.overlayPath $relpath "*"
     }
 
@@ -374,7 +373,7 @@ function Initialize-Config() {
 
     $originalConfigPath = (join-path $WorkDir ".." "configuration" "*")
     Copy-Item -Path $originalConfigPath -Destination (join-path $configpath "\") -Recurse -Force -ErrorAction SilentlyContinue
-    Write-Debug -Message ("Config created and copied on " + $configpath)
+    Write-Debug -Message ("Config created and copied on "+$configpath)
     
     # Override - Only relevant when initializing a deployment
     $overridepath = Get-DeploymentOverlayPath "configuration"
@@ -544,15 +543,35 @@ function Get-DataStorageAccountParameters {
 
 function Get-CognitiveServiceKey {
 
-    $tuples = Get-Parameters "cogService"
+    # Check for Bundle Cognitive Services
+    $cogServicesBundleKey = $null 
+
+    if ( ! $config.cogServicesBundleDisabled )
+    {
+        $cogServicesBundleKey = az cognitiveservices account keys list --name $params.cogServicesBundle -g $config.resourceGroupName --query key1 --out tsv
+
+        if ( $cogServicesBundleKey -and $cogServicesBundleKey.length -gt 0 ) {
+            Add-Param ($params.cogServicesBundle+"Key") $cogServicesBundleKey
+        }
+    }
+
+    $tuples = Get-Parameters "cogSvc"
 
     foreach ($tuple in $tuples) {
-        $cogServicesKey = az cognitiveservices account keys list --name $tuple.Value -g $config.resourceGroupName --query key1 --out tsv
+        if ( $config.cogServicesBundleDisabled ) 
+        {
+            $cogServicesKey = az cognitiveservices account keys list --name $tuple.Value -g $config.resourceGroupName --query key1 --out tsv
 
-        if ( $cogServicesKey -and $cogServicesKey.length -gt 0 ) {
-            Add-Param ($tuple.Name + "Key") $cogServicesKey
-        }            
-    }
+            if ( $cogServicesKey -and $cogServicesKey.length -gt 0 ) {
+                Add-Param ($tuple.Name + "Key") $cogServicesKey
+            }
+        }
+        else 
+        {
+            Add-Param ($tuple.Name + "Key") $cogServicesBundleKey
+        }
+    }    
+
     Save-Parameters
 }
 
@@ -716,7 +735,6 @@ function Invoke-SearchAPI {
 
     Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method $method -Body $body | ConvertTo-Json -Depth 100
 }
-
 function Initialize-Search {
     param (
         [switch]$AllowIndexDowntime
@@ -862,7 +880,7 @@ function Search-Query {
     $baseSearchUrl = "https://" + $params.searchServiceName + ".search.windows.net"
     $fullUrl = $baseSearchUrl + "/indexes/" + $params.indexName + "/docs?search=" + $query + "&api-version=" + $config.searchVersion
 
-    Write-Debug -Message ("CallingGet  api: '" + $fullUrl + "'")
+    Write-Debug -Message ("CallingGet  api: '"+$fullUrl+"'")
     Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method Get
 };
 
@@ -1959,6 +1977,7 @@ function Publish-Solution {
     Publish-FunctionsSettings
     Publish-WebAppsSettings
 }
+
 function Optimize-Solution () {
 
     # Scale down the entire solution
@@ -2001,6 +2020,7 @@ function Optimize-Solution () {
 
     Pop-Location
 }
+
 function Publish-Environment {
     param (
         [switch] $CloudShell

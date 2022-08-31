@@ -21,7 +21,7 @@
     },
     {
         "name": "FORMS_RECOGNIZER_KEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcFormKey)",
         "slotSetting": false
     },
     {
@@ -31,7 +31,7 @@
     },
     {
         "name": "COMPUTER_VISION_KEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcVisionKey)",
         "slotSetting": false
     }
 ]

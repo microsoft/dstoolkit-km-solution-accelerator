@@ -1,11 +1,6 @@
 ﻿{
     "name": "{{param.documentsSkillSet}}",
     "description": "Extract entities, detect language and extract key-phrases",
-    "cognitiveServices": {
-        "@odata.type": "#Microsoft.Azure.Search.CognitiveServicesByKey",
-        "description": "Cognitive Service",
-        "key": "{{param.cogServicesBundleKey}}"
-    },
     "skills": [
         {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",

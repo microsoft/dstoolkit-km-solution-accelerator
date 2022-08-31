@@ -203,10 +203,10 @@ pricing.premium                   : P1V2
 pricing.elastic                   : EP1
 searchServiceName                 : kmcontososearch
 cogServicesBundle                 : kmcontosocog
-cogServiceLanguage                : kmcontosocoglanguage
-cogServiceVision                  : kmcontosocogvision
-cogServiceForm                    : kmcontosocogform
-cogServiceTranslate               : kmcontosocogtranslate
+cogSvcLanguage                : kmcontosocoglanguage
+cogSvcVision                  : kmcontosocogvision
+cogSvcForm                    : kmcontosocogform
+cogSvcTranslate               : kmcontosocogtranslate
 appInsightsService                : kmcontosoinsights
 techStorageAccountName            : kmcontosotech
 dataStorageAccountName            : kmcontosodata

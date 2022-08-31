@@ -136,7 +136,7 @@ function New-CognitiveServices
         # Language 
         Write-Host "Creating TextAnalytics Cognitive Service";
         az cognitiveservices account create `
-        -n $params.cogServiceLanguage `
+        -n $params.cogSvcLanguage `
         -g $config.resourceGroupName `
         --kind TextAnalytics `
         --sku S `
@@ -146,7 +146,7 @@ function New-CognitiveServices
         # Vision
         Write-Host "Creating ComputerVision Cognitive Service";
         az cognitiveservices account create `
-        -n $params.cogServiceVision `
+        -n $params.cogSvcVision `
         -g $config.resourceGroupName `
         --kind ComputerVision `
         --sku S1 `
@@ -156,7 +156,7 @@ function New-CognitiveServices
         # Form
         Write-Host "Creating FormRecognizer Cognitive Service";
         az cognitiveservices account create `
-        -n $params.cogServiceForm `
+        -n $params.cogSvcForm `
         -g $config.resourceGroupName `
         --kind FormRecognizer `
         --sku S0 `
@@ -166,7 +166,7 @@ function New-CognitiveServices
         # Translation
         Write-Host "Creating Translation Cognitive Service";
         az cognitiveservices account create `
-        -n $params.cogServiceTranslate `
+        -n $params.cogSvcTranslate `
         -g $config.resourceGroupName `
         --kind TextTranslation `
         --sku S1 `

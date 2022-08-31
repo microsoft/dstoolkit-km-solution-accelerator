@@ -26,7 +26,7 @@
     },
     {
         "name": "TEXT_ANALYTICS_KEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcLanguageKey)",
         "slotSetting": false
     },
     {
@@ -36,7 +36,7 @@
     },
     {
         "name": "TRANSLATOR_KEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcTranslateKey)",
         "slotSetting": false
     },
     {

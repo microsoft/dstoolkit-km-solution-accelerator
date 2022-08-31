@@ -251,7 +251,7 @@
   },
   {
     "name": "TranslationConfig:SubscriptionKey",
-    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey)",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcTranslateKey)",
     "slotSetting": false
   },
   {
