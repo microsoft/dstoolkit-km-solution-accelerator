@@ -187,9 +187,10 @@ namespace Knowledge.Services.AzureSearch.SDK
             // Facets filter
             List<String> facetsList = new List<String>();
 
-            if (selectFacets != null && selectFacets.Count > 0)
+            //if (selectFacets != null && selectFacets.Count > 0)
+            if (selectFacets != null)
             {
-                facetsList = selectFacets;
+                    facetsList = selectFacets;
             }
             else
             {
@@ -494,6 +495,7 @@ namespace Knowledge.Services.AzureSearch.SDK
 
             // Perform search based on query, facets, filter, etc.
             var response = this.SearchDocuments(searchText: QUERY_ALL,
+                                                selectFacets: new List<string>(),
                                                 selectFields: this.GetModel(request.indexName).ReducedRetrievableFields,
                                                 incomingfilter: embeddedfilter,
                                                 parameters: queryParameters,
@@ -512,6 +514,7 @@ namespace Knowledge.Services.AzureSearch.SDK
         {
             // Perform search based on query, facets, filter, etc.
             var response = this.SearchDocuments(searchText: QUERY_ALL,
+                                                selectFacets: new List<string>(),
                                                 selectFields: this.GetModel(request.indexName).ReducedRetrievableFields,
                                                 incomingfilter: request.incomingFilter,
                                                 parameters: request.parameters,
@@ -539,6 +542,7 @@ namespace Knowledge.Services.AzureSearch.SDK
 
             // Perform search based on query, facets, filter, etc.
             var response = this.SearchDocuments(searchText: QUERY_ALL,
+                                                selectFacets: new List<string>(),
                                                 selectFields: this.GetModel(request.indexName).ReducedRetrievableFields,
                                                 incomingfilter: embeddedfilter,
                                                 parameters: queryParameters,
@@ -591,6 +595,7 @@ namespace Knowledge.Services.AzureSearch.SDK
             // Perform search based on query, facets, filter, etc.
             var response = this.SearchDocuments(searchText: request.queryText,
                                                 searchFacets: request.searchFacets,
+                                                selectFacets: new List<string>(),
                                                 selectFields: this.GetModel(request.indexName).ReducedRetrievableFields,
                                                 currentPage: request.currentPage,
                                                 incomingfilter: embeddedfilter,
@@ -791,6 +796,7 @@ namespace Knowledge.Services.AzureSearch.SDK
             // Perform search based on query, facets, filter, etc.
             var response = this.SearchDocuments(searchText: request.queryText,
                                                 searchFacets: request.searchFacets,
+                                                selectFacets: new List<string>(),
                                                 selectFields: this.GetModel(request.indexName).ReducedRetrievableFields,
                                                 currentPage: request.currentPage,
                                                 incomingfilter: embeddedfilter,
