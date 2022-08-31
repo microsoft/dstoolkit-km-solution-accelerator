@@ -190,7 +190,7 @@ function New-CognitiveServices
 }
 function New-SearchServices
 {
-    Write-Host "Creating Search Service";
+    Write-Host "Provisionning Search Service";
 
     $exists = az search service show --name $params.searchServiceName --resource-group $config.resourceGroupName --query id --out tsv
 
@@ -214,10 +214,18 @@ function New-SearchServices
 
 function New-ACRService
 {
-    Write-Host "Creating ACR service";
-    az acr create -g $config.resourceGroupName -n $params.acr_prefix --sku Premium --admin-enabled true --location $config.location
+    Write-Host "Provisionning ACR service";
 
-    az acr identity assign --identities '[system]' -g $config.resourceGroupName -n $params.acr_prefix 
+    $exists = az acr show -g $config.resourceGroupName -n $params.acr_prefix --query id --out tsv
+
+    if ( $exists ) {
+        Write-Host "ACR service already exists...";
+    }
+    else {
+        az acr create -g $config.resourceGroupName -n $params.acr_prefix --sku Premium --admin-enabled true --location $config.location
+
+        az acr identity assign --identities '[system]' -g $config.resourceGroupName -n $params.acr_prefix
+    }
 }
 
 function New-AzureMapsService()
