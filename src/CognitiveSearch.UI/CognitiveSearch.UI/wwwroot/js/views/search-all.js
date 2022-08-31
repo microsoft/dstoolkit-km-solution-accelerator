@@ -84,7 +84,7 @@ Microsoft.All = {
                     resultsHtml = '<div class="row results-div" >';
                     resultsHtml += '<div class="rounded">';
                     resultsHtml += '<div class="row">';
-                    resultsHtml += '<center><h4 style="color:white;">We couldn\'t find any results for this view...</h4></center>';
+                    resultsHtml += '<center><h4>We couldn\'t find any results for this view...</h4></center>';
                     resultsHtml += '</div>';
                     resultsHtml += '</div>';
                     resultsHtml += '</div>';
@@ -98,7 +98,6 @@ Microsoft.All = {
 
             //$(view_result_tag).empty();
         }
-
     },
 
     UpdateResultsAsList: function (results, currentPage, detailedView) {
