@@ -104,7 +104,7 @@ Microsoft.Home = {
                 var id = docresult.index_key;
                 var path = docresult.metadata_storage_path;
     
-                var name = docresult.metadata_storage_name;
+                var name = decodeURI(docresult.metadata_storage_name);
     
                 if (docresult.title) name = docresult.title;
     
@@ -201,7 +201,7 @@ Microsoft.Home = {
                 var id = docresult.index_key;
                 var path = docresult.metadata_storage_path;
     
-                var name = docresult.metadata_storage_name;
+                var name = decodeURI(docresult.metadata_storage_name);
     
                 if (docresult.title) name = docresult.title;
     
