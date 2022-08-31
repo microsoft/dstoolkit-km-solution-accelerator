@@ -200,6 +200,9 @@ Microsoft.News = {
 
     // LIVE NEWS REGION
     LiveNewsSearch: function () {
+
+        Microsoft.Search.setQueryInProgress(); 
+        
         if (this.selected_feeds.length > 0) {
             $.postXML('/api/news/getliveaggregatedfeed', this.selected_feeds, Microsoft.News.LiveNewsUpdate);
         }
