@@ -10,18 +10,19 @@ using Knowledge.Services.SemanticSearch;
 using Knowledge.Services.SpellChecking;
 using Knowledge.Services.Translation;
 using Knowledge.Services.WebSearch;
+using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Knowledge.Services
 {
-    public class QueryService : IQueryService
+    public class QueryService : AbstractService, IQueryService
     {
         protected const string QUERY_ALL = QueryHelper.QUERY_ALL;
 
-        private IDistributedCache memCache;
         private ISpellCheckingService spellcheckService;
         private ITranslationService translationService;
         private IQnAService qnaService;
@@ -32,7 +33,8 @@ namespace Knowledge.Services
         SearchServiceConfig config; 
 
         public QueryService(SearchServiceConfig configuration,
-            IDistributedCache memoryCache,
+            IDistributedCache cache,
+            TelemetryClient telemetry,
             IAzureSearchService searchSvc,
             IQnAService qnaService,
             ISpellCheckingService spellcheckService,
@@ -42,7 +44,9 @@ namespace Knowledge.Services
         {
             try
             {
-                this.memCache = memoryCache;
+                this.distCache = cache;
+                this.telemetryClient = telemetry;
+
                 this.config = configuration; 
 
                 this.searchService = searchSvc;
@@ -50,7 +54,10 @@ namespace Knowledge.Services
                 this.translationService = translationService;
                 this.qnaService = qnaService;
                 this.semanticService = semanticService;
-                this.webSearchService = websvc; 
+                this.webSearchService = websvc;
+
+                this.CachePrefix = this.GetType().Name;
+
             }
             catch (Exception e)
             {
@@ -155,18 +162,69 @@ namespace Knowledge.Services
             return await this.searchService.GetDocumentEmbedded(request);
         }
 
+        #region SearchResponse Cache methods 
+
+        public SearchResponse GetCachedSearchResponse(string key)
+        {
+            string result = this.distCache.GetString(this.CachePrefix + key);
+
+            if (! String.IsNullOrEmpty(result))
+            {
+                return JsonConvert.DeserializeObject<SearchResponse>(result);
+            }
+
+            return null;
+        }
+        public void CacheSearchResponse(string key, SearchResponse response)
+        {
+            string result = JsonConvert.SerializeObject(response);
+
+            this.distCache.SetString(this.CachePrefix + key, result, new DistributedCacheEntryOptions()
+            {
+                SlidingExpiration = TimeSpan.FromMinutes(120)
+            });
+        }
+
+        #endregion
+
         public async Task<SearchResponse> GetDocumentCoverImage(IngressSearchRequest request)
         {
             QueryHelper.EnsureDefaultValues(request);
 
-            return await this.searchService.GetDocumentCoverImage(request);
+            SearchResponse result = GetCachedSearchResponse("CoverImage-"+request.document_id);
+
+            if (result == null)
+            {
+                result = await this.searchService.GetDocumentCoverImage(request);
+
+                CacheSearchResponse("CoverImage-" + request.document_id, result);
+            }
+            else
+            {
+                telemetryClient.TrackTrace("Cached cover image by document_id " + request.document_id);
+            }
+
+            return result;
         }
 
         public async Task<SearchResponse> GetDocumentCoverImageByIndexKey(IngressSearchRequest request)
         {
             QueryHelper.EnsureDefaultValues(request);
 
-            return await this.searchService.GetDocumentCoverImageByIndexKey(request);
+            SearchResponse result = GetCachedSearchResponse("CoverImage-" + request.index_key);
+
+            if (result == null)
+            {
+                result = await this.searchService.GetDocumentCoverImageByIndexKey(request);
+
+                CacheSearchResponse("CoverImage-" + request.index_key, result);
+            }
+            else
+            {
+                telemetryClient.TrackTrace("Cached cover image by index_key "+request.index_key);
+            }
+
+            return result;
         }
 
         public async Task<SearchResponse> GetImagesAsync(IngressSearchRequest request)

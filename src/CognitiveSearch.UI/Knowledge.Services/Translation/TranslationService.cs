@@ -15,9 +15,9 @@ namespace Knowledge.Services.Translation
     {
         public TranslationConfig config;
 
-        public TranslationService(IDistributedCache memoryCache, TranslationConfig serviceConfig, TelemetryClient telemetry)
+        public TranslationService(IDistributedCache cache, TranslationConfig serviceConfig, TelemetryClient telemetry)
         {
-            this.distCache = memoryCache;
+            this.distCache = cache;
             this.config = serviceConfig;
             this.CachePrefix = this.GetType().Name;
             this.telemetryClient = telemetry;

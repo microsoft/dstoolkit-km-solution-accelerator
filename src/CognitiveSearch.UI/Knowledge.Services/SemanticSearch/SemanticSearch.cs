@@ -27,14 +27,14 @@ namespace Knowledge.Services.SemanticSearch
         public SemanticSearch(TelemetryClient telemetry,
             ITranslationService translator,
             StorageConfig strCfg,
-            IDistributedCache memoryCache, 
+            IDistributedCache cache, 
             SearchServiceConfig serviceConfig,
             SemanticSearchConfig semanticConfig)
         {
             this.telemetryClient = telemetry;
 
             this.translationService = translator;
-            this.distCache = memoryCache;
+            this.distCache = cache;
             this.serviceConfig = serviceConfig;
             this.storageConfig = strCfg;
             this.config = semanticConfig;

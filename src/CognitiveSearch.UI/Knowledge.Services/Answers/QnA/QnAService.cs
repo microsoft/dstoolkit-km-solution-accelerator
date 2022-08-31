@@ -17,9 +17,9 @@ namespace Knowledge.Services.QnA
     {
         private QnAConfig config;
 
-        public QnAService(IDistributedCache memoryCache, QnAConfig serviceConfig)
+        public QnAService(IDistributedCache cache, QnAConfig serviceConfig)
         {
-            this.distCache = memoryCache;
+            this.distCache = cache;
             this.config = serviceConfig;
             this.CachePrefix = this.GetType().Name;
         }

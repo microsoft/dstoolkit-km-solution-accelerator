@@ -18,10 +18,10 @@ namespace Knowledge.Services.Graph.Custom
 
         private GraphConfig config;
 
-        public GraphService(TelemetryClient telemetry, IDistributedCache memoryCache, SearchServiceConfig serviceConfig, GraphConfig gConfig)
+        public GraphService(TelemetryClient telemetry, IDistributedCache cache, SearchServiceConfig serviceConfig, GraphConfig gConfig)
         {
             this.telemetryClient = telemetry;
-            this.distCache = memoryCache;
+            this.distCache = cache;
             this.serviceConfig = serviceConfig;
             this.config = gConfig;
 
