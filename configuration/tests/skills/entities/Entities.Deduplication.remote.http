@@ -1,5 +1,5 @@
 ### Entities Deduplication 1
-POST {{param.entitiescleansing.deduplication}}
+POST {{param.entities.deduplication}}
 content-type: application/json
 
 {

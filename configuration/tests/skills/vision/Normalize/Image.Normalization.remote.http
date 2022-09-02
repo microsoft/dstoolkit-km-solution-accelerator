@@ -1,5 +1,5 @@
 ### https://base64-to-image.com/ 
-POST {{param.imagenormalization.imagenormalization}}
+POST {{param.vision.Normalize}}
 content-type: application/json
 
 {

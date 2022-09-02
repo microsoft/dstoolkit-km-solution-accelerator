@@ -1,5 +1,5 @@
 ###
-POST {{param.htmlconversion.HtmlConversion}}
+POST {{param.text.HtmlConversion}}
 content-type: application/json
 
 {
