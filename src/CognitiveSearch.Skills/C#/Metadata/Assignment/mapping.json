@@ -25,6 +25,11 @@
   },
   {
     "source": "dc-subject",
+    "target": [ "topics" ],
+    "transform": "SplitComma"
+  },
+  {
+    "source": "dc-description",
     "target": [ "description" ]
   },
   {
@@ -39,6 +44,11 @@
   },
   {
     "source": "meta-last-author",
+    "target": [ "authors" ],
+    "transform": "none"
+  },
+  {
+    "source": "dc-creator",
     "target": [ "authors" ],
     "transform": "none"
   },

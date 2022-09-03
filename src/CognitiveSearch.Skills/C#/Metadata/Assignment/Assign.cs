@@ -282,15 +282,22 @@ namespace Assignment
 
                                 if (assignedMetadata.ContainsKey(target))
                                 {
-                                    ((List<string>)assignedMetadata[target]).AddRange(transformed_value);
+                                    // Appending to existing list
+                                    if (assignedMetadata[target].GetType() == typeof(List<string>)) {
 
-                                    assignedMetadata[target] = ((List<string>)assignedMetadata[target]).Distinct().ToList();
+                                        ((List<string>)assignedMetadata[target]).AddRange(transformed_value);
+
+                                        assignedMetadata[target] = ((List<string>)assignedMetadata[target]).Distinct().ToList();
+                                    }
+                                    else {
+                                        // Overwriting existing value
+                                        assignedMetadata[target] = transformed_value;
+                                    }
                                 }
                                 else
                                 {
                                     assignedMetadata.Add(target, transformed_value);
                                 }
-
                             }
                         }
                     }
@@ -420,12 +427,11 @@ namespace Assignment
                 }
             }
         }
-
-        public static List<string> SplitSemiColumn(string input)
+        public static List<string> SplitGeneric(string input, char separator)
         {
             List<string> results = new List<string>();
 
-            string[] tokens = input.Split(';');
+            string[] tokens = input.Split(separator);
 
             foreach (string token in tokens)
             {
@@ -433,6 +439,15 @@ namespace Assignment
             }
 
             return results;
+        }
+
+        public static List<string> SplitSemiColumn(string input)
+        {
+            return SplitGeneric(input, ';');
+        }
+        public static List<string> SplitComma(string input)
+        {
+            return SplitGeneric(input, ',');
         }
         public static List<string> SplitSPTaxonomy(string input)
         {
