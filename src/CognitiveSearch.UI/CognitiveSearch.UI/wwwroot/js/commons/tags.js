@@ -23,11 +23,19 @@ Microsoft.Tags = {
         }
     },
 
-    renderTagsAsList: function (result, limitTagsToDisplay, highlights, selectTags = []) {
+    renderTagsAsList: function (result, limitTagsToDisplay, highlights, selectTags = [], title) {
+
         var tagsHTML = this.renderCoreTags(result, limitTagsToDisplay, highlights, selectTags, '', '', 'div');
 
         if (tagsHTML.length > 0) {
-            return "<div class='col-md-12 mt-2 d-flex'>" + tagsHTML + "</div>";
+            var outHtml = "<div class='col-md-12 mt-1 d-flex align-items-center'>";
+            if (title != null) {
+                outHtml += '<span class="modification-line-label me-2 text-decoration-underline" title="'+title+'">'+title+'</span>';
+            }
+            outHtml += tagsHTML;
+            outHtml += "</div>";
+
+            return outHtml;
         }
         else {
             return tagsHTML;
@@ -38,7 +46,7 @@ Microsoft.Tags = {
         var tagsHTML = this.renderCoreTags(result, limitTagsToDisplay, highlights, selectTags, '', '', 'div');
 
         if (tagsHTML.length > 0) {
-            return "<div class='col-md-12 mt-2 d-flex'>" + tagsHTML + "</div>";
+            return "<div class='col-md-12 mt-1 d-flex'>" + tagsHTML + "</div>";
         }
         else {
             return tagsHTML;
@@ -121,10 +129,10 @@ Microsoft.Tags = {
                                                     //}
 
                                                     if (name === "celebrities") {
-                                                        tagsHTML += '<button title="' + tagValue + '" class="' + tagclasses + '" onclick="Microsoft.Tags.HighlightTag(event)">' + tagDisplayValue + '</button>';
+                                                        tagsHTML += '<button value="'+ tagValue +'" title="' + displayName + ' : ' + tagValue + '" class="' + tagclasses + '" onclick="Microsoft.Tags.HighlightTag(event)">' + tagDisplayValue + '</button>';
                                                     }
                                                     else {
-                                                        tagsHTML += '<button title="' + tagValue + '" class="' + tagclasses + '" onclick="Microsoft.Tags.FacetTag(event,\'' + name + '\');">' + tagDisplayValue + '</button>';
+                                                        tagsHTML += '<button value="'+ tagValue +'" title="' + displayName + ' : ' + tagValue + '" class="' + tagclasses + '" onclick="Microsoft.Tags.FacetTag(event,\'' + name + '\');">' + tagDisplayValue + '</button>';
                                                     }
                                                     i++;
                                                 }
@@ -146,7 +154,7 @@ Microsoft.Tags = {
                                 if (tagEntry.length > Microsoft.Tags.MaxTagValueLengthToDisplay) {
                                     tagDisplayValue = tagEntry.substring(0, Microsoft.Tags.MaxTagValueLengthToDisplay) + '...';
                                 }
-                                tagsHTML += '<button title="' + tagEntry + '" class="tag tag-' + name + '" onclick="Microsoft.Tags.FacetTag(event,\'' + name + '\');">' + tagDisplayValue + '</button>';
+                                tagsHTML += '<button value="'+ tagEntry +'" title="' + displayName + ' : ' + tagEntry + '" class="tag tag-' + name + '" onclick="Microsoft.Tags.FacetTag(event,\'' + name + '\');">' + tagDisplayValue + '</button>';
 
                                 tagsHTML += '</' + htmlTagElt + '>';
                             }
@@ -162,7 +170,7 @@ Microsoft.Tags = {
     },
 
     FacetTag: function (event, name) {
-        var tagValue = $(event.target).attr('title');
+        var tagValue = $(event.target).attr('value');
 
         if ($(event.target).parents('#tags-card').length) {
             GetReferences(tagValue, false);
@@ -174,7 +182,7 @@ Microsoft.Tags = {
     },
 
     HighlightTag: function (event) {
-        var searchText = $(event.target).attr('title');
+        var searchText = $(event.target).attr('value');
 
         if ($(event.target).parents('#tags-card').length) {
             GetReferences(searchText, false);

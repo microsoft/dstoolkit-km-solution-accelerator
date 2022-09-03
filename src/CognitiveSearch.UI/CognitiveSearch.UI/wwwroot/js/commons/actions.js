@@ -124,17 +124,17 @@ Microsoft.Search.Actions = {
 
         // Actions
         htmlDiv += '<div class="dropdown" id="actions-' + docresult.index_key + '">';
-        htmlDiv += '<button class="btn btn-sm text-primary" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">';
+        htmlDiv += '<button class="btn btn-sm text-primary" type="button" id="dropdownMenu-' + docresult.index_key + '" data-bs-toggle="dropdown" aria-expanded="false">';
         htmlDiv += '...';
         htmlDiv += '</button>';
 
-        htmlDiv += '<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">';
+        htmlDiv += '<ul class="dropdown-menu" aria-labelledby="dropdownMenu-' + docresult.index_key + '">';
 
         if (docresult.document_embedded) {
             htmlDiv += '<li>';
             htmlDiv += '<button onclick="Microsoft.Results.Details.ShowDocumentById(\'' + docresult.image_parentid + '\')" class="dropdown-item btn btn-outline-success btn-sm">';
-            htmlDiv += '<span class="bi bi-file-earmark me-1" title="Show source document details"/>';
-            htmlDiv += 'Open Parent';
+            htmlDiv += '<span class="bi bi-file-earmark me-2" title="Show parent ]document details"></span>';
+            htmlDiv += '<span>Open Parent</span>';
             htmlDiv += '</button>';
             htmlDiv += '</li>';
         }

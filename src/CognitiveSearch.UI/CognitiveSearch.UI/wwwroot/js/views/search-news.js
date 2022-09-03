@@ -311,6 +311,10 @@ Microsoft.News = {
                 }
             }
 
+            if (feed_entry.source) {
+                resultsHtml += '<h6>Source : ' + feed_entry.source + '</h6>';
+            }
+
             resultsHtml += '</div>';
 
             // Preview part

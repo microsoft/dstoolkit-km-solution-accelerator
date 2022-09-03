@@ -236,7 +236,6 @@ Microsoft.Facets = {
         $('#search-facets-accordion').html(facetResultsHTML);
     },
 
-    // Clear 
     ClearAllFilters: function () {
 
         if (this.selectedFacets.length > 0) {

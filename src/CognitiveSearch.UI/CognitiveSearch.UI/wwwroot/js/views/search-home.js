@@ -82,7 +82,7 @@ Microsoft.Home = {
                     Microsoft.Utils.executeFunctionByName(parameters.update_method, window, parameters, data);
                 }
                 else {
-                    Microsoft.Home.HomeUpdateLatestImages(data.results, parameters?.tag_id, parameters?.tag_class);
+                    Microsoft.Home.HomeUpdateLatestImagesAsList(data.results, parameters?.tag_id, parameters?.tag_class);
                 }
             }
         );
@@ -159,6 +159,11 @@ Microsoft.Home = {
         });
     },
     
+    HomeUpdateLatestImagesAsList:function (results, target_tag = Microsoft.Home.LATEST_IMAGES_TAG) 
+    {
+        this.HomeSearchResultsAsList(results, target_tag);
+    },
+    
     // DOCUMENTS
     
     GetLatestDocuments:function (parameters) {
@@ -178,7 +183,7 @@ Microsoft.Home = {
                     Microsoft.Utils.executeFunctionByName(parameters.update_method, window, parameters, data);
                 }
                 else {
-                    Microsoft.Home.HomeUpdateLatestDocuments(data.results, parameters?.tag_id, parameters?.tag_class);
+                    Microsoft.Home.HomeUpdateLatestDocumentsAsList(data.results, parameters?.tag_id, parameters?.tag_class);
                 }
             }
         );
@@ -259,8 +264,27 @@ Microsoft.Home = {
                 adaptiveHeight: false
             });
         }
-    }
+    },
+
+    HomeUpdateLatestDocumentsAsList:function (results, target_tag = Microsoft.Home.LATEST_DOCUMENTS_TAG) 
+    {
+        this.HomeSearchResultsAsList(results, target_tag);
+    },
+   
+    //
+    // Generic Search Results List method
+    //
+    HomeSearchResultsAsList:function (results, target_tag) {
+        var resultsHtml = '';
     
+        if (results && results.length > 0) {
+    
+            resultsHtml = Microsoft.All.UpdateResultsAsList (results);
+        }
+    
+        $(target_tag).html(resultsHtml);
+    }
+   
 }
 
 // export default Microsoft.Home;

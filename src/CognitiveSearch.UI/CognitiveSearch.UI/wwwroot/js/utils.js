@@ -372,38 +372,38 @@ Microsoft.Utils = {
     //TODO GetModificationLine(docresult) refactor this in a better way
     GetModificationLine: function (docresult) {
 
-        var resultHtml = '<form class="row g-1 bg-light ms-2">';
+        var resultHtml = '<div id="modification-line" class="g-1 ms-2 d-flex flex-row">';
 
         var mdate = docresult.last_modified ? docresult.last_modified : docresult.source_last_modified;
 
         if (mdate) {
             var d = new Date(mdate);
-            resultHtml += '<div class="col">';
-            resultHtml += '<label class="modification-line me-2" for="date'+docresult.index_key+'">Last Modified</label>';
-            resultHtml += '<input type="text" readonly class="p-0 border-0 bg-light" id="date'+docresult.index_key+'" title="' + d.toLocaleString() + '" value="' + d.toLocaleString() + '">';
+            resultHtml += '<div class="d-flex align-items-center">';
+            // resultHtml += ' <span class="modification-line-label me-2 text-decoration-underline" title="Last Modified">Last Modified</span>';
+            resultHtml += ' <span class="modification-line-value me-2" title="' + d.toLocaleString() + '">'+ d.toLocaleString() + '</span>';
             resultHtml += '</div>';
         }
 
         if (docresult.authors) {
             if (docresult.authors.length > 0) {
-                var author = docresult.authors[0];
 
-                resultHtml += '<div class="col">';
-                resultHtml += '<label class="modification-line me-2" for="authors'+docresult.index_key+'">Author(s)</label>';
+                resultHtml += '<div class="d-flex align-items-center">';
+                // resultHtml += '<span class="modification-line-label me-2 text-decoration-underline" for="authors'+docresult.index_key+'">Author(s)</span>';
+                resultHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['authors']);
+                // resultHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['authors'],"Author(s)");
 
-                if (author.length > 60) {
-                    // resultHtml += ' Author(s) ' + author.substring(0, 50) + "..."
-                    resultHtml += '<input type="text" readonly class="p-0 border-0 bg-light" id="authors'+docresult.index_key+'" title="' + author + '" value="' + author.substring(0, 50) + '...">';
-                }
-                else {
-                    // resultHtml += ' Author(s) ' + author
-                    resultHtml += '<input type="text" readonly class="p-0 border-0 bg-light" id="authors'+docresult.index_key+'" title="' + author + '" value="' + author + '...">';
-                }
+                // var author = docresult.authors[0];
+                // if (author.length > 60) {
+                //     resultHtml += '<span class="modification-line-value me-2" title="' + author + '" >'+ author.substring(0, 50) + '</span>';
+                // }
+                // else {
+                //     resultHtml += '<span class="modification-line-value me-2" title="' + author + '" >'+ author + '</span>';
+                // }
                 resultHtml += '</div>';
             }
         }
 
-        resultHtml += '</form>';
+        resultHtml += '</div>';
         return resultHtml;
     },
 
