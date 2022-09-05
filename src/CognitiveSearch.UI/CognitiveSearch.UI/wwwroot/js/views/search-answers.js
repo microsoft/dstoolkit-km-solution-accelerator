@@ -142,7 +142,7 @@ Microsoft.Answers = {
         Microsoft.View.currentQuery = $("#q").val();
     
         // Get center of map to use to score the search results
-        $.postJSON('/api/answers/getanswers',
+        $.postAPIJSON('/api/answers/getanswers',
             {
                 queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
                 searchFacets: Microsoft.Facets.selectedFacets,

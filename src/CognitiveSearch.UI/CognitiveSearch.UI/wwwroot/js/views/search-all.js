@@ -43,7 +43,7 @@ Microsoft.All = {
             }
         }
 
-        $.postJSON('/api/search/getdocuments',
+        $.postAPIJSON('/api/search/getdocuments',
             {
                 queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
                 searchFacets: Microsoft.Facets.selectedFacets,

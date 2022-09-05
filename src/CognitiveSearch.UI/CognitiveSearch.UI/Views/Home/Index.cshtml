@@ -135,8 +135,9 @@
     <script>
         $(document).ready(function () {
 
-            //TODO Check Terms of Use acceptance
-            Microsoft.Home.initSearchHome();
+            Microsoft.Config.init().then(() => {
+                Microsoft.Home.initSearchHome();
+            });
         });
     </script>
 }

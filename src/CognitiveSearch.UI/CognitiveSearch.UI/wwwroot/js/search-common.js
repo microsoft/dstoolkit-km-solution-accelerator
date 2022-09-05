@@ -525,7 +525,7 @@ Microsoft.Search.Utils.Excel = {
     getExportToExcelResults: function (url, query, ReportTitle) {
         Microsoft.Search.setQueryInProgress();
 
-        $.postJSON(url, query,
+        $.postAPIJSON(url, query,
             function (data) {
                 try {
                     if (data && data.results) {
@@ -665,7 +665,7 @@ Microsoft.Search.Results = {
     },
 
     get_next_page: function (document_id, pagenumber) {
-        $.postJSON('/api/search/getdocumentsiblings',
+        $.postAPIJSON('/api/search/getdocumentsiblings',
             {
                 document_id: document_id,
                 incomingFilter: "image_parentid eq '" + document_id + "' and (page_number ge " + (pagenumber + 1) + ")",
@@ -937,7 +937,7 @@ Microsoft.Search.Results.Metadata = {
         metadataContainerHTML += '</tbody>';
         metadataContainerHTML += '</table></div><br/>';
 
-        $.postJSON('/api/search/getdocumentmetadata',
+        $.postAPIJSON('/api/search/getdocumentmetadata',
             {
                 path: result.metadata_storage_path
             },
@@ -1022,7 +1022,7 @@ Microsoft.Search.Results.Embedded = {
 
         var containerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role = "progressbar" style = "width: 100%" aria - valuenow="100" aria - valuemin="0" aria - valuemax="100"></div></div>';
 
-        $.postJSON('/api/search/getdocumentembedded',
+        $.postAPIJSON('/api/search/getdocumentembedded',
             {
                 document_id: result.document_id
             },
@@ -1077,7 +1077,7 @@ Microsoft.Search.Results.Siblings = {
 
         var containerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role = "progressbar" style = "width: 100%" aria - valuenow="100" aria - valuemin="0" aria - valuemax="100"></div></div>';
 
-        $.postJSON('/api/search/getdocumentsiblings',
+        $.postAPIJSON('/api/search/getdocumentsiblings',
             {
                 document_id: result.image_parentid,
                 incomingFilter: "image_parentid eq '" + result.image_parentid + "' ",

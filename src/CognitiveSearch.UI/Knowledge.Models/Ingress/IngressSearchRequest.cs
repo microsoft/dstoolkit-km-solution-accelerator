@@ -8,20 +8,27 @@ namespace Knowledge.Models.Ingress
 {
     public class IngressSearchRequest
     {
-        public string index_key { get; set; }
-        public string document_id { get; set; }
+        public string? index_key { get; set; }
+        public string? document_id { get; set; }
         public int page_number { get; set; }
-        public string queryText { get; set; }
-        public SearchFacet[] searchFacets { get; set; }
-        public string[] content_sources{ get; set; }
+        public string? queryText { get; set; }
+        public SearchFacet[]? searchFacets { get; set; }
+        public string[]? content_sources{ get; set; }
         public int currentPage { get; set; }
-        public QueryParameters parameters { get; set; }
-        public UserOptions options { get; set; }
-        public SearchPermission[] permissions {  get; set; }
-        public string polygonString {  get; set; }
-        public string[] retrievableFields {  get; set; }
-        public string incomingFilter { get; set; }
-        public string indexName { get; set; }
+        public QueryParameters? parameters { get; set; }
+        public UserOptions? options { get; set; }
+        public SearchPermission[]? permissions {  get; set; }
+        public string? polygonString {  get; set; }
+        public string[]? retrievableFields {  get; set; }
+        public string? incomingFilter { get; set; }
+        public string? indexName { get; set; }
+
+        public IngressSearchRequest()
+        {
+            page_number = 1;
+            currentPage = 1;
+        }
+
         // Keep track of the query transformations applied to the original query text
         private SortedDictionary<string,string> _queryTransformations = new();
 

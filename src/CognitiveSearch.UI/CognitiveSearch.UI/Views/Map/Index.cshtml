@@ -63,10 +63,11 @@
     <script>
         $(document).ready(function () {
 
-            Microsoft.Maps.initMap();
-
-            Microsoft.Search.initSearchVertical(Microsoft.View.config);
-            Microsoft.Search.initSearch();
+            Microsoft.Config.init().then(() => {
+                Microsoft.Maps.initMap();
+                Microsoft.Search.initSearchVertical(Microsoft.View.config);
+                Microsoft.Search.initSearch();
+            });
 
         });
     </script>

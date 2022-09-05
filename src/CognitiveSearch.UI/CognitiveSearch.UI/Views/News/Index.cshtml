@@ -47,15 +47,17 @@
     <script>
         $(document).ready(function () {
 
-            Microsoft.Search.initSearchVertical(Microsoft.View.config);
+            Microsoft.Config.init().then(() => {
 
-            $("#navbar-row-1").attr("style", "display: none !important");
+                Microsoft.Search.initSearchVertical(Microsoft.View.config);
 
-            Microsoft.News.init().then(() => {
-                Microsoft.News.UpdateNewsFacets(Microsoft.News.news_facets);
-                Microsoft.News.LiveNewsSearch();
+                $("#navbar-row-1").attr("style", "display: none !important");
+
+                Microsoft.News.init().then(() => {
+                    Microsoft.News.UpdateNewsFacets(Microsoft.News.news_facets);
+                    Microsoft.News.LiveNewsSearch();
+                });
             });
-
         });
     </script>
 }

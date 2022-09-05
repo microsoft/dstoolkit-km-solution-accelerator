@@ -21,6 +21,8 @@ namespace CognitiveSearch.UI.Configuration
 
         public WebSearchConfig WebSearchConfig { get; set; }
 
+        public WebAPIBackend WebAPIBackend { get; set; }
+
         public string UIVersion { get; set; }
     }
 }

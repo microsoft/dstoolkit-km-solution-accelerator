@@ -55,13 +55,17 @@
     <script>
         $(document).ready(function () {
 
-            Microsoft.Search.initSearchVertical(Microsoft.View.config);
+            Microsoft.Config.init().then(() => {
 
-            // TODO should be included in the init Search vertical piece
-            //Static Facets
-            Microsoft.Facets.RenderStaticFacets();
+                Microsoft.Search.initSearchVertical(Microsoft.View.config);
 
-            Microsoft.Search.initSearch();
+                // TODO should be included in the init Search vertical piece
+                //Static Facets
+                Microsoft.Facets.RenderStaticFacets();
+
+                Microsoft.Search.initSearch();
+
+            });
 
         });</script>
 }

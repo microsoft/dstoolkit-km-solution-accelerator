@@ -7,7 +7,7 @@ namespace Knowledge.Models
 {
     public class QueryParameters
     {
-        public string ScoringProfile { get; set; }
+        public string? ScoringProfile { get; set; }
 
         public int RowCount { get; set;  }
 

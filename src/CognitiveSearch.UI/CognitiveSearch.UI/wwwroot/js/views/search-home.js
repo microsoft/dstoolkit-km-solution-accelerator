@@ -67,7 +67,7 @@ Microsoft.Home = {
     
     GetLatestImages:function (parameters) {
     
-        $.postJSON('/api/search/getlatestimages',
+        $.postAPIJSON('/api/search/getlatestimages',
             {
                 queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
                 searchFacets: parameters?.facets,
@@ -168,7 +168,7 @@ Microsoft.Home = {
     
     GetLatestDocuments:function (parameters) {
     
-        $.postJSON('/api/search/getlatestdocuments',
+        $.postAPIJSON('/api/search/getlatestdocuments',
             {
                 queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
                 searchFacets: parameters?.facets,

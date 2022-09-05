@@ -87,7 +87,7 @@ Microsoft.Images = {
         }
     
         // Get center of map to use to score the search results
-        $.postJSON('/api/search/getimages',
+        $.postAPIJSON('/api/search/getimages',
             {
                 queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
                 searchFacets: Microsoft.Facets.selectedFacets,

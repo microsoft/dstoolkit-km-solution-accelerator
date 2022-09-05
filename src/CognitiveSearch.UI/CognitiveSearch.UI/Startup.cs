@@ -74,6 +74,10 @@ namespace CognitiveSearch.UI
             GraphConfig gconfigData = Configuration.GetSection("GraphConfig").Get<GraphConfig>();
             services.AddSingleton<GraphConfig>(_ => gconfigData);
 
+            WebAPIBackend webapiconfigData = Configuration.GetSection("WebAPIBackend").Get<WebAPIBackend>();
+            services.AddSingleton<WebAPIBackend>(_ => webapiconfigData);
+
+
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 
             // Global Configuration singleton 
@@ -82,6 +86,10 @@ namespace CognitiveSearch.UI
                 Organization = orgConfig,
                 Clarity = clarityConfig,
                 UIConfig = uiConfig,
+                MapConfig = mapConfigData,
+                GraphConfig = gconfigData,
+                WebSearchConfig = wsconfigData,
+                WebAPIBackend = webapiconfigData,
                 UIVersion = Configuration.GetValue("UIVersion","1.0.0")
             };
             services.AddSingleton(appConfig);
@@ -91,7 +99,7 @@ namespace CognitiveSearch.UI
             services.AddWebOptimizer(pipeline =>
             {
                 pipeline.AddCssBundle("/css/bundle.css", "css/site.css","css/colors.css");
-                pipeline.AddJavaScriptBundle("/js/bundle.js", "js/site.js","js/utils.js","js/search-common.js", "js/commons/*.js", "js/graph/*.js", "js/search-details.js","js/views/*.js","js/export.js");
+                pipeline.AddJavaScriptBundle("/js/bundle.js", "js/config.js", "js/site.js","js/utils.js","js/search-common.js", "js/commons/*.js", "js/graph/*.js", "js/search-details.js","js/views/*.js","js/export.js");
             });
         }
 

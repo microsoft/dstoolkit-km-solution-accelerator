@@ -128,7 +128,7 @@ Microsoft.Graph = {
             q = "*";
         }
 
-        $.postJSON("/api/graph/getgraphdata",
+        $.postAPIJSON("/api/graph/getgraphdata",
             {
                 queryText: q,
                 facets: graphFacet,

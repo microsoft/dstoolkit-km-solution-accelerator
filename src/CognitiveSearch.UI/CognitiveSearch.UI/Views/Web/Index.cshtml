@@ -51,13 +51,15 @@
     <script>
         $(document).ready(function () {
 
-            Microsoft.Search.initSearchVertical(Microsoft.View.config);
+            Microsoft.Config.init().then(() => {
+                Microsoft.Search.initSearchVertical(Microsoft.View.config);
 
-            //Facets
-            Microsoft.Facets.RenderWebFacets();
-            Microsoft.Facets.UpdateFilterReset();
+                //Facets
+                Microsoft.Facets.RenderWebFacets();
+                Microsoft.Facets.UpdateFilterReset();
 
-            Microsoft.Search.initSearch();
+                Microsoft.Search.initSearch();
+            });
 
         });
     </script>
