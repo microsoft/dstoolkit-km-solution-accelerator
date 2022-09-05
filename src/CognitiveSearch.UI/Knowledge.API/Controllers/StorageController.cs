@@ -6,7 +6,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Knowledge.Services;
 using Knowledge.Services.AzureStorage;
-using Knowledge.Services.Configuration;
+using Knowledge.Configuration;
 using Knowledge.Services.Helpers;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;

@@ -4,7 +4,7 @@
 using Knowledge.API.Models;
 using Knowledge.Services;
 using Knowledge.Services.AzureSearch.REST;
-using Knowledge.Services.Configuration;
+using Knowledge.Configuration;
 using Knowledge.Services.SemanticSearch;
 using Microsoft.AspNetCore.Mvc;
 

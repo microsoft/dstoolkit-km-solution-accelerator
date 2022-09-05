@@ -5,7 +5,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Caching.Distributed;
 using Knowledge.Services.AzureSearch;
 using Knowledge.Services.AzureSearch.REST;
-using Knowledge.Services.Configuration;
+using Knowledge.Configuration;
 using Knowledge.Services.Helpers;
 using Knowledge.Services.Models;
 using Knowledge.Services.Models.Ingress;
@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Knowledge.Services.AzureStorage;
+using Knowledge.Models;
 
 namespace Knowledge.Services.SemanticSearch
 {

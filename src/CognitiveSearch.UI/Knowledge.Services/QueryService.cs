@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Knowledge.Services.Configuration;
+using Knowledge.Configuration;
 using Knowledge.Services.Helpers;
 using Knowledge.Services.Models;
 using Knowledge.Services.Models.Ingress;

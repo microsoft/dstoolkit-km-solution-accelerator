@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using Knowledge.Services;
-using Knowledge.Services.Configuration;
+using Knowledge.Configuration;
 using Knowledge.Services.Models;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;

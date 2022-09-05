@@ -3,17 +3,16 @@
 
 namespace Knowledge.Services.Metadata
 {
+    using Azure.Storage;
+    using Azure.Storage.Blobs;
+    using Knowledge.Services;
+    using Knowledge.Services.AzureStorage;
+    using Microsoft.ApplicationInsights;
     using System;
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web;
-    using Azure.Storage;
-    using Azure.Storage.Blobs;
-    using Knowledge.Services;
-    using Knowledge.Services.AzureStorage;
-    using Knowledge.Services.Configuration;
-    using Microsoft.ApplicationInsights;
 
     public class MetadataService : AbstractService, IMetadataService
     {

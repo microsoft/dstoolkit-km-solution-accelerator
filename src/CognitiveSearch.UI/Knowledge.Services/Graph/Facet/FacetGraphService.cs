@@ -3,6 +3,8 @@
 
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
+using Knowledge.Configuration.Graph;
+using Knowledge.Models;
 using Knowledge.Services.AzureSearch.SDK;
 using Knowledge.Services.Helpers;
 using Knowledge.Services.Models;

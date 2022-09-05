@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Knowledge.Services.Configuration;
-using Knowledge.Services.Graph;
+using Knowledge.Configuration;
+using Knowledge.Configuration.Graph;
 using System.Collections.Generic;
 using System.Linq;
 

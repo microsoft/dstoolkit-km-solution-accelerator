@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Knowledge.Models;
 using Knowledge.Services.QnA;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Knowledge.Services.Models

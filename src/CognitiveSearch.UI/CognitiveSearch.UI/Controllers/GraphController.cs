@@ -3,9 +3,6 @@
 
 using CognitiveSearch.UI.Configuration;
 using CognitiveSearch.UI.Models;
-using Knowledge.Services;
-using Knowledge.Services.Configuration;
-using Knowledge.Services.Models;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -15,15 +12,10 @@ namespace CognitiveSearch.UI.Controllers
 {
     public class GraphController : AbstractSearchViewController
     {
-        public GraphController (SearchServiceConfig svcconfig,
-                                 IQueryService client,
-                                UIConfig uiConfig, 
-                                TelemetryClient telemetry)
+        public GraphController (UIConfig uiConfig, TelemetryClient telemetry)
         {
             this.telemetryClient = telemetry;
 
-            _queryService = client;
-            _searchConfig = svcconfig;
             _uiConfig = uiConfig;
             _viewId = "graph";
         }

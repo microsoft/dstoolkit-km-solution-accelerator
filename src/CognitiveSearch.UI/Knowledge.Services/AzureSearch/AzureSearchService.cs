@@ -3,18 +3,18 @@
 
 namespace Knowledge.Services.AzureSearch
 {
-    using Microsoft.Extensions.Caching.Memory;
+    using Knowledge.Configuration;
+    using Knowledge.Configuration.Graph;
     using Knowledge.Services.AzureSearch.REST;
-    using Knowledge.Services.Configuration;
-    using Knowledge.Services.Graph;
     using Knowledge.Services.Helpers;
     using Knowledge.Services.Models;
     using Knowledge.Services.Models.Ingress;
+    using Microsoft.ApplicationInsights;
+    using Microsoft.Extensions.Caching.Memory;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.ApplicationInsights;
 
     public class AzureSearchService : AzureSearchRESTService, IAzureSearchService
     {

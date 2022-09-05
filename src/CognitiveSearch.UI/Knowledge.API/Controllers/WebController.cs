@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using Knowledge.API.Models;
-using Knowledge.Services.Configuration;
+using Knowledge.Configuration;
 using Knowledge.Services.WebSearch;
 using Microsoft.AspNetCore.Mvc;
 

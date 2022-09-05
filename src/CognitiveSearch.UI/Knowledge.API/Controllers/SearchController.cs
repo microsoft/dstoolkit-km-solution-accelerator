@@ -3,7 +3,7 @@
 
 using Knowledge.API.Models;
 using Knowledge.Services;
-using Knowledge.Services.Configuration;
+using Knowledge.Configuration;
 using Knowledge.Services.Metadata;
 using Knowledge.Services.Models;
 using Microsoft.AspNetCore.Mvc;

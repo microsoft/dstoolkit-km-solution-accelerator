@@ -3,12 +3,13 @@
 
 namespace Knowledge.Services.AzureSearch.SDK
 {
-    using System;
-    using System.Collections.Generic;
     using Azure.Search.Documents;
     using Azure.Search.Documents.Models;
-    using Knowledge.Services.Configuration;
+    using Knowledge.Configuration;
+    using Knowledge.Models;
     using Knowledge.Services.Models;
+    using System;
+    using System.Collections.Generic;
 
     public interface IAzureSearchSDKService : IAzureSearchService
     {

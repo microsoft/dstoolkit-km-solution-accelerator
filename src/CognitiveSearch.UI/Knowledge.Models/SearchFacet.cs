@@ -4,7 +4,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace Knowledge.Services.Models
+namespace Knowledge.Models
 {
     public class SearchFacet
     {

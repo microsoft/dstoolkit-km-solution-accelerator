@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Knowledge.Services.Graph
+namespace Knowledge.Configuration.Graph
 {
     public class GraphConfig : AbstractServiceConfig
     {

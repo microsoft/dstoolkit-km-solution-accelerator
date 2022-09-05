@@ -1,16 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Microsoft.AspNetCore.Mvc;
-using Knowledge.Services;
-using Knowledge.Services.Configuration;
-using Knowledge.Services.Maps;
 using CognitiveSearch.UI.Configuration;
-using Microsoft.ApplicationInsights;
 using CognitiveSearch.UI.Models;
-using System;
+using Knowledge.Configuration.Maps;
+using Knowledge.Models;
+using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Knowledge.Services.Models;
+using System;
 
 namespace CognitiveSearch.UI.Controllers
 {
@@ -18,12 +16,10 @@ namespace CognitiveSearch.UI.Controllers
     {
         private readonly MapConfig _mapConfig;
 
-        public MapController(UIConfig uiConfig, IQueryService client, SearchServiceConfig searchConfig, MapConfig svcconfig, TelemetryClient telemetry)
+        public MapController(UIConfig uiConfig, MapConfig svcconfig, TelemetryClient telemetry)
         {
             this.telemetryClient = telemetry;
 
-            _queryService = client;
-            _searchConfig = searchConfig;
             _uiConfig = uiConfig;
             _viewId = "map";
 

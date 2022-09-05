@@ -3,8 +3,8 @@
 
 using CognitiveSearch.UI.Configuration;
 using CognitiveSearch.UI.Models;
-using Knowledge.Services.Models;
-using Knowledge.Services.WebSearch;
+using Knowledge.Configuration.WebSearch;
+using Knowledge.Models;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -14,18 +14,14 @@ namespace CognitiveSearch.UI.Controllers
 {
     public class WebController : AbstractViewController
     {
-        public IWebSearchService webSearchService;
-
-        public WebSearchConfig webConfig; 
-
-        public WebController(UIConfig uiConfig, IWebSearchService client, WebSearchConfig inWebConfig, TelemetryClient telemetry)
+        public WebSearchConfig webSearchConfig;
+        public WebController(WebSearchConfig webSearchConfig, UIConfig uiConfig, TelemetryClient telemetry)
         {
-            this.webSearchService = client;
-            this.webConfig = inWebConfig;
-
             this.telemetryClient = telemetry;
             this._uiConfig = uiConfig;
             this._viewId = "web";
+
+            this.webSearchConfig = webSearchConfig;
         }
 
         public IActionResult Index()
@@ -43,7 +39,7 @@ namespace CognitiveSearch.UI.Controllers
                 vm.selectedFacets = JsonConvert.DeserializeObject<SearchFacet[]>(this.Base64Decode(facets));
             }
 
-            if (!this.webConfig.IsEnabled)
+            if (!this.webSearchConfig.IsEnabled)
             {
                 ViewBag.Message = "Web Search is disabled. Please contact your solution admin to enable it.";
                 ViewBag.Style = "alert-danger";
