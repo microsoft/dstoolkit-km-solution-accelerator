@@ -3,6 +3,7 @@
 
 using Knowledge.Configuration;
 using Knowledge.Configuration.Graph;
+using Knowledge.Configuration.Maps;
 using Knowledge.Configuration.WebSearch;
 using Knowledge.Services;
 using Knowledge.Services.AzureSearch.SDK;
@@ -15,11 +16,6 @@ using Knowledge.Services.SpellChecking;
 using Knowledge.Services.Translation;
 using Knowledge.Services.WebSearch;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 
@@ -88,6 +84,10 @@ namespace Knowledge.API
 
             SpellCheckingConfig scconfigData = Configuration.GetSection("SpellCheckConfig").Get<SpellCheckingConfig>();
             services.AddSingleton<SpellCheckingConfig>(_ => scconfigData);
+
+            MapConfig mapConfigData = Configuration.GetSection("MapConfig").Get<MapConfig>();
+            services.AddSingleton<MapConfig>(_ => mapConfigData);
+
 
             // Services Singletons
             services.AddSingleton<IStorageService, StorageService>();

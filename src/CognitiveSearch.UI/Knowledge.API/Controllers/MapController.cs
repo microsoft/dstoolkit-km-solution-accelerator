@@ -15,7 +15,7 @@ namespace Knowledge.API.Controllers.api
 
         public MapController(MapConfig client)
         {
-            mapService = client;
+            this.mapService = client;
         }
 
         public class MapCredentials
