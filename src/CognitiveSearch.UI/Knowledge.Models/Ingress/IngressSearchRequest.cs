@@ -4,7 +4,7 @@
 using Knowledge.Models;
 using System.Collections.Generic;
 
-namespace Knowledge.Services.Models.Ingress
+namespace Knowledge.Models.Ingress
 {
     public class IngressSearchRequest
     {

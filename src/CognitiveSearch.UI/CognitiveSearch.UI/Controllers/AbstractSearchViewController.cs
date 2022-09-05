@@ -10,11 +10,9 @@ namespace CognitiveSearch.UI.Controllers
     {
         protected override SearchViewModel GetViewModel(string query = null)
         {
-            var searchidId = Guid.NewGuid().ToString();
-
             SearchViewModel vm = new()
             {
-                searchId = searchidId,
+                searchId = Guid.NewGuid().ToString(),
                 currentQuery = query ?? "*",
                 config = _uiConfig.GetVerticalById(this._viewId)
             };

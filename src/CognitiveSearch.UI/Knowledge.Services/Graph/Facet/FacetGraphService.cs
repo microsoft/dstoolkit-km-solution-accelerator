@@ -7,7 +7,6 @@ using Knowledge.Configuration.Graph;
 using Knowledge.Models;
 using Knowledge.Services.AzureSearch.SDK;
 using Knowledge.Services.Helpers;
-using Knowledge.Services.Models;
 using Microsoft.ApplicationInsights;
 using System;
 using System.Collections.Generic;

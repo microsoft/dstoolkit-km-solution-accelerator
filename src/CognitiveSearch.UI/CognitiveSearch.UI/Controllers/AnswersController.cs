@@ -3,6 +3,7 @@
 
 using CognitiveSearch.UI.Configuration;
 using CognitiveSearch.UI.Models;
+using Knowledge.Models;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -35,11 +36,11 @@ namespace CognitiveSearch.UI.Controllers
                 vm.selectedFacets = JsonConvert.DeserializeObject<SearchFacet[]>(this.Base64Decode(facets));
             }
 
-            if (!this._searchConfig.semanticSearchEnabled)
-            {
-                ViewBag.Message = "Semantic Search is disabled. Please contact your solution admin to enable it.";
-                ViewBag.Style = "alert-danger";
-            }
+            //if (!this._searchConfig.semanticSearchEnabled)
+            //{
+            //    ViewBag.Message = "Semantic Search is disabled. Please contact your solution admin to enable it.";
+            //    ViewBag.Style = "alert-danger";
+            //}
 
             return View(vm);
         }

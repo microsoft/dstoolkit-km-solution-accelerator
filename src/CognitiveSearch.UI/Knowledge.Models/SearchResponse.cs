@@ -1,11 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Knowledge.Models;
-using Knowledge.Services.QnA;
-using System.Collections.Generic;
+using Knowledge.Models.Answers;
 
-namespace Knowledge.Services.Models
+namespace Knowledge.Models
 {
     // Results Object
     public class SearchResponse

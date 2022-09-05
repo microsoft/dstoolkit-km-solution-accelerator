@@ -3,10 +3,8 @@
 
 using Knowledge.Configuration;
 using Knowledge.Configuration.Graph;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Knowledge.Services.Models
+namespace Knowledge.Models
 {
     public class SearchModel
     {

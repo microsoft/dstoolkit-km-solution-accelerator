@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Azure.Search.Documents.Indexes.Models;
 using Microsoft.Spatial;
 
-namespace Knowledge.Services.Models
+namespace Knowledge.Models
 {
     public enum PreferredFilter { None, MinValue, MaxValue, RangeMin, RangeMax, Range };
 

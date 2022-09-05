@@ -3,6 +3,7 @@
 
 namespace Knowledge.Services.QnA
 {
+    using Knowledge.Models.Answers;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 

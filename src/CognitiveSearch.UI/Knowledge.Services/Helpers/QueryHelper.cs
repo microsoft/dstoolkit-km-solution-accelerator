@@ -3,8 +3,8 @@
 
 namespace Knowledge.Services.Helpers
 {
-    using Knowledge.Services.Models;
-    using Knowledge.Services.Models.Ingress;
+    using Knowledge.Models;
+    using Knowledge.Models.Ingress;
     using System;
 
     public static class QueryHelper

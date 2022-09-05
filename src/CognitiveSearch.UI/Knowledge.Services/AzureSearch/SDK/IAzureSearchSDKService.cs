@@ -7,7 +7,6 @@ namespace Knowledge.Services.AzureSearch.SDK
     using Azure.Search.Documents.Models;
     using Knowledge.Configuration;
     using Knowledge.Models;
-    using Knowledge.Services.Models;
     using System;
     using System.Collections.Generic;
 

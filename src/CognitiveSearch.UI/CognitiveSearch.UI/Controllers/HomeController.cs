@@ -3,6 +3,7 @@
 
 using CognitiveSearch.UI.Configuration;
 using CognitiveSearch.UI.Models;
+using Knowledge.Models;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

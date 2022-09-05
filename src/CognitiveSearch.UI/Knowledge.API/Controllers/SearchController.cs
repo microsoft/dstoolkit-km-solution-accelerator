@@ -2,10 +2,10 @@
 // Licensed under the MIT License.
 
 using Knowledge.API.Models;
-using Knowledge.Services;
 using Knowledge.Configuration;
+using Knowledge.Models;
+using Knowledge.Services;
 using Knowledge.Services.Metadata;
-using Knowledge.Services.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;

@@ -7,8 +7,8 @@ namespace Knowledge.Services.AzureSearch
     using Knowledge.Configuration.Graph;
     using Knowledge.Services.AzureSearch.REST;
     using Knowledge.Services.Helpers;
-    using Knowledge.Services.Models;
-    using Knowledge.Services.Models.Ingress;
+    using Knowledge.Models;
+    using Knowledge.Models.Ingress;
     using Microsoft.ApplicationInsights;
     using Microsoft.Extensions.Caching.Memory;
     using System;

@@ -12,6 +12,7 @@ namespace Knowledge.Services.QnA
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
+    using Knowledge.Models.Answers;
 
     public class QnAService : AbstractService, IQnAService
     {

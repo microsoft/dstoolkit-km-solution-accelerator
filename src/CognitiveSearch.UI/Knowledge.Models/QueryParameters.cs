@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Knowledge.Services.Models
+namespace Knowledge.Models
 {
     public class QueryParameters
     {

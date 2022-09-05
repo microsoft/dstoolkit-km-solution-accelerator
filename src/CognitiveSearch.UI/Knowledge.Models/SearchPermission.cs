@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Knowledge.Services.Models
+namespace Knowledge.Models
 {
     public class SearchPermission
     {

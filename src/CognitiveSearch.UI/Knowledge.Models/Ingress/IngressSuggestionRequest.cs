@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Knowledge.Services.Models.Ingress
+namespace Knowledge.Models.Ingress
 {
     //See https://docs.microsoft.com/en-us/rest/api/searchservice/suggestions#request-body 
 

@@ -2,9 +2,9 @@
 // Licensed under the MIT License.
 
 using Knowledge.Configuration;
+using Knowledge.Models;
+using Knowledge.Models.Ingress;
 using Knowledge.Services.Helpers;
-using Knowledge.Services.Models;
-using Knowledge.Services.Models.Ingress;
 using Knowledge.Services.QnA;
 using Knowledge.Services.SemanticSearch;
 using Knowledge.Services.SpellChecking;

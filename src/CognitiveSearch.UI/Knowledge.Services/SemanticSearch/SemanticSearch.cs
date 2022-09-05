@@ -1,21 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Microsoft.ApplicationInsights;
-using Microsoft.Extensions.Caching.Distributed;
+using Knowledge.Configuration;
+using Knowledge.Models;
+using Knowledge.Models.Ingress;
 using Knowledge.Services.AzureSearch;
 using Knowledge.Services.AzureSearch.REST;
-using Knowledge.Configuration;
+using Knowledge.Services.AzureStorage;
 using Knowledge.Services.Helpers;
-using Knowledge.Services.Models;
-using Knowledge.Services.Models.Ingress;
 using Knowledge.Services.Translation;
+using Microsoft.ApplicationInsights;
+using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Knowledge.Services.AzureStorage;
-using Knowledge.Models;
 
 namespace Knowledge.Services.SemanticSearch
 {

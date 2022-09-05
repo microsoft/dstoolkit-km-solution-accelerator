@@ -2,11 +2,8 @@
 // Licensed under the MIT License.
 
 using Knowledge.Models;
-using Knowledge.Services.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Knowledge.Services.Helpers
 {
