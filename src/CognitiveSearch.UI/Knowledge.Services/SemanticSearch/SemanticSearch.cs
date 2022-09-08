@@ -2,11 +2,12 @@
 // Licensed under the MIT License.
 
 using Knowledge.Configuration;
+using Knowledge.Configuration.AzureStorage;
+using Knowledge.Configuration.SemanticSearch;
 using Knowledge.Models;
 using Knowledge.Models.Ingress;
 using Knowledge.Services.AzureSearch;
 using Knowledge.Services.AzureSearch.REST;
-using Knowledge.Services.AzureStorage;
 using Knowledge.Services.Helpers;
 using Knowledge.Services.Translation;
 using Microsoft.ApplicationInsights;
@@ -37,9 +38,10 @@ namespace Knowledge.Services.SemanticSearch
             this.distCache = cache;
             this.serviceConfig = serviceConfig;
             this.storageConfig = strCfg;
+
             this.config = semanticConfig;
 
-            if (serviceConfig.semanticSearchEnabled)
+            if (config.IsEnabled)
             {
                 this.InitSearchClients();
             }
@@ -47,7 +49,7 @@ namespace Knowledge.Services.SemanticSearch
 
         public async Task<AzureSearchRESTResponse> GetSemanticRESTResults(IngressSearchRequest request)
         {
-            if (! serviceConfig.semanticSearchEnabled)
+            if (!config.IsEnabled)
             {
                 return new AzureSearchRESTResponse();
             }
@@ -81,7 +83,7 @@ namespace Knowledge.Services.SemanticSearch
 
         public async Task<SearchResponse> GetSemanticResults(IngressSearchRequest request)
         {
-            if (!serviceConfig.semanticSearchEnabled)
+            if (!config.IsEnabled)
             {
                 return new SearchResponse();
             }

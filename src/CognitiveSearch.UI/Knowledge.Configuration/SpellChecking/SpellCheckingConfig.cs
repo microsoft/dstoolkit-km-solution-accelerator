@@ -3,20 +3,18 @@
 
 using Knowledge.Configuration;
 
-namespace Knowledge.Services.Translation
+namespace Knowledge.Configuration.SpellChecking
 {
-    public class TranslationConfig : AbstractServiceConfig
+    public class SpellCheckingConfig : AbstractServiceConfig
     {
+        public string Provider { get; set; }
+
         public string SubscriptionKey { get; set; }
 
         public string Endpoint { get; set; }
-
-        public string ServiceRegion { get; set; }
-
         public string SupportedLanguages { get; set; }
-
-        public string SuggestedFrom { get; set; }
-        public string SuggestedTo { get; set; }
+        public string Market { get; set; }
+        public string Mode { get; set; }
 
         public int CacheExpirationTime { get; set; }
     }

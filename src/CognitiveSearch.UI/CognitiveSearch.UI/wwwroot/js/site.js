@@ -61,7 +61,7 @@ function createJQueryRequest(url, data, callback, method, dataType) {
                 type: method,
                 crossDomain: true,
                 contentType: "application/json; charset=utf-8",
-                dataType: "json",
+                dataType: dataType,
                 data: JSON.stringify(data),
                 beforeSend: function (xhr) {
                     /* Authorization header */
@@ -76,7 +76,52 @@ function createJQueryRequest(url, data, callback, method, dataType) {
                 type: method,
                 crossDomain: true,
                 contentType: "application/json; charset=utf-8",
-                dataType: "json",
+                dataType: dataType,
+                data: JSON.stringify(data),
+                success: callback
+            });
+        }
+    }
+    else {
+        return jQuery.ajax({
+            url: url,
+            type: method,
+            contentType: "application/json; charset=utf-8",
+            dataType: dataType,
+            data: JSON.stringify(data),
+            success: callback
+        });
+    }
+}
+
+function GetWebAPIBackendUrl(url) {
+
+    if (Microsoft.Config.data.webAPIBackend.isEnabled) {
+        // Append the API Backend host here
+        var backendurl = Microsoft.Config.data.webAPIBackend.endpoint + url;
+
+        if (Microsoft.Config.data.webAPIBackend.isAuthenticated) {
+            return jQuery.ajax({
+                url: backendurl,
+                type: method,
+                crossDomain: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: dataType,
+                data: JSON.stringify(data),
+                beforeSend: function (xhr) {
+                    /* Authorization header */
+                    xhr.setRequestHeader("Authorization", "Bearer " + getAccessToken());
+                },
+                success: callback
+            });
+        }
+        else {
+            return jQuery.ajax({
+                url: backendurl,
+                type: method,
+                crossDomain: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: dataType,
                 data: JSON.stringify(data),
                 success: callback
             });

@@ -5,6 +5,7 @@ namespace Knowledge.Services.Metadata
 {
     using Azure.Storage;
     using Azure.Storage.Blobs;
+    using Knowledge.Configuration.AzureStorage;
     using Knowledge.Services;
     using Knowledge.Services.AzureStorage;
     using Microsoft.ApplicationInsights;

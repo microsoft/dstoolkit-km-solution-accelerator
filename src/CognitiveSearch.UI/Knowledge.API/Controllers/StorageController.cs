@@ -4,21 +4,14 @@
 using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Knowledge.Configuration.AzureStorage;
 using Knowledge.Services;
 using Knowledge.Services.AzureStorage;
-using Knowledge.Configuration;
 using Knowledge.Services.Helpers;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace Knowledge.API.Controllers.api
 {
@@ -240,29 +233,6 @@ namespace Knowledge.API.Controllers.api
             }
 
             return new JsonResult("ok");
-        }
-
-        /// <summary>
-        ///  Returns the requested document with an 'inline' content disposition header.
-        ///  This hints to a browser to show the file instead of downloading it.
-        /// </summary>
-        /// <param name="storageIndex">The storage connection string index.</param>
-        /// <param name="fileName">The storage blob filename.</param>
-        /// <param name="mimeType">The expected mime content type.</param>
-        /// <returns>The file data with inline disposition header.</returns>
-        [HttpGet("preview/{storageIndex}/{fileName}/{mimeType}")]
-        public async Task<FileContentResult> GetDocumentInline(int storageIndex, string fileName, string mimeType)
-        {
-            var decodedFilename = HttpUtility.UrlDecode(fileName);
-            var container = GetStorageContainer(storageIndex);
-            var blob = container.GetBlobClient(decodedFilename);
-            using (var ms = new MemoryStream())
-            {
-                var downlaodInfo = await blob.DownloadAsync();
-                await downlaodInfo.Value.Content.CopyToAsync(ms);
-                Response.Headers.Add("Content-Disposition", "inline; filename=" + decodedFilename);
-                return File(ms.ToArray(), HttpUtility.UrlDecode(mimeType));
-            }
         }
 
         private BlobContainerClient GetDefaultStorageContainer()

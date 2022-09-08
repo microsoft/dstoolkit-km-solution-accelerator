@@ -1,4 +1,5 @@
-﻿using Knowledge.Services.SpellChecking.ACS;
+﻿using Knowledge.Configuration.SpellChecking;
+using Knowledge.Services.SpellChecking.ACS;
 using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Caching.Distributed;
 using System;

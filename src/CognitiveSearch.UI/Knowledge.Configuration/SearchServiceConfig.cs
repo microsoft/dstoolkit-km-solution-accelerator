@@ -32,12 +32,6 @@ namespace Knowledge.Configuration
         // Flags 
         public bool IsPathBase64Encoded { get; set; }
 
-        // Initial User controllable flags - User Options TODO
-        public bool semanticSearchEnabled { get; set; }
-        public bool TranslateQueryText { get; set; }
-        public bool SpellCheckQueryText { get; set; }
-        public bool SuggestionsAsFilter { get; set; }
-
         // Content Security Trimming
         public bool IsSecurityTrimmingEnabled { get; set; }
         public string PermissionsPublicFilter { get; set; }

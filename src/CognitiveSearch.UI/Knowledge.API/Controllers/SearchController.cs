@@ -8,10 +8,6 @@ using Knowledge.Services;
 using Knowledge.Services.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Knowledge.API.Controllers
 {
@@ -178,8 +174,11 @@ namespace Knowledge.API.Controllers
         }
 
         [Route("autocomplete")]
-        [HttpGet]
-        public async Task<IActionResult> AutoCompleteAsync(string term, string targetField = "key_phrases", string suggester = "suggester1", string indexName = DEFAULT_INDEX_NAME)
+        [HttpPost]
+        public async Task<IActionResult> AutoCompleteAsync(string term,
+                                                           string? targetField = "key_phrases",
+                                                           string? suggester = "suggester1",
+                                                           string? indexName = DEFAULT_INDEX_NAME)
         {
             List<string> candidates = new List<string>();
 
@@ -206,10 +205,17 @@ namespace Knowledge.API.Controllers
         }
 
         [Route("suggest")]
-        [HttpGet]
-        public async Task<IActionResult> SuggestAsync(string term, string targetField = "key_phrases", bool fuzzy = true, bool highlights = true, string suggester = "suggester1", string indexName = DEFAULT_INDEX_NAME, string filter = null)
+        [HttpPost]
+
+        public async Task<IActionResult> SuggestAsync(string term,
+                                                      string? targetField = "key_phrases",
+                                                      bool fuzzy = true,
+                                                      bool highlights = true,
+                                                      string? suggester = "suggester1",
+                                                      string? indexName = DEFAULT_INDEX_NAME,
+                                                      string? filter = null)
         {
-            List<string> uniqueItems = new List<string>();
+            List<string> uniqueItems = new();
 
             if (!string.IsNullOrEmpty(term))
             {

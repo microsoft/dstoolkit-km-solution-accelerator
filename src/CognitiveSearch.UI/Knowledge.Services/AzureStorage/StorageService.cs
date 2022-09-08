@@ -6,6 +6,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Specialized;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
+using Knowledge.Configuration.AzureStorage;
 using Microsoft.ApplicationInsights;
 using System;
 

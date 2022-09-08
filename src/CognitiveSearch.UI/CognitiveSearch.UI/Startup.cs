@@ -2,8 +2,12 @@
 // Licensed under the MIT License.
 
 using CognitiveSearch.UI.Configuration;
+using Knowledge.Configuration;
 using Knowledge.Configuration.Graph;
 using Knowledge.Configuration.Maps;
+using Knowledge.Configuration.SemanticSearch;
+using Knowledge.Configuration.SpellChecking;
+using Knowledge.Configuration.Translation;
 using Knowledge.Configuration.WebSearch;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -77,6 +81,20 @@ namespace CognitiveSearch.UI
             WebAPIBackend webapiconfigData = Configuration.GetSection("WebAPIBackend").Get<WebAPIBackend>();
             services.AddSingleton<WebAPIBackend>(_ => webapiconfigData);
 
+            QueryServiceConfig queryconfigData = Configuration.GetSection("QueryServiceConfig").Get<QueryServiceConfig>();
+            services.AddSingleton<QueryServiceConfig>(_ => queryconfigData);
+
+            // Semantic 
+            SemanticSearchConfig semanticData = Configuration.GetSection("SemanticSearchConfig").Get<SemanticSearchConfig>();
+            services.AddSingleton<SemanticSearchConfig>(_ => semanticData);
+
+            TranslationConfig tconfigData = Configuration.GetSection("TranslationConfig").Get<TranslationConfig>();
+            services.AddSingleton<TranslationConfig>(_ => tconfigData);
+
+            SpellCheckingConfig scconfigData = Configuration.GetSection("SpellCheckConfig").Get<SpellCheckingConfig>();
+            services.AddSingleton<SpellCheckingConfig>(_ => scconfigData);
+
+
 
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 
@@ -90,6 +108,7 @@ namespace CognitiveSearch.UI
                 GraphConfig = gconfigData,
                 WebSearchConfig = wsconfigData,
                 WebAPIBackend = webapiconfigData,
+                QueryServiceConfig = queryconfigData,
                 UIVersion = Configuration.GetValue("UIVersion","1.0.0")
             };
             services.AddSingleton(appConfig);

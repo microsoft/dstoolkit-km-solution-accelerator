@@ -7,6 +7,7 @@ using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Sas;
 using Knowledge.Configuration;
+using Knowledge.Configuration.AzureStorage;
 using Knowledge.Configuration.Graph;
 using Knowledge.Models;
 using Knowledge.Services.AzureStorage;

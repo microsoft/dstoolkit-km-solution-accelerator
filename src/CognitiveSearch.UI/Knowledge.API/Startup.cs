@@ -2,8 +2,12 @@
 // Licensed under the MIT License.
 
 using Knowledge.Configuration;
+using Knowledge.Configuration.AzureStorage;
 using Knowledge.Configuration.Graph;
 using Knowledge.Configuration.Maps;
+using Knowledge.Configuration.SemanticSearch;
+using Knowledge.Configuration.SpellChecking;
+using Knowledge.Configuration.Translation;
 using Knowledge.Configuration.WebSearch;
 using Knowledge.Services;
 using Knowledge.Services.AzureSearch.SDK;
@@ -87,6 +91,9 @@ namespace Knowledge.API
 
             MapConfig mapConfigData = Configuration.GetSection("MapConfig").Get<MapConfig>();
             services.AddSingleton<MapConfig>(_ => mapConfigData);
+
+            QueryServiceConfig queryconfigData = Configuration.GetSection("QueryServiceConfig").Get<QueryServiceConfig>();
+            services.AddSingleton<QueryServiceConfig>(_ => queryconfigData);
 
 
             // Services Singletons

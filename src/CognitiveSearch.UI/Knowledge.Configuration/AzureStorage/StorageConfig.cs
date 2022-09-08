@@ -1,12 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-
-namespace Knowledge.Services.AzureStorage
+namespace Knowledge.Configuration.AzureStorage
 {
-    public class StorageConfig
+    public class StorageConfig : AbstractServiceConfig
     {
         // Storage Accounts settings for SAS Token handling
 
