@@ -665,7 +665,7 @@ Microsoft.Search.Results = {
     },
 
     get_next_page: function (document_id, pagenumber) {
-        $.postAPIJSON('/api/search/getdocumentsiblings',
+        $.postAPIJSON('/api/document/getsiblings',
             {
                 document_id: document_id,
                 incomingFilter: "image_parentid eq '" + document_id + "' and (page_number ge " + (pagenumber + 1) + ")",
@@ -763,7 +763,7 @@ Microsoft.Search.Results = {
             }
             else {
                 if (hasCoverImage) {
-                    documentHtml += '   <img alt="' + name + '" class="image-result" src="/api/search/getdocumentcoverimage?id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                    documentHtml += '   <img alt="' + name + '" class="image-result" src="/api/document/getcoverimage?id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                 }
                 else {
                     documentHtml += '   <img alt="' + name + '" class="image-result-nocover" src="' + iconPath + '" title="' + docresult.title + '"/>';
@@ -937,7 +937,7 @@ Microsoft.Search.Results.Metadata = {
         metadataContainerHTML += '</tbody>';
         metadataContainerHTML += '</table></div><br/>';
 
-        $.postAPIJSON('/api/search/getdocumentmetadata',
+        $.postAPIJSON('/api/document/getmetadata',
             {
                 path: result.metadata_storage_path
             },
@@ -1022,7 +1022,7 @@ Microsoft.Search.Results.Embedded = {
 
         var containerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role = "progressbar" style = "width: 100%" aria - valuenow="100" aria - valuemin="0" aria - valuemax="100"></div></div>';
 
-        $.postAPIJSON('/api/search/getdocumentembedded',
+        $.postAPIJSON('/api/document/getembedded',
             {
                 document_id: result.document_id
             },
@@ -1077,7 +1077,7 @@ Microsoft.Search.Results.Siblings = {
 
         var containerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role = "progressbar" style = "width: 100%" aria - valuenow="100" aria - valuemin="0" aria - valuemax="100"></div></div>';
 
-        $.postAPIJSON('/api/search/getdocumentsiblings',
+        $.postAPIJSON('/api/document/getsiblings',
             {
                 document_id: result.image_parentid,
                 incomingFilter: "image_parentid eq '" + result.image_parentid + "' ",

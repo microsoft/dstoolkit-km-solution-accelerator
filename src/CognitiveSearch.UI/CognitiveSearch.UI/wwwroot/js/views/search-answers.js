@@ -48,14 +48,14 @@ Microsoft.Answers = {
 
                     if (item.highlights) {
                         answersHtml += ' <a title="'+item.text+'" href="javascript:void(0)" onclick="Microsoft.Results.Details.ShowDocument(\'' + index_key + '\',0);" class="list-group-item list-group-item-action d-flex" style="color:inherit !important">' ;
-                        answersHtml += '   <img title="'+item.text+'" class="image-result img-thumbnail" src="/api/search/getdocumentcoverimagebyindexkey?key=' + index_key + '" " onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                        answersHtml += '   <img title="' + item.text +'" class="image-result img-thumbnail" src="/api/document/getcoverimagebyindexkey?key=' + index_key + '" " onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                         answersHtml += ' <span class="ms-1">' + item.highlights + '</span>';
                         answersHtml += ' </a>';
                     }
                     else {
                         if (item.text) {
                             answersHtml += ' <a title="'+item.text+'" href="javascript:void(0)" onclick="Microsoft.Results.Details.ShowDocument(\'' + index_key + '\',0);" class="list-group-item list-group-item-action d-flex" style="color:inherit !important">' ;
-                            answersHtml += '   <img title="'+item.text+'" class="image-result img-thumbnail" src="/api/search/getdocumentcoverimagebyindexkey?key=' + index_key + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                            answersHtml += '   <img title="' + item.text +'" class="image-result img-thumbnail" src="/api/document/getcoverimagebyindexkey?key=' + index_key + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                             answersHtml += ' <span class="ms-1">' + item.text + '</span>';
                             answersHtml += ' </a>';
                         }
@@ -253,7 +253,7 @@ Microsoft.Answers = {
                             src = "https://view.officeapps.live.com/op/view.aspx?src=" + encodeURIComponent(Microsoft.Search.GetSASTokenFromPath(path));
                         }
                         answersHtml += '<a target="_blank" href="' + src + '" >' + name;
-                        answersHtml += '    <img class="image-result" src="/api/search/getdocumentcoverimage?id=' + docresult.document_id + '"/>';
+                        answersHtml += '    <img class="image-result" src="/api/document/getcoverimage?id=' + docresult.document_id + '"/>';
                         answersHtml += '</a>';
                         answersHtml += '</h5>';
                     }

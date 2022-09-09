@@ -322,7 +322,7 @@ Microsoft.All = {
                     resultsHtml += '        <div class="row col-md-12" onclick="Microsoft.Results.Details.ShowDocument(\'' + id + '\',' + docresult.idx + ');">';
                     resultsHtml += Microsoft.Utils.GetModificationLine(docresult);
 
-                    resultsHtml += '            <img alt="' + name + '" class="image-result" src="/api/search/getdocumentcoverimage?id=' + docresult.document_id + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                    resultsHtml += '            <img alt="' + name + '" class="image-result" src="/api/document/getcoverimage?id=' + docresult.document_id + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
 
                     resultsHtml += '            <div class="results-body mt-2" >' + highlights + '</div>';
 
