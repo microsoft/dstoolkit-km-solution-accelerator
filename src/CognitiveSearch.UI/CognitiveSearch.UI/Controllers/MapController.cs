@@ -20,8 +20,8 @@ namespace CognitiveSearch.UI.Controllers
         {
             this.telemetryClient = telemetry;
 
-            _uiConfig = uiConfig;
-            _viewId = "map";
+            base.uiConfig = uiConfig;
+            viewId = "map";
 
             _mapConfig = svcconfig;
         }

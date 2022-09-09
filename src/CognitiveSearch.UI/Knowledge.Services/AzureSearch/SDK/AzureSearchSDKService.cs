@@ -642,7 +642,7 @@ namespace Knowledge.Services.AzureSearch.SDK
             var searchId = this.GetSearchId().ToString();
 
             QueryParameters queryParameters = request.parameters ?? (new());
-            queryParameters.RowCount = 50;
+            queryParameters.RowCount = 30;
             queryParameters.ScoringProfile = "images";
 
             UserOptions userOptions = new();
@@ -705,7 +705,7 @@ namespace Knowledge.Services.AzureSearch.SDK
             var searchId = this.GetSearchId().ToString();
 
             QueryParameters queryParameters = request.parameters ?? (new());
-            queryParameters.RowCount = 50;
+            queryParameters.RowCount = 30;
             queryParameters.ScoringProfile = "videos";
 
             UserOptions userOptions = new();

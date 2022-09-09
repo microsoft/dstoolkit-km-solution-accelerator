@@ -20,9 +20,11 @@ using Knowledge.Services.SpellChecking;
 using Knowledge.Services.Translation;
 using Knowledge.Services.WebSearch;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace Knowledge.API
 {
@@ -48,7 +50,20 @@ namespace Knowledge.API
                     .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
             }
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(jsonOptions =>
+            {
+                jsonOptions.SerializerSettings.Converters.Add(new StringEnumConverter());
+                jsonOptions.SerializerSettings.ContractResolver = new DefaultContractResolver
+                {
+                    //NamingStrategy = new CamelCaseNamingStrategy()
+                    NamingStrategy = new CamelCaseNamingStrategy
+                    {
+                        OverrideSpecifiedNames = false
+                    }
+                };
+                jsonOptions.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.None;
+            });
+
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {

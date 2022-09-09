@@ -17,8 +17,8 @@ namespace CognitiveSearch.UI.Controllers
         {
             this.telemetryClient = telemetry;
 
-            _uiConfig = uiConfig;
-            _viewId = "graph";
+            base.uiConfig = uiConfig;
+            viewId = "graph";
         }
 
 

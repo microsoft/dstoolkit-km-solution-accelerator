@@ -24,8 +24,8 @@ namespace Knowledge.API.Controllers
 
         public SearchController(IQueryService client, SearchServiceConfig svcconfig, IMetadataService msvc)
         {
-            _queryService = client;
-            _config = svcconfig;
+            QueryService = client;
+            Config = svcconfig;
             this.metadataService = msvc;
         }
 
@@ -34,7 +34,7 @@ namespace Knowledge.API.Controllers
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
-            SearchResponse result = await _queryService.GetDocumentsAsync(request);
+            SearchResponse result = await QueryService.GetDocumentsAsync(request);
 
             return CreateContentResultResponse(result);
             //return new JsonResult(result);
@@ -47,7 +47,7 @@ namespace Knowledge.API.Controllers
             {
                 request.indexName = DEFAULT_INDEX_NAME;
                 request.permissions = GetUserPermissions();
-                var result = await _queryService.GetDocumentByIndexKey(request);
+                var result = await QueryService.GetDocumentByIndexKey(request);
 
                 return CreateContentResultResponse(result);
             }
@@ -62,7 +62,7 @@ namespace Knowledge.API.Controllers
             {
                 request.indexName = DEFAULT_INDEX_NAME;
                 request.permissions = GetUserPermissions();
-                var result = await _queryService.GetDocumentById(request);
+                var result = await QueryService.GetDocumentById(request);
 
                 return CreateContentResultResponse(result);
             }
@@ -82,7 +82,7 @@ namespace Knowledge.API.Controllers
                 request.indexName = DEFAULT_INDEX_NAME;
                 request.permissions = GetUserPermissions();
 
-                var result = await _queryService.GetDocumentCoverImage(request);
+                var result = await QueryService.GetDocumentCoverImage(request);
 
                 if (result.Count > 0)
                 {
@@ -122,7 +122,7 @@ namespace Knowledge.API.Controllers
                 request.indexName = DEFAULT_INDEX_NAME;
                 request.permissions = GetUserPermissions();
 
-                var result = await _queryService.GetDocumentCoverImageByIndexKey(request);
+                var result = await QueryService.GetDocumentCoverImageByIndexKey(request);
 
                 if (result.Count > 0)
                 {
@@ -155,7 +155,7 @@ namespace Knowledge.API.Controllers
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
-            SearchResponse result = await _queryService.GetLatestDocumentsAsync(request);
+            SearchResponse result = await QueryService.GetLatestDocumentsAsync(request);
 
             return CreateContentResultResponse(result);
         }
@@ -193,7 +193,7 @@ namespace Knowledge.API.Controllers
                 };
 
                 // Change to _docSearch.Suggest if you would prefer to have suggestions instead of auto-completion
-                var response = await _queryService.AutocompleteAsync(request);
+                var response = await QueryService.AutocompleteAsync(request);
 
                 if (response != null)
                 {
@@ -231,7 +231,7 @@ namespace Knowledge.API.Controllers
                 };
 
                 // Change to _docSearch.Suggest if you would prefer to have suggestions instead of auto-completion
-                var response = await _queryService.SuggestAsync(request);
+                var response = await QueryService.SuggestAsync(request);
 
                 if (response != null)
                 {
@@ -247,7 +247,7 @@ namespace Knowledge.API.Controllers
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
-            SearchResponse result = await _queryService.GetDocumentEmbedded(request);
+            SearchResponse result = await QueryService.GetDocumentEmbedded(request);
 
             return CreateContentResultResponse(result);
         }
@@ -257,7 +257,7 @@ namespace Knowledge.API.Controllers
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
-            SearchResponse result = await _queryService.GetDocumentSiblings(request);
+            SearchResponse result = await QueryService.GetDocumentSiblings(request);
 
             return CreateContentResultResponse(result);
         }
@@ -267,7 +267,7 @@ namespace Knowledge.API.Controllers
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
-            SearchResponse result = await _queryService.GetImagesAsync(request);
+            SearchResponse result = await QueryService.GetImagesAsync(request);
 
             return CreateContentResultResponse(result);
         }
@@ -277,7 +277,7 @@ namespace Knowledge.API.Controllers
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
-            SearchResponse result = await _queryService.GetLatestImagesAsync(request);
+            SearchResponse result = await QueryService.GetLatestImagesAsync(request);
 
             return CreateContentResultResponse(result);
         }
@@ -287,7 +287,7 @@ namespace Knowledge.API.Controllers
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
-            SearchResponse result = await _queryService.GetVideosAsync(request);
+            SearchResponse result = await QueryService.GetVideosAsync(request);
 
             return CreateContentResultResponse(result);
         }

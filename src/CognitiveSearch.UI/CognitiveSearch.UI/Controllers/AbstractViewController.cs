@@ -5,8 +5,6 @@ using CognitiveSearch.UI.Configuration;
 using CognitiveSearch.UI.Models;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
 
 namespace CognitiveSearch.UI.Controllers
@@ -17,20 +15,11 @@ namespace CognitiveSearch.UI.Controllers
 
         protected TelemetryClient telemetryClient;
 
-        protected UIConfig _uiConfig { get; set; }
+        protected UIConfig uiConfig { get; set; }
 
-        protected string _configurationError { get; set; }
+        protected string configurationError { get; set; }
 
-        protected string _viewId ;
-
-        private static DefaultContractResolver contractResolver = new()
-        {
-            //NamingStrategy = new CamelCaseNamingStrategy()
-            NamingStrategy = new CamelCaseNamingStrategy
-            {
-                OverrideSpecifiedNames = false
-            }
-        };
+        protected string viewId ;
 
         public string Base64Decode(string base64EncodedData)
         {
@@ -38,15 +27,9 @@ namespace CognitiveSearch.UI.Controllers
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
-        private JsonSerializerSettings settings = new()
-        {
-            ContractResolver = contractResolver,
-            Formatting = Formatting.Indented
-        };
-
         protected string GetViewTitle()
         {
-            return this._uiConfig.GetVerticalById(this._viewId).title;
+            return this.uiConfig.GetVerticalById(this.viewId).title;
         }
 
         protected virtual SearchViewModel GetViewModel(string query = null)
@@ -57,14 +40,13 @@ namespace CognitiveSearch.UI.Controllers
             {
                 searchId = searchidId,
                 currentQuery = query ?? QUERY_ALL,
-                config = _uiConfig.GetVerticalById(this._viewId)
+                config = uiConfig.GetVerticalById(this.viewId)
             };
             return vm;
         }
-
-        protected ContentResult CreateContentResultResponse(object result)
+        protected IActionResult CreateContentResultResponse(object result)
         {
-            return Content(JsonConvert.SerializeObject(result, settings), "application/json");
+            return new JsonResult(result);
         }
 
         protected SearchViewModel GetLandingModel(string query = null)
@@ -75,12 +57,9 @@ namespace CognitiveSearch.UI.Controllers
             {
                 searchId = searchidId,
                 currentQuery = query ?? QUERY_ALL,
-                config = this._uiConfig.LandingPage
+                config = this.uiConfig.LandingPage
             };
             return vm;
-            //return this._uiConfig.LandingPage;
         }
-
     }
-
 }

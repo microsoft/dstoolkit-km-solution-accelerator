@@ -14,7 +14,7 @@ namespace CognitiveSearch.UI.Controllers
             {
                 searchId = Guid.NewGuid().ToString(),
                 currentQuery = query ?? "*",
-                config = _uiConfig.GetVerticalById(this._viewId)
+                config = uiConfig.GetVerticalById(this.viewId)
             };
             return vm;
         }

@@ -17,8 +17,8 @@ namespace CognitiveSearch.UI.Controllers
         {
             this.telemetryClient = telemetry;
 
-            _uiConfig = uiConfig;
-            _viewId = "search";
+            base.uiConfig = uiConfig;
+            viewId = "search";
         }
 
         public IActionResult Index()

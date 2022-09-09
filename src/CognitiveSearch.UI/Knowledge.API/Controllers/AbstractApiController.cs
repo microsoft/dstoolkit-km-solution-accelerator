@@ -6,10 +6,6 @@ using Knowledge.Models;
 using Knowledge.Services;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 
 namespace Knowledge.API.Controllers
@@ -19,37 +15,23 @@ namespace Knowledge.API.Controllers
         // Client logs all searches in Application Insights
         protected TelemetryClient telemetryClient;
 
-        protected SearchServiceConfig _config { get; set; }
+        protected SearchServiceConfig Config { get; set; }
 
-        protected IQueryService _queryService { get; set; }
+        protected IQueryService QueryService { get; set; }
 
-        protected string _configurationError { get; set; }
+        protected string ConfigurationError { get; set; }
 
-        private static DefaultContractResolver contractResolver = new DefaultContractResolver
+        protected IActionResult CreateContentResultResponse(object result)
         {
-            //NamingStrategy = new CamelCaseNamingStrategy()
-            NamingStrategy = new CamelCaseNamingStrategy
-            {
-                OverrideSpecifiedNames = false
-            }
-        };
-
-        private JsonSerializerSettings settings = new JsonSerializerSettings
-        {
-            ContractResolver = contractResolver,
-            Formatting = Formatting.Indented
-        };
-
-        protected ContentResult CreateContentResultResponse(object result)
-        {
-            return Content(JsonConvert.SerializeObject(result, settings), "application/json");
+            return new JsonResult(result);
         }
 
         protected SearchPermission[] GetUserPermissions()
         {
-            List<SearchPermission> permissions = new();
-
-            permissions.Add(new SearchPermission() { group = GetUserId() });
+            List<SearchPermission> permissions = new()
+            {
+                new SearchPermission() { group = GetUserId() }
+            };
 
             if (User.Claims.Any(c => c.Type == "groups"))
             {

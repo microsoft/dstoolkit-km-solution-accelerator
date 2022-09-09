@@ -19,9 +19,9 @@ namespace Knowledge.API.Controllers
 
         public AnswersController(IQueryService client, ISemanticSearchService semantic, SearchServiceConfig svcconfig)
         {
-            _queryService = client;
+            QueryService = client;
             semanticService = semantic;
-            _config = svcconfig;
+            Config = svcconfig;
         }
 
 

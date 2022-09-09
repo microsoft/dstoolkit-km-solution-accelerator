@@ -25,22 +25,22 @@ namespace Knowledge.API.Controllers
                                 IFacetGraphService facetGraphService,
                                 SearchServiceConfig svcConfig)
         {
-            this._queryService = client;
-            this._config = svcConfig;
+            this.QueryService = client;
+            this.Config = svcConfig;
             this._facetGraphService = facetGraphService;
         }
 
         [HttpPost("getgraphdata")]
-        public ActionResult GetGraphData(ApiGraphRequest request)
+        public IActionResult GetGraphData(ApiGraphRequest request)
         {
             // Support for common query transformations like spellcheck & translation
-            _queryService.TransformQuery(request);
+            QueryService.TransformQuery(request);
 
             List<string> facetNames = request.facets;
 
             if (facetNames == null || facetNames.Count == 0)
             {
-                string facetsList = _config.GraphFacet;
+                string facetsList = Config.GraphFacet;
 
                 facetNames = facetsList.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList<string>();
             }

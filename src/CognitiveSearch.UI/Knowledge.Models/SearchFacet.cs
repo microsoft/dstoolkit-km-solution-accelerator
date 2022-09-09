@@ -2,17 +2,15 @@
 // Licensed under the MIT License.
 
 using Newtonsoft.Json;
-using System;
 
 namespace Knowledge.Models
 {
     public class SearchFacet
     {
-        public string Key { get; set; }
+        public string? Key { get; set; }
         public FacetValue[] Values { get; set; }
-        public string Type { get; set; }
-        public string Target{ get; set; }
-        public string Label{ get; set; }
+        public string? Type { get; set; }
+        public string? Target{ get; set; }
 
         public SearchFacet()
         {
@@ -33,7 +31,7 @@ namespace Knowledge.Models
     }
     public class FacetValue
     {
-        public string value { get; set; }
+        public string? value { get; set; }
 
         [JsonProperty(PropertyName = "count", NullValueHandling = NullValueHandling.Ignore)]
         public long count { get; set; }
@@ -42,10 +40,10 @@ namespace Knowledge.Models
         public string[] query { get; set; }
 
         [JsonProperty(PropertyName = "target", NullValueHandling = NullValueHandling.Ignore)]
-        public string target { get; set; }
+        public string? target { get; set; }
 
         [JsonProperty(PropertyName = "logical", NullValueHandling = NullValueHandling.Ignore)]
-        public string logical { get; set; }
+        public string? logical { get; set; }
 
         [JsonProperty(PropertyName = "singlevalued", NullValueHandling = NullValueHandling.Ignore)]
         public bool singlevalued { get; set; }

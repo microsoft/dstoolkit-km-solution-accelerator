@@ -17,6 +17,8 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using System.IO;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
@@ -113,7 +115,19 @@ namespace CognitiveSearch.UI
             };
             services.AddSingleton(appConfig);
 
-            services.AddMvc(options => options.EnableEndpointRouting = false).AddNewtonsoftJson();
+            services.AddMvc(options => options.EnableEndpointRouting = false).AddNewtonsoftJson(jsonOptions =>
+            {
+                jsonOptions.SerializerSettings.Converters.Add(new StringEnumConverter());
+                jsonOptions.SerializerSettings.ContractResolver = new DefaultContractResolver
+                {
+                    //NamingStrategy = new CamelCaseNamingStrategy()
+                    NamingStrategy = new CamelCaseNamingStrategy
+                    {
+                        OverrideSpecifiedNames = false
+                    }
+                };
+                jsonOptions.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.None;
+            });
 
             services.AddWebOptimizer(pipeline =>
             {

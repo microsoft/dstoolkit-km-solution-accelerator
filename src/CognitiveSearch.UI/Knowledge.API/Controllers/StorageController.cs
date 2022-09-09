@@ -26,7 +26,7 @@ namespace Knowledge.API.Controllers.api
         public StorageController(TelemetryClient telemetry, IQueryService client, StorageConfig storageConfig)
         {
             this.telemetryClient = telemetry;
-            this._queryService = client;
+            this.QueryService = client;
             this._storageConfig = storageConfig;
         }
 
@@ -118,7 +118,7 @@ namespace Knowledge.API.Controllers.api
                 }
             }
 
-            _queryService.RunIndexers();
+            QueryService.RunIndexers();
 
             return new JsonResult("Upload completed.");
         }
@@ -170,7 +170,7 @@ namespace Knowledge.API.Controllers.api
                     await blockBlob.UploadAsync(stream, httpHeaders, metadata);
                 }
 
-                _queryService.RunIndexers();
+                QueryService.RunIndexers();
             }
             catch (Exception ex)
             {
@@ -225,7 +225,7 @@ namespace Knowledge.API.Controllers.api
                     await blockBlob.UploadAsync(stream, httpHeaders, metadata);
                 }
 
-                _queryService.RunIndexers();
+                QueryService.RunIndexers();
             }
             catch (Exception ex)
             {

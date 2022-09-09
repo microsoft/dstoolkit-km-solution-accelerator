@@ -14,7 +14,6 @@ namespace CognitiveSearch.UI.Controllers.api
 
         private static DefaultContractResolver contractResolver = new DefaultContractResolver
         {
-            //NamingStrategy = new CamelCaseNamingStrategy()
             NamingStrategy = new CamelCaseNamingStrategy
             {
                 OverrideSpecifiedNames = false

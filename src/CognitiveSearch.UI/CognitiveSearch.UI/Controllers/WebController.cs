@@ -18,8 +18,8 @@ namespace CognitiveSearch.UI.Controllers
         public WebController(WebSearchConfig webSearchConfig, UIConfig uiConfig, TelemetryClient telemetry)
         {
             this.telemetryClient = telemetry;
-            this._uiConfig = uiConfig;
-            this._viewId = "web";
+            this.uiConfig = uiConfig;
+            this.viewId = "web";
 
             this.webSearchConfig = webSearchConfig;
         }
