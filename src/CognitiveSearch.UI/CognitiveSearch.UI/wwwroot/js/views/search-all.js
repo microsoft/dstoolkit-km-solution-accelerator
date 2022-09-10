@@ -76,6 +76,8 @@ Microsoft.All = {
             }
 
             $(this.view_result_tag).append(resultsHtml);
+
+            Microsoft.Search.ProcessCoverImage(); 
         }
         else {
             //No search result found
@@ -322,7 +324,7 @@ Microsoft.All = {
                     resultsHtml += '        <div class="row col-md-12" onclick="Microsoft.Results.Details.ShowDocument(\'' + id + '\',' + docresult.idx + ');">';
                     resultsHtml += Microsoft.Utils.GetModificationLine(docresult);
 
-                    resultsHtml += '            <img alt="' + name + '" class="image-result" src="/api/document/getcoverimage?id=' + docresult.document_id + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                    resultsHtml += '            <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
 
                     resultsHtml += '            <div class="results-body mt-2" >' + highlights + '</div>';
 

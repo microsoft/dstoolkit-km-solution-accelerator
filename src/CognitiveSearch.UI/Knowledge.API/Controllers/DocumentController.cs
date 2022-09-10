@@ -13,7 +13,6 @@ namespace Knowledge.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
     public class DocumentController : AbstractApiController
     {
         private IMetadataService metadataService { get; set; }
@@ -30,10 +29,15 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getbyindexkey")]
-        public async Task<IActionResult> GetDocumentByIndexKeyAsync(ApiSearchRequest request)
+        public async Task<IActionResult> GetDocumentByIndexKeyAsync(string index_key)
         {
-            if (!string.IsNullOrEmpty(request.index_key))
+            if (!string.IsNullOrEmpty(index_key))
             {
+                ApiSearchRequest request = new()
+                {
+                    index_key = index_key
+                };
+
                 request.indexName = DEFAULT_INDEX_NAME;
                 request.permissions = GetUserPermissions();
                 var result = await QueryService.GetDocumentByIndexKey(request);
@@ -45,10 +49,15 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getbyid")]
-        public async Task<IActionResult> GetDocumentByIdAsync(ApiSearchRequest request)
+        public async Task<IActionResult> GetDocumentByIdAsync(string document_id)
         {
-            if (!string.IsNullOrEmpty(request.document_id))
+            if (!string.IsNullOrEmpty(document_id))
             {
+                ApiSearchRequest request = new()
+                {
+                    document_id = document_id
+                };
+
                 request.indexName = DEFAULT_INDEX_NAME;
                 request.permissions = GetUserPermissions();
                 var result = await QueryService.GetDocumentById(request);
@@ -60,13 +69,13 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getcoverimage")]
-        public async Task<IActionResult> GetDocumentCoverImageAsync(string id)
+        public async Task<IActionResult> GetDocumentCoverImageAsync(string document_id)
         {
-            if (!string.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(document_id))
             {
-                ApiSearchRequest request = new ApiSearchRequest
+                ApiSearchRequest request = new()
                 {
-                    document_id = id
+                    document_id = document_id
                 };
                 request.indexName = DEFAULT_INDEX_NAME;
                 request.permissions = GetUserPermissions();
@@ -86,7 +95,8 @@ namespace Knowledge.API.Controllers
                     }
                     else
                     {
-                        return new FileContentResult(System.Convert.FromBase64String((string)image.GetValue("thumbnail_medium")), "image/jpeg");
+                        return Content((string)image.GetValue("thumbnail_medium"));
+                        //return new FileContentResult(System.Convert.FromBase64String((string)image.GetValue("thumbnail_medium")), "image/jpeg");
                     }
                 }
                 else
@@ -100,13 +110,13 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getcoverimagebyindexkey")]
-        public async Task<IActionResult> GetDocumentCoverImageByIndexKeyAsync(string key)
+        public async Task<IActionResult> GetDocumentCoverImageByIndexKeyAsync(string index_key)
         {
-            if (!string.IsNullOrEmpty(key))
+            if (!string.IsNullOrEmpty(index_key))
             {
-                ApiSearchRequest request = new ApiSearchRequest
+                ApiSearchRequest request = new()
                 {
-                    index_key = key
+                    index_key = index_key
                 };
                 request.indexName = DEFAULT_INDEX_NAME;
                 request.permissions = GetUserPermissions();
@@ -126,7 +136,8 @@ namespace Knowledge.API.Controllers
                     }
                     else
                     {
-                        return new FileContentResult(System.Convert.FromBase64String((string)image.GetValue("thumbnail_medium")), "image/jpeg");
+                        return Content((string)image.GetValue("thumbnail_medium"));
+                        //return new FileContentResult(System.Convert.FromBase64String((string)image.GetValue("thumbnail_medium")), "image/jpeg");
                     }
                 }
                 else

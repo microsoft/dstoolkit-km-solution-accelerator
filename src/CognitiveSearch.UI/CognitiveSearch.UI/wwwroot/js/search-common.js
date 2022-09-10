@@ -339,8 +339,51 @@ Microsoft.Search = {
             }
             return path;
         }
-    }
+    },
 
+    //TODO
+    RenderCoverImage: function (docresult) {
+        var documentHtml = '';
+        if (hasCoverImage) {
+            documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+        }
+        else {
+            documentHtml += '   <img alt="' + name + '" class="image-result-nocover" src="' + iconPath + '" title="' + docresult.title + '"/>';
+        }
+        return documentHtml;
+    },
+
+    ProcessCoverImage: function () {
+        var imgDefer = document.getElementsByClassName('cover-image');
+        for (var i = 0; i < imgDefer.length; i++) {
+            this.RequestCoverImage(imgDefer[i]);
+        }
+    },
+    RequestCoverImage: function (coverImage) {
+        if (coverImage.getAttribute('data-src')) {
+            var url = coverImage.getAttribute('data-src');
+
+            if (Microsoft.Config.data.webAPIBackend.isEnabled) {
+                // Append the API Backend host here
+                url = Microsoft.Config.data.webAPIBackend.endpoint + url;
+            }
+
+            // Call backend API with a promise
+            return new Promise((resolve, reject) => {
+                jQuery.ajax({
+                    cache: true,
+                    url: url,
+                    type: "POST",
+                    contentType: "application/text; charset=utf-8",
+                    dataType: "text",
+                    success: function (data) {
+                        coverImage.setAttribute('src', 'data:image/png;base64,' + data);
+                        coverImage.classList.remove('cover-image');
+                    }
+                });
+            });
+        }
+    }
 }
 
 //
@@ -763,7 +806,7 @@ Microsoft.Search.Results = {
             }
             else {
                 if (hasCoverImage) {
-                    documentHtml += '   <img alt="' + name + '" class="image-result" src="/api/document/getcoverimage?id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                    documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                 }
                 else {
                     documentHtml += '   <img alt="' + name + '" class="image-result-nocover" src="' + iconPath + '" title="' + docresult.title + '"/>';
