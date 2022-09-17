@@ -107,7 +107,7 @@ Microsoft.Tables = {
                                 extraMetadataContainerHTML += '<th>' + cell.text + '</th>';
                             }
                             else {
-                                extraMetadataContainerHTML += '<th>N/A</th>';
+                                extraMetadataContainerHTML += '<th></th>';
                             }
                         }
                         extraMetadataContainerHTML += '</tr>';
