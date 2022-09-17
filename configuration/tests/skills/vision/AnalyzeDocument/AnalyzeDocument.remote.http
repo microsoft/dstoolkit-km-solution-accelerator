@@ -1,0 +1,5 @@
+### Test empty data
+POST {{param.vision.analyzedocument}}
+content-type: application/json
+
+< AnalyzeDocument.1.json

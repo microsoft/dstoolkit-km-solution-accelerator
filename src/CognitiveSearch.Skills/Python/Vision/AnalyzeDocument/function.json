@@ -1,5 +1,5 @@
 {
-  "scriptFile": "../shared_code/ExtractTables__init.py",
+  "scriptFile": "../shared_code/AnalyzeDocument__init.py",
   "bindings": [
     {
       "authLevel": "function",

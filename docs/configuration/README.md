@@ -258,7 +258,7 @@ Functions defined in the core configuration are mostly Azure Search custom skill
                             "Name": "Describe"
                         },
                         {
-                            "Name": "ExtractTables"
+                            "Name": "AnalyzeDocument"
                         },
                         {
                             "Name": "Normalize"

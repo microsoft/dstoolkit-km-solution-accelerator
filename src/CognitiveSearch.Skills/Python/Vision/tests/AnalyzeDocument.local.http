@@ -1,0 +1,5 @@
+###
+POST http://localhost:7071/vision/analyzedocument
+content-type: application/json
+
+< AnalyzeDocument.local.json
