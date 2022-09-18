@@ -143,20 +143,21 @@ namespace Assignment
             if (inRecord.Data.ContainsKey("imageparentid"))
             {
                 assignedMetadata[$"document_embedded"] = true;
-            }
 
-            try
-            {
-                string[] tokens = filename.Split('-');
-
-                if (tokens.Length > 2)
+                // Page Number
+                try
                 {
-                    assignedMetadata[$"page_number"] = Int32.Parse(tokens[1]);
+                    string[] tokens = filename.Split('-');
+
+                    if (tokens.Length > 2)
+                    {
+                        assignedMetadata[$"page_number"] = Int32.Parse(tokens[1]);
+                    }
                 }
-            }
-            catch (Exception)
-            {
-                assignedMetadata[$"page_number"] = 0;
+                catch (Exception)
+                {
+                    assignedMetadata[$"page_number"] = 0;
+                }
             }
 
             // DEFAULT TITLE
