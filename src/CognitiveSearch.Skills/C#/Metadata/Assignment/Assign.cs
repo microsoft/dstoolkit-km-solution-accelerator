@@ -134,6 +134,14 @@ namespace Assignment
             // Security
             TransformSecurity(headers,inRecord,assignedMetadata);
 
+            // Pages Count
+            assignedMetadata[$"page_count"] = 0;
+
+            if (inRecord.Data.ContainsKey("metadata_page_count"))
+            {
+                assignedMetadata[$"page_count"] = inRecord.Data["metadata_page_count"];
+            }
+
             // Page Number
             assignedMetadata[$"page_number"] = 0;
 

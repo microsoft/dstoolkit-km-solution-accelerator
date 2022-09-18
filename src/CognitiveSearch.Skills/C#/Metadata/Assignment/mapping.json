@@ -33,6 +33,10 @@
     "target": [ "description" ]
   },
   {
+    "source": "xmpTPg-NPages",
+    "target": [ "page_count" ]
+  },
+  {
     "source": "Category",
     "target": [ "user_categories" ],
     "transform": "SplitSemiColumn"
