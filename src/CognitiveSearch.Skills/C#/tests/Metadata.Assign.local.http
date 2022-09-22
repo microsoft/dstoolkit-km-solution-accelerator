@@ -1,5 +1,5 @@
 POST http://localhost:7071/mtda/assign
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [

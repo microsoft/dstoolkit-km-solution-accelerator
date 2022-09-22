@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Commons;
 using System;
 using System.IO;
 using System.Web;
@@ -36,23 +37,22 @@ namespace Microsoft.Services.Common
 
         public static string GetContentBlobPath(IDocumentEntity doc, string containerName, string containerUri)
         {
-            return HttpUtility.UrlDecode(doc.WebUrl.Replace(containerUri, containerName));
+            return UrlUtility.UrlDecode(doc.WebUrl.Replace(containerUri, containerName));
         }
 
         public static string GetRelativeContentBlobPath(IDocumentEntity doc, string containerUri)
         {
-            return HttpUtility.UrlDecode(doc.WebUrl.Replace(containerUri, "").Substring(1));
+            return UrlUtility.UrlDecode(doc.WebUrl.Replace(containerUri, "").Substring(1));
         }
 
         public static string GetRelativeImagesPath(IDocumentEntity doc, string containerName, string containerUri)
         {
-            //return "images/" + PartitionKey + "/" + RowKey + Extension;
-            return HttpUtility.UrlDecode(doc.WebUrl.Replace(containerUri, containerName));
+            return UrlUtility.UrlDecode(doc.WebUrl.Replace(containerUri, containerName));
         }
 
         public static string GetParentDocumentMetadataPath(IDocumentEntity doc, string containerName, string containerUri)
         {
-            return HttpUtility.UrlDecode(doc.ParentUrl.Replace(containerUri, containerName));
+            return UrlUtility.UrlDecode(doc.ParentUrl.Replace(containerUri, containerName));
         }
 
         public static string GetRelativeMetadataPath(IDocumentEntity doc, string containerName, string containerUri)
@@ -61,12 +61,12 @@ namespace Microsoft.Services.Common
         }
         public static string GetRelativeMetadataPathByUrl(string url, string containerName, string containerUri)
         {
-            return HttpUtility.UrlDecode(url.Replace(containerUri, containerName));
+            return UrlUtility.UrlDecode(url.Replace(containerUri, containerName));
         }
 
         public static string GetRelativeThumbnailPath(IDocumentEntity doc, string containerName, string containerUri)
         {
-            return HttpUtility.UrlDecode(doc.WebUrl.Replace(containerUri, containerName) + ".thumbnail.jpg");
+            return UrlUtility.UrlDecode(doc.WebUrl.Replace(containerUri, containerName) + ".thumbnail.jpg");
         }
     }
 }

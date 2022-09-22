@@ -27,7 +27,6 @@ namespace Metadata.Extraction
     public static class MetadataExtractionSkill
     {
         private const string MetadataFileExtension = ".json";
-        private const string MetadataOutputField = "file_metadata";
 
         // Create a single, static HttpClient
         private static readonly HttpClient webclient = new HttpClient();
@@ -75,7 +74,7 @@ namespace Metadata.Extraction
             };
 
             // Find the right source container 
-            BlobUriBuilder blobUriBuilder = new BlobUriBuilder(new Uri(HttpUtility.UrlDecode(docitem.WebUrl)));
+            BlobUriBuilder blobUriBuilder = new(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
 
             containers.TryGetValue(blobUriBuilder.BlobContainerName, out BlobContainerClient container);
 
@@ -93,8 +92,6 @@ namespace Metadata.Extraction
 
             if ( container != null)
             {
-                //var container = docitem.WebUrl.Contains(imagesContainer.Uri.ToString()) ? documentsContainer : imagesContainer;
-
                 // check if the metadata file already exists or not.
                 string metadataFileName = IDocumentEntity.GetRelativeMetadataPath(docitem, IsExtractedImageFile? String.Empty : container.Name, container.Uri.ToString()).TrimStart('/') + ".json";
 
@@ -107,7 +104,7 @@ namespace Metadata.Extraction
                         string parentUrl = (string)inRecord.Data["imageparenturl"];
                         docitem.ParentUrl = IHelpers.Base64Decode(parentUrl);
 
-                        BlobUriBuilder parentBlobUriBuilder = new BlobUriBuilder(new Uri(HttpUtility.UrlDecode(docitem.ParentUrl)));
+                        BlobUriBuilder parentBlobUriBuilder = new(new Uri(UrlUtility.UrlDecode(docitem.ParentUrl)));
 
                         containers.TryGetValue(parentBlobUriBuilder.BlobContainerName, out BlobContainerClient parentContainer);
 
@@ -143,13 +140,12 @@ namespace Metadata.Extraction
                     //Revert the metadata file name as we didn't find its own or parent. 
                     metadataFileName = IDocumentEntity.GetRelativeMetadataPath(docitem, IsExtractedImageFile ? String.Empty : container.Name, container.Uri.ToString()).TrimStart('/') + ".json";
 
-                    //container.Uri
-                    MemoryStream mstream = new MemoryStream();
+                    MemoryStream mstream = new();
 
-                    if (await BlobHelper.IsBlobExistsAsync(container, docitem))
+                    if (await BlobHelper.IsBlobExistsAsync(container, blobUriBuilder.BlobName))
                     {
-                        // Open the Document
-                        BlobClient docblob = container.GetBlobClient(IDocumentEntity.GetRelativeContentBlobPath(docitem, container.Uri.ToString()));
+                        // Open the original Document
+                        BlobClient docblob = container.GetBlobClient(blobUriBuilder.BlobName);
                         Stream documentstream = await docblob.OpenReadAsync();
                         documentstream.CopyTo(mstream);
 
@@ -163,9 +159,9 @@ namespace Metadata.Extraction
                                 {
                                     try
                                     {
-                                        HttpRequestMessage tikarequest = new HttpRequestMessage(HttpMethod.Put, IConstants.tikaEndpoint + "/meta");
+                                        HttpRequestMessage tikarequest = new(HttpMethod.Put, IConstants.tikaEndpoint + "/meta");
 
-                                        tikarequest.Headers.Add("Accept", "application/json");
+                                        tikarequest.Headers.Add("Accept", "application/json;charset=utf-8");
                                         tikarequest.Headers.Add("User-Agent", IConstants.UserAgent);
 
                                         tikarequest.Content = new ByteArrayContent(mstream.ToArray());

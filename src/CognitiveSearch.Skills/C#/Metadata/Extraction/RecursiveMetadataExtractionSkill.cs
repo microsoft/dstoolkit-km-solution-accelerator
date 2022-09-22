@@ -43,7 +43,7 @@ namespace Metadata.Extraction
             MemoryStream mstream = new MemoryStream();
 
             // Find the right source container 
-            BlobUriBuilder blobUriBuilder = new BlobUriBuilder(new Uri(HttpUtility.UrlDecode(docitem.WebUrl)));
+            BlobUriBuilder blobUriBuilder = new BlobUriBuilder(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
 
             containers.TryGetValue(blobUriBuilder.BlobContainerName, out BlobContainerClient container);
 
@@ -71,7 +71,7 @@ namespace Metadata.Extraction
                                 {
                                     HttpRequestMessage tikarequest = new HttpRequestMessage(HttpMethod.Put, IConstants.tikaEndpoint + "/rmeta");
 
-                                    tikarequest.Headers.Add("Accept", "application/json");
+                                    tikarequest.Headers.Add("Accept", "application/json;charset=utf-8");
 
                                     AddTikaHeader(tikarequest.Headers, "User-Agent", IConstants.UserAgent);
 

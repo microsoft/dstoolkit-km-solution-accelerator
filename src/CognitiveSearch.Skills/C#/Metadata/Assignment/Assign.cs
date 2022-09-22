@@ -345,7 +345,7 @@ namespace Assignment
                 string furl = (string)inRecord.Data["document_url"];
                 if (!String.IsNullOrEmpty(furl))
                 {
-                    string decoded_url = HttpUtility.UrlDecode(furl);
+                    string decoded_url = UrlUtility.UrlDecode(furl);
                     pathTokens = decoded_url.ToLowerInvariant().Split('/', StringSplitOptions.RemoveEmptyEntries);
                 }
             }
@@ -355,7 +355,7 @@ namespace Assignment
                 string furl = (string)inRecord.Data["imageparenturl"];
                 if (!String.IsNullOrEmpty(furl))
                 {
-                    string decoded_url = HttpUtility.UrlDecode(IHelpers.Base64Decode(furl));
+                    string decoded_url = UrlUtility.UrlDecode(IHelpers.Base64Decode(furl));
                     pathTokens = decoded_url.ToLowerInvariant().Split('/', StringSplitOptions.RemoveEmptyEntries);
                 }
             }
@@ -396,7 +396,7 @@ namespace Assignment
                     string furl = (string)inRecord.Data["document_url"];
                     if (! String.IsNullOrEmpty(furl))
                     {
-                        string decoded_url = HttpUtility.UrlDecode(furl);
+                        string decoded_url = UrlUtility.UrlDecode(furl);
                         pathTokens = decoded_url.ToLowerInvariant().Split('/', StringSplitOptions.RemoveEmptyEntries);
 
                         if (pathTokens.Length > 3)
@@ -411,7 +411,7 @@ namespace Assignment
                     string furl = (string)inRecord.Data["imageparenturl"];
                     if (!String.IsNullOrEmpty(furl))
                     {
-                        string decoded_url = HttpUtility.UrlDecode(IHelpers.Base64Decode(furl));
+                        string decoded_url = UrlUtility.UrlDecode(IHelpers.Base64Decode(furl));
                         pathTokens = decoded_url.ToLowerInvariant().Split('/', StringSplitOptions.RemoveEmptyEntries);
 
                         if (pathTokens.Length > 3)

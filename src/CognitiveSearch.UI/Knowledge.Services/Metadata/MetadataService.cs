@@ -36,7 +36,7 @@ namespace Knowledge.Services.Metadata
         {
             container = new BlobContainerClient(new Uri(metadataContainerPath), new StorageSharedKeyCredential(config.StorageAccountName, config.StorageAccountKey));
 
-            string blobname = HttpUtility.UrlDecode(documentPath).Replace(this.storageServicePath, "");
+            string blobname = UrlUtility.UrlDecode(documentPath).Replace(this.storageServicePath, "");
 
             BlobClient blob = container.GetBlobClient(blobname+".json");
 
