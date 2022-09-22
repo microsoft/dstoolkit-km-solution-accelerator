@@ -1276,7 +1276,7 @@ function Build-Functions () {
             # Windows
             if (-not $plan.IsLinux) {
                 if ( -not $LinuxOnly ) {
-                    Write-Host ("Building Windows Function App" + $functionApp.Name) -ForegroundColor DarkCyan
+                    Write-Host ("Building Windows Function App " + $functionApp.Name) -ForegroundColor DarkCyan
 
                     # Build the configured functions
                     Push-Location (join-path $global:workpath ".." $functionApp.Path)
