@@ -20,7 +20,7 @@ This endpoint is used to call the Link entities using the Text Analytics Azure s
 The structure of the request is the following:
 
 ```https
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 minimumPrecision: (Optional) A value between 0 and 1. If the confidence score (in the entities output) is lower than this value, the entity is not returned. The default is 0.
 defaultLanguageCode: (Optional) Language code of the input text. If the default language code is not specified, English (en) will be used as the default language code.
 type: (Optional) "small" or "big"
@@ -63,7 +63,7 @@ The Entity Recognition skill extracts entities of different types from text. The
 The structure of the request is the following:
 
 ```https
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 categories: (Optional) Array of categories that should be extracted. Possible category types: "Person", "Location", "Organization", "Quantity", "DateTime", "URL", "Email", "personType", "Event", "Product", "Skill", "Address", "phoneNumber", "ipAddress". If no category is provided, all types are returned.
 minimumPrecision: (Optional) A value between 0 and 1. If the confidence score (in the namedEntities output) is lower than this value, the entity is not returned. The default is 0.
 defaultLanguageCode: (Optional) Language code of the input text. If the default language code is not specified, English (en) will be used as the default language code.
@@ -120,7 +120,7 @@ The Key Phrase Extraction skill evaluates unstructured text, and for each record
 The structure of the request is the following:
 
 ```https
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 maxKeyPhraseCount: (Optional) The maximum number of key phrases to produce.
 defaultLanguageCode: (Optional) The language code to apply to documents that don't specify language explicitly. If the default language code is not specified, English (en) will be used as the default language code.
 type: (Optional) "small" or "big"
@@ -155,7 +155,7 @@ This endpoint is used to call the Language Detection using the Text Analytics Az
 The structure of the request is the following:
 
 ```https
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 defaultCountryHint: (Optional) An ISO 3166-1 alpha-2 two letter country code can be provided to use as a hint to the language detection model if it cannot disambiguate the language. Specifically, the defaultCountryHint parameter is used with documents that don't specify the countryHint input explicitly.
 type: (Optional) "small" or "big"
 
@@ -183,7 +183,7 @@ This endpoint is used to call the Summarization using the Text Analytics Azure s
 The structure of the request is the following:
 
 ```https
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -217,7 +217,7 @@ This endpoint is used to call the Translator using the Text Analytics Azure serv
 The structure of the request is the following:
 
 ```https
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 defaultToLanguageCode:  (Required) The language code to translate documents into for documents that don't specify the to language explicitly.
 defaultFromLanguageCode:    (Optional) The language code to translate documents from for documents that don't specify the from language explicitly. If the defaultFromLanguageCode is not specified, the automatic language detection provided by the Translator Text API will be used to determine the from language.
 suggestedFrom:  (Optional) The language code to translate documents from when neither the fromLanguageCode input nor the defaultFromLanguageCode parameter are provided, and the automatic language detection is unsuccessful. If the suggestedFrom language is not specified, English (en) will be used as the suggestedFrom language.

@@ -1,6 +1,6 @@
 ###
 POST http://localhost:7071/language/tokenmatcher/indexing
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 processing-type: small
 
 {
@@ -24,7 +24,7 @@ processing-type: small
 
 ###
 POST http://localhost:7071/language/tokenmatcher/editkeywords
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -39,7 +39,7 @@ Content-Type: application/json
 
 ###
 POST http://localhost:7071/language/tokenmatcher/indexing
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 processing-type: small
 
 {
@@ -56,7 +56,7 @@ processing-type: small
 
 ###
 POST http://localhost:7071/language/tokenmatcher/indexing
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 {
   "values": [
@@ -79,7 +79,7 @@ Content-Type: application/json
 
 ### Spanish 
 POST http://localhost:7071/language/tokenmatcher
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 {
   "values": [
@@ -95,7 +95,7 @@ Content-Type: application/json
 
 ###
 POST http://localhost:7071/language/tokenmatcher/indexing
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -111,7 +111,7 @@ Content-Type: application/json
 
 ###
 POST http://localhost:7071/language/tokenmatcher
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -127,7 +127,7 @@ Content-Type: application/json
 
 ###
 POST http://localhost:7071/language/tokenmatcher/indexing
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -143,7 +143,7 @@ Content-Type: application/json
 
 ###
 POST http://localhost:7071/language/tokenmatcher
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 {
   "values": [
@@ -166,7 +166,7 @@ Content-Type: application/json
 
 ### Spanish 
 POST http://localhost:7071/language/tokenmatcher/indexing
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 {
   "values": [

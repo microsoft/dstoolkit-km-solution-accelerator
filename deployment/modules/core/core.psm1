@@ -887,7 +887,7 @@ function Search-Query {
 # https://docs.microsoft.com/en-us/rest/api/searchservice/reset-indexer
 
 # POST https://[service name].search.windows.net/indexers/[indexer name]/reset?api-version=[api-version]  
-#   Content-Type: application/json  
+#   content-type: application/json;charset=utf-8  
 #   api-key: [admin key]
 
 function Reset-SearchIndexer {
@@ -916,7 +916,7 @@ function Reset-SearchIndexer {
 # https://docs.microsoft.com/en-us/rest/api/searchservice/run-indexer
 
 # POST https://[service name].search.windows.net/indexers/[indexer name]/run?api-version=[api-version]  
-#   Content-Type: application/json  
+#   content-type: application/json;charset=utf-8  
 #   api-key: [admin key]
 
 function Start-SearchIndexer {
@@ -1022,7 +1022,7 @@ function Get-SearchServiceDetails() {
 # https://docs.microsoft.com/en-us/rest/api/searchservice/preview-api/reset-documents
 
 # POST https://[service name].search.windows.net/indexers/[indexer name]/resetdocs?api-version=[api-version]
-#     Content-Type: application/json
+#     content-type: application/json;charset=utf-8
 #     api-key: [admin key]
 
 function Reset-SearchDocument {

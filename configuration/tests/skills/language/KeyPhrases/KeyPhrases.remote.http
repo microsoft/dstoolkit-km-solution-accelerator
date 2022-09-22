@@ -1,6 +1,6 @@
 ###
 POST {{param.language.KeyPhrasesExtraction}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 minimumPrecision: 0.2
 defaultLanguageCode: en
 type: small
@@ -9,7 +9,7 @@ type: small
 
 ###
 POST {{param.language.KeyPhrasesExtraction}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 < KeyPhrases.2.json
 

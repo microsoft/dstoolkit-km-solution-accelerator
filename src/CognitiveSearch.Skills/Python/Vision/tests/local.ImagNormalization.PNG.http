@@ -1,6 +1,6 @@
 ### Frame 0 Image W 747 H 475 Size Ratio 1.5726315789473684
 POST http://localhost:7071/vision/ImageNormalization
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -21,7 +21,7 @@ content-type: application/json
 
 ### image-00005-00007.png - Small Image W 155 H 34 Size Ratio 4.5588235294117645
 POST http://localhost:7071/vision/ImageNormalization
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -44,7 +44,7 @@ content-type: application/json
 ### image-00005-00005 Small Image W 208 H 45 Size Ratio 4.622222222222222
 
 POST http://localhost:7071/vision/ImageNormalization
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [

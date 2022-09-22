@@ -1,5 +1,5 @@
 ### Test empty data
 POST {{param.vision.analyzedocument}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < AnalyzeDocument.1.json

@@ -1,6 +1,6 @@
 ###
 POST {{param.language.Translator}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 defaultToLanguageCode: en
 defaultFromLanguageCode: de
 suggestedFrom: de
@@ -9,7 +9,7 @@ suggestedFrom: de
 
 ###
 POST {{param.language.Translator}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 defaultToLanguageCode: en
 defaultFromLanguageCode: de
 suggestedFrom: de
@@ -18,7 +18,7 @@ suggestedFrom: de
 
 ###
 POST {{param.language.Translator}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 defaultToLanguageCode: en
 defaultFromLanguageCode: de
 suggestedFrom: de

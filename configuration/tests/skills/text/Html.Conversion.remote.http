@@ -1,6 +1,6 @@
 ###
 POST {{param.text.HtmlConversion}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -16,7 +16,7 @@ content-type: application/json
 }
 ### 
 POST {{param.htmlconversion.HtmlConversion}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [

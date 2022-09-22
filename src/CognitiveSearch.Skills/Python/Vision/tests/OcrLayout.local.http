@@ -1,6 +1,6 @@
 ###
 POST http://localhost:7071/vision/azureocrlayout
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -22,7 +22,7 @@ content-type: application/json
 
 ###
 POST http://localhost:7071/vision/azureocrlayout
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -39,7 +39,7 @@ content-type: application/json
 
 ###
 POST http://localhost:7071/vision/azureocrlayout
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [

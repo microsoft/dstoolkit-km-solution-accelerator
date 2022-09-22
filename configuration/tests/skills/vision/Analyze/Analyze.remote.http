@@ -1,6 +1,6 @@
 ###
 POST {{param.vision.Analyze}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 defaultLanguageCode: en
 visualFeatures: ['brands', 'faces']
 details: ["landmarks", "celebrities"]
@@ -9,7 +9,7 @@ details: ["landmarks", "celebrities"]
 
 ### Image bigger than 4MB ..a resize is happening to avoid this error
 POST {{param.vision.Analyze}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 defaultLanguageCode: en
 visualFeatures: ['brands', 'faces']
 details: ["landmarks", "celebrities"]

@@ -1,6 +1,6 @@
 ###
 POST {{param.language.LanguageDetection}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 defaultCountryHint: us
 type: big
 
@@ -8,18 +8,18 @@ type: big
 
 ###
 POST {{param.language.LanguageDetection}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 < LanguageDetection.2.json
 
 ###
 POST {{param.language.LanguageDetection}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 < LanguageDetection.3.json
 
 ###
 POST {{param.language.LanguageDetection}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 < LanguageDetection.4.json

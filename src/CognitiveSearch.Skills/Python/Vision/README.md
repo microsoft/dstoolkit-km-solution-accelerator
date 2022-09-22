@@ -63,7 +63,7 @@ This endpoint is used to call the Image Analysis using the Computer Vision Azure
 The structure of the request is the following:
 
 ```https
-content-type: application/json
+content-type: application/json;charset=utf-8
 defaultLanguageCode: A string indicating the language to return. The service returns recognition results in a specified language. If this parameter is not specified, the default value is "en".
 visualFeatures: An array of strings indicating the visual feature types to return. Valid visual feature types include:
 - adult - detects if the image is pornographic in nature (depicts nudity or a sex act), or is gory (depicts extreme violence or blood). Sexually suggestive content (also known as racy content) is also detected.
