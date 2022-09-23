@@ -1,0 +1,52 @@
+{
+    "items": [
+        {
+            "Name": "dstk6cogvision",
+            "Apptype":"CognitiveService",
+            "Type":"ComputerVision",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "vnetPrivateEndpoint": false,
+            "EnablePrivateAccess":false,
+            "AddExistingSubnets":false,
+            "groupId":"CognitiveService",
+            "privateEndPointSubnet":"dstk6-subnet",
+            "serviceEndPoint":"Microsoft.CognitiveServices"
+        },
+        {
+            "Name": "dstk6cogform",
+            "Apptype":"CognitiveService",
+            "Type":"FormRecognizer",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "vnetPrivateEndpoint": false,
+            "EnablePrivateAccess":false,
+            "AddExistingSubnets":false,
+            "groupId":"CognitiveService",
+            "privateEndPointSubnet":"dstk6-subnet",
+            "serviceEndPoint":"Microsoft.CognitiveServices"
+        },
+        {
+            "Name": "dstk6cogtranslate ",
+            "Apptype":"CognitiveService",
+            "Type":"FormRecognizer",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "vnetPrivateEndpoint": false,
+            "EnablePrivateAccess":false,
+            "AddExistingSubnets":false,
+            "groupId":"CognitiveService",
+            "privateEndPointSubnet":"dstk6-subnet",
+            "serviceEndPoint":"Microsoft.CognitiveServices"
+        },
+        {
+            "Name": "dstk6coglanguage",
+            "Apptype":"CognitiveService",
+            "Type":"FormRecognizer",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "vnetPrivateEndpoint": false,
+            "EnablePrivateAccess":false,
+            "AddExistingSubnets":false,
+            "groupId":"CognitiveService",
+            "privateEndPointSubnet":"dstk6-subnet",
+            "serviceEndPoint":"Microsoft.CognitiveServices"
+        }
+    ]
+}

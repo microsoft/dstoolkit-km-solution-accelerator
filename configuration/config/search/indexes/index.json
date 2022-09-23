@@ -1048,12 +1048,7 @@
       }
     ]
   },
-  "corsOptions": {
-    "allowedOrigins": [
-      "https://ms.portal.azure.com"
-    ],
-    "maxAgeInSeconds": null
-  },
+  "corsOptions": null,
   "suggesters": [
     {
       "name": "suggester1",

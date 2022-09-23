@@ -5,6 +5,11 @@
             "Sku": "{{param.pricing.premium}}",
             "ResourceGroup":"{{config.ResourceGroupName}}",
             "IsLinux":false,
+            "serviceEndpoints":"Microsoft.ContainerRegistry Microsoft.CognitiveServices",
+            "networkSecurityGroup":"dstk6-NSG",
+            "addressPrefix":"172.17.1.0/28",
+            "delegations":"Microsoft.Web/serverFarms",
+            "disablePENetworkPolicies":true,
             "WebApps": [
                 {
                     "Id":"webappui",
@@ -12,9 +17,14 @@
                     "Path": "src\\CognitiveSearch.UI\\CognitiveSearch.UI",
                     "vnetPrivateEndpoint":false,
                     "vnetIntegration":true,
+                    "accessIPRestriction":true,
+                    "accessSubnetRestriction":true,
                     "slots":[
                         "staging"
-                    ]
+                    ],
+                    "groupId":"WebApps",
+                    "subnet":"dstk6ui-subnet",
+                    "inboundrestrictSubnet":"dstk6-subnet"
                 }
             ]
         },
@@ -23,13 +33,22 @@
             "Sku": "{{param.pricing.premium}}",
             "ResourceGroup":"{{config.ResourceGroupName}}",
             "IsLinux":true,
+            "serviceEndpoints":"Microsoft.ContainerRegistry Microsoft.CognitiveServices",
+            "networkSecurityGroup":"dstk6-NSG",
+            "addressPrefix":"172.17.2.0/28",
+            "delegations":"Microsoft.Web/serverFarms",
+            "disablePENetworkPolicies":true,
             "WebApps": [
                 {
                     "Id":"tikaserver",
                     "Name": "{{config.name}}tikaserver",
                     "Image": "microsoft/tikaserver:latest",
                     "vnetPrivateEndpoint":true,
-                    "vnetIntegration":true
+                    "vnetIntegration":true,
+                    "accessIPRestriction":true,
+                    "accessSubnetRestriction":true,
+                    "groupId":"WebApps",
+                    "inboundrestrictSubnet":"dstk6-subnet"
                 }
             ]
         }

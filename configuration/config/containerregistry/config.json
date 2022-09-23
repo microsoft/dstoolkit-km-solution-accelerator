@@ -1,0 +1,19 @@
+{
+    "items": [
+        {
+            "Name": "dstk6acr",
+            "Apptype":"ContainerRegistry",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "vnetPrivateEndpoint": false,
+            "EnablePrivateAccess":false,
+            "AddExistingSubnets":false,
+            "privateEndPointSubnet":"dstk6-subnet",
+            "serviceEndPoint":"Microsoft.ContainerRegistry",
+            "groupId":"ContainerRegistry",
+            "ipAddressToAdd":[
+                "122.176.175.84",
+                "122.181.194.177"
+            ]
+        }
+    ]
+}

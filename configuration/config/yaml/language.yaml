@@ -33,13 +33,13 @@ spec:
         - name: BLOB_CONNECT_STRING
           value: "{{param.storageConnectionString}}"
         - name: TEXT_ANALYTICS_ENDPOINT
-          value: "https://{{param.cogSvcLanguage}}.cognitiveservices.azure.com"
+          value: "https://{{param.cogServiceLanguage}}.cognitiveservices.azure.com"
         - name: TEXT_ANALYTICS_KEY
-          value: "{{param.cogSvcLanguageKey}}"
+          value: "{{param.cogServiceLanguageKey}}"
         - name: TRANSLATOR_ENDPOINT
-          value: "https://{{param.cogSvcTranslate}}.cognitiveservices.azure.com/translator/text/v3.0"
+          value: "https://{{param.cogServiceTranslate}}.cognitiveservices.azure.com/translator/text/v3.0"
         - name: TRANSLATOR_KEY
-          value: "{{param.cogSvcTranslateKey}}"
+          value: "{{param.cogServiceTranslateKey}}"
         - name: TRANSLATOR_LOCATION
           value: "{{config.location}}"
         - name: MODEL_SIZE

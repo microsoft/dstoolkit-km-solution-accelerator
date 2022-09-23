@@ -75,6 +75,11 @@
       "mappingFunction": null
     },
     {
+      "sourceFieldName": "metadata_page_count",
+      "targetFieldName": "page_count",
+      "mappingFunction": null
+    },
+    {
       "sourceFieldName": "metadata_slide_count",
       "targetFieldName": "slide_count",
       "mappingFunction": null
@@ -229,11 +234,6 @@
     {
       "sourceFieldName": "/document/skill_metadata/page_number",
       "targetFieldName": "page_number",
-      "mappingFunction": null
-    },
-    {
-      "sourceFieldName": "/document/skill_metadata/page_count",
-      "targetFieldName": "page_count",
       "mappingFunction": null
     }
   ],

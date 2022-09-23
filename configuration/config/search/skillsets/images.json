@@ -1,6 +1,11 @@
 ﻿{
     "name": "{{param.imagesSkillSet}}",
     "description": "Extract entities, detect language and extract key-phrases",
+    "cognitiveServices": {
+        "@odata.type": "#Microsoft.Azure.Search.CognitiveServicesByKey",
+        "description": "Cognitive Skills Set for Images indexing",
+        "key": "{{param.cogServicesBundleKey}}"
+    },
     "skills": [
         {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
@@ -773,7 +778,7 @@
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
             "name": "TablesExtraction",
             "description": "Extracts fields from a form using a pre-trained form recognition model",
-            "uri": "{{param.vision.AnalyzeDocument}}",
+            "uri": "{{param.vision.ExtractTables}}",
             "httpMethod": "POST",
             "timeout": "PT3M",
             "context": "/document",
@@ -796,14 +801,6 @@
                 {
                     "name": "tables_count",
                     "targetName": "tables_count"
-                },
-                {
-                    "name": "kvs",
-                    "targetName": "kvs"
-                },
-                {
-                    "name": "kvs_count",
-                    "targetName": "kvs_count"
                 }
             ]
         },

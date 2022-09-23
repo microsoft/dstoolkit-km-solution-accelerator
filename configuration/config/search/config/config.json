@@ -1,0 +1,17 @@
+{
+    "items": [
+        {
+            "Name": "dstk6search",
+            "Apptype":"Search",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "vnetPrivateEndpoint": false,
+            "EnablePrivateAccess":false,
+            "AddExistingSubnets":true,
+            "groupId":"Search",
+            "privateEndPointSubnet":"dstk6-subnet",
+            "serviceEndPoint":"Microsoft.Search",
+            "AddPrivateSharedLink":true,
+            "privatesharedlink":"blob"
+        }
+    ]
+}

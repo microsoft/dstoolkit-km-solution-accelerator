@@ -1,0 +1,9 @@
+{
+    "Subnets":[
+        "default",
+        "{{config.Name}}tikaserver-subnet",
+        "{{config.Name}}skillsplan-subnet",
+        "{{config.Name}}-subnet",
+        "{{config.Name}}ui-subnet"
+    ]
+}

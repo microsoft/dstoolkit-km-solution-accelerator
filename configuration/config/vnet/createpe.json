@@ -1,0 +1,8 @@
+{
+    "name": "blob-spa",
+    "properties": {
+      "privateLinkResourceId": "/subscriptions/96b93cbc-034d-4278-99f6-15200663b39a/resourceGroups/CognitiveSearch-Dev/providers/Microsoft.Storage/storageAccounts/dstk6data",
+      "groupId": "blob",
+      "requestMessage": "please approve"
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "items": [
+        {
+            "Name": "dstk6data",
+            "Apptype":"Storage",
+            "Accountkind": "StorageV2",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "vnetPrivateEndpoint": false,
+            "EnablePrivateAccess":false,
+            "AddExistingSubnets":false,
+            "privateEndPointSubnet":"dstk6-subnet",
+            "serviceEndPoint":"Microsoft.Storage",
+            "groupId":"Blob"
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "items": [
+        {
+            "Name": "dstk6kv",
+            "Apptype":"KeyVault",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "vnetPrivateEndpoint": false,
+            "EnablePrivateAccess":false,
+            "AddExistingSubnets":false,
+            "privateEndPointSubnet":"dstk6-subnet",
+            "serviceEndPoint":"Microsoft.KeyVault",
+            "groupId":"KeyValut"
+        }
+    ]
+}

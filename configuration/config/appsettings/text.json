@@ -1,17 +1,17 @@
 [
     {
         "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey/)",
         "slotSetting": true
     },
     {
         "name": "AzureWebJobsStorage",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString/)",
         "slotSetting": false
     },
     {
         "name": "ContainerConnectionString",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/storageConnectionString)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/storageConnectionString/)",
         "slotSetting": false
     },
     {
