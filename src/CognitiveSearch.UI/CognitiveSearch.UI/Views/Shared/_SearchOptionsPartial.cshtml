@@ -21,30 +21,23 @@
             <hr />
         }
 
-        <div class="form-check form-switch search-translation-switch">
-            <label class="form-check-label search-translation-label" for="translation-switch">Query Translation</label>
-            @if (translationCfg.IsEnabled)
-            {
-                <input class="form-check-input search-translation-input" type="checkbox" id="translation-switch" checked onclick="Microsoft.Search.Options.switchQueryTranslation(this);">                    
-            }
-            else
-            {
-                <input class="form-check-input search-translation-input" type="checkbox" id="translation-switch" onclick="Microsoft.Search.Options.switchQueryTranslation(this);">
-                    
-            }
-        </div>
-        <br />
-        <div class="form-check form-switch search-spellcheck-switch">
-            <label class="form-check-label search-spellcheck-label" for="spellcheck-switch">Query Spell Checking</label>
-            @if (spellcheckingCfg.IsEnabled)
-            {
-                <input class="form-check-input search-spellcheck-input" type="checkbox" id="spellcheck-switch" checked onclick="Microsoft.Search.Options.switchQuerySpellCheck(this);">
-            }
-            else
-            {
-                <input class="form-check-input search-spellcheck-input" type="checkbox" id="spellcheck-switch" onclick="Microsoft.Search.Options.switchQuerySpellCheck(this);">                    
-            }
-        </div>
+        @if (translationCfg.IsEnabled)
+        {
+            <div class="form-check form-switch search-translation-switch">
+                <label class="form-check-label search-translation-label" for="translation-switch">Query Translation</label>
+                    <input class="form-check-input search-translation-input" type="checkbox" id="translation-switch" checked onclick="Microsoft.Search.Options.switchQueryTranslation(this);">                    
+            </div>
+        }
+
+        @if (spellcheckingCfg.IsEnabled)
+        {
+            <br/>
+            <div class="form-check form-switch search-spellcheck-switch">
+                <label class="form-check-label search-spellcheck-label" for="spellcheck-switch">Query Spell Checking</label>
+                    <input class="form-check-input search-spellcheck-input" type="checkbox" id="spellcheck-switch" checked onclick="Microsoft.Search.Options.switchQuerySpellCheck(this);">
+            </div>
+        }
+
         <hr>
         <div class="form-check form-switch search-suggestions-switch">
             <label class="form-check-label search-suggestions-label" for="suggestions-switch">Suggestions As Filter</label>

@@ -22,54 +22,63 @@ namespace Knowledge.Services.SpellChecking
 
             this.CachePrefix = this.GetType().Name;
 
-            // Find all SpellChecking providers...
-            var tests = Assembly.GetExecutingAssembly().GetTypes()
-                    .Where(t => t.GetInterfaces().Contains(typeof(ISpellCheckingProvider)))
-                    .Select((t, i) => Activator.CreateInstance(t, config) as ISpellCheckingProvider);
-
-            foreach (var item in tests)
+            if (config.IsEnabled)
             {
-                if ( config.Provider.Equals(item.GetProvider()))
+                // Find all SpellChecking providers...
+                var tests = Assembly.GetExecutingAssembly().GetTypes()
+                        .Where(t => t.GetInterfaces().Contains(typeof(ISpellCheckingProvider)))
+                        .Select((t, i) => Activator.CreateInstance(t, config) as ISpellCheckingProvider);
+
+                foreach (var item in tests)
                 {
-                    provider = (ISpellCheckingService)item;
+                    if (config.Provider.Equals(item.GetProvider()))
+                    {
+                        provider = (ISpellCheckingService)item;
+                    }
+                }
+
+                // If the configured spellchecking service is not found, revert config to disabled.
+                if (provider == null)
+                {
+                    config.IsEnabled = false;
                 }
             }
-
-            // If the configured spellchecking service is not found, revert config to disabled.
-            if (provider == null)
-            {
-                config.IsEnabled = false;
-            }
-
         }
 
         public async Task<string> SpellCheckAsync(string text)
         {
-            string result = this.distCache.GetString(CachePrefix + text);
-
-            if (!String.IsNullOrEmpty(result))
+            if (config.IsEnabled)
             {
-                return result;
-            }
-            else
-            {
-                result = await provider.SpellCheckAsync(text);
+                string result = this.distCache.GetString(CachePrefix + text);
 
-                if (String.IsNullOrEmpty(result))
+                if (!String.IsNullOrEmpty(result))
                 {
-                    // Add Telemetry event SpellChecking event
-
-                    return text;
+                    return result;
                 }
                 else
                 {
-                    this.distCache.SetString(CachePrefix + text, result, new DistributedCacheEntryOptions()
-                    {
-                        SlidingExpiration = TimeSpan.FromMinutes(config.CacheExpirationTime)
-                    });
+                    result = await provider.SpellCheckAsync(text);
 
-                    return result;
+                    if (String.IsNullOrEmpty(result))
+                    {
+                        // Add Telemetry event SpellChecking event
+
+                        return text;
+                    }
+                    else
+                    {
+                        this.distCache.SetString(CachePrefix + text, result, new DistributedCacheEntryOptions()
+                        {
+                            SlidingExpiration = TimeSpan.FromMinutes(config.CacheExpirationTime)
+                        });
+
+                        return result;
+                    }
                 }
+            }
+            else
+            {
+                return text;
             }
         }
     }
