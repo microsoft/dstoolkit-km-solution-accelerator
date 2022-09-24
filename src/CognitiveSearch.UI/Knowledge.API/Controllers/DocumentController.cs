@@ -29,43 +29,25 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getbyindexkey")]
-        public async Task<IActionResult> GetDocumentByIndexKeyAsync(string index_key)
+        public async Task<IActionResult> GetDocumentByIndexKeyAsync(ApiSearchRequest request)
         {
-            if (!string.IsNullOrEmpty(index_key))
-            {
-                ApiSearchRequest request = new()
-                {
-                    index_key = index_key
-                };
+            request.indexName = DEFAULT_INDEX_NAME;
+            request.permissions = GetUserPermissions();
 
-                request.indexName = DEFAULT_INDEX_NAME;
-                request.permissions = GetUserPermissions();
-                var result = await QueryService.GetDocumentByIndexKey(request);
+            var result = await QueryService.GetDocumentByIndexKey(request);
 
-                return CreateContentResultResponse(result);
-            }
-
-            return new BadRequestResult();
+            return CreateContentResultResponse(result);
         }
 
         [HttpPost("getbyid")]
-        public async Task<IActionResult> GetDocumentByIdAsync(string document_id)
+        public async Task<IActionResult> GetDocumentByIdAsync(ApiSearchRequest request)
         {
-            if (!string.IsNullOrEmpty(document_id))
-            {
-                ApiSearchRequest request = new()
-                {
-                    document_id = document_id
-                };
+            request.indexName = DEFAULT_INDEX_NAME;
+            request.permissions = GetUserPermissions();
 
-                request.indexName = DEFAULT_INDEX_NAME;
-                request.permissions = GetUserPermissions();
-                var result = await QueryService.GetDocumentById(request);
+            var result = await QueryService.GetDocumentById(request);
 
-                return CreateContentResultResponse(result);
-            }
-
-            return new BadRequestResult();
+            return CreateContentResultResponse(result);
         }
 
         [HttpPost("getcoverimage")]
@@ -75,10 +57,10 @@ namespace Knowledge.API.Controllers
             {
                 ApiSearchRequest request = new()
                 {
-                    document_id = document_id
+                    document_id = document_id,
+                    indexName = DEFAULT_INDEX_NAME,
+                    permissions = GetUserPermissions()
                 };
-                request.indexName = DEFAULT_INDEX_NAME;
-                request.permissions = GetUserPermissions();
 
                 var result = await QueryService.GetDocumentCoverImage(request);
 
@@ -116,10 +98,10 @@ namespace Knowledge.API.Controllers
             {
                 ApiSearchRequest request = new()
                 {
-                    index_key = index_key
+                    index_key = index_key,
+                    indexName = DEFAULT_INDEX_NAME,
+                    permissions = GetUserPermissions()
                 };
-                request.indexName = DEFAULT_INDEX_NAME;
-                request.permissions = GetUserPermissions();
 
                 var result = await QueryService.GetDocumentCoverImageByIndexKey(request);
 
