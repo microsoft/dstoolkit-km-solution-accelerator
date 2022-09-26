@@ -12,8 +12,8 @@ namespace CognitiveSearch.UI.Controllers
         public NewsController(UIConfig uiConfig, TelemetryClient telemetry)
         {
             this.telemetryClient = telemetry;
-            this._uiConfig = uiConfig;
-            this._viewId = "news";
+            this.uiConfig = uiConfig;
+            this.viewId = "news";
         }
 
         public IActionResult Index()
@@ -24,7 +24,7 @@ namespace CognitiveSearch.UI.Controllers
         [HttpPost, HttpGet]
         public IActionResult Index(string q)
         {
-            ViewBag.Message = _uiConfig.GetVerticalById("news").message;
+            ViewBag.Message = uiConfig.GetVerticalById("news").message;
 
             return View(this.GetViewModel(q));
         }

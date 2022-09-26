@@ -6,12 +6,13 @@ using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using Azure.Search.Documents.Models;
-using Knowledge.Services.AzureStorage;
-using Knowledge.Services.Configuration;
-using Knowledge.Services.Graph;
+using Knowledge.Configuration;
+using Knowledge.Configuration.AzureStorage;
+using Knowledge.Configuration.Graph;
+using Knowledge.Configuration.SemanticSearch;
+using Knowledge.Models;
+using Knowledge.Models.Ingress;
 using Knowledge.Services.Helpers;
-using Knowledge.Services.Models;
-using Knowledge.Services.Models.Ingress;
 using Knowledge.Services.SemanticSearch;
 using Microsoft.ApplicationInsights;
 using Newtonsoft.Json;
@@ -26,10 +27,12 @@ namespace Knowledge.Services.AzureSearch.SDK
     {
         private string SearchId;
 
-        private ISemanticSearchService semanticSearch; 
+        private SemanticSearchConfig semanticConfig;
+        private ISemanticSearchService semanticSearch;
 
-        public AzureSearchSDKService(TelemetryClient telemetry, 
+        public AzureSearchSDKService(TelemetryClient telemetry,
             SearchServiceConfig configuration,
+            SemanticSearchConfig semanticCfg,
             StorageConfig strCfg,
             ISemanticSearchService semanticSvc,
             GraphConfig graphConfig)
@@ -37,7 +40,10 @@ namespace Knowledge.Services.AzureSearch.SDK
             this.telemetryClient = telemetry;
             this.serviceConfig = configuration;
             this.storageConfig = strCfg;
+
+            this.semanticConfig = semanticCfg;
             this.semanticSearch = semanticSvc;
+
             this.graphConfig = graphConfig;
 
             InitSearchClients();
@@ -62,7 +68,7 @@ namespace Knowledge.Services.AzureSearch.SDK
 
             SearchResponse result; 
 
-            if ( (request.options != null) && (request.options.isSemanticSearch) && serviceConfig.semanticSearchEnabled)
+            if ( (request.options != null) && (request.options.isSemanticSearch) && semanticConfig.IsEnabled)
             {
                 // Semantic search doesn't allow more than 50 results. No pagination possible. 
                 if (request.currentPage > 1 )
@@ -636,14 +642,14 @@ namespace Knowledge.Services.AzureSearch.SDK
             var searchId = this.GetSearchId().ToString();
 
             QueryParameters queryParameters = request.parameters ?? (new());
-            queryParameters.RowCount = 50;
+            queryParameters.RowCount = 30;
             queryParameters.ScoringProfile = "images";
 
             UserOptions userOptions = new();
 
             SearchResponse result;
 
-            if ((request.options != null) && (request.options.isSemanticSearch) && serviceConfig.semanticSearchEnabled)
+            if ((request.options != null) && (request.options.isSemanticSearch) && semanticConfig.IsEnabled)
             {
                 // Semantic search doesn't allow more than 50 results. No pagination possible. 
                 if (request.currentPage > 1)
@@ -699,14 +705,14 @@ namespace Knowledge.Services.AzureSearch.SDK
             var searchId = this.GetSearchId().ToString();
 
             QueryParameters queryParameters = request.parameters ?? (new());
-            queryParameters.RowCount = 50;
+            queryParameters.RowCount = 30;
             queryParameters.ScoringProfile = "videos";
 
             UserOptions userOptions = new();
 
             SearchResponse result;
 
-            if ((request.options != null) && (request.options.isSemanticSearch) && serviceConfig.semanticSearchEnabled)
+            if ((request.options != null) && (request.options.isSemanticSearch) && semanticConfig.IsEnabled)
             {
                 // Semantic search doesn't allow more than 50 results. No pagination possible. 
                 if (request.currentPage > 1)

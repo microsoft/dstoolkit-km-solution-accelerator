@@ -66,7 +66,7 @@ Microsoft.News = {
     GetLiveNewsFeed: function (update_method) {
         var selectedFeeds = this.GetHomeNewsFeeds();
 
-        $.postXML('/api/news/getliveaggregatedfeed', selectedFeeds, update_method);
+        $.postAPIXML('/api/news/getliveaggregatedfeed', selectedFeeds, update_method);
     },
 
     // Carousel aren't accessible friendly.
@@ -204,10 +204,10 @@ Microsoft.News = {
         Microsoft.Search.setQueryInProgress(); 
         
         if (this.selected_feeds.length > 0) {
-            $.postXML('/api/news/getliveaggregatedfeed', this.selected_feeds, Microsoft.News.LiveNewsUpdate);
+            $.postAPIXML('/api/news/getliveaggregatedfeed', this.selected_feeds, Microsoft.News.LiveNewsUpdate);
         }
         else {
-            $.postXML('/api/news/getliveaggregatedfeed', this.GetAllNewsFeeds(), Microsoft.News.LiveNewsUpdate);
+            $.postAPIXML('/api/news/getliveaggregatedfeed', this.GetAllNewsFeeds(), Microsoft.News.LiveNewsUpdate);
         }
     },
 

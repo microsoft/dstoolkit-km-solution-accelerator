@@ -4,8 +4,8 @@
 namespace Knowledge.Services.SemanticSearch
 {
     using Knowledge.Services.AzureSearch.REST;
-    using Knowledge.Services.Models;
-    using Knowledge.Services.Models.Ingress;
+    using Knowledge.Models;
+    using Knowledge.Models.Ingress;
     using System.Threading.Tasks;
 
     public interface ISemanticSearchService

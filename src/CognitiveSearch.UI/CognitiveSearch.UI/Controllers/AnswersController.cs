@@ -3,9 +3,7 @@
 
 using CognitiveSearch.UI.Configuration;
 using CognitiveSearch.UI.Models;
-using Knowledge.Services;
-using Knowledge.Services.Configuration;
-using Knowledge.Services.Models;
+using Knowledge.Models;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -15,14 +13,12 @@ namespace CognitiveSearch.UI.Controllers
 {
     public class AnswersController : AbstractSearchViewController
     {
-        public AnswersController(UIConfig uiConfig, IQueryService client, SearchServiceConfig svcconfig, TelemetryClient telemetry)
+        public AnswersController(UIConfig uiConfig, TelemetryClient telemetry)
         {
             this.telemetryClient = telemetry;
 
-            _queryService = client;
-            _searchConfig = svcconfig;
-            _uiConfig = uiConfig;
-            _viewId = "answers";
+            base.uiConfig = uiConfig;
+            viewId = "answers";
         }
 
         public IActionResult Index()
@@ -40,11 +36,11 @@ namespace CognitiveSearch.UI.Controllers
                 vm.selectedFacets = JsonConvert.DeserializeObject<SearchFacet[]>(this.Base64Decode(facets));
             }
 
-            if (!this._searchConfig.semanticSearchEnabled)
-            {
-                ViewBag.Message = "Semantic Search is disabled. Please contact your solution admin to enable it.";
-                ViewBag.Style = "alert-danger";
-            }
+            //if (!this._searchConfig.semanticSearchEnabled)
+            //{
+            //    ViewBag.Message = "Semantic Search is disabled. Please contact your solution admin to enable it.";
+            //    ViewBag.Style = "alert-danger";
+            //}
 
             return View(vm);
         }

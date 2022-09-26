@@ -2,19 +2,24 @@
 // Licensed under the MIT License.
 
 using CognitiveSearch.UI.Configuration;
-using Knowledge.Services;
+using Knowledge.Configuration;
+using Knowledge.Configuration.AzureStorage;
+using Knowledge.Configuration.Graph;
+using Knowledge.Configuration.Maps;
+using Knowledge.Configuration.SemanticSearch;
+using Knowledge.Configuration.SpellChecking;
+using Knowledge.Configuration.Translation;
+using Knowledge.Configuration.WebSearch;
 using Knowledge.Services.AzureSearch.SDK;
 using Knowledge.Services.AzureStorage;
-using Knowledge.Services.Configuration;
-using Knowledge.Services.Graph;
 using Knowledge.Services.Graph.Facet;
-using Knowledge.Services.Maps;
 using Knowledge.Services.Metadata;
 using Knowledge.Services.QnA;
 using Knowledge.Services.SemanticSearch;
 using Knowledge.Services.SpellChecking;
 using Knowledge.Services.Translation;
 using Knowledge.Services.WebSearch;
+using Knowledge.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +28,8 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using System.IO;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
@@ -71,6 +78,89 @@ namespace CognitiveSearch.UI
             var uiConfig = Configuration.GetSection("UIConfig").Get<UIConfig>();
             services.AddSingleton(uiConfig);
 
+            // Microsoft Clarity Support
+            ClarityConfig clarityConfig = Configuration.GetSection("ClarityConfig").Get<ClarityConfig>();
+            services.AddSingleton<ClarityConfig>(_ => clarityConfig);
+
+            MapConfig mapConfigData = Configuration.GetSection("MapConfig").Get<MapConfig>();
+            services.AddSingleton<MapConfig>(_ => mapConfigData);
+
+            WebSearchConfig wsconfigData = Configuration.GetSection("WebSearchConfig").Get<WebSearchConfig>();
+            services.AddSingleton<WebSearchConfig>(_ => wsconfigData);
+
+            GraphConfig gconfigData = Configuration.GetSection("GraphConfig").Get<GraphConfig>();
+            services.AddSingleton<GraphConfig>(_ => gconfigData);
+
+            WebAPIBackend webapiconfigData = Configuration.GetSection("WebAPIBackend").Get<WebAPIBackend>();
+            services.AddSingleton<WebAPIBackend>(_ => webapiconfigData);
+
+
+            // Global Configuration singleton 
+            var appConfig = new AppConfig
+            {
+                Organization = orgConfig,
+                Clarity = clarityConfig,
+                UIConfig = uiConfig,
+                MapConfig = mapConfigData,
+                GraphConfig = gconfigData,
+                WebSearchConfig = wsconfigData,
+                WebAPIBackend = webapiconfigData,
+                UIVersion = Configuration.GetValue("UIVersion", "1.0.0")
+            };
+            services.AddSingleton(appConfig);
+
+
+            // Activate API backend services
+            if (! webapiconfigData.IsEnabled)
+            {
+                ActivateBackendServices(services);
+            }
+            else
+            {
+                QueryServiceConfig queryconfigData = Configuration.GetSection("QueryServiceConfig").Get<QueryServiceConfig>();
+                services.AddSingleton<QueryServiceConfig>(_ => queryconfigData);
+
+                appConfig.QueryServiceConfig = queryconfigData; 
+
+                // Semantic 
+                SemanticSearchConfig semanticData = Configuration.GetSection("SemanticSearchConfig").Get<SemanticSearchConfig>();
+                services.AddSingleton<SemanticSearchConfig>(_ => semanticData);
+
+                TranslationConfig tconfigData = Configuration.GetSection("TranslationConfig").Get<TranslationConfig>();
+                services.AddSingleton<TranslationConfig>(_ => tconfigData);
+
+                SpellCheckingConfig scconfigData = Configuration.GetSection("SpellCheckConfig").Get<SpellCheckingConfig>();
+                services.AddSingleton<SpellCheckingConfig>(_ => scconfigData);
+
+            }
+
+            services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
+
+            services.AddMvc(options => options.EnableEndpointRouting = false).AddNewtonsoftJson(jsonOptions =>
+            {
+                jsonOptions.SerializerSettings.Converters.Add(new StringEnumConverter());
+                jsonOptions.SerializerSettings.ContractResolver = new DefaultContractResolver
+                {
+                    //NamingStrategy = new CamelCaseNamingStrategy()
+                    NamingStrategy = new CamelCaseNamingStrategy
+                    {
+                        OverrideSpecifiedNames = false
+                    }
+                };
+                jsonOptions.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.None;
+            });
+
+            services.AddWebOptimizer(pipeline =>
+            {
+                pipeline.AddCssBundle("/css/bundle.css", "css/site.css","css/colors.css");
+                pipeline.AddJavaScriptBundle("/js/bundle.js", "js/config.js", "js/site.js","js/utils.js","js/search-common.js", "js/commons/*.js", "js/graph/*.js", "js/search-details.js","js/views/*.js","js/export.js");
+            });
+        }
+
+
+
+        public void ActivateBackendServices(IServiceCollection services)
+        {
             StorageConfig sconfigData = Configuration.GetSection("StorageConfig").Get<StorageConfig>();
             services.AddSingleton<StorageConfig>(_ => sconfigData);
 
@@ -99,25 +189,9 @@ namespace CognitiveSearch.UI
             MapConfig mapConfigData = Configuration.GetSection("MapConfig").Get<MapConfig>();
             services.AddSingleton<MapConfig>(_ => mapConfigData);
 
-            // Microsoft Clarity Support
-            ClarityConfig clarityConfig = Configuration.GetSection("ClarityConfig").Get<ClarityConfig>();
-            services.AddSingleton<ClarityConfig>(_ => clarityConfig);
+            QueryServiceConfig queryconfigData = Configuration.GetSection("QueryServiceConfig").Get<QueryServiceConfig>();
+            services.AddSingleton<QueryServiceConfig>(_ => queryconfigData);
 
-            services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
-
-            // Global Configuration singleton 
-            var appConfig = new AppConfig
-            {
-                Organization = orgConfig,
-                Clarity = clarityConfig,
-                UIConfig = uiConfig,
-                SearchConfig = configData,
-                GraphConfig = gconfigData,
-                WebSearchConfig = wsconfigData,
-                MapConfig = mapConfigData,
-                UIVersion = Configuration.GetValue("UIVersion","1.0.0")
-            };
-            services.AddSingleton(appConfig);
 
             // Services Singletons
             services.AddSingleton<IStorageService, StorageService>();
@@ -132,14 +206,8 @@ namespace CognitiveSearch.UI
             services.AddSingleton<IAzureSearchSDKService, AzureSearchSDKService>();
             services.AddSingleton<IQueryService, QueryService>();
 
-            services.AddMvc(options => options.EnableEndpointRouting = false).AddNewtonsoftJson();
-
-            services.AddWebOptimizer(pipeline =>
-            {
-                pipeline.AddCssBundle("/css/bundle.css", "css/site.css","css/colors.css");
-                pipeline.AddJavaScriptBundle("/js/bundle.js", "js/site.js","js/utils.js","js/search-common.js", "js/commons/*.js", "js/graph/*.js", "js/search-details.js","js/views/*.js","js/export.js");
-            });
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

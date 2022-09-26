@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Knowledge.API.Models;
-using Knowledge.Services.Configuration;
-using Knowledge.Services.Maps;
+using Knowledge.Configuration.Maps;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Knowledge.API.Controllers.api
@@ -17,7 +15,7 @@ namespace Knowledge.API.Controllers.api
 
         public MapController(MapConfig client)
         {
-            mapService = client;
+            this.mapService = client;
         }
 
         public class MapCredentials

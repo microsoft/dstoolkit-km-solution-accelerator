@@ -26,7 +26,7 @@ Microsoft.Web = {
         // Set a default web filter for your vertical if necessary
         var filter = Microsoft.View.config.filter ? Microsoft.View.config.filter : '';
 
-        $.postJSON('/api/web/webresults',
+        $.postAPIJSON('/api/web/webresults',
             {
                 queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
                 searchFacets: Microsoft.Facets.selectedFacets,
@@ -708,14 +708,14 @@ Microsoft.Web = {
     },
 
     WebUpload: function(base64webpage) {
-        $.postJSON('/api/storage/webupload',{base64obj: base64webpage},
+        $.postAPIJSON('/api/storage/webupload',{base64obj: base64webpage},
             function (data) {
                 //TODO send notification
         });
     },
 
     UrlUpload: function(base64url) {
-        $.postJSON('/api/storage/urlupload',{base64obj: base64url},
+        $.postAPIJSON('/api/storage/urlupload',{base64obj: base64url},
             function (data) {
                 //TODO send notification
             });

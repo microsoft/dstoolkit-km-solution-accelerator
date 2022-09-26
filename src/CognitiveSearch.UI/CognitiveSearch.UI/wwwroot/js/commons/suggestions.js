@@ -47,13 +47,28 @@ Microsoft.Suggestions = {
             if (vertical?.filter) {
                 remote_url += ('&filter='+vertical.filter);
             }
+
+            // WebAPI Support
+            var backendurl = remote_url;
+
+            if (Microsoft.Config.data.webAPIBackend.isEnabled) {
+                backendurl = Microsoft.Config.data.webAPIBackend.endpoint + remote_url;
+            }
+
             var engine = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.whitespace,
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 remote: {
-                    url: remote_url,
-                    replace: function (url, query) {
-                        return url + '&term=' + query;
+                    url: backendurl,
+                    prepare: function (query, settings) {
+                        settings.url = settings.url + '&term=' + query
+                        settings.type = "POST";
+
+                        // WebAPI Support - Authentication
+                        //settings.contentType = "application/json; charset=UTF-8";
+                        //settings.data = JSON.stringify(query);
+
+                        return settings;
                     }
                 }
             });

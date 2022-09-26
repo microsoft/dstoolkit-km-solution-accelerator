@@ -35,7 +35,7 @@ Microsoft.Tables = {
                 resultsHtml += '<img alt="' + name + '" class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + docresult.metadata_storage_name + '" />';
             }
             else {
-                resultsHtml += '   <img alt="' + name + '" class="image-result" src="/api/search/getdocumentcoverimage?id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                resultsHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
             }
 
             resultsHtml += '</a>';
@@ -195,7 +195,7 @@ Microsoft.Tables = {
 
         // Get center of map to use to score the search results
 
-        $.postJSON('/api/search/getdocuments',
+        $.postAPIJSON('/api/search/getdocuments',
             {
                 queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
                 searchFacets: Microsoft.Facets.selectedFacets,

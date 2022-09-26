@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using Knowledge.API.Models;
-using Knowledge.Services.Configuration;
+using Knowledge.Configuration;
 using Knowledge.Services.WebSearch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,9 +23,9 @@ namespace Knowledge.API.Controllers.api
             searchConfig = allconfig;
         }
 
-        public string GetIp()
+        private string? GetIp()
         {
-            return Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            return Request.HttpContext.Connection.RemoteIpAddress?.ToString();
         }
 
         [HttpPost("webresults")]

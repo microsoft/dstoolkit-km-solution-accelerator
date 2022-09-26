@@ -80,13 +80,18 @@
     "slotSetting": false
   },
   {
-    "name": "SearchServiceConfig:AdminKey",
-    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/searchServiceKey)",
+    "name": "WebAPIBackend:IsEnabled",
+    "value": "false",
     "slotSetting": false
   },
   {
-    "name": "SearchServiceConfig:APIVersion",
-    "value": "{{config.searchVersion}}",
+    "name": "WebAPIBackend:IsAuthenticated",
+    "value": "false",
+    "slotSetting": false
+  },
+  {
+    "name": "WebAPIBackend:Endpoint",
+    "value": "https://localhost:7101",
     "slotSetting": false
   },
   {
@@ -97,6 +102,17 @@
   {
     "name": "MapConfig:AzureMapsSubscriptionKey",
     "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/mapsSubscriptionKey)",
+    "slotSetting": false
+  },
+
+  {
+    "name": "SearchServiceConfig:AdminKey",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/searchServiceKey)",
+    "slotSetting": false
+  },
+  {
+    "name": "SearchServiceConfig:APIVersion",
+    "value": "{{config.searchVersion}}",
     "slotSetting": false
   },
   {
@@ -142,11 +158,6 @@
   {
     "name": "SearchServiceConfig:IsPathBase64Encoded",
     "value": "false",
-    "slotSetting": false
-  },
-  {
-    "name": "SearchServiceConfig:semanticSearchEnabled",
-    "value": "{{config.semanticSearchEnabled}}",
     "slotSetting": false
   },
   {
@@ -357,6 +368,11 @@
   {
     "name": "WebSearchConfig:Market",
     "value": "{{config.webMarket}}",
+    "slotSetting": false
+  },
+  {
+    "name": "SemanticSearchConfig:semanticSearchEnabled",
+    "value": "{{config.semanticSearchEnabled}}",
     "slotSetting": false
   },
   {

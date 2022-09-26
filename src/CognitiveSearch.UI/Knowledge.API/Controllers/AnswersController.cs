@@ -4,7 +4,7 @@
 using Knowledge.API.Models;
 using Knowledge.Services;
 using Knowledge.Services.AzureSearch.REST;
-using Knowledge.Services.Configuration;
+using Knowledge.Configuration;
 using Knowledge.Services.SemanticSearch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +19,9 @@ namespace Knowledge.API.Controllers
 
         public AnswersController(IQueryService client, ISemanticSearchService semantic, SearchServiceConfig svcconfig)
         {
-            _queryService = client;
+            QueryService = client;
             semanticService = semantic;
-            _config = svcconfig;
+            Config = svcconfig;
         }
 
 

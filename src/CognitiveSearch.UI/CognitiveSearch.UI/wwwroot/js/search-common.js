@@ -339,8 +339,51 @@ Microsoft.Search = {
             }
             return path;
         }
-    }
+    },
 
+    //TODO
+    RenderCoverImage: function (docresult) {
+        var documentHtml = '';
+        if (hasCoverImage) {
+            documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+        }
+        else {
+            documentHtml += '   <img alt="' + name + '" class="image-result-nocover" src="' + iconPath + '" title="' + docresult.title + '"/>';
+        }
+        return documentHtml;
+    },
+
+    ProcessCoverImage: function () {
+        var imgDefer = document.getElementsByClassName('cover-image');
+        for (var i = 0; i < imgDefer.length; i++) {
+            this.RequestCoverImage(imgDefer[i]);
+        }
+    },
+    RequestCoverImage: function (coverImage) {
+        if (coverImage.getAttribute('data-src')) {
+            var url = coverImage.getAttribute('data-src');
+
+            if (Microsoft.Config.data.webAPIBackend.isEnabled) {
+                // Append the API Backend host here
+                url = Microsoft.Config.data.webAPIBackend.endpoint + url;
+            }
+
+            // Call backend API with a promise
+            return new Promise((resolve, reject) => {
+                jQuery.ajax({
+                    cache: true,
+                    url: url,
+                    type: "POST",
+                    contentType: "application/text; charset=utf-8",
+                    dataType: "text",
+                    success: function (data) {
+                        coverImage.setAttribute('src', 'data:image/png;base64,' + data);
+                        coverImage.classList.remove('cover-image');
+                    }
+                });
+            });
+        }
+    }
 }
 
 //
@@ -525,7 +568,7 @@ Microsoft.Search.Utils.Excel = {
     getExportToExcelResults: function (url, query, ReportTitle) {
         Microsoft.Search.setQueryInProgress();
 
-        $.postJSON(url, query,
+        $.postAPIJSON(url, query,
             function (data) {
                 try {
                     if (data && data.results) {
@@ -665,7 +708,7 @@ Microsoft.Search.Results = {
     },
 
     get_next_page: function (document_id, pagenumber) {
-        $.postJSON('/api/search/getdocumentsiblings',
+        $.postAPIJSON('/api/document/getsiblings',
             {
                 document_id: document_id,
                 incomingFilter: "image_parentid eq '" + document_id + "' and (page_number ge " + (pagenumber + 1) + ")",
@@ -763,7 +806,7 @@ Microsoft.Search.Results = {
             }
             else {
                 if (hasCoverImage) {
-                    documentHtml += '   <img alt="' + name + '" class="image-result" src="/api/search/getdocumentcoverimage?id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                    documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                 }
                 else {
                     documentHtml += '   <img alt="' + name + '" class="image-result-nocover" src="' + iconPath + '" title="' + docresult.title + '"/>';
@@ -937,7 +980,7 @@ Microsoft.Search.Results.Metadata = {
         metadataContainerHTML += '</tbody>';
         metadataContainerHTML += '</table></div><br/>';
 
-        $.postJSON('/api/search/getdocumentmetadata',
+        $.postAPIJSON('/api/document/getmetadata',
             {
                 path: result.metadata_storage_path
             },
@@ -1022,7 +1065,7 @@ Microsoft.Search.Results.Embedded = {
 
         var containerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role = "progressbar" style = "width: 100%" aria - valuenow="100" aria - valuemin="0" aria - valuemax="100"></div></div>';
 
-        $.postJSON('/api/search/getdocumentembedded',
+        $.postAPIJSON('/api/document/getembedded',
             {
                 document_id: result.document_id
             },
@@ -1077,7 +1120,7 @@ Microsoft.Search.Results.Siblings = {
 
         var containerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role = "progressbar" style = "width: 100%" aria - valuenow="100" aria - valuemin="0" aria - valuemax="100"></div></div>';
 
-        $.postJSON('/api/search/getdocumentsiblings',
+        $.postAPIJSON('/api/document/getsiblings',
             {
                 document_id: result.image_parentid,
                 incomingFilter: "image_parentid eq '" + result.image_parentid + "' ",

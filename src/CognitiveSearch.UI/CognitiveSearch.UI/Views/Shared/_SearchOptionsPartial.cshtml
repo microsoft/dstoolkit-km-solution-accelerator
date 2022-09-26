@@ -1,8 +1,9 @@
 ﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
      Licensed under the MIT License. -->
 
-@using Knowledge.Services.Configuration
-@inject SearchServiceConfig SearchConfig 
+@inject Knowledge.Configuration.Translation.TranslationConfig translationCfg
+@inject Knowledge.Configuration.SemanticSearch.SemanticSearchConfig semanticCfg
+@inject Knowledge.Configuration.SpellChecking.SpellCheckingConfig spellcheckingCfg
 
 <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBackdrop" aria-labelledby="offcanvasWithBackdropLabel">
     <div class="offcanvas-header">
@@ -11,7 +12,7 @@
     </div>
     <div id="search-options-body" class="offcanvas-body">
         <p>The below options let you control your search experience.</p>
-        @if (SearchConfig.semanticSearchEnabled)
+        @if (semanticCfg.IsEnabled)
         {
             <div class="form-check form-switch search-semantic-switch">
                 <label class="form-check-label search-semantic-label" for="semanticSwitch">Semantic</label>
@@ -20,41 +21,27 @@
             <hr />
         }
 
-        <div class="form-check form-switch search-translation-switch">
-            <label class="form-check-label search-translation-label" for="translation-switch">Query Translation</label>
-            @if (SearchConfig.TranslateQueryText)
-            {
-                <input class="form-check-input search-translation-input" type="checkbox" id="translation-switch" checked onclick="Microsoft.Search.Options.switchQueryTranslation(this);">                    
-            }
-            else
-            {
-                <input class="form-check-input search-translation-input" type="checkbox" id="translation-switch" onclick="Microsoft.Search.Options.switchQueryTranslation(this);">
-                    
-            }
-        </div>
-        <br />
-        <div class="form-check form-switch search-spellcheck-switch">
-            <label class="form-check-label search-spellcheck-label" for="spellcheck-switch">Query Spell Checking</label>
-            @if (SearchConfig.SpellCheckQueryText)
-            {
-                <input class="form-check-input search-spellcheck-input" type="checkbox" id="spellcheck-switch" checked onclick="Microsoft.Search.Options.switchQuerySpellCheck(this);">
-            }
-            else
-            {
-                <input class="form-check-input search-spellcheck-input" type="checkbox" id="spellcheck-switch" onclick="Microsoft.Search.Options.switchQuerySpellCheck(this);">                    
-            }
-        </div>
+        @if (translationCfg.IsEnabled)
+        {
+            <div class="form-check form-switch search-translation-switch">
+                <label class="form-check-label search-translation-label" for="translation-switch">Query Translation</label>
+                    <input class="form-check-input search-translation-input" type="checkbox" id="translation-switch" checked onclick="Microsoft.Search.Options.switchQueryTranslation(this);">                    
+            </div>
+        }
+
+        @if (spellcheckingCfg.IsEnabled)
+        {
+            <br/>
+            <div class="form-check form-switch search-spellcheck-switch">
+                <label class="form-check-label search-spellcheck-label" for="spellcheck-switch">Query Spell Checking</label>
+                    <input class="form-check-input search-spellcheck-input" type="checkbox" id="spellcheck-switch" checked onclick="Microsoft.Search.Options.switchQuerySpellCheck(this);">
+            </div>
+        }
+
         <hr>
         <div class="form-check form-switch search-suggestions-switch">
             <label class="form-check-label search-suggestions-label" for="suggestions-switch">Suggestions As Filter</label>
-            @if (SearchConfig.SuggestionsAsFilter)
-            {
-                <input class="form-check-input search-suggestions-input" type="checkbox" id="suggestions-switch" checked onclick="Microsoft.Search.Options.switchSuggestionsAsFilter(this);">
-            }
-            else
-            {
-                <input class="form-check-input search-suggestions-input" type="checkbox" id="suggestions-switch" onclick="Microsoft.Search.Options.switchSuggestionsAsFilter(this);">                    
-            }
+            <input class="form-check-input search-suggestions-input" type="checkbox" id="suggestions-switch" onclick="Microsoft.Search.Options.switchSuggestionsAsFilter(this);">
         </div>
         <hr>
         <div>

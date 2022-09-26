@@ -11,17 +11,28 @@ To deploy & publish the solution accelerator from a local or remote machine with
 - [AZ CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 - [Azure Functions Core tools v4.x](https://github.com/Azure/azure-functions-core-tools)
 
-
 ## Azure Cloud Shell installation
 
-Alternatively, you can use Azure Cloud Shell for deploying and/or operating your solution.
+Alternatively, you can use Azure Cloud Shell for deploying and/or operating your solution. Use a dedicated file share to upload/store the solution accelerator code.
 
-Az CLI and PowerShell 7 are already installed in Azure Cloud Shell by default. Azure Functions and Dotnet Core as well although at the time of writing with older versions. 
+Az CLI and PowerShell 7 are already installed in Azure Cloud Shell by default. Azure Functions and Dotnet Core are also installed although at the time of writing with older versions.
 
 https://docs.microsoft.com/en-us/azure/cloud-shell/features
 
 https://docs.microsoft.com/en-us/azure/cloud-shell/features#tools
 
+Check on the function core runtime 
+
+```ps
+func --version
+```
+Check on the dotnet core runtime 
+
+```ps
+dotnet --version
+```
+
+**If the function and dotnet versions are showing 4.x and 6.x respectively, you're good to go. If not, please follow the below steps.**
 
 ### Install Azure Functions 4 on Azure Cloud Shell (local user)
 

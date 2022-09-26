@@ -1,42 +1,34 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Microsoft.AspNetCore.Mvc;
-using Knowledge.Services;
-using Knowledge.Services.Configuration;
-using Knowledge.Services.Models;
-using Newtonsoft.Json;
-using System;
 using CognitiveSearch.UI.Configuration;
 using CognitiveSearch.UI.Models;
+using Knowledge.Models;
 using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System;
 
 namespace CognitiveSearch.UI.Controllers
 {
     public class HomeController : AbstractSearchViewController
     {
-        public HomeController (UIConfig uiConfig, IQueryService client, SearchServiceConfig svcconfig, TelemetryClient telemetry)
+        public HomeController (UIConfig uiConfig, TelemetryClient telemetry)
         {
             this.telemetryClient = telemetry;
 
-            _queryService = client;
-            _searchConfig = svcconfig;
-            _uiConfig = uiConfig;
-            _viewId = "search";
+            base.uiConfig = uiConfig;
+            viewId = "search";
         }
 
         public IActionResult Index()
         {
-            CheckDocSearchInitialized();
-
             return View(this.GetLandingModel());
         }
 
         #region Search 
         public IActionResult Search()
         {
-            CheckDocSearchInitialized();
-
             return View(this.GetViewModel());
         }
 

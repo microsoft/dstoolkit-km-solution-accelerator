@@ -3,8 +3,9 @@
 
 namespace Knowledge.Services.Graph.Custom
 {
+    using Knowledge.Configuration;
+    using Knowledge.Configuration.Graph;
     using Knowledge.Services.AzureSearch;
-    using Knowledge.Services.Configuration;
     using Knowledge.Services.Helpers;
     using Microsoft.ApplicationInsights;
     using Microsoft.Extensions.Caching.Distributed;

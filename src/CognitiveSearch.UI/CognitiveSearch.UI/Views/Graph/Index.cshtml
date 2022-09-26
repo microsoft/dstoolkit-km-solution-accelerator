@@ -147,8 +147,10 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            Microsoft.Search.initSearchVertical(Microsoft.View.config);
-            Microsoft.Graph.initEntityGraph();
-            Microsoft.Search.initSearch();
+            Microsoft.Config.init().then(() => {
+                Microsoft.Search.initSearchVertical(Microsoft.View.config);
+                Microsoft.Graph.initEntityGraph();
+                Microsoft.Search.initSearch();
+            });
         });</script>
 }

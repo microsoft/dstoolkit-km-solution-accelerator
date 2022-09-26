@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Knowledge.Services.Configuration;
+using Knowledge.Configuration;
+using Knowledge.Models;
+using Knowledge.Models.Ingress;
 using Knowledge.Services.Helpers;
-using Knowledge.Services.Models;
-using Knowledge.Services.Models.Ingress;
 using Knowledge.Services.QnA;
 using Knowledge.Services.SemanticSearch;
 using Knowledge.Services.SpellChecking;
@@ -30,9 +30,11 @@ namespace Knowledge.Services
         private IWebSearchService webSearchService;
         private IAzureSearchService searchService;
 
-        SearchServiceConfig config; 
+        QueryServiceConfig queryConfig;
 
-        public QueryService(SearchServiceConfig configuration,
+        SearchServiceConfig config;
+
+        public QueryService(QueryServiceConfig qconfig,SearchServiceConfig configuration,
             IDistributedCache cache,
             TelemetryClient telemetry,
             IAzureSearchService searchSvc,
@@ -47,6 +49,7 @@ namespace Knowledge.Services
                 this.distCache = cache;
                 this.telemetryClient = telemetry;
 
+                this.queryConfig = qconfig;
                 this.config = configuration; 
 
                 this.searchService = searchSvc;

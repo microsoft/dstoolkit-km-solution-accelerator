@@ -67,7 +67,7 @@ Microsoft.Home = {
     
     GetLatestImages:function (parameters) {
     
-        $.postJSON('/api/search/getlatestimages',
+        $.postAPIJSON('/api/search/getlatestimages',
             {
                 queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
                 searchFacets: parameters?.facets,
@@ -145,6 +145,8 @@ Microsoft.Home = {
         }
     
         $(target_tag).html(resultsHtml);
+
+        Microsoft.Search.ProcessCoverImage(); 
     
         $(slick_class).not('.slick-initialized').slick({
             infinite: true,
@@ -168,7 +170,7 @@ Microsoft.Home = {
     
     GetLatestDocuments:function (parameters) {
     
-        $.postJSON('/api/search/getlatestdocuments',
+        $.postAPIJSON('/api/search/getlatestdocuments',
             {
                 queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
                 searchFacets: parameters?.facets,
@@ -233,7 +235,7 @@ Microsoft.Home = {
                         resultsHtml += '<a target="_blank" href=\'' + Microsoft.Search.GetSASTokenFromPath(path) + '\'>';
                     }
     
-                    resultsHtml += '<img class="document-carousel-item-image" title="'+displayName+'" src="/api/search/getdocumentcoverimage?id=' + docresult.document_id + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                    resultsHtml += '<img class="document-carousel-item-image cover-image" title="' + displayName +'" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                     resultsHtml += '<div class="document-carousel-item-title">';
     
                     resultsHtml += '<h5 class="modification-time" title=\'' + path + '\'>' + displayName + '</h5>';
@@ -251,6 +253,8 @@ Microsoft.Home = {
         }
     
         $(target_tag).html(resultsHtml);
+
+        Microsoft.Search.ProcessCoverImage(); 
     
         if (slide_show) {
             $(slick_class).not('.slick-initialized').slick({
@@ -283,6 +287,8 @@ Microsoft.Home = {
         }
     
         $(target_tag).html(resultsHtml);
+
+        Microsoft.Search.ProcessCoverImage(); 
     }
    
 }

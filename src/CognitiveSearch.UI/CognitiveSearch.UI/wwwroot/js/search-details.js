@@ -213,7 +213,7 @@ Microsoft.Results.Details = {
     },
     
     ShowDocument: function(index_key, idx) {
-        $.postJSON('/api/search/getdocumentbyindexkey',
+        $.postAPIJSON('/api/document/getbyindexkey',
             {
                 index_key: index_key
             },
@@ -227,7 +227,7 @@ Microsoft.Results.Details = {
     ShowDocumentAction: function(parameters) {
         parameters = JSON.parse(Base64.decode(parameters));
         var bkobj = parameters[0]; 
-        $.postJSON('/api/search/getdocumentbyindexkey',
+        $.postAPIJSON('/api/document/getbyindexkey',
             {
                 index_key: bkobj.index_key
             },
@@ -239,7 +239,7 @@ Microsoft.Results.Details = {
     },
     
     ShowDocumentById: function(id, idx = -1) {
-        $.postJSON('/api/search/getdocumentbyid',
+        $.postAPIJSON('/api/document/getbyid',
             {
                 document_id: id
             },

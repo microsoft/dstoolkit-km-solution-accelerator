@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using Knowledge.Services;
-using Knowledge.Services.Configuration;
+using Knowledge.Configuration;
 using Knowledge.Services.News;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
@@ -23,8 +23,8 @@ namespace Knowledge.API.Controllers
         public NewsController(TelemetryClient telemetry, IQueryService client, SearchServiceConfig svcconfig)
         {
             telemetryClient = telemetry;
-            _queryService = client;
-            _config = svcconfig;
+            QueryService = client;
+            Config = svcconfig;
         }
 
         // CREDITS : http://www.binaryintellect.net/articles/05fc3052-bf5c-4ab9-b8ab-a7fd6974b977.aspx

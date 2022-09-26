@@ -32,10 +32,11 @@
     <script>
         $(document).ready(function () {
 
-            Microsoft.Search.initSearchVertical(Microsoft.View.config);
-
+            Microsoft.Config.init().then(() => {
+                Microsoft.Search.initSearchVertical(Microsoft.View.config);
                 Microsoft.Search.initSearch();
             });
+        });
         </script>
     }
 </div>
