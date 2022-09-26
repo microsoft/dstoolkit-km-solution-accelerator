@@ -1,7 +1,7 @@
 ###
 ### Test 0 - Frame 0 Image W 1284 H 1655 Size Ratio 1.2889408099688473
 POST http://localhost:7071/vision/analyze
-content-type: application/json
+content-type: application/json;charset=utf-8
 defaultLanguageCode: en
 visualFeatures: ['brands', 'faces']
 details: ["landmarks"]
@@ -24,6 +24,6 @@ details: ["landmarks"]
 
 ### Test empty data
 POST http://localhost:7071/vision/analyze
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {"values":[{"recordId":"0","data":{}}]}

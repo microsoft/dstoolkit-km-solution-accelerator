@@ -258,7 +258,7 @@ Functions defined in the core configuration are mostly Azure Search custom skill
                             "Name": "Describe"
                         },
                         {
-                            "Name": "ExtractTables"
+                            "Name": "AnalyzeDocument"
                         },
                         {
                             "Name": "Normalize"
@@ -419,7 +419,7 @@ As an example of a .http located in the configuration/monitoring/search folder
 ```http
 ### Services Stats
 GET https://{{param.searchServiceName}}.search.windows.net/servicestats?api-version={{config.searchVersion}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 api-key: {{param.searchServiceKey}}
 ```
 
@@ -430,7 +430,7 @@ Upon initializing the environment, a converted file will be available holding th
 ```http
 ### Services Stats
 GET https://XXXXXXXXX.search.windows.net/servicestats?api-version=2021-04-30-Preview
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 api-key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ```

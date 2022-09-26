@@ -1,6 +1,6 @@
 ###
 POST {{param.language.EntityLinking}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 minimumPrecision: 0.2
 defaultLanguageCode: en
 type: small
@@ -9,7 +9,7 @@ type: small
 
 ###
 POST {{param.language.EntityLinking}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 minimumPrecision: 0.2
 defaultLanguageCode: en
 type: big
@@ -18,14 +18,14 @@ type: big
 
 ###
 POST {{param.language.EntityLinking}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 minimumPrecision: 0.1
 
 < EntityLinked.3.json
 
 ###
 POST {{param.language.EntityLinking}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 minimumPrecision: 0.1
 
 < EntityLinked.4.json

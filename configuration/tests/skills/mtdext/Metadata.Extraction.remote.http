@@ -1,6 +1,6 @@
 ###
 POST {{param.mtdext.DurableMetadataExtractionSkill_HttpStart}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -16,7 +16,7 @@ content-type: application/json
 }
 ### 
 POST {{param.mtdext.MetadataExtractionSkill}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -32,7 +32,7 @@ content-type: application/json
 }
 ### Non-Recursive
 POST {{param.mtdext.MetadataExtractionSkill}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [

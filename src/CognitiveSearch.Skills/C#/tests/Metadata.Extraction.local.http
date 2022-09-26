@@ -1,6 +1,6 @@
 ### Empty Request
 POST http://localhost:7071/mtdext/DurableMetadataExtractionSkill_HttpStart
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -14,7 +14,7 @@ content-type: application/json
 
 ### Recursive 
 POST http://localhost:7071/mtdext/DurableMetadataExtractionSkill_HttpStart
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -31,7 +31,7 @@ content-type: application/json
 
 ### Non-Recursive
 POST http://localhost:7071/mtdext/MetadataExtractionSkill
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -47,7 +47,7 @@ content-type: application/json
 }
 ### Document metadata
 POST http://localhost:7071/mtdext/MetadataExtractionSkill
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -65,7 +65,7 @@ content-type: application/json
 
 ### Image metadata
 POST http://localhost:7071/mtdext/MetadataExtractionSkill
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -79,3 +79,21 @@ content-type: application/json
         }
     ]
 }
+
+### Unicode Character in document filename
+POST http://localhost:7071/mtdext/MetadataExtractionSkill
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_id": "aHR0cHM6Ly9kc3RrMmRhdGEuYmxvYi5jb3JlLndpbmRvd3MubmV0L2RvY3VtZW50cy9JTEctMDkxLTIwJUUzJTgwJTgwJUU2JTlDJUFDJUU3JTk0JUIwJUU3JThFJUIyJUU1JUE1JTg4JUUzJTgwJTgwODhMTVMwMzAxKyVFNSVBNCU5NiVFNiVCMyVBOCVFNyVCNSU5MCVFNiU5RSU5QzIwLTU0MDYtNTQwOSUyMCgxKS5wZGY",
+                "document_filename":"2020+eco.pdf",
+                "document_url":"https://kmsolacdata.blob.core.windows.net/documents/2020+eco.pdf"
+            }
+        }
+    ]
+}
+

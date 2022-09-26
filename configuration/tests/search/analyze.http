@@ -1,6 +1,6 @@
 ### Analyze Text query
 POST  https://{{param.searchServiceName}}.search.windows.net/indexes/{{param.indexName}}/analyze?api-version={{config.searchVersion}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 api-key : {{param.searchServiceKey}}
 
 {
@@ -10,7 +10,7 @@ api-key : {{param.searchServiceKey}}
 
 ### Using the German Analyzer
 POST  https://{{param.searchServiceName}}.search.windows.net/indexes/{{param.indexName}}/analyze?api-version={{config.searchVersion}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 api-key : {{param.searchServiceKey}}
 
 {

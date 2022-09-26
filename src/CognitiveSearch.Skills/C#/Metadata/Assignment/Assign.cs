@@ -134,6 +134,14 @@ namespace Assignment
             // Security
             TransformSecurity(headers,inRecord,assignedMetadata);
 
+            // Pages Count
+            assignedMetadata[$"page_count"] = 0;
+
+            if (inRecord.Data.ContainsKey("metadata_page_count"))
+            {
+                assignedMetadata[$"page_count"] = inRecord.Data["metadata_page_count"];
+            }
+
             // Page Number
             assignedMetadata[$"page_number"] = 0;
 
@@ -143,20 +151,21 @@ namespace Assignment
             if (inRecord.Data.ContainsKey("imageparentid"))
             {
                 assignedMetadata[$"document_embedded"] = true;
-            }
 
-            try
-            {
-                string[] tokens = filename.Split('-');
-
-                if (tokens.Length > 2)
+                // Page Number
+                try
                 {
-                    assignedMetadata[$"page_number"] = Int32.Parse(tokens[1]);
+                    string[] tokens = filename.Split('-');
+
+                    if (tokens.Length > 2)
+                    {
+                        assignedMetadata[$"page_number"] = Int32.Parse(tokens[1]);
+                    }
                 }
-            }
-            catch (Exception)
-            {
-                assignedMetadata[$"page_number"] = 0;
+                catch (Exception)
+                {
+                    assignedMetadata[$"page_number"] = 0;
+                }
             }
 
             // DEFAULT TITLE
@@ -336,7 +345,7 @@ namespace Assignment
                 string furl = (string)inRecord.Data["document_url"];
                 if (!String.IsNullOrEmpty(furl))
                 {
-                    string decoded_url = HttpUtility.UrlDecode(furl);
+                    string decoded_url = UrlUtility.UrlDecode(furl);
                     pathTokens = decoded_url.ToLowerInvariant().Split('/', StringSplitOptions.RemoveEmptyEntries);
                 }
             }
@@ -346,7 +355,7 @@ namespace Assignment
                 string furl = (string)inRecord.Data["imageparenturl"];
                 if (!String.IsNullOrEmpty(furl))
                 {
-                    string decoded_url = HttpUtility.UrlDecode(IHelpers.Base64Decode(furl));
+                    string decoded_url = UrlUtility.UrlDecode(IHelpers.Base64Decode(furl));
                     pathTokens = decoded_url.ToLowerInvariant().Split('/', StringSplitOptions.RemoveEmptyEntries);
                 }
             }
@@ -387,7 +396,7 @@ namespace Assignment
                     string furl = (string)inRecord.Data["document_url"];
                     if (! String.IsNullOrEmpty(furl))
                     {
-                        string decoded_url = HttpUtility.UrlDecode(furl);
+                        string decoded_url = UrlUtility.UrlDecode(furl);
                         pathTokens = decoded_url.ToLowerInvariant().Split('/', StringSplitOptions.RemoveEmptyEntries);
 
                         if (pathTokens.Length > 3)
@@ -402,7 +411,7 @@ namespace Assignment
                     string furl = (string)inRecord.Data["imageparenturl"];
                     if (!String.IsNullOrEmpty(furl))
                     {
-                        string decoded_url = HttpUtility.UrlDecode(IHelpers.Base64Decode(furl));
+                        string decoded_url = UrlUtility.UrlDecode(IHelpers.Base64Decode(furl));
                         pathTokens = decoded_url.ToLowerInvariant().Split('/', StringSplitOptions.RemoveEmptyEntries);
 
                         if (pathTokens.Length > 3)

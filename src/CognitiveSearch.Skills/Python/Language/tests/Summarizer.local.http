@@ -1,6 +1,6 @@
 ###
 POST http://localhost:7071/language/summarization
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -23,7 +23,7 @@ Content-Type: application/json
 
 ###
 POST http://localhost:7071/language/translator
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 defaultToLanguageCode: en
 defaultFromLanguageCode: de
 suggestedFrom: de

@@ -1,29 +1,29 @@
 ### Test 1 - Frame 0 Image W 1284 H 1655 Size Ratio 1.2889408099688473
 POST {{param.vision.Normalize}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < ImageNormalization.Infography.1.json
 
 ### Test 2 - Frame 0 Image outside Max Width or Height or Size Ratio.(650, 2260, 3.476923076923077)
 POST {{param.vision.Normalize}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < ImageNormalization.Infography.2.json
 
 ### Test 3 - Rotated Frame 0 Image outside Max Width or Height or Size Ratio.(5700, 1200, 4.75)
 POST {{param.vision.Normalize}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < ImageNormalization.Infography.3.json
 
 ### Test 4 - Frame 0 Image W 800 H 2000 Size Ratio 2.5
 POST {{param.vision.Normalize}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < ImageNormalization.Infography.4.json
 
 ### Test 5 - rotated - Frame 0 Image outside Max Width or Height or Size Ratio.(4141, 640, 6.4703125)
 POST {{param.vision.Normalize}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < ImageNormalization.Infography.5.json

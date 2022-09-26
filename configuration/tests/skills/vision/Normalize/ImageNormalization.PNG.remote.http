@@ -1,17 +1,17 @@
 ### Ratio > 2:1 image
 POST {{param.vision.Normalize}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < ImageNormalization.PNG.3.json
 
 ### Small image
 POST {{param.vision.Normalize}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < ImageNormalization.PNG.4.json
 
 ### Small b&w image
 POST {{param.vision.Normalize}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < ImageNormalization.PNG.5.json

@@ -580,6 +580,10 @@
                 {
                     "name": "metadata_creation_date",
                     "source": "/document/metadata_creation_date"
+                },
+                {
+                    "name": "metadata_page_count",
+                    "source": "/document/metadata_page_count"
                 }
             ],
             "outputs": [

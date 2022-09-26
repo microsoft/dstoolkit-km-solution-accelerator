@@ -2,9 +2,13 @@
 // Licensed under the MIT License.
 
 using Azure.Storage.Blobs;
+using System.Web;
+using System;
 
 namespace Microsoft.Services.Common
 {
+    // https://learn.microsoft.com/en-us/rest/api/storageservices/naming-and-referencing-containers--blobs--and-metadata
+
     public class BlobHelper
     {
         public static async System.Threading.Tasks.Task<bool> IsBlobExistsAsync(BlobContainerClient container, IDocumentEntity docitem)
@@ -12,16 +16,12 @@ namespace Microsoft.Services.Common
             string blobpath = IDocumentEntity.GetContentBlobPath(docitem, container.Name, container.Uri.ToString());
 
             string blobname = blobpath.Replace(container.Name + "/", "");
-
+          
             BlobClient blob = container.GetBlobClient(blobname);
 
             bool existingblob = await blob.ExistsAsync();
-            if (existingblob)
-            {
-                return true;
-            }
 
-            return false;
+            return existingblob;
         }
         public static async System.Threading.Tasks.Task<bool> IsBlobExistsAsync(BlobContainerClient container, string blobpath)
         {
@@ -30,12 +30,8 @@ namespace Microsoft.Services.Common
             BlobClient blob = container.GetBlobClient(blobname);
 
             bool existingblob = await blob.ExistsAsync();
-            if (existingblob)
-            {
-                return true;
-            }
 
-            return false;
+            return existingblob;
         }
     }
 }

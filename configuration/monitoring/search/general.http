@@ -1,34 +1,34 @@
 ### Services Stats
 GET https://{{param.searchServiceName}}.search.windows.net/servicestats?api-version={{config.searchVersion}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 api-key: {{param.searchServiceKey}}
 
 ### List of indexes
 GET https://{{param.searchServiceName}}.search.windows.net/indexes?api-version={{config.searchVersion}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 api-key: {{param.searchServiceKey}}
 
 ### List of indexers
 GET https://{{param.searchServiceName}}.search.windows.net/indexers?api-version={{config.searchVersion}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 api-key: {{param.searchServiceKey}}
 
 ### List of datasources
 GET https://{{param.searchServiceName}}.search.windows.net/datasources?api-version={{config.searchVersion}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 api-key: {{param.searchServiceKey}}
 
 ### List of skillsets
 GET https://{{param.searchServiceName}}.search.windows.net/skillsets?api-version={{config.searchVersion}}
-Content-Type: application/json  
+content-type: application/json;charset=utf-8  
 api-key: {{param.searchServiceKey}}
 
 ### Index Statistics
 GET https://{{param.searchServiceName}}.search.windows.net/indexes/{{param.indexName}}/stats?api-version={{config.searchVersion}}
-Content-Type: application/json  
+content-type: application/json;charset=utf-8  
 api-key: {{param.searchServiceKey}}
 
 ### Synonyms 
 GET https://{{param.searchServiceName}}.search.windows.net/synonymmaps?api-version={{config.searchVersion}} 
-Content-Type: application/json  
+content-type: application/json;charset=utf-8  
 api-key: {{param.searchServiceKey}}

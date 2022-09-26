@@ -1,6 +1,6 @@
 ### HTML Conversion Test Empty data
 POST http://localhost:7071/textext/HtmlConversion
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -14,7 +14,7 @@ content-type: application/json
 
 ### HTML Conversion 
 POST http://localhost:7071/textext/HtmlConversion
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -30,7 +30,7 @@ content-type: application/json
 }
 ### Document metadata
 POST http://localhost:7071/textext/HtmlConversion
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -48,7 +48,7 @@ content-type: application/json
 
 ### Image Not Found
 POST http://localhost:7071/textext/HtmlConversion
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -65,7 +65,7 @@ content-type: application/json
 
 ### Image Html Conversion from parent
 POST http://localhost:7071/textext/HtmlConversion
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [

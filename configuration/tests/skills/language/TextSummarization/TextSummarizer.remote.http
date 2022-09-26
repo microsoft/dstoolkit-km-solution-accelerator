@@ -1,5 +1,5 @@
 ###
 POST {{param.language.Summarization}}
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 
 < TextSummarization.1.json

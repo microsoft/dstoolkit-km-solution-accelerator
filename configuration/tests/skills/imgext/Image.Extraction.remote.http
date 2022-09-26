@@ -1,5 +1,5 @@
 POST {{param.imgext.DurableImageExtractionSkill_HttpStart}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -15,7 +15,7 @@ content-type: application/json
 }
 ###
 POST {{param.imgext.DurableImageExtractionSkill_HttpStart}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
