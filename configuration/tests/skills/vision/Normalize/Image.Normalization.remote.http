@@ -1,6 +1,6 @@
 ### https://base64-to-image.com/ 
 POST {{param.vision.Normalize}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -21,7 +21,7 @@ content-type: application/json
 
 ### image-00005-00007.png
 POST {{param.imagenormalization.imagenormalization}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -44,7 +44,7 @@ content-type: application/json
 ### image-00005-00005
 
 POST {{param.imagenormalization.imagenormalization}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [
@@ -67,7 +67,7 @@ content-type: application/json
 ### Image1.png
 
 POST {{param.imagenormalization.imagenormalization}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 {
     "values": [

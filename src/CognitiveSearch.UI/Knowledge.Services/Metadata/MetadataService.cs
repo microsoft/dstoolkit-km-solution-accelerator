@@ -8,12 +8,12 @@ namespace Knowledge.Services.Metadata
     using Knowledge.Configuration.AzureStorage;
     using Knowledge.Services;
     using Knowledge.Services.AzureStorage;
+    using Knowledge.Services.Helpers;
     using Microsoft.ApplicationInsights;
     using System;
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
-    using System.Web;
 
     public class MetadataService : AbstractService, IMetadataService
     {
@@ -36,7 +36,7 @@ namespace Knowledge.Services.Metadata
         {
             container = new BlobContainerClient(new Uri(metadataContainerPath), new StorageSharedKeyCredential(config.StorageAccountName, config.StorageAccountKey));
 
-            string blobname = HttpUtility.UrlDecode(documentPath).Replace(this.storageServicePath, "");
+            string blobname = UrlUtility.UrlDecode(documentPath).Replace(this.storageServicePath, "");
 
             BlobClient blob = container.GetBlobClient(blobname+".json");
 

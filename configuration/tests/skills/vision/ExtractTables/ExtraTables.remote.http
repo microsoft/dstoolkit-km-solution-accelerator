@@ -1,5 +1,0 @@
-### Test empty data
-POST {{param.vision.extracttables}}
-content-type: application/json
-
-< ExtractTables.1.json

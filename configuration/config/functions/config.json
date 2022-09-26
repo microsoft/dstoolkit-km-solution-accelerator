@@ -147,7 +147,7 @@
                             "Name": "Describe"
                         },
                         {
-                            "Name": "ExtractTables"
+                            "Name": "AnalyzeDocument"
                         },
                         {
                             "Name": "Normalize"

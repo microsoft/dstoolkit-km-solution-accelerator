@@ -1,6 +1,6 @@
 ###
 POST http://localhost:7071/language/entitylinking
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 minimumPrecision: 0.2
 defaultLanguageCode: en
 type: small
@@ -26,7 +26,7 @@ type: small
 
 ###
 POST http://localhost:7071/language/entitylinking
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 minimumPrecision: 0.2
 defaultLanguageCode: en
 type: big
@@ -44,7 +44,7 @@ type: big
 
 ### Req 4
 POST http://localhost:7071/language/entitylinking
-Content-Type: application/json
+content-type: application/json;charset=utf-8
 minimumPrecision: 0.1
 
 {

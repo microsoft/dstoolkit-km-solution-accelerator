@@ -1,6 +1,6 @@
 ### Spell Checking query (standalone)
 POST https://{{param.searchServiceName}}.search.windows.net/indexes/{{param.indexName}}/docs/search?api-version={{config.searchVersion}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 api-key : {{param.searchServiceQueryKey}}
 
 {

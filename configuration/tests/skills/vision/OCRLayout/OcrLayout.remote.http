@@ -1,18 +1,18 @@
 ### Invalid Body
 POST {{param.vision.azureocrlayout}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < OCRLayout.1.json
 
 ### Empty
 POST {{param.vision.azureocrlayout}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < OCRLayout.2.json
 
 ###
 POST {{param.vision.azureocrlayout}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < OCRLayout.3.json
 

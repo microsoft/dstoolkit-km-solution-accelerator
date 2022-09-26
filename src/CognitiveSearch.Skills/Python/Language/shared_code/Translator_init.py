@@ -20,9 +20,10 @@ MAX_DOC_PER_REQUEST=int(os.environ["TRANSLATOR_MAX_DOC_PER_REQUEST"])
 
 path = '/translate'
 constructed_url = endpoint + path
-available_language = ["af", "sq", "am", "ar", "hy", "as", "az", "bn", "ba", "bs", "bg",
-"yue", "ca", "lzh", "zh-Hans", "zh-Hant", "hr", "cs", "da", "prs", "dv", "nl", "en",
-"et", "fj", "fil", "fi", "fr", "fr-ca", "ka", "de", "el", "gu", "ht", "he", "hi", "mww",
+available_language = ["af", "sq", "am", "ar", "hy", "as", "az", "bn", "ba", "bs", "bg","yue", "ca",
+"zh", "zh_chs", "zh_cht", "lzh", "zh-Hans", "zh-Hant", 
+"hr", "cs", "da", "prs", "dv", "nl", "en","et", "fj", "fil", "fi",
+"fr", "fr-ca", "ka", "de", "el", "gu", "ht", "he", "hi", "mww",
 "hu", "is", "id", "iu", "ga", "it", "ja", "kn", "kk", "km", "tlh-Latn", "tlh-Piqd", "ko",
 "ku", "kmr", "ky", "lo", "lv", "lt", "mk", "mg", "ms", "ml", "mt", "mi", "mr", "mn-Cyrl",
 "mn-Mong", "my", "ne", "nb", "or", "ps", "fa", "pl", "pt", "pt-pt", "pa", "otq", "ro", "ru",
@@ -98,6 +99,19 @@ def transform_value(headers, record):
         toLanguageCode = headers["defaultToLanguageCode"]
         if "toLanguageCode" in data:
             toLanguageCode = data["toLanguageCode"]
+
+        #
+        # Chinese language code normalization
+        # https://learn.microsoft.com/en-us/azure/cognitive-services/language-service/language-detection/language-support
+        # vs
+        # https://learn.microsoft.com/en-us/azure/cognitive-services/translator/language-support
+        #
+        if fromLanguageCode == 'zh':
+            fromLanguageCode = 'lzh'
+        if fromLanguageCode == 'zh_chs':
+            fromLanguageCode = 'zh-Hans'
+        if fromLanguageCode == 'zh_cht':
+            fromLanguageCode = 'zh-Hant'
         
         document['data']['translatedFromLanguageCode'] = fromLanguageCode
         document['data']['translatedToLanguageCode'] = toLanguageCode

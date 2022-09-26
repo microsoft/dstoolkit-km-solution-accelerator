@@ -887,7 +887,7 @@ function Search-Query {
 # https://docs.microsoft.com/en-us/rest/api/searchservice/reset-indexer
 
 # POST https://[service name].search.windows.net/indexers/[indexer name]/reset?api-version=[api-version]  
-#   Content-Type: application/json  
+#   content-type: application/json;charset=utf-8  
 #   api-key: [admin key]
 
 function Reset-SearchIndexer {
@@ -916,7 +916,7 @@ function Reset-SearchIndexer {
 # https://docs.microsoft.com/en-us/rest/api/searchservice/run-indexer
 
 # POST https://[service name].search.windows.net/indexers/[indexer name]/run?api-version=[api-version]  
-#   Content-Type: application/json  
+#   content-type: application/json;charset=utf-8  
 #   api-key: [admin key]
 
 function Start-SearchIndexer {
@@ -1022,7 +1022,7 @@ function Get-SearchServiceDetails() {
 # https://docs.microsoft.com/en-us/rest/api/searchservice/preview-api/reset-documents
 
 # POST https://[service name].search.windows.net/indexers/[indexer name]/resetdocs?api-version=[api-version]
-#     Content-Type: application/json
+#     content-type: application/json;charset=utf-8
 #     api-key: [admin key]
 
 function Reset-SearchDocument {
@@ -1178,6 +1178,7 @@ function New-Functions {
                             --resource-group $plan.ResourceGroup `
                             --os-type Linux `
                             --app-insights $params.appInsightsService `
+                            --https-only true `
                             --runtime python `
                             --runtime-version $functionApp.PythonVersion `
                             --functions-version $functionApp.Version
@@ -1191,6 +1192,7 @@ function New-Functions {
                                 --resource-group $plan.ResourceGroup `
                                 --functions-version $functionApp.Version `
                                 --os-type Linux `
+                                --https-only true `
                                 --app-insights $params.appInsightsService `
                                 --deployment-container-image-name $imageName                        
                         }
@@ -1202,6 +1204,7 @@ function New-Functions {
                                 --functions-version $functionApp.Version `
                                 --os-type Linux `
                                 --app-insights $params.appInsightsService `
+                                --https-only true `
                                 --runtime python `
                                 --runtime-version $functionApp.PythonVersion `
                                 --functions-version $functionApp.Version                            
@@ -1225,6 +1228,7 @@ function New-Functions {
                             --consumption-plan-location $config.location `
                             --resource-group $plan.ResourceGroup `
                             --functions-version $functionApp.Version `
+                            --https-only true `
                             --app-insights $params.appInsightsService
                     }
                     else {
@@ -1248,8 +1252,8 @@ function New-Functions {
             # FTP State to FTPS Only
             az functionapp config set -g $plan.ResourceGroup -n $functionApp.Name --ftps-state FtpsOnly
 
-            # HTTPS Only flag
-            az functionapp update  -g $plan.ResourceGroup -n $functionApp.Name --set httpsOnly=true        
+            # HTTPS Only flag => now integrated in the create command
+            # az functionapp update  -g $plan.ResourceGroup -n $functionApp.Name --set httpsOnly=true        
         }
     }
 }
@@ -1272,7 +1276,7 @@ function Build-Functions () {
             # Windows
             if (-not $plan.IsLinux) {
                 if ( -not $LinuxOnly ) {
-                    Write-Host ("Building Windows Function App" + $functionApp.Name) -ForegroundColor DarkCyan
+                    Write-Host ("Building Windows Function App " + $functionApp.Name) -ForegroundColor DarkCyan
 
                     # Build the configured functions
                     Push-Location (join-path $global:workpath ".." $functionApp.Path)
@@ -1546,6 +1550,7 @@ function New-WebApps {
                         az webapp create --name $webApp.Name `
                             --plan $plan.Name `
                             --resource-group $plan.ResourceGroup `
+                            --https-only true `
                             --deployment-container-image-name $imageName
                     
                         $storekey = $params.techStorageConnectionString
@@ -1566,11 +1571,13 @@ function New-WebApps {
                             --name $webApp.Name `
                             --plan $plan.Name `
                             --resource-group $plan.ResourceGroup `
+                            --https-only true `
                             --runtime 'dotnet:6'
 
                         if ($config.stagingUIEnabled) {
                             az webapp deployment slot create --name $webApp.Name `
                                 --resource-group $plan.ResourceGroup `
+                                --https-only true `
                                 --slot staging `
                                 --configuration-source $webApp.Name    
                         }
@@ -1584,7 +1591,7 @@ function New-WebApps {
                         az webapp config set -g $plan.ResourceGroup -n $webApp.Name --use-32bit-worker-process false --slot staging
                         az webapp identity assign -g $plan.ResourceGroup -n $webApp.Name --slot staging
                         az webapp config set -g $plan.ResourceGroup -n $webApp.Name --ftps-state FtpsOnly --slot staging
-                        az webapp update  -g $plan.ResourceGroup -n $webApp.Name --set httpsOnly=true --slot staging    
+                        # az webapp update  -g $plan.ResourceGroup -n $webApp.Name --set httpsOnly=true --slot staging    
                     }
 
                     # App Service Logging
@@ -1603,8 +1610,8 @@ function New-WebApps {
             # FTP State to FTPS Only
             az webapp config set -g $plan.ResourceGroup -n $webApp.Name --ftps-state FtpsOnly
 
-            # HTTPS Only flag
-            az webapp update  -g $plan.ResourceGroup -n $webApp.Name --set httpsOnly=true
+            # HTTPS Only flag => integrated in the create command
+            # az webapp update  -g $plan.ResourceGroup -n $webApp.Name --set httpsOnly=true
         }
     }
 }

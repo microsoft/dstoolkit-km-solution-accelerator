@@ -1,6 +1,6 @@
 ### Test TIFF 6 (small)
 POST {{param.vision.Normalize}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < Image.TIFF.1.json
 

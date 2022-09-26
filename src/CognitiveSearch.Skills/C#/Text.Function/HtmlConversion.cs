@@ -72,7 +72,7 @@ namespace Text.HTML
             };
 
             // Find the right source container 
-            BlobUriBuilder blobUriBuilder = new(new Uri(HttpUtility.UrlDecode(docitem.WebUrl)));
+            BlobUriBuilder blobUriBuilder = new(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
 
             containers.TryGetValue(blobUriBuilder.BlobContainerName, out BlobContainerClient container);
 
@@ -102,7 +102,7 @@ namespace Text.HTML
                         string parentUrl = (string)inRecord.Data["imageparenturl"];
                         docitem.ParentUrl = IHelpers.Base64Decode(parentUrl);
 
-                        BlobUriBuilder parentBlobUriBuilder = new BlobUriBuilder(new Uri(HttpUtility.UrlDecode(docitem.ParentUrl)));
+                        BlobUriBuilder parentBlobUriBuilder = new BlobUriBuilder(new Uri(UrlUtility.UrlDecode(docitem.ParentUrl)));
 
                         containers.TryGetValue(parentBlobUriBuilder.BlobContainerName, out BlobContainerClient parentContainer);
 
@@ -150,7 +150,7 @@ namespace Text.HTML
                                     {
                                         HttpRequestMessage tikarequest = new HttpRequestMessage(HttpMethod.Put, IConstants.tikaEndpoint + "/tika");
 
-                                        tikarequest.Headers.Add("Accept", "text/html");
+                                        tikarequest.Headers.Add("Accept", "text/html;charset=utf-8");
                                         tikarequest.Headers.Add("User-Agent", IConstants.UserAgent);
 
                                         tikarequest.Content = new ByteArrayContent(mstream.ToArray());

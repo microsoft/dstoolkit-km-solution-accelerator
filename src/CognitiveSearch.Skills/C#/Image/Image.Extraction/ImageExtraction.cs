@@ -68,7 +68,7 @@ namespace Image.Commons.Extraction
             MemoryStream mstream = new MemoryStream();
 
             // Find the container from the docitem url
-            BlobUriBuilder blobUriBuilder = new BlobUriBuilder(new Uri(HttpUtility.UrlDecode(docitem.WebUrl)));
+            BlobUriBuilder blobUriBuilder = new BlobUriBuilder(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
 
             containers.TryGetValue(blobUriBuilder.BlobContainerName, out BlobContainerClient container);
 
@@ -220,7 +220,7 @@ namespace Image.Commons.Extraction
                 }
                 else
                 {
-                    throw new FileNotFoundException($"Blob not found {docitem.WebUrl}. Sending to retry.");
+                    throw new FileNotFoundException($"Blob not found {docitem.WebUrl} - {container.Uri.ToString()}. Sending to retry.");
                 }
             }
 

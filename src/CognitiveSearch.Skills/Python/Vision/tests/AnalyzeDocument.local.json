@@ -1,0 +1,11 @@
+{
+    "values": [
+        {
+            "recordId": "0",
+            "data": {
+                "formUrl":"https://raw.githubusercontent.com/Azure-Samples/cognitive-services-REST-api-samples/master/curl/form-recognizer/sample-layout.pdf",
+                "formSasToken":""
+            }
+        }
+    ]
+}

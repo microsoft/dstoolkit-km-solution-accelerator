@@ -1,12 +1,54 @@
 # Table of Functions/Skills 
 
+- [Analyze Document](#analyze-document)
 - [Analyze Image](#analyze-image)  
 - [Analyze Image per Domain](#analyze-image-domain)
 - [Describe Image](#describe-image)
-- [Extract Tables](#extract-tables)
 - [Image Normalization](#image-normalization)
 - [Read (OCR)](#read)
 - [OCRLayout for reading order](#ocrlayout)
+
+
+# Analyze Document
+
+This function is targeting [Azure Applied AI Service - Form Recognizer](https://docs.microsoft.com/en-us/azure/applied-ai-services/form-recognizer/overview?tabs=v3-0)
+
+It uses the layout model to get the tabulars information out of each page/slide/image.
+
+_Skill definition_
+```json
+{
+    "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+    "name": "TablesExtraction",
+    "description": "Extracts fields from a form using a pre-trained form recognition model",
+    "uri": "{{param.vision.AnalyzeDocument}}",
+    "httpMethod": "POST",
+    "timeout": "PT3M",
+    "context": "/document",
+    "batchSize": 1,
+    "inputs": [
+        {
+            "name": "formUrl",
+            "source": "/document/metadata_storage_path"
+        },
+        {
+            "name": "formSasToken",
+            "source": "/document/metadata_storage_sas_token"
+        }
+    ],
+    "outputs": [
+        {
+            "name": "tables",
+            "targetName": "tables"
+        },
+        {
+            "name": "tables_count",
+            "targetName": "tables_count"
+        }
+    ]
+},
+```
+
 
 # Analyze Image
 
@@ -21,7 +63,7 @@ This endpoint is used to call the Image Analysis using the Computer Vision Azure
 The structure of the request is the following:
 
 ```https
-content-type: application/json
+content-type: application/json;charset=utf-8
 defaultLanguageCode: A string indicating the language to return. The service returns recognition results in a specified language. If this parameter is not specified, the default value is "en".
 visualFeatures: An array of strings indicating the visual feature types to return. Valid visual feature types include:
 - adult - detects if the image is pornographic in nature (depicts nudity or a sex act), or is gory (depicts extreme violence or blood). Sexually suggestive content (also known as racy content) is also detected.
@@ -146,46 +188,6 @@ __Computer Vision can analyze an image and generate a human-readable phrase that
 __At this time, English is the only supported language for image description.__
 
 While we provide the skill as separated function for convenience, image description feature is part of the [Image Analysis](#image-analysis) output. 
-
-# Extract Tables
-
-This function is targeting [Azure Applied AI Service - Form Recognizer](https://docs.microsoft.com/en-us/azure/applied-ai-services/form-recognizer/overview?tabs=v3-0)
-
-It uses the layout model to get the tabulars information out of each page/slide/image.
-
-_Skill definition_
-```json
-{
-    "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
-    "name": "TablesExtraction",
-    "description": "Extracts fields from a form using a pre-trained form recognition model",
-    "uri": "{{param.vision.ExtractTables}}",
-    "httpMethod": "POST",
-    "timeout": "PT3M",
-    "context": "/document",
-    "batchSize": 1,
-    "inputs": [
-        {
-            "name": "formUrl",
-            "source": "/document/metadata_storage_path"
-        },
-        {
-            "name": "formSasToken",
-            "source": "/document/metadata_storage_sas_token"
-        }
-    ],
-    "outputs": [
-        {
-            "name": "tables",
-            "targetName": "tables"
-        },
-        {
-            "name": "tables_count",
-            "targetName": "tables_count"
-        }
-    ]
-},
-```
 
 # Image Normalization 
 

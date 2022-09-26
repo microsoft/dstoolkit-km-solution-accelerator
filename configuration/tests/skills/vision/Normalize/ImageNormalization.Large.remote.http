@@ -1,5 +1,5 @@
 ### Frame 
 POST {{param.vision.Normalize}}
-content-type: application/json
+content-type: application/json;charset=utf-8
 
 < ImageNormalization.Large.2.json
