@@ -9,18 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="appsettings.Development.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="appsettings.Development.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\.dockerignore" Link=".dockerignore">
       <DependentUpon>$(DockerDefaultDockerfile)</DependentUpon>
     </None>
@@ -49,5 +37,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Knowledge.Services\Knowledge.Services.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Content Update="appsettings.*.json" CopyToPublishDirectory="Never" />
+  </ItemGroup>
 </Project>
