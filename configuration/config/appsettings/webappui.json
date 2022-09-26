@@ -371,7 +371,7 @@
     "slotSetting": false
   },
   {
-    "name": "SemanticSearchConfig:semanticSearchEnabled",
+    "name": "SemanticSearchConfig:IsEnabled",
     "value": "{{config.semanticSearchEnabled}}",
     "slotSetting": false
   },
