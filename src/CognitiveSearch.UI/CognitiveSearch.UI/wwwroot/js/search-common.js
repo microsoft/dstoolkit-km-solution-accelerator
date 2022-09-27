@@ -824,12 +824,31 @@ Microsoft.Search.Results = {
             }
 
             documentHtml += '<div class="d-flex align-items-center">'
-            documentHtml += '<div class="col-md-11">'
+
+            documentHtml += '<div class="col-md-10">'
             documentHtml += Microsoft.Utils.GetDocumentTitle(docresult);
             documentHtml += '</div>';
+
+            // Language
+            documentHtml += '<div class="col-md-1">'
+            documentHtml += '<span class="badge rounded-pill bg-dark text-uppercase me-1" title="Detected language is '+docresult.language+'">'+docresult.language+'</span>';
+            
+            if (docresult.page_count) {
+                var pagetitle = 'Document has '+docresult.page_count+' slides or pages.';
+                if (docresult.page_count > 0) {
+                    documentHtml += '<span class="badge rounded-pill bg-success" title="'+pagetitle+'">'+docresult.page_count+'</span>';
+                }
+                else { 
+                    documentHtml += '<span class="badge rounded-pill bg-danger" title="'+pagetitle+'">0</span>';
+                }
+            }
+            documentHtml += '</div>';
+
+
             documentHtml += '<div class="col-md-1">'
             documentHtml += Microsoft.Search.Actions.renderActionsAsMenu(docresult);
             documentHtml += '</div>';
+
             documentHtml += '</div>'
 
             documentHtml += Microsoft.Utils.GetModificationLine(docresult);
