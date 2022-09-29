@@ -115,45 +115,48 @@ def transform_value(headers, record):
         
         document['data']['translatedFromLanguageCode'] = fromLanguageCode
         document['data']['translatedToLanguageCode'] = toLanguageCode
-        
-        if fromLanguageCode != toLanguageCode:
-            params = {
-                'api-version': version,
-                'from': fromLanguageCode,
-                'to': toLanguageCode
-            }
-            headers_translator = {
-                'Ocp-Apim-Subscription-Key': subscription_key,
-                'Ocp-Apim-Subscription-Region': location,
-                'Content-type': 'application/json',
-                'X-ClientTraceId': str(uuid.uuid4())
-            }
 
-            logging.info(f'Translation url {constructed_url}')
-            logging.info(f'Translation params {params}')
-            logging.info(f'Translation headers {headers_translator}')
+        if "text" in data:
+            if fromLanguageCode != toLanguageCode:
+                params = {
+                    'api-version': version,
+                    'from': fromLanguageCode,
+                    'to': toLanguageCode
+                }
+                headers_translator = {
+                    'Ocp-Apim-Subscription-Key': subscription_key,
+                    'Ocp-Apim-Subscription-Region': location,
+                    'Content-type': 'application/json',
+                    'X-ClientTraceId': str(uuid.uuid4())
+                }
 
-            # https://docs.microsoft.com/en-us/azure/cognitive-services/translator/request-limits
-            text = data['text']
-            chunks = [text[i:i+MAX_CHARS_PER_DOC] for i in range(0, len(text), MAX_CHARS_PER_DOC)]
+                logging.info(f'Translation url {constructed_url}')
+                logging.info(f'Translation params {params}')
+                logging.info(f'Translation headers {headers_translator}')
 
-            # If the number of chunks is greater than the maximum allowed, then ignore the rest of it.
-            if len(chunks) > MAX_DOC_PER_REQUEST:
-                chunks=chunks[:MAX_DOC_PER_REQUEST]
+                # https://docs.microsoft.com/en-us/azure/cognitive-services/translator/request-limits
+                text = data['text']
+                chunks = [text[i:i+MAX_CHARS_PER_DOC] for i in range(0, len(text), MAX_CHARS_PER_DOC)]
 
-            response_text = ''
-            for chunk in chunks:
-                body = [{'text': chunk}]
-                request = requests.post(constructed_url, params=params, headers=headers_translator, json=body)
-                response = request.json()
-                if request.status_code == 200:
-                    response_text += response[0]['translations'][0]['text']
-                else:
-                    document['errors'] = [{"message": request.text}]
+                # If the number of chunks is greater than the maximum allowed, then ignore the rest of it.
+                if len(chunks) > MAX_DOC_PER_REQUEST:
+                    chunks=chunks[:MAX_DOC_PER_REQUEST]
 
-            document['data']['translatedText'] = response_text
+                response_text = ''
+                for chunk in chunks:
+                    body = [{'text': chunk}]
+                    request = requests.post(constructed_url, params=params, headers=headers_translator, json=body)
+                    response = request.json()
+                    if request.status_code == 200:
+                        response_text += response[0]['translations'][0]['text']
+                    else:
+                        document['errors'] = [{"message": request.text}]
+
+                document['data']['translatedText'] = response_text
+            else:
+                document['data']['translatedText'] = data['text']
         else:
-            document['data']['translatedText'] = data['text']
+            document['data']['translatedText'] = ''
 
     except KeyError as error:
         return (
