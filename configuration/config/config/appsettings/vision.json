@@ -1,0 +1,37 @@
+[
+    {
+        "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey/)",
+        "slotSetting": true
+    },
+    {
+        "name": "AzureWebJobsStorage",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString/)",
+        "slotSetting": false
+    },
+    {
+        "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+        "value": "false",
+        "slotSetting": false
+    },
+    {
+        "name": "FORMS_RECOGNIZER_ENDPOINT",
+        "value": "https://{{config.location}}.api.cognitive.microsoft.com",
+        "slotSetting": false
+    },
+    {
+        "name": "FORMS_RECOGNIZER_KEY",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey/)",
+        "slotSetting": false
+    },
+    {
+        "name": "COMPUTER_VISION_ENDPOINT",
+        "value": "https://{{config.location}}.api.cognitive.microsoft.com",
+        "slotSetting": false
+    },
+    {
+        "name": "COMPUTER_VISION_KEY",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey/)",
+        "slotSetting": false
+    }
+]

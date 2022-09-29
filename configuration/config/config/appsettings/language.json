@@ -1,0 +1,112 @@
+[
+    {
+        "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey/)",
+        "slotSetting": true
+    },
+    {
+        "name": "AzureWebJobsStorage",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString/)",
+        "slotSetting": false
+    },
+    {
+        "name": "BLOB_CONNECT_STRING",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/storageConnectionString/)",
+        "slotSetting": false
+    },
+    {
+        "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+        "value": "false",
+        "slotSetting": false
+    },
+    {
+        "name": "TEXT_ANALYTICS_ENDPOINT",
+        "value": "https://{{config.location}}.api.cognitive.microsoft.com",
+        "slotSetting": false
+    },
+    {
+        "name": "TEXT_ANALYTICS_KEY",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey/)",
+        "slotSetting": false
+    },
+    {
+        "name": "TRANSLATOR_ENDPOINT",
+        "value": "https://api.cognitive.microsofttranslator.com",
+        "slotSetting": false
+    },
+    {
+        "name": "TRANSLATOR_KEY",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogServicesBundleKey/)",
+        "slotSetting": false
+    },
+    {
+        "name": "TRANSLATOR_LOCATION",
+        "value": "{{config.location}}",
+        "slotSetting": false
+    },
+    {
+        "name": "TRANSLATOR_VERSION",
+        "value": "3.0",
+        "slotSetting": false
+    },
+    {
+        "name": "TRANSLATOR_MAX_CHARS_PER_DOC",
+        "value": "10000",
+        "slotSetting": false
+    },
+    {
+        "name": "TRANSLATOR_MAX_DOC_PER_REQUEST",
+        "value": "5",
+        "slotSetting": false
+    },
+    {
+        "name": "MODEL_SIZE",
+        "value": "lg",
+        "slotSetting": false
+    },
+    {
+        "name": "StorageAccountName",
+        "value": "{{param.dataStorageAccountName}}",
+        "slotSetting": false
+    },
+    {
+        "name": "StorageKey",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/storageAccountKey/)",
+        "slotSetting": false
+    },
+    {
+        "name": "MAX_CHARS_PER_DOC",
+        "value": "5120",
+        "slotSetting": false
+    },
+    {
+        "name": "EL_MAX_DOC_PER_REQUEST",
+        "value": "5",
+        "slotSetting": false
+    },
+    {
+        "name": "NER_MAX_DOC_PER_REQUEST",
+        "value": "5",
+        "slotSetting": false
+    },
+    {
+        "name": "KPE_MAX_DOC_PER_REQUEST",
+        "value": "10",
+        "slotSetting": false
+    },
+    {
+        "name": "LD_MAX_DOC_PER_REQUEST",
+        "value": "1000",
+        "slotSetting": false
+    },
+    {
+        "name": "TS_MAX_DOC_PER_REQUEST",
+        "value": "25",
+        "slotSetting": false
+    },
+    {
+        "name": "TS_MODEL_VERSION",
+        "value": "v3.2-preview.2",
+        "slotSetting": false
+    }
+]

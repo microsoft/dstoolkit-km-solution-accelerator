@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: mslanguage-app
+  labels:
+    # any Pods with matching labels are included in this Daemon Set
+    app: kubernetes-series
+    tier: monitor
+spec:
+  selector:
+    # Pods will match with the following labels
+    matchLabels:
+      name: mslanguage-app
+  template:
+    metadata:
+      labels:
+        name: mslanguage-app
+    spec:
+      containers:
+      - name: mslanguage-app
+        image: mcr.microsoft.com/azure-cognitive-services/textanalytics/language:latest
+        ports:
+        - containerPort: 5000
+        args: [
+          "Eula=accept",
+          "Billing=https://{{param.cogServiceLanguage}}.cognitiveservices.azure.com/",
+          "ApiKey={{param.cogServiceLanguageKey}}",
+          "ApplicationInsights:InstrumentationKey={{param.appInsightsServiceKey}}"
+        ]
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2000m
+            memory: 8Gi
+      nodeSelector:
+        agentpool: poolcogs
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: mslanguage
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5000
+  selector:
+    name: mslanguage-app

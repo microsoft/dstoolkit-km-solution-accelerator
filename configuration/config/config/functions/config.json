@@ -1,0 +1,231 @@
+    {
+        "GroupId":"WebApps",
+        "AppPlans": [
+            {
+                "Id": "skillsplan",
+                "Name": "{{config.name}}skillsplan",
+                "Sku": "{{param.pricing.premium}}",
+                "ResourceGroup": "{{config.resourceGroupName}}",
+                "IsLinux": false,
+                "ipaddress":"172.17.4.0/28",
+                "IsActive":false,
+                "FunctionApps": [
+                    {
+                        "Id": "geolocations",
+                        "Name": "{{config.name}}geolocations",
+                        "Path": "src\\CognitiveSearch.Skills\\C#\\Geo\\GeoLocations",
+                        "Version": 4,
+                        "Functions": [
+                            {
+                                "Name": "locations"
+                            }               
+                        ],
+                        "VNetPrivateEndpoint": false,   
+                        "VNetIntegration": false,
+                        "AccessIPRestriction":false,
+                        "AccessSubnetRestriction":false
+                    },
+                    {
+                        "Id": "text",
+                        "Name": "{{config.name}}text",
+                        "Path": "src\\CognitiveSearch.Skills\\C#\\Text.Function",
+                        "Version": 4,
+                        "Functions": [
+                            {
+                                "Name": "TextMesh"
+                            },
+                            {
+                                "Name": "TextMerge"
+                            },
+                            {
+                                "Name": "TranslationMerge"
+                            },
+                            {
+                                "Name": "HtmlConversion"
+                            }
+                        ],
+                        "VNetPrivateEndpoint": false,   
+                        "VNetIntegration": false,
+                        "AccessIPRestriction":false,
+                        "AccessSubnetRestriction":false
+                    },
+                    {
+                        "Id": "entities",
+                        "Name": "{{config.name}}entities",
+                        "Path": "src\\CognitiveSearch.Skills\\C#\\Entities.Function",
+                        "Version": 4,
+                        "Functions": [
+                            {
+                                "Name": "concatenation"
+                            },
+                            {
+                                "Name": "deduplication"
+                            },
+                            {
+                                "Name": "keyphrases-cleansing"
+                            }
+                        ],
+                        "VNetPrivateEndpoint": false,   
+                        "VNetIntegration": false,
+                        "AccessIPRestriction":false,
+                        "AccessSubnetRestriction":false
+                    }
+                ]
+            },
+            {
+                "Id": "imageplan",
+                "Name": "{{config.name}}imageplan",
+                "Sku": "{{param.pricing.premium}}",
+                "ResourceGroup": "{{config.resourceGroupName}}",
+                "IsLinux": false,
+                "IsActive":false,
+                "ipaddress":"172.17.5.0/28",
+                "FunctionApps": [
+                    {
+                        "Id": "imgext",
+                        "Name": "{{config.name}}imgext",
+                        "Path": "src\\CognitiveSearch.Skills\\C#\\Image\\Image.Extraction",
+                        "Version": 4,
+                        "Functions": [
+                            {
+                                "Name": "DurableImageExtractionSkill_HttpStart"
+                            }
+                        ],
+                        "VNetPrivateEndpoint": false,   
+                        "VNetIntegration": false,
+                        "AccessIPRestriction":false,
+                        "AccessSubnetRestriction":false
+                    }
+                ]
+            },
+            {
+                "Id": "metadataplan",
+                "Name": "{{config.name}}metadataplan",
+                "Sku": "{{param.pricing.premium}}",
+                "ResourceGroup": "{{config.resourceGroupName}}",
+                "IsLinux": false,
+                "IsActive":false,
+                "ipaddress":"172.17.6.0/28",
+                "FunctionApps": [
+                    {
+                        "Id": "mtda",
+                        "Name": "{{config.name}}mtda",
+                        "Path": "src\\CognitiveSearch.Skills\\C#\\Metadata\\Assignment",
+                        "Version": 4,
+                        "VNetPrivateEndpoint": false,   
+                        "VNetIntegration": false,
+                        "AccessIPRestriction":false,
+                        "AccessSubnetRestriction":false,
+                        "Functions": [
+                            {
+                                "Name": "Assign"
+                            }
+                        ]
+                    },
+                    {
+                        "Id": "mtdext",
+                        "Name": "{{config.name}}mtdext",
+                        "Path": "src\\CognitiveSearch.Skills\\C#\\Metadata\\Extraction",
+                        "Version": 4,
+                        "VNetPrivateEndpoint": false,   
+                        "VNetIntegration": false,
+                        "AccessIPRestriction":false,
+                        "AccessSubnetRestriction":false,
+                        "Functions": [
+                            {
+                                "Name": "MetadataExtractionSkill"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "Id": "visionplan",
+                "Name": "{{config.name}}visionplan",
+                "Sku": "{{param.pricing.premium}}",
+                "ResourceGroup": "{{config.resourceGroupName}}",
+                "IsLinux": false,
+                "IsActive":false,
+                "ipaddress":"172.17.7.0/28",
+                "FunctionApps": [
+                    {
+                        "Id": "vision",
+                        "Name": "{{config.name}}vision",
+                        "Path": "src\\CognitiveSearch.Skills\\Python\\Vision",
+                        "Version": 4,
+                        "PythonVersion": 3.9,
+                        "VNetPrivateEndpoint": false,   
+                        "VNetIntegration": false,
+                        "AccessIPRestriction":false,
+                        "AccessSubnetRestriction":false,
+                        "Functions": [
+                            {
+                                "Name": "Analyze"
+                            },
+                            {
+                                "Name": "AnalyzeDomain"
+                            },
+                            {
+                                "Name": "azureocrlayout"
+                            },
+                            {
+                                "Name": "Describe"
+                            },
+                            {
+                                "Name": "ExtractTables"
+                            },
+                            {
+                                "Name": "Normalize"
+                            },
+                            {
+                                "Name": "Read"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "Id": "languageplan",
+                "Name": "{{config.name}}languageplan",
+                "Sku": "{{param.pricing.premium}}",
+                "ResourceGroup": "{{config.resourceGroupName}}",
+                "IsLinux": false,
+                "ipaddress":"172.17.8.0/28",
+                "IsActive":false,
+                "FunctionApps": [
+                    {
+                        "Id": "language",
+                        "Name": "{{config.name}}language",
+                        "Version": 4,
+                        "PythonVersion": 3.9,
+                        "Path": "src\\CognitiveSearch.Skills\\Python\\Language",
+                        "Functions": [
+                            {
+                                "Name": "EntityLinking"
+                            },
+                            {
+                                "Name": "EntityRecognition"
+                            },
+                            {
+                                "Name": "KeyPhrasesExtraction"
+                            },
+                            {
+                                "Name": "LanguageDetection"
+                            },
+                            {
+                                "Name": "Summarization"
+                            },
+                            {
+                                "Name": "Translator"
+                            }
+                        ],
+                        "VNetPrivateEndpoint": false,   
+                        "VNetIntegration": false,
+                        "AccessIPRestriction":false,
+                        "AccessSubnetRestriction":false
+                    }
+                ]
+            }
+            
+        ]
+    }

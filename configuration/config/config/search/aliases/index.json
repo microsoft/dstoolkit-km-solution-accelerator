@@ -1,0 +1,4 @@
+{
+    "name": "index",
+    "indexes": ["{{param.indexName}}"]
+}

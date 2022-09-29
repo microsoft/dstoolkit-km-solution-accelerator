@@ -1,0 +1,46 @@
+{
+    "GroupId":"WebApps",
+    "AppPlans": [
+        {
+            "Name": "{{config.name}}uiplan",
+            "Sku": "{{param.pricing.premium}}",
+            "ResourceGroup":"{{config.ResourceGroupName}}",
+            "IsLinux":false,
+            "IsActive":false,
+            "ipaddress":"172.17.9.0/28",
+            "WebApps": [
+                {
+                    "Id":"webappui",
+                    "Name": "{{config.name}}ui",
+                    "Path": "src\\CognitiveSearch.UI\\CognitiveSearch.UI",
+                    "VNetPrivateEndpoint":false,
+                    "VNetIntegration":false,
+                    "AccessIPRestriction":false,
+                    "AccessSubnetRestriction":false,
+                    "slots":[
+                        "staging"
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "{{config.name}}tikaplan",
+            "Sku": "{{param.pricing.premium}}",
+            "ResourceGroup":"{{config.ResourceGroupName}}",
+            "IsLinux":false,
+            "IsActive":false,
+            "ipaddress":"172.17.10.0/28",
+            "WebApps": [
+                {
+                    "Id":"tikaserver",
+                    "Name": "{{config.name}}tikaserver",
+                    "Image": "microsoft/tikaserver:latest",
+                    "VNetPrivateEndpoint":false,
+                    "VNetIntegration":false,
+                    "AccessIPRestriction":false,
+                    "AccessSubnetRestriction":false
+                }
+            ]
+        }
+    ]
+}

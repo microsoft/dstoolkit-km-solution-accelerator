@@ -1,0 +1,14 @@
+{
+    "ServiceEndPoint":"Microsoft.KeyVault",
+    "GroupId":"KeyValut",
+    "Apptype":"KeyVault",
+    "Items": [
+        {
+            "Name": "{{config.name}}kv",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "VNetPrivateEndpoint": false,
+            "EnablePrivateAccess":false,
+            "AddExistingSubnets":false
+        }
+    ]
+}

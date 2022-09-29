@@ -1,0 +1,15 @@
+{
+    "GroupId":"Search",
+    "ServiceEndPoint":"Microsoft.Search",
+    "Apptype":"Search",
+    "Items": [
+        {
+            "Name": "{{config.name}}search",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "VNetPrivateEndpoint": false,
+            "EnablePrivateAccess":false,
+            "AddIPAddressRule":false,
+            "AddPrivateSharedLink":true
+        }
+    ]
+}

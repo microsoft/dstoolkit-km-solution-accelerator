@@ -1,0 +1,16 @@
+{
+    "name": "{{param.documentsDataSource}}",
+    "description": "Documents Storage datasource",
+    "type": "adlsgen2",
+    "credentials": {
+        "connectionString": "{{param.storageConnectionString}}"
+    },
+    "container": {
+        "name": "{{param.documentsStorageContainerName}}"
+    },
+    "dataDeletionDetectionPolicy" : {
+        "@odata.type" :"#Microsoft.Azure.Search.SoftDeleteColumnDeletionDetectionPolicy",
+        "softDeleteColumnName" : "IsDeleted",
+        "softDeleteMarkerValue" : "true"
+    }
+}

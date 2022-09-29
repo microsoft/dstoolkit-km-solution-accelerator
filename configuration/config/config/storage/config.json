@@ -1,0 +1,23 @@
+{
+    "ServiceEndPoint":"Microsoft.Storage",
+    "GroupId":"Blob",
+    "Apptype":"Storage",
+    "Items": [
+        {
+            "Name": "{{config.name}}data",
+            "Accountkind": "StorageV2",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "VNetPrivateEndpoint": false,
+            "EnablePrivateAccess":false,
+            "AddExistingSubnets":false
+        },
+        {
+            "Name": "{{config.name}}tech",
+            "Accountkind": "StorageV2",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "VNetPrivateEndpoint": false,
+            "EnablePrivateAccess":false,
+            "AddExistingSubnets":false
+        }
+    ]
+}

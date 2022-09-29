@@ -1,0 +1,241 @@
+﻿{
+  "name": "{{param.documentsIndexer}}",
+  "dataSourceName": "{{param.documentsDataSource}}",
+  "targetIndexName": "{{param.indexName}}",
+  "skillsetName": "{{param.documentsSkillSet}}",
+  "disabled": null,
+  "schedule": {
+    "interval": "PT2H5M"
+  },
+  "parameters": {
+    "batchSize": 5,
+    "maxFailedItems": -1,
+    "maxFailedItemsPerBatch": -1,
+    "base64EncodeKeys": null,
+    "configuration": {
+      "dataToExtract": "contentAndMetadata",
+      "imageAction": "none",
+      "failOnUnsupportedContentType": false,
+      "failOnUnprocessableDocument": false,
+      "allowSkillsetToReadFileData": false,
+      "indexStorageMetadataOnlyForOversizedDocuments": true,
+      "excludedFileNameExtensions": ".jpg,.jpeg,.png,.bmp,.tiff,.tif,.gif,.wmv,.mp4,.zip,.gz,.7z,.rar,.sitx,.db,.bat,.csv,.yxmd,.bak,.pbix,.pbiviz",
+      "executionEnvironment": "{{config.searchIndexerEnvironment}}"
+    }
+  },
+  "fieldMappings": [
+    {
+      "sourceFieldName": "metadata_storage_path",
+      "targetFieldName": "index_key",
+      "mappingFunction": {
+        "name": "base64Encode"
+      }
+    },
+    {
+      "sourceFieldName": "metadata_storage_path",
+      "targetFieldName": "document_id",
+      "mappingFunction": {
+        "name": "base64Encode",
+        "parameters": {
+          "useHttpServerUtilityUrlTokenEncode": false
+        }
+      }
+    },
+    {
+      "sourceFieldName": "metadata_storage_path",
+      "targetFieldName": "metadata_storage_path"
+    },
+    {
+      "sourceFieldName": "metadata_storage_path",
+      "targetFieldName": "document_url"
+    },
+    {
+      "sourceFieldName": "metadata_storage_name",
+      "targetFieldName": "metadata_storage_name",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "metadata_storage_name",
+      "targetFieldName": "document_filename",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "metadata_storage_last_modified",
+      "targetFieldName": "source_last_modified",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "metadata_description",
+      "targetFieldName": "description",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "metadata_storage_content_type",
+      "targetFieldName": "content_type",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "metadata_page_count",
+      "targetFieldName": "page_count",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "metadata_slide_count",
+      "targetFieldName": "slide_count",
+      "mappingFunction": null
+    }
+    ],
+  "outputFieldMappings": [
+    {
+      "sourceFieldName": "/document/skill_metadata/source_processing_date",
+      "targetFieldName": "source_processing_date"
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/document_embedded",
+      "targetFieldName": "document_embedded"
+    },
+    {
+      "sourceFieldName": "/document/organizations",
+      "targetFieldName": "organizations",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/persons",
+      "targetFieldName": "persons",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/locations",
+      "targetFieldName": "locations",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/keyPhrases",
+      "targetFieldName": "key_phrases",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/merged_translation",
+      "targetFieldName": "translated_text",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/translated_title",
+      "targetFieldName": "translated_title",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/pages/*/paragraphs/*",
+      "targetFieldName": "paragraphs",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/links",
+      "targetFieldName": "links",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/pages/*/emails/*",
+      "targetFieldName": "emails",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/language",
+      "targetFieldName": "language",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/acronyms",
+      "targetFieldName": "acronyms",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/trimmed_content",
+      "targetFieldName": "content",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/countries",
+      "targetFieldName": "countries"
+    },
+    {
+      "sourceFieldName": "/document/cities",
+      "targetFieldName": "cities"
+    },
+    {
+      "sourceFieldName": "/document/capitals",
+      "targetFieldName": "capitals"
+    },
+    {
+      "sourceFieldName": "/document/topics",
+      "targetFieldName": "topics",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/summary/*/text",
+      "targetFieldName": "summary",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/restricted",
+      "targetFieldName": "restricted",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/permissions",
+      "targetFieldName": "permissions",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/user_categories",
+      "targetFieldName": "user_categories",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/user_tags",
+      "targetFieldName": "user_tags",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/user_keywords",
+      "targetFieldName": "user_keywords",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/content_source",
+      "targetFieldName": "content_source",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/title",
+      "targetFieldName": "title",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/authors",
+      "targetFieldName": "authors",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/creation_date",
+      "targetFieldName": "creation_date",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/last_modified",
+      "targetFieldName": "last_modified",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/content_group",
+      "targetFieldName": "content_group",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/page_number",
+      "targetFieldName": "page_number",
+      "mappingFunction": null
+    }
+  ],
+  "encryptionKey": null
+}
