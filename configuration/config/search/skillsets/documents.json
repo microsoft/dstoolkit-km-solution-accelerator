@@ -24,6 +24,10 @@
                     "targetName": "trimmed_content"
                 },
                 {
+                    "name": "trimmed_content_size",
+                    "targetName": "trimmed_content_size"
+                },
+                {
                     "name": "trimmed_content_lines_count",
                     "targetName": "trimmed_content_lines_count"
                 },

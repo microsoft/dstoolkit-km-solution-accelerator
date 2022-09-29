@@ -150,6 +150,11 @@
       "mappingFunction": null
     },
     {
+      "sourceFieldName": "/document/trimmed_content_size",
+      "targetFieldName": "content_size",
+      "mappingFunction": null
+    },
+    {
       "sourceFieldName": "/document/countries",
       "targetFieldName": "countries"
     },

@@ -139,7 +139,9 @@ namespace Text.Mesh
                 }
             }
 
-            outRecord.Data["trimmed_content"] = String.Join(Environment.NewLine, content_trim.ToArray<string>());
+            string trimmed_content = String.Join(Environment.NewLine, content_trim.ToArray<string>());
+            outRecord.Data["trimmed_content"] = trimmed_content;
+            outRecord.Data["trimmed_content_size"] = trimmed_content.Length;
             outRecord.Data["trimmed_content_lines_count"] = content_trim.Count;
             outRecord.Data["trimmed_content_lines_matches"] = matches;
 
