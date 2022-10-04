@@ -77,7 +77,6 @@ namespace Knowledge.API
 
             // The following line enables Application Insights telemetry collection.
             services.AddApplicationInsightsTelemetry();
-
          
             StorageConfig sconfigData = Configuration.GetSection("StorageConfig").Get<StorageConfig>();
             services.AddSingleton<StorageConfig>(_ => sconfigData);
