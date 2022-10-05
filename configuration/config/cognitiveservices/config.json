@@ -6,34 +6,38 @@
         {
             "Name": "{{config.name}}cogvision",
             "Itemtype":"ComputerVision",
+            "Kind":"ComputerVision",
             "ResourceGroup": "{{config.resourceGroupName}}",
-            "VNetPrivateEndpoint": false,
-            "EnablePrivateAccess":false,
-            "AddExistingSubnets":false
+            "Sku":"S1",
+            "EnablePrivateAccess":true,
+            "AddExistingSubnets":true
         },
         {
             "Name": "{{config.name}}cogform",
             "Itemtype":"FormRecognizer",
+            "Kind":"FormRecognizer",
             "ResourceGroup": "{{config.resourceGroupName}}",
-            "VNetPrivateEndpoint": false,
-            "EnablePrivateAccess":false,
-            "AddExistingSubnets":false
+            "Sku":"S0",
+            "EnablePrivateAccess":true,
+            "AddExistingSubnets":true
         },
         {
             "Name": "{{config.name}}cogtranslate",
-            "ResourceGroup": "{{config.resourceGroupName}}",
             "Itemtype":"Translate",
-            "VNetPrivateEndpoint": false,
-            "EnablePrivateAccess":false,
-            "AddExistingSubnets":false
+            "Kind":"TextTranslation",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "Sku":"S1",
+            "EnablePrivateAccess":true,
+            "AddExistingSubnets":true
         },
         {
             "Name": "{{config.name}}coglanguage",
             "Itemtype":"Language",
+            "Kind":"TextAnalytics",
             "ResourceGroup": "{{config.resourceGroupName}}",
-            "VNetPrivateEndpoint": false,
-            "EnablePrivateAccess":false,
-            "AddExistingSubnets":false
+            "Sku":"S",
+            "EnablePrivateAccess":true,
+            "AddExistingSubnets":true
         }
     ]
 }

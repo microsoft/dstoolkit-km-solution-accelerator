@@ -204,7 +204,6 @@ pricing.standard                  : S1
 pricing.premium                   : P1V2
 pricing.elastic                   : EP1
 searchServiceName                 : kmcontososearch
-cogServicesBundle                 : kmcontosocog
 cogSvcLanguage                : kmcontosocoglanguage
 cogSvcVision                  : kmcontosocogvision
 cogSvcForm                    : kmcontosocogform

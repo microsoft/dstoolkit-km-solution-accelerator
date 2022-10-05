@@ -6,8 +6,9 @@
         {
             "Name": "{{config.name}}search",
             "ResourceGroup": "{{config.resourceGroupName}}",
+            "Sku":"{{config.searchSku}}",
             "VNetPrivateEndpoint": false,
-            "EnablePrivateAccess":false,
+            "EnablePrivateAccess":true,
             "AddIPAddressRule":false,
             "AddPrivateSharedLink":true
         }

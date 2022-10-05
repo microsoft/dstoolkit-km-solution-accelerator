@@ -1,11 +1,11 @@
 {
     "searchServiceName": "{{config.name}}search",
-    "cogServicesBundle": "{{config.name}}cog",
     "cogSvcLanguage": "{{config.name}}coglanguage",
     "cogSvcVision": "{{config.name}}cogvision",
     "cogSvcForm": "{{config.name}}cogform",
     "cogSvcTranslate": "{{config.name}}cogtranslate",
     "appInsightsService": "{{config.name}}insights",
+    "logAnalyticsService": "{{config.name}}analytics",
     "techStorageAccountName": "{{config.name}}tech",
     "dataStorageAccountName": "{{config.name}}data",
     "vnetnsg": "{{config.name}}nsg",

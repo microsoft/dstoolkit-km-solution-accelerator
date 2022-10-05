@@ -1,4 +1,5 @@
 {
+    "GroupId":"WebApps",
     "AppPlans": [
         {
             "Id": "skillsplan",
@@ -17,8 +18,10 @@
                             "Name": "locations"
                         }
                     ],
-                    "vnetPrivateEndpoint": true,
-                    "vnetIntegration": false
+                    "VNetPrivateEndpoint": false,   
+                    "VNetIntegration": false,
+                    "AccessIPRestriction":false,
+                    "AccessSubnetRestriction":false                
                 },
                 {
                     "Id": "text",
@@ -39,8 +42,10 @@
                             "Name": "HtmlConversion"
                         }
                     ],
-                    "vnetPrivateEndpoint": true,
-                    "vnetIntegration": false
+                    "VNetPrivateEndpoint": false,   
+                    "VNetIntegration": false,
+                    "AccessIPRestriction":false,
+                    "AccessSubnetRestriction":false                
                 },
                 {
                     "Id": "entities",
@@ -58,8 +63,10 @@
                             "Name": "keyphrases-cleansing"
                         }
                     ],
-                    "vnetPrivateEndpoint": true,
-                    "vnetIntegration": false
+                    "VNetPrivateEndpoint": false,   
+                    "VNetIntegration": false,
+                    "AccessIPRestriction":false,
+                    "AccessSubnetRestriction":false                
                 }
             ]
         },
@@ -80,8 +87,10 @@
                             "Name": "DurableImageExtractionSkill_HttpStart"
                         }
                     ],
-                    "vnetPrivateEndpoint": true,
-                    "vnetIntegration": true
+                    "VNetPrivateEndpoint": false,   
+                    "VNetIntegration": false,
+                    "AccessIPRestriction":false,
+                    "AccessSubnetRestriction":false                
                 }
             ]
         },
@@ -102,8 +111,10 @@
                             "Name": "Assign"
                         }
                     ],
-                    "vnetPrivateEndpoint": true,
-                    "vnetIntegration": false
+                    "VNetPrivateEndpoint": false,   
+                    "VNetIntegration": false,
+                    "AccessIPRestriction":false,
+                    "AccessSubnetRestriction":false                
                 },
                 {
                     "Id": "mtdext",
@@ -115,8 +126,10 @@
                             "Name": "MetadataExtractionSkill"
                         }
                     ],
-                    "vnetPrivateEndpoint": true,
-                    "vnetIntegration": true
+                    "VNetPrivateEndpoint": false,   
+                    "VNetIntegration": false,
+                    "AccessIPRestriction":false,
+                    "AccessSubnetRestriction":false                
                 }
             ]
         },
@@ -156,8 +169,10 @@
                             "Name": "Read"
                         }
                     ],
-                    "vnetPrivateEndpoint": true,
-                    "vnetIntegration": false
+                    "VNetPrivateEndpoint": false,   
+                    "VNetIntegration": false,
+                    "AccessIPRestriction":false,
+                    "AccessSubnetRestriction":false                
                 }
             ]
         },
@@ -194,8 +209,10 @@
                             "Name": "Translator"
                         }
                     ],
-                    "vnetPrivateEndpoint": true,
-                    "vnetIntegration": false
+                    "VNetPrivateEndpoint": false,   
+                    "VNetIntegration": false,
+                    "AccessIPRestriction":false,
+                    "AccessSubnetRestriction":false                
                 }
             ]
         }

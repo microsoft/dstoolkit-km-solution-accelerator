@@ -28,7 +28,7 @@
     "storageContainers":["documents", "images", "metadata"],
     "searchIndexerEnvironment":"standard",
     "clarityProjectId":"",
-    "cogServicesBundleDisabled": true,
     "X_Tika_PDFAllPagesAsImages":true,
-    "vnetEnable":false
+    "vnetEnable":false,
+    "vnetResourceGroup":"kmcontoso-infra"
 }

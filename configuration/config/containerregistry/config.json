@@ -6,13 +6,9 @@
         {
             "Name": "{{config.name}}acr",
             "ResourceGroup": "{{config.resourceGroupName}}",
-            "VNetPrivateEndpoint": false,
-            "EnablePrivateAccess":false,
-            "AddExistingSubnets":false,
-            "IPAddressToAdd":[
-                "122.176.175.89",
-                "122.181.194.194"
-            ]
+            "EnablePrivateAccess":true,
+            "AddExistingSubnets":true,
+            "IPAddressToAdd":[]
         }
     ]
 }

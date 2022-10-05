@@ -1,0 +1,13 @@
+{
+    "Blob": "blob",
+    "DataLakeStorageGen2": "dfs",
+    "Tables": "table ",
+    "SQLDatabase": "sqlServer",
+    "MySql": "mysqlServer",
+    "KeyValut": "vault",
+    "Functions": "sites",
+    "WebApps": "sites",
+    "CognitiveService": "account",
+    "ContainerRegistry": "registry",
+    "Search": "searchService"
+}
