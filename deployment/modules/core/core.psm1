@@ -6,7 +6,7 @@ function Resolve-Environment {
     )
     
     if ($Name) {
-        $testpath = join-path $WorkDir ".." ("99-" + $Name)
+        $testpath = join-path $HOME ("99-" + $Name)
 
         if (! (Test-Path $testpath)) {
             mkdir $testpath | Out-Null
@@ -123,32 +123,41 @@ function ConvertTo-String {
 }
 
 function Import-Params([switch] $Reload) {
-    # Loading Environment Parameters
-    $global:params = [string] (Get-Content -Path (join-path $global:envpath "parameters.json") -ErrorAction SilentlyContinue)
 
-    if ( $global:params ) {
-        $global:params = ConvertFrom-Json $global:params
-        Add-ServicesParameters
+    $global:params = New-Object -TypeName PSObject
+
+    $parametersJson = join-path $global:envpath "parameters.json"
+
+    if (Test-Path -Path $parametersJson) {
+        # Loading Environment Parameters
+        $readParams = [string] (Get-Content -Path $parametersJson -ErrorAction SilentlyContinue)
+
+        if ($readParams) {
+            if ($readParams.Length -gt 0) {
+                $global:params = ConvertFrom-Json $readParams
+            }
+        }
     }
-    else {
-        $global:params = New-Object -TypeName PSObject
-        Add-ServicesParameters
-    }
+    
+    Add-ServicesParameters
 
-    # Decrypt secured string
-    $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
+    if ($PSVersionTable.Platform -eq "Win32NT") {
+        # Decrypt secured string
+        $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
 
-    foreach ($prop in $parameterslist) {
-        if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
-            $propValue = Get-ParamValue $prop.Name -AsSecureString
-            if ($propValue) {
-                Add-Param $prop.Name (ConvertTo-String -secureString $propValue)
+        foreach ($prop in $parameterslist) {
+            if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
+                $propValue = Get-ParamValue $prop.Name -AsSecureString
+                if ($propValue) {
+                    Add-Param $prop.Name (ConvertTo-String -secureString $propValue)
+                }
             }
         }
     }
 
     return $global:params
 }
+
 function Add-ExtendedParameters {
     param (
         [string] $source
@@ -253,9 +262,11 @@ function Save-Parameters() {
 
         $propValue = Get-ParamValue $prop.Name
         
-        if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
-            if ($propValue) {
-                $propValue = ConvertTo-SecureString -String $propValue -AsPlainText -Force | ConvertFrom-SecureString
+        if ($PSVersionTable.Platform -eq "Win32NT") {
+            if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
+                if ($propValue) {
+                    $propValue = ConvertTo-SecureString -String $propValue -AsPlainText -Force | ConvertFrom-SecureString
+                }
             }
         }
 
