@@ -1238,6 +1238,7 @@ function New-Functions {
                             --plan $plan.Name `
                             --resource-group $plan.ResourceGroup `
                             --functions-version $functionApp.Version `
+                            --https-only true `
                             --app-insights $params.appInsightsService                        
                     }
                 }
