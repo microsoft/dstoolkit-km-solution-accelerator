@@ -14,7 +14,7 @@ function Resolve-Environment {
     )
     
     if ($Name) {
-        $testpath = join-path $WorkDir ".." ("99-" + $Name)
+        $testpath = join-path $HOME ("99-" + $Name)
 
         if (! (Test-Path $testpath)) {
             mkdir $testpath | Out-Null
@@ -47,12 +47,10 @@ function Import-StorageConfig() {
     # Import Other configurations like functions
     $global:storagecfg = [string] (Get-Content -Path (join-path $global:envpath "config" "storage" "config.json"))
     $global:storagecfg = ConvertFrom-Json $global:storagecfg
+
+    Import-ConfigParameters $global:storagecfg
 }
-function Import-VNetConfig() {
-    # Import Other configurations like functions
-    $global:vnetcfg = [string] (Get-Content -Path (join-path $global:envpath "config" "vnet" "config.json"))
-    $global:vnetcfg = ConvertFrom-Json $global:vnetcfg
-}
+
 function Import-CognitiveServicesConfig() {
     # Import Other configurations like functions
     $global:cogservicesecfg = [string] (Get-Content -Path (join-path $global:envpath "config" "cognitiveservices" "config.json"))
@@ -72,16 +70,19 @@ function Import-searchserviceConfig() {
     # Import Other configurations like functions
     $global:searchservicecfg = [string] (Get-Content -Path (join-path $global:envpath "config" "search" "config.json"))
     $global:searchservicecfg = ConvertFrom-Json $global:searchservicecfg
+
+    Import-ConfigParameters $global:searchservicecfg
 }
-function Import-createpeConfig() {
-    # Import Other configurations like functions
-    $global:createpecfg = [string] (Get-Content -Path (join-path $global:envpath "config" "vnet" "createpe.json"))
-    $global:createpecfg = ConvertFrom-Json $global:createpecfg
-}
-function Import-groupidConfig() {
-    # Import Other configurations like functions
-    $global:groupidcfg = [string] (Get-Content -Path (join-path $global:envpath "config" "vnet" "groupid.json"))
-    $global:groupidcfg = ConvertFrom-Json $global:groupidcfg
+function Import-ConfigParameters ($inputcfg) {
+
+    # Automatically ad the services parameters to the global parameters variable. 
+    if ($inputcfg.Parameters) {
+        foreach ($entry in $($inputcfg.Parameters | Get-Member -MemberType NoteProperty)) {
+            $value = $entry.Name
+            Add-Param $entry.Name $inputcfg.Parameters.$value
+        }
+        Save-Parameters
+    }
 }
 function Get-Config() {
     param (
@@ -117,9 +118,6 @@ function Import-Config() {
     function Import-RawConfig {
         Write-Debug -Message "Load environment from deployment config"
         # Loading Environment Template Configurations
-        $pathH = join-path $WorkDir "config" ($Name + ".json")
-        Write-host  $pathH -ForegroundColor Green 
-
         $global:config = [string] (Get-Content -Path (join-path $WorkDir "config" ($Name + ".json")) -Raw)
         $global:config = ConvertFrom-Json $global:config
     }
@@ -149,33 +147,58 @@ function Import-Config() {
     Import-DockerConfig
     Import-WebAppsConfig
     Import-StorageConfig
-    Import-VNetConfig
     Import-CognitiveServicesConfig
     Import-ContainerRegistryConfig
     Import-keyvaultConfig
     Import-searchserviceConfig
-    Import-createpeConfig
-    Import-groupidConfig
     
     return $global:config
 }
 
-function Import-Params([switch] $Reload) {
+function ConvertTo-String {
+    param(
+        [Security.SecureString] $secureString
+    )
 
-    # Loading Environment Parameters
-    $global:params = [string] (Get-Content -Path (join-path $global:envpath "parameters.json") -ErrorAction SilentlyContinue)
-    if ( $global:params ) {
-
-        $global:params = ConvertFrom-Json $global:params
-        Add-ServicesParameters
-        return $global:params
-    }
-    else {
-        $global:params = New-Object -TypeName PSObject
-        Add-ServicesParameters
-        return $global:params
-    }
+    return [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR((($secureString))))
 }
+
+function Import-Params() {
+
+    $global:params = New-Object -TypeName PSObject
+
+    $parametersJson = join-path $global:envpath "parameters.json"
+
+    if (Test-Path -Path $parametersJson) {
+        # Loading Environment Parameters
+        $readParams = [string] (Get-Content -Path $parametersJson -ErrorAction SilentlyContinue)
+
+        if ($readParams) {
+            if ($readParams.Length -gt 0) {
+                $global:params = ConvertFrom-Json $readParams
+            }
+        }
+    }
+    
+    Add-ServicesParameters
+
+    if ($PSVersionTable.Platform -eq "Win32NT") {
+        # Decrypt secured string
+        $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
+
+        foreach ($prop in $parameterslist) {
+            if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
+                $propValue = Get-ParamValue $prop.Name -AsSecureString
+                if ($propValue) {
+                    Add-Param $prop.Name (ConvertTo-String -secureString $propValue)
+                }
+            }
+        }
+    }
+
+    return $global:params    
+}
+
 function Add-ExtendedParameters {
     param (
         [string] $source
@@ -230,12 +253,12 @@ function Add-ServicesParameters {
     }
   
     # Container
-    $dataStorageContainerName = $config.storageContainers[0];
+    $dataStorageContainerName = $params.storageContainers[0];
     Add-Param "dataStorageContainerName" $dataStorageContainerName
     
     # Create the containers entries for UI SAS access
     $StorageContainerAddresses = @()
-    foreach ($container in $config.storageContainers) {
+    foreach ($container in $params.storageContainers) {
         $url = "https://" + $global:params.dataStorageAccountName + ".blob.core.windows.net/" + $container
         $StorageContainerAddresses += $url
     }
@@ -243,7 +266,7 @@ function Add-ServicesParameters {
     
     Initialize-SearchConfig
 }
-    
+
 function Add-Param($name, $value) {
     if ( $global:params.PSobject.Properties.name -eq $name) {
         $global:params.$name = $value
@@ -252,9 +275,47 @@ function Add-Param($name, $value) {
         $global:params | Add-Member -MemberType NoteProperty -Name $name -Value $value -ErrorAction Ignore
     }
 }
-    
+
+function Get-ParamValue() {
+    param (
+        [string] $name,
+        [switch] $AsSecureString
+    )
+    $value = $global:params | Select-Object -ExpandProperty $name
+
+    if ($value) {
+        if ($AsSecureString) {
+            $value = ConvertTo-SecureString -String $value
+        }    
+    }
+
+    return $value
+}
 function Save-Parameters() {
-    $global:params | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath $global:envpath\"parameters.json" -Force    
+    
+    # Create a blank object 
+    $securedparams = New-Object -TypeName PSObject
+
+    $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
+
+    foreach ($prop in $parameterslist) {
+
+        $propValue = Get-ParamValue $prop.Name
+        
+        if ($PSVersionTable.Platform -eq "Win32NT") {
+            if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
+                if ($propValue) {
+                    $propValue = ConvertTo-SecureString -String $propValue -AsPlainText -Force | ConvertFrom-SecureString
+                }
+            }
+        }
+
+        $securedparams | Add-Member -MemberType NoteProperty -Name $prop.Name -Value $propValue -ErrorAction Ignore
+    }
+
+    $securedparams | Add-Member -MemberType NoteProperty -Name "LastModifiedDate" -Value (Get-Date) -ErrorAction Ignore
+
+    $securedparams | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath $global:envpath\"parameters.json" -Force
 }
     
 function Save-Config() {
@@ -304,7 +365,8 @@ function Sync-Parameters() {
         foreach ($temp in $templates) {
             $jsontemp = Get-Content -Path $temp.FullName
             foreach ($prop in $parameterslist) {
-                $propValue = $global:params | Select-Object -ExpandProperty $prop.Name
+                $propValue = Get-ParamValue $prop.Name
+                # $propValue = $global:params | Select-Object -ExpandProperty $prop.Name
                 $jsontemp = $jsontemp -replace ("{{param." + $prop.Name + "}}"), $propValue 
             }
             $jsontemp | Out-File -FilePath $temp.FullName -Force
@@ -315,8 +377,8 @@ function Sync-Parameters() {
 }
     
 function Sync-Modules() {
-    $folders = @("modules", "deploy")
-    
+    $folders = @("modules", "scripts")
+
     foreach ($folder in $folders) {
         $modulepath = Join-Path $global:envpath $folder
         if (! (Test-Path $modulepath)) {
@@ -738,7 +800,7 @@ function Update-SearchAliases {
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        Invoke-SearchAPI -url ("/aliases/" + $jsonobj.name + "?api-version=" + $config.searchVersion) -body $configBody -method $method
+        Invoke-SearchAPI -url ("/aliases/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody -method $method
     }
 }
 function Update-SearchSynonyms {
@@ -752,7 +814,7 @@ function Update-SearchSynonyms {
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        Invoke-SearchAPI -url ("/synonymmaps/" + $jsonobj.name + "?api-version=" + $config.searchVersion) -body $configBody -method $method
+        Invoke-SearchAPI -url ("/synonymmaps/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody -method $method
     }
 }
 function Update-SearchIndex {
@@ -766,7 +828,7 @@ function Update-SearchIndex {
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        Invoke-SearchAPI -url ("/indexes/" + $jsonobj.name + "?api-version=" + $config.searchVersion + "&allowIndexDowntime=" + $AllowIndexDowntime) -body $configBody
+        Invoke-SearchAPI -url ("/indexes/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion + "&allowIndexDowntime=" + $AllowIndexDowntime) -body $configBody
     }
 }
     
@@ -780,7 +842,7 @@ function Remove-SearchIndex {
             'Content-Type' = 'application/json'
             'Accept'       = 'application/json'
         }
-        $url = ("/indexes/" + $name + "?api-version=" + $config.searchVersion)
+        $url = ("/indexes/" + $name + "?api-version=" + $searchservicecfg.Parameters.searchVersion)
         $baseSearchUrl = "https://" + $params.searchServiceName + ".search.windows.net"
         $fullUrl = $baseSearchUrl + $url
         
@@ -798,7 +860,7 @@ function Update-SearchDataSource {
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        Invoke-SearchAPI -url ("/datasources/" + $jsonobj.name + "?api-version=" + $config.searchVersion) -body $configBody
+        Invoke-SearchAPI -url ("/datasources/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
     }
 }
     
@@ -812,7 +874,7 @@ function Update-SearchSkillSet {
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        Invoke-SearchAPI -url ("/skillsets/" + $jsonobj.name + "?api-version=" + $config.searchVersion) -body $configBody
+        Invoke-SearchAPI -url ("/skillsets/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
     }
 }
     
@@ -831,7 +893,7 @@ function Update-SearchIndexer {
     
         if ( $name ) {
             if ($jsonobj.name.indexOf($name) -ge 0) {
-                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "?api-version=" + $config.searchVersion) -body $configBody
+                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
             }    
         }
         else {
@@ -839,7 +901,7 @@ function Update-SearchIndexer {
                 Write-Host "Skipping SharePoint Indexer re-configuration." -ForegroundColor DarkRed
             }
             else {
-                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "?api-version=" + $config.searchVersion) -body $configBody
+                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
             }    
         }
     }
@@ -855,7 +917,7 @@ function Search-Query {
         'Accept'       = 'application/json'
     }
     $baseSearchUrl = "https://" + $params.searchServiceName + ".search.windows.net"
-    $fullUrl = $baseSearchUrl + "/indexes/" + $params.indexName + "/docs?search=" + $query + "&api-version=" + $config.searchVersion
+    $fullUrl = $baseSearchUrl + "/indexes/" + $params.indexName + "/docs?search=" + $query + "&api-version=" + $searchservicecfg.Parameters.searchVersion
     
     Write-Debug -Message ("CallingGet  api: '" + $fullUrl + "'")
     Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method Get
@@ -881,11 +943,11 @@ function Reset-SearchIndexer {
     
         if ( $name ) {
             if ( $jsonobj.name.indexOf($name) -ge 0) {
-                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/reset?api-version=" + $config.searchVersion) -method "POST"
+                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/reset?api-version=" + $searchservicecfg.Parameters.searchVersion) -method "POST"
             }    
         }
         else {
-            Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/reset?api-version=" + $config.searchVersion) -method "POST"
+            Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/reset?api-version=" + $searchservicecfg.Parameters.searchVersion) -method "POST"
         }
     }
 };
@@ -909,11 +971,11 @@ function Start-SearchIndexer {
     
         if ( $name ) {
             if ( $jsonobj.name.indexOf($name) -ge 0) {
-                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/run?api-version=" + $config.searchManagementVersion) -method "POST" 
+                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/run?api-version=" + $searchservicecfg.Parameters.searchManagementVersion) -method "POST" 
             }
         }
         else {
-            Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/run?api-version=" + $config.searchManagementVersion) -method "POST" 
+            Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/run?api-version=" + $searchservicecfg.Parameters.searchManagementVersion) -method "POST" 
         }
     }
 };
@@ -924,7 +986,7 @@ function Get-SearchIndexersStatus {
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        $status = Invoke-SearchAPI -Method GET -url ("/indexers/" + $jsonobj.name + "/status?api-version=" + $config.searchVersion)
+        $status = Invoke-SearchAPI -Method GET -url ("/indexers/" + $jsonobj.name + "/status?api-version=" + $searchservicecfg.Parameters.searchVersion)
         $status = ConvertFrom-Json $status
         $properties = @{ name = $status.name
             status            = $status.status
@@ -942,7 +1004,7 @@ function Get-SearchIndexersStatus {
     #     $indexerBody = [string] (Get-Content -Path (join-path $global:envpath $("\config\search\indexers\"+$item+".json")))
     #     $jsonobj = ConvertFrom-Json $indexerBody
     #     $baseSearchUrl = "https://"+$params.searchServiceName+".search.windows.net"
-    #     $fullUrl = $baseSearchUrl + "/indexers/"+$jsonobj.name+"/status?api-version="+$config.searchVersion
+    #     $fullUrl = $baseSearchUrl + "/indexers/"+$jsonobj.name+"/status?api-version="+$searchservicecfg.Parameters.searchVersion
         
     #     Write-Host "CallingGet  api: '"$fullUrl"'";
     #     Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method Get    
@@ -963,7 +1025,7 @@ function Get-SearchIndexer {
         if (Test-Path -Path $indexercfg) {
             $indexerBody = [string] (Get-Content -Path $indexercfg)
             $jsonobj = ConvertFrom-Json $indexerBody
-            $status = Invoke-SearchAPI -Method GET -url ("/indexers/" + $jsonobj.name + "?api-version=" + $config.searchVersion)    
+            $status = Invoke-SearchAPI -Method GET -url ("/indexers/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion)    
             return $(ConvertFrom-Json $status)    
         }
         else {
@@ -983,7 +1045,7 @@ function Get-SearchIndexerStatus {
     if ($item) {
         $indexerBody = [string] (Get-Content -Path (join-path $global:envpath $("\config\search\indexers\" + $item + ".json")))
         $jsonobj = ConvertFrom-Json $indexerBody
-        $status = Invoke-SearchAPI -Method GET -url ("/indexers/" + $jsonobj.name + "/status?api-version=" + $config.searchVersion)    
+        $status = Invoke-SearchAPI -Method GET -url ("/indexers/" + $jsonobj.name + "/status?api-version=" + $searchservicecfg.Parameters.searchVersion)    
         return $(ConvertFrom-Json $status)
     }
     else {
@@ -992,7 +1054,7 @@ function Get-SearchIndexerStatus {
 }
     
 function Get-SearchServiceDetails() {
-    # az rest --method GET --url ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName + "?api-version=" + $config.searchManagementVersion)
+    # az rest --method GET --url ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName + "?api-version=" + $searchservicecfg.Parameters.searchManagementVersion)
     az rest --method GET --url ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName + "?api-version=2021-04-01-Preview")
 }
     
@@ -1011,7 +1073,7 @@ function Reset-SearchDocument {
     $body = @{
         'documentKeys' = @($key)
     }
-    Invoke-SearchAPI -url ("/indexers/documents/resetdocs?api-version=" + $config.searchVersion) -method "POST" -body $body
+    Invoke-SearchAPI -url ("/indexers/documents/resetdocs?api-version=" + $searchservicecfg.Parameters.searchVersion) -method "POST" -body $body
 }
     
 #endregion
@@ -1155,6 +1217,7 @@ function New-Functions {
                             --resource-group $plan.ResourceGroup `
                             --os-type Linux `
                             --app-insights $params.appInsightsService `
+                            --https-only true `
                             --runtime python `
                             --runtime-version $functionApp.PythonVersion `
                             --functions-version $functionApp.Version
@@ -1168,6 +1231,7 @@ function New-Functions {
                                 --resource-group $plan.ResourceGroup `
                                 --functions-version $functionApp.Version `
                                 --os-type Linux `
+                                --https-only true `
                                 --app-insights $params.appInsightsService `
                                 --deployment-container-image-name $imageName                        
                         }
@@ -1178,6 +1242,7 @@ function New-Functions {
                                 --resource-group $plan.ResourceGroup `
                                 --functions-version $functionApp.Version `
                                 --os-type Linux `
+                                --https-only true `
                                 --app-insights $params.appInsightsService `
                                 --runtime python `
                                 --runtime-version $functionApp.PythonVersion `
@@ -1202,6 +1267,7 @@ function New-Functions {
                             --consumption-plan-location $config.location `
                             --resource-group $plan.ResourceGroup `
                             --functions-version $functionApp.Version `
+                            --https-only true `
                             --app-insights $params.appInsightsService
                     }
                     else {
@@ -1211,6 +1277,7 @@ function New-Functions {
                             --plan $plan.Name `
                             --resource-group $plan.ResourceGroup `
                             --functions-version $functionApp.Version `
+                            --https-only true `
                             --app-insights $params.appInsightsService                        
                     }
                 }
@@ -1224,9 +1291,9 @@ function New-Functions {
     
             # FTP State to FTPS Only
             az functionapp config set -g $plan.ResourceGroup -n $functionApp.Name --ftps-state FtpsOnly
-    
-            # HTTPS Only flag
-            az functionapp update  -g $plan.ResourceGroup -n $functionApp.Name --set httpsOnly=true        
+
+            # HTTPS Only flag => now integrated in the create command
+            # az functionapp update  -g $plan.ResourceGroup -n $functionApp.Name --set httpsOnly=true        
         }
     }
 }
@@ -1387,7 +1454,21 @@ function Publish-FunctionsSettings() {
     }
     Pop-Location
 }
-    
+
+function New-FunctionsKeys() {
+    foreach ($plan in $functionscfg.AppPlans) {
+        foreach ($functionApp in $plan.FunctionApps) {
+            foreach ($function in $functionApp.Functions) {
+                az functionapp function keys set -g $plan.ResourceGroup `
+                    -n $functionApp.Name `
+                    --function-name $function.Name `
+                    --key-name default `
+                    --debug
+            }
+        }
+    }
+}
+
 function Get-FunctionsKeys() {
     foreach ($plan in $functionscfg.AppPlans) {
         foreach ($functionApp in $plan.FunctionApps) {
@@ -1422,9 +1503,9 @@ function Test-Functions() {
     param (
         [switch] $Local
     )
-    
-    $results = @()
-    
+
+    # $results=@()
+
     foreach ($plan in $functionscfg.AppPlans) {
         Write-Host "--------------------"
         Write-Host "Testing Plan "$plan.name -ForegroundColor DarkCyan
@@ -1523,6 +1604,7 @@ function New-WebApps {
                         az webapp create --name $webApp.Name `
                             --plan $plan.Name `
                             --resource-group $plan.ResourceGroup `
+                            --https-only true `
                             --deployment-container-image-name $imageName
                         
                         $storekey = $params.techStorageConnectionString
@@ -1543,11 +1625,13 @@ function New-WebApps {
                             --name $webApp.Name `
                             --plan $plan.Name `
                             --resource-group $plan.ResourceGroup `
+                            --https-only true `
                             --runtime 'dotnet:6'
     
                         if ($config.stagingUIEnabled) {
                             az webapp deployment slot create --name $webApp.Name `
                                 --resource-group $plan.ResourceGroup `
+                                --https-only true `
                                 --slot staging `
                                 --configuration-source $webApp.Name    
                         }
@@ -1561,9 +1645,9 @@ function New-WebApps {
                         az webapp config set -g $plan.ResourceGroup -n $webApp.Name --use-32bit-worker-process false --slot staging
                         az webapp identity assign -g $plan.ResourceGroup -n $webApp.Name --slot staging
                         az webapp config set -g $plan.ResourceGroup -n $webApp.Name --ftps-state FtpsOnly --slot staging
-                        az webapp update  -g $plan.ResourceGroup -n $webApp.Name --set httpsOnly=true --slot staging    
+                        # az webapp update  -g $plan.ResourceGroup -n $webApp.Name --set httpsOnly=true --slot staging    
                     }
-    
+
                     # App Service Logging
                     az webapp log config --application-logging azureblobstorage `
                         --resource-group $plan.ResourceGroup `
@@ -1579,9 +1663,9 @@ function New-WebApps {
                 
             # FTP State to FTPS Only
             az webapp config set -g $plan.ResourceGroup -n $webApp.Name --ftps-state FtpsOnly
-    
-            # HTTPS Only flag
-            az webapp update  -g $plan.ResourceGroup -n $webApp.Name --set httpsOnly=true
+
+            # HTTPS Only flag => integrated in the create command
+            # az webapp update  -g $plan.ResourceGroup -n $webApp.Name --set httpsOnly=true
         }
     }
 }

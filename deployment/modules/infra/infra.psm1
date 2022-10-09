@@ -44,7 +44,7 @@ function New-ResourceGroups {
     FindOrCreateResourceGroup $config.resourceGroupName 
 
     if ($config.vnetEnable) {
-        FindOrCreateResourceGroup $config.vnetResourceGroupName
+        FindOrCreateResourceGroup $vnetcfg.vnetResourceGroup
     }
 }
 
@@ -137,7 +137,7 @@ function New-StorageAccount {
                 Get-DataStorageAccountParameters; 
 
                 # Iterate through the list of containers to create. 
-                foreach ($container in $config.storageContainers) {
+                foreach ($container in $params.storageContainers) {
                     az storage container create -n $container `
                         --account-name $params.dataStorageAccountName `
                         --account-key $params.storageAccountKey `

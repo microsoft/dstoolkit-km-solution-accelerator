@@ -20,7 +20,7 @@
       "allowSkillsetToReadFileData": false,
       "indexStorageMetadataOnlyForOversizedDocuments": true,
       "excludedFileNameExtensions": ".jpg,.jpeg,.png,.bmp,.tiff,.tif,.gif,.wmv,.mp4,.zip,.gz,.7z,.rar,.sitx,.db,.bat,.csv,.yxmd,.bak,.pbix,.pbiviz",
-      "executionEnvironment": "{{config.searchIndexerEnvironment}}"
+      "executionEnvironment": "{{param.searchIndexerEnvironment}}"
     }
   },
   "fieldMappings": [

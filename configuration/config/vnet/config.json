@@ -1,29 +1,20 @@
 {
+    "vnetResourceGroup": "{{config.resourceGroupName}}-network",
     "privateEndPointSubnet": "{{config.name}}-subnet",
-    "networkSecurityGroup": "{{config.name}}-NSG",
+    "networkSecurityGroup": "{{config.name}}-nsg",
     "disablePENetworkPolicies": false,
-    "vnetName": "{{config.name}}-VN",
-    "vnetResourceGroup": "CognitiveSearch-Dev",
+    "vnetName": "{{config.name}}-vnet",
+    "vnetAddressPrefix": "172.17.0.0/16",
+    "vnetStartIpAddress": "172.17.0.0",
     "ipAddressToAllow": "122.181.199.178/32",
     "ipRestricRuleName": "AllowUser1IP",
     "subnetRestricRuleName": "AllowSubnetIP",
     "inboundRestrictSubnet": "{{config.name}}-subnet",
     "ipaddressrule": "172.17.5.0/24",
-    "VnetStartIpAddress": "172.17.0.0",
     "VnetFuncAppStartIpAddress": "172.17.50.0",
     "VnetWebAppStartIpAddress": "172.17.100.0",
-    "privateendpointscreated": [
-        {
-            "id": "",
-            "status": ""
-        }
-    ],
     "inboundrulePriority": 453,
     "subnetRuleNameCounter": 154,
     "lastCreatedFuncAppIpAddress": "172.17.80.0",
-    "lastCreatedWebAppIpAddress": "172.17.128.0",
-    "excludeAddingSubnetToResources": [
-        "{{config.name}}ui",
-        "{{config.name}}entities"
-    ]
+    "lastCreatedWebAppIpAddress": "172.17.128.0"
 }

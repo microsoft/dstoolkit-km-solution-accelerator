@@ -1,5 +1,5 @@
 {
-    "GroupId":"WebApps",
+    "GroupId": "WebApps",
     "AppPlans": [
         {
             "Id": "skillsplan",
@@ -18,10 +18,10 @@
                             "Name": "locations"
                         }
                     ],
-                    "VNetPrivateEndpoint": false,   
+                    "VNetPrivateEndpoint": false,
                     "VNetIntegration": false,
-                    "AccessIPRestriction":false,
-                    "AccessSubnetRestriction":false                
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": false
                 },
                 {
                     "Id": "text",
@@ -42,10 +42,10 @@
                             "Name": "HtmlConversion"
                         }
                     ],
-                    "VNetPrivateEndpoint": false,   
+                    "VNetPrivateEndpoint": false,
                     "VNetIntegration": false,
-                    "AccessIPRestriction":false,
-                    "AccessSubnetRestriction":false                
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": false
                 },
                 {
                     "Id": "entities",
@@ -63,10 +63,10 @@
                             "Name": "keyphrases-cleansing"
                         }
                     ],
-                    "VNetPrivateEndpoint": false,   
+                    "VNetPrivateEndpoint": false,
                     "VNetIntegration": false,
-                    "AccessIPRestriction":false,
-                    "AccessSubnetRestriction":false                
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": false
                 }
             ]
         },
@@ -87,10 +87,10 @@
                             "Name": "DurableImageExtractionSkill_HttpStart"
                         }
                     ],
-                    "VNetPrivateEndpoint": false,   
+                    "VNetPrivateEndpoint": false,
                     "VNetIntegration": false,
-                    "AccessIPRestriction":false,
-                    "AccessSubnetRestriction":false                
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": false
                 }
             ]
         },
@@ -111,10 +111,10 @@
                             "Name": "Assign"
                         }
                     ],
-                    "VNetPrivateEndpoint": false,   
+                    "VNetPrivateEndpoint": false,
                     "VNetIntegration": false,
-                    "AccessIPRestriction":false,
-                    "AccessSubnetRestriction":false                
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": false
                 },
                 {
                     "Id": "mtdext",
@@ -126,10 +126,10 @@
                             "Name": "MetadataExtractionSkill"
                         }
                     ],
-                    "VNetPrivateEndpoint": false,   
+                    "VNetPrivateEndpoint": false,
                     "VNetIntegration": false,
-                    "AccessIPRestriction":false,
-                    "AccessSubnetRestriction":false                
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": false
                 }
             ]
         },
@@ -169,10 +169,10 @@
                             "Name": "Read"
                         }
                     ],
-                    "VNetPrivateEndpoint": false,   
+                    "VNetPrivateEndpoint": false,
                     "VNetIntegration": false,
-                    "AccessIPRestriction":false,
-                    "AccessSubnetRestriction":false                
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": false
                 }
             ]
         },
@@ -209,10 +209,10 @@
                             "Name": "Translator"
                         }
                     ],
-                    "VNetPrivateEndpoint": false,   
+                    "VNetPrivateEndpoint": false,
                     "VNetIntegration": false,
-                    "AccessIPRestriction":false,
-                    "AccessSubnetRestriction":false                
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": false
                 }
             ]
         }

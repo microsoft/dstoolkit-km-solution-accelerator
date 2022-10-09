@@ -112,7 +112,7 @@
   },
   {
     "name": "SearchServiceConfig:APIVersion",
-    "value": "{{config.searchVersion}}",
+    "value": "{{param.searchVersion}}",
     "slotSetting": false
   },
   {
@@ -272,12 +272,12 @@
   },
   {
     "name": "TranslationConfig:SuggestedFrom",
-    "value": "{{config.searchDefaultFromLanguageCode}}",
+    "value": "{{param.searchDefaultFromLanguageCode}}",
     "slotSetting": false
   },
   {
     "name": "TranslationConfig:SuggestedTo",
-    "value": "{{config.searchDefaultToLanguageCode}}",
+    "value": "{{param.searchDefaultToLanguageCode}}",
     "slotSetting": false
   },
   {
@@ -307,7 +307,7 @@
   },
   {
     "name": "SpellCheckConfig:SupportedLanguages",
-    "value": "{{config.searchDefaultFromLanguageCode}}",
+    "value": "{{param.searchDefaultFromLanguageCode}}",
     "slotSetting": false
   },
   {

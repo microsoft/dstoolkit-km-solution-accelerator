@@ -108,7 +108,14 @@ function Get-PublicOutboundIPAddress {
     $outboundIpAddresses = az webapp show -n $appName -g $appResourceGroupName  --query "possibleOutboundIpAddresses"
     return $outboundIpAddresses.Trim("\""").split(",")
 }
- 
+
+function Add-VNET {
+
+    az network vnet create --name $vnetcfg.vnetName --resource-group $vnetcfg.vnetResourceGroup `
+        --location $config.location `
+        --address-prefixes $vnetcfg.vnetAddressPrefix
+}
+
 function Add-Subnet {
     param(
         $resourceGroupName,
@@ -144,17 +151,17 @@ function Add-NewSubnettoAllResources {
 
     foreach ($plan in $functionscfg.AppPlans) {
         foreach ($appService in $plan.FunctionApps) {
-            Add-WebAppAccessRestrictionRule $vnetcfg.vnetResourceGroup $appService.Name  $null ("Allow Subnet " + $subnetRuleNameCounter) $vnetcfg.vnetName $subnetName $inboundRulePriority
-            $inboundRulePriority++
-            $subnetRuleNameCounter++
+            Add-WebAppAccessRestrictionRule $vnetcfg.vnetResourceGroup $appService.Name  $null ("Allow Subnet " + $vnetparams.subnetRuleNameCounter) $vnetcfg.vnetName $subnetName $vnetparams.inboundRulePriority
+            $vnetparams.inboundRulePriority++
+            $vnetparams.subnetRuleNameCounter++
         }
     }
 
     foreach ($plan in $webappscfg.AppPlans) {
         foreach ($appService in $plan.WebApps) {
-            Add-WebAppAccessRestrictionRule $vnetcfg.vnetResourceGroup $appService.Name  $null ("Allow Subnet " + $subnetRuleNameCounter) $vnetcfg.vnetName $subnetName $inboundRulePriority
-            $inboundRulePriority++
-            $subnetRuleNameCounter++
+            Add-WebAppAccessRestrictionRule $vnetcfg.vnetResourceGroup $appService.Name  $null ("Allow Subnet " + $vnetparams.subnetRuleNameCounter) $vnetcfg.vnetName $subnetName $vnetparams.inboundRulePriority
+            $vnetparams.inboundRulePriority++
+            $vnetparams.subnetRuleNameCounter++
         }
     }
 }
@@ -359,7 +366,7 @@ function Add-StorageAccountVNetNetworkRules {
  
     # Add subnet to storage account
     foreach ($subnet in $subnets.vnetSubnets) {
-        $subnetId = $(az network vnet subnet show --resource-group $config.vnetResourceGroup --vnet-name $config.vnetName  --name $subnet.SubnetName --query id --output tsv)
+        $subnetId = $(az network vnet subnet show --resource-group $vnetcfg.vnetResourceGroup --vnet-name $config.vnetName  --name $subnet.SubnetName --query id --output tsv)
         az storage account network-rule add --subnet $subnetId -g $config.resourceGroupName --account-name $storageAccountName
     }
  
@@ -380,7 +387,7 @@ function Remove-StorageAccountVNetNetworkRules {
  
     # Remove subnet from storage account
     foreach ($subnet in $config.vnetSubnets) {
-        $subnetId = $(az network vnet subnet show --resource-group $config.vnetResourceGroup --vnet-name $config.vnetName  --name $subnet.SubnetName --query id --output tsv)
+        $subnetId = $(az network vnet subnet show --resource-group $vnetcfg.vnetResourceGroup --vnet-name $config.vnetName  --name $subnet.SubnetName --query id --output tsv)
         az storage account network-rule remove --subnet $subnetId -g $config.resourceGroupName --account-name $storageAccountName
     }
  
@@ -408,7 +415,7 @@ function Add-CognitiveServiceVnetNetworkRules {
  
     # Add subnet to storage account
     foreach ($subnet in $config.vnetSubnets) {
-        $subnetId = $(az network vnet subnet show --resource-group $config.vnetResourceGroup --vnet-name $config.vnetName --name $subnet.SubnetName --query id --output tsv)
+        $subnetId = $(az network vnet subnet show --resource-group $vnetcfg.vnetResourceGroup --vnet-name $config.vnetName --name $subnet.SubnetName --query id --output tsv)
         az cognitiveservices account network-rule add -g $config.resourceGroupName --name $cognitiveServiceName --subnet $subnetId
     }
  
@@ -428,7 +435,7 @@ function Remove-CognitiveServiceVnetNetworkRules {
  
     # Add subnet to storage account
     foreach ($subnet in $config.vnetSubnets) {
-        $subnetId = $(az network vnet subnet show --resource-group $config.vnetResourceGroup --vnet-name $config.vnetName --name $subnet.SubnetName --query id --output tsv)
+        $subnetId = $(az network vnet subnet show --resource-group $vnetcfg.vnetResourceGroup --vnet-name $config.vnetName --name $subnet.SubnetName --query id --output tsv)
         az cognitiveservices account network-rule remove -g $config.resourceGroupName --name $cognitiveServiceName --subnet $subnetId
     }
  
@@ -511,7 +518,6 @@ function Enable-PrivaceAccess {
 #endregion
 
 #region WebApps & Functions
-
 function Add-VNETAppSettings {
  
     Push-Location $global:envpath
@@ -552,27 +558,8 @@ function Add-VNETAppSettings {
 #endregion
 
 #region initialise vnet integration
-# Main Script starts here  
-# Add Private Endpoints + VNET Integration for all functions and webapps
-function Initialize-PE {
-    Push-Location $global:envpath
 
-    $global:inboundRulePriority = $vnetcfg.inboundrulePriority
-    $global:subnetRuleNameCounter = $vnetcfg.subnetRuleNameCounter
-    
-    if ($vnetcfg.lastCreatedWebAppIpAddress) {
-        $nextAvailableWebAppAddress = $vnetcfg.lastCreatedWebAppIpAddress
-    }
-    else {
-        $nextAvailableWebAppAddress = $vnetcfg.VnetWebAppStartIpAddress
-    }
-    if ($vnetcfg.lastCreatedFuncAppIpAddress) {
-        $nextAvailableFuncAddress = $vnetcfg.lastCreatedFuncAppIpAddress
-    }
-    else {
-        $nextAvailableFuncAddress = $vnetcfg.VnetFuncAppStartIpAddress
-    }
-
+function Set-VNETFunctions {
     Write-Host "========================================"
     Write-Host ("VNet Integration starting for function apps") -ForegroundColor Yellow
     $availableSubnets = Get-AvailableSubnets
@@ -587,9 +574,9 @@ function Initialize-PE {
             }
             else {
                 Write-Host ("subnet $subnetName  does not exists in " + $vnetcfg.vnetName) -ForegroundColor Green
-                Add-Subnet $vnetcfg.vnetResourceGroup $vnetcfg.vnetName $subnetName $vnetcfg.networkSecurityGroup ($nextAvailableFuncAddress + '/28')
+                Add-Subnet $vnetcfg.vnetResourceGroup $vnetcfg.vnetName $subnetName $vnetcfg.networkSecurityGroup ($vnetparams.nextAvailableFuncAddress + '/28')
                 $availableSubnets += $subnetName
-                $nextAvailableFuncAddress = Get-AvailableIPAddress $nextAvailableFuncAddress
+                $vnetparams.nextAvailableFuncAddress = Get-AvailableIPAddress $vnetparams.nextAvailableFuncAddress
             }
             foreach ($appService in $plan.FunctionApps) {
                 if ($appService.VNetPrivateEndpoint) {
@@ -605,26 +592,30 @@ function Initialize-PE {
                 }
                 
                 if ( $appService.AccessIPRestriction) {
-                    Add-WebAppAccessRestrictionRule $vnetcfg.vnetResourceGroup $appService.Name $vnetcfg.ipAddressToAllow ("Allow Ip" + $subnetRuleNameCounter) $null $null $inboundRulePriority
-                    $inboundRulePriority++
-                    $subnetRuleNameCounter++
+                    Add-WebAppAccessRestrictionRule $vnetcfg.vnetResourceGroup $appService.Name $vnetcfg.ipAddressToAllow ("Allow Ip" + $vnetparams.subnetRuleNameCounter) $null $null $vnetparams.inboundRulePriority
+                    $vnetparams.inboundRulePriority++
+                    $vnetparams.subnetRuleNameCounter++
                 }
 
                 if ( $appService.AccessSubnetRestriction) {
                     foreach ($subnet in $existingSubnets) {
-                        Add-WebAppAccessRestrictionRule $vnetcfg.vnetResourceGroup $appService.Name  $null ("Allow Subnet" + $subnetRuleNameCounter) $vnetcfg.vnetName $subnet.Trim() $inboundRulePriority
-                        $inboundRulePriority++ 
-                        $subnetRuleNameCounter++
+                        Add-WebAppAccessRestrictionRule $vnetcfg.vnetResourceGroup $appService.Name  $null ("Allow Subnet" + $vnetparams.subnetRuleNameCounter) $vnetcfg.vnetName $subnet.Trim() $vnetparams.inboundRulePriority
+                        $vnetparams.inboundRulePriority++ 
+                        $vnetparams.subnetRuleNameCounter++
                     }
                 }
             
             }
         }
     }
-    Add-VNETParam "lastCreatedFuncAppIpAddress" $nextAvailableFuncAddress
+    Add-VNETParam "lastCreatedFuncAppIpAddress" $vnetparams.nextAvailableFuncAddress
 
     Write-Host ("VNet Integration completed for function apps") -ForegroundColor Green
     Write-Host "========================================"
+
+}
+
+function Set-VNETWebApps { 
 
     Write-Host "========================================"
     Write-Host ("VNet Integration starting for web apps ") -ForegroundColor Yellow
@@ -639,9 +630,9 @@ function Initialize-PE {
             }
             else {
                 Write-Host ("subnet does not exists ") -ForegroundColor Green
-                Add-Subnet $vnetcfg.vnetResourceGroup $vnetcfg.vnetName $subnetName $vnetcfg.networkSecurityGroup ($nextAvailableWebAppAddress + '/28')
+                Add-Subnet $vnetcfg.vnetResourceGroup $vnetcfg.vnetName $subnetName $vnetcfg.networkSecurityGroup ($vnetparams.nextAvailableWebAppAddress + '/28')
                 $availableSubnets += $subnetName
-                $nextAvailableWebAppAddress = Get-AvailableIPAddress $nextAvailableWebAppAddress
+                $vnetparams.nextAvailableWebAppAddress = Get-AvailableIPAddress $vnetparams.nextAvailableWebAppAddress
             }
             foreach ($appService in $plan.WebApps) {
                 if ( $appService.VNetPrivateEndpoint) {
@@ -656,37 +647,83 @@ function Initialize-PE {
                 }
 
                 if ( $appService.AccessIPRestriction) {
-                    Add-WebAppAccessRestrictionRule $vnetcfg.vnetResourceGroup $appService.Name $vnetcfg.ipAddressToAllow ("Allow IP" + $subnetRuleNameCounter) $null $null $inboundRulePriority
-                    $inboundRulePriority++    
-                    $subnetRuleNameCounter++
-                    Write-Host("inboundRulePriority web app: $inboundRulePriority") -ForegroundColor Green
-                    Write-Host("subnetRuleNameCounter web app: $subnetRuleNameCounter") -ForegroundColor Green
+                    Add-WebAppAccessRestrictionRule $vnetcfg.vnetResourceGroup $appService.Name $vnetcfg.ipAddressToAllow ("Allow IP" + $vnetparams.subnetRuleNameCounter) $null $null $vnetparams.inboundRulePriority
+                    $vnetparams.inboundRulePriority++    
+                    $vnetparams.subnetRuleNameCounter++
+                    Write-Host("inboundRulePriority web app: $vnetparams.inboundRulePriority") -ForegroundColor Green
+                    Write-Host("subnetRuleNameCounter web app: $vnetparams.subnetRuleNameCounter") -ForegroundColor Green
                 }
 
                 if ( $appService.AccessSubnetRestriction) {
                     foreach ($subnet in $existingSubnets) {
-                        Add-WebAppAccessRestrictionRule $vnetcfg.vnetResourceGroup $appService.Name  $null ("Allow Subnet" + $subnetRuleNameCounter) $vnetcfg.vnetName $subnet.Trim() $inboundRulePriority
-                        $inboundRulePriority++    
-                        $subnetRuleNameCounter++
+                        Add-WebAppAccessRestrictionRule $vnetcfg.vnetResourceGroup $appService.Name  $null ("Allow Subnet" + $vnetparams.subnetRuleNameCounter) $vnetcfg.vnetName $subnet.Trim() $vnetparams.inboundRulePriority
+                        $vnetparams.inboundRulePriority++    
+                        $vnetparams.subnetRuleNameCounter++
                     }
                 }
             }
         }
     }
-    Add-VNETParam "lastCreatedWebAppIpAddress" $nextAvailableWebAppAddress
+    Add-VNETParam "lastCreatedWebAppIpAddress" $vnetparams.nextAvailableWebAppAddress
 
     Write-Host ("VNet Integration completed for web apps ") -ForegroundColor Green
     Write-Host "========================================"
-    Add-VNETParam "inboundRulePriority" $inboundRulePriority
-    Add-VNETParam "inboundRulePriority" $inboundRulePriority
-    Add-VNETParam "subnetRuleNameCounter" $subnetRuleNameCounter
-    Add-VNETParam "subnetRuleNameCounter" $subnetRuleNameCounter
 
-    Save-VNETParameters
+}
+
+function Set-VNETSearch { 
 
     Write-Host "========================================"
-    Write-Host ("VNet Integration starting for cognitive services, storage accounts, keyvaults and container registry apps ") -ForegroundColor Yellow
-    $azureResourcesArray = ($cogservicesecfg, $storagecfg, $keyvaultcfg, $conregistrycfg)
+    Write-Host ("VNet Integration starting for search service") -ForegroundColor Yellow
+  
+    $searchserviceType = $searchservicecfg.Apptype
+    $searchServiceGroupId = $searchservicecfg.GroupId
+    $searchsrvcpGroupId = $groupidcfg.$searchServiceGroupId
+    foreach ($srchservice in $searchservicecfg.Items) {
+        if ( $srchservice.EnablePrivateAccess) {
+            Enable-PrivaceAccess  $srchservice.Name  $searchserviceType
+        }
+       
+        if ( $srchservice.VNetPrivateEndpoint) {
+            Add-PrivateEndPoint  $searchserviceType $srchservice.Name ($srchservice.Name + "-pe") ($srchservice.Name + "-connection") $searchsrvcpGroupId $vnetcfg.privateEndPointSubnet 
+        }
+
+        if ( $srchservice.AddIPAddressRule) {
+            Write-Host("=========================") -ForegroundColor Yellow
+            Write-Host("Adding Ip Address rule on resource:" + $srchservice.Name) -ForegroundColor Yellow
+
+            az search service update --name $srchservice.Name --resource-group $config.resourceGroupName --public-access "enabled" --ip-rules $vnetcfg.ipaddressrule
+            Write-Host("=========================") -ForegroundColor Green
+            Write-Host("Added Ip Address rule on resource:" + $srchservice.Name) -ForegroundColor Green
+        }
+
+        if ( $srchservice.AddPrivateSharedLink) {
+            foreach ($spaReq in $createpecfg.items) {
+                if ($spaReq.properties.privateLinkResourceId -match "Microsoft.Web/sites") {
+                    $url = "https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/CognitiveSearch-Dev/providers/Microsoft.Search/searchServices/" + $srchservice.Name + "/sharedPrivateLinkResources/" + $spaReq.name + "?api-version=2020-08-01-preview"
+                }
+                else {
+                    $url = "https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/CognitiveSearch-Dev/providers/Microsoft.Search/searchServices/" + $srchservice.Name + "/sharedPrivateLinkResources/" + $spaReq.name + "?api-version=2020-08-01"
+                }
+                $body = ($spaReq | ConvertTo-Json -Compress).Replace('"', '\"')
+                Write-Host("=========================") -ForegroundColor Yellow
+                Write-Host("creating shared private access with name: " + $spaReq.name) -ForegroundColor Yellow
+
+                az rest --method put --uri $url --body $body
+                
+                Write-Host("created shared private access with name: " + $spaReq.name) -ForegroundColor Green
+                Write-Host("=========================") -ForegroundColor Green
+
+            }
+        }
+    }
+
+    Write-Host ("VNet Integration completed for search service") -ForegroundColor Green
+    Write-Host "========================================"
+   
+}
+
+function Set-VNETResource ($azureResourcesArray) {
     foreach ($azureResource in $azureResourcesArray) {
         $appType = $azureResource.Apptype
         Write-Host ("App type is  " + $appType) -ForegroundColor Yellow
@@ -730,81 +767,111 @@ function Initialize-PE {
         Write-Host ("VNet Integration completed for resource with types " + $appType) -ForegroundColor Green
 
     }
+}
+
+# Main Script starts here  
+# Add Private Endpoints + VNET Integration for all functions and webapps
+function Initialize-VNET {
+
+    Import-VNETConfig
+
+    Set-VNETFunctions
+    Save-VNETParameters
+
+    Set-VNETWebApps 
+    Save-VNETParameters
+
+    Write-Host "========================================"
+    Write-Host ("VNet Integration starting for cognitive services, storage accounts, keyvaults and container registry apps ") -ForegroundColor Yellow
+
+    Set-VNETResource $cogservicesecfg
+    Set-VNETResource $storagecfg
+    Set-VNETResource $keyvaultcfg
+    Set-VNETResource $conregistrycfg
+
     Write-Host ("VNet Integration completed for cognitive services, storage accounts, keyvaults and container registry apps ") -ForegroundColor Green
     Write-Host "========================================"
   
-    Write-Host "========================================"
-    Write-Host ("VNet Integration starting for search service") -ForegroundColor Yellow
-  
-    $searchserviceType = $searchservicecfg.Apptype
-    $searchServiceGroupId = $searchservicecfg.GroupId
-    $searchsrvcpGroupId = $groupidcfg.$searchServiceGroupId
-    foreach ($srchservice in $searchservicecfg.Items) {
-        if ( $srchservice.EnablePrivateAccess) {
-            Enable-PrivaceAccess  $srchservice.Name  $searchserviceType
-        }
-       
-        if ( $srchservice.VNetPrivateEndpoint) {
-            Add-PrivateEndPoint  $searchserviceType $srchservice.Name ($srchservice.Name + "-pe") ($srchservice.Name + "-connection") $searchsrvcpGroupId $vnetcfg.privateEndPointSubnet 
-        }
+    Set-VNETSearch
+    Save-VNETParameters
+}
+#endregion
 
-        if ( $srchservice.AddIPAddressRule) {
-            Write-Host("=========================") -ForegroundColor Yellow
-            Write-Host("Adding Ip Address rule on resource:" + $srchservice.Name) -ForegroundColor Yellow
+#region VNET Configuration & Parameters
 
-            az search service update --name $srchservice.Name --resource-group $config.resourceGroupName --public-access "enabled" --ip-rules $vnetcfg.ipaddressrule
-            Write-Host("=========================") -ForegroundColor Green
-            Write-Host("Added Ip Address rule on resource:" + $srchservice.Name) -ForegroundColor Green
+function Import-VNETConfig {
 
+    $global:vnetcfg = [string] (Get-Content -Path (join-path $global:envpath "config" "vnet" "config.json"))
+    $global:vnetcfg = ConvertFrom-Json $global:vnetcfg
 
-        }
+    Import-createpeConfig
+    Import-groupidConfig
 
-        if ( $srchservice.AddPrivateSharedLink) {
-            foreach ($spaReq in $createpecfg.items) {
-                if ($spaReq.properties.privateLinkResourceId -match "Microsoft.Web/sites") {
-                    $url = "https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/CognitiveSearch-Dev/providers/Microsoft.Search/searchServices/" + $srchservice.Name + "/sharedPrivateLinkResources/" + $spaReq.name + "?api-version=2020-08-01-preview"
-                }
-                else {
-                    $url = "https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/CognitiveSearch-Dev/providers/Microsoft.Search/searchServices/" + $srchservice.Name + "/sharedPrivateLinkResources/" + $spaReq.name + "?api-version=2020-08-01"
-                }
-                $body = ($spaReq | ConvertTo-Json -Compress).Replace('"', '\"')
-                Write-Host("=========================") -ForegroundColor Yellow
-                Write-Host("creating shared private access with name: " + $spaReq.name) -ForegroundColor Yellow
+    Import-VNETParams
 
-                az rest --method put --uri $url --body $body
-                
-                Write-Host("created shared private access with name: " + $spaReq.name) -ForegroundColor Green
-                Write-Host("=========================") -ForegroundColor Green
+    if (! $vnetparams.inboundRulePriority) {
+        Add-VNETParam "inboundRulePriority" 400
+    }
 
+    if (! $vnetparams.subnetRuleNameCounter) {
+        Add-VNETParam "subnetRuleNameCounter" 1
+    }
+
+    if (! $vnetparams.lastCreatedWebAppIpAddress) {
+        Add-VNETParam "nextAvailableWebAppAddress" $vnetcfg.VnetWebAppStartIpAddress
+    }
+
+    if (! $vnetparams.lastCreatedFuncAppIpAddress) {
+        Add-VNETParam "nextAvailableFuncAddress" $vnetcfg.VnetFuncAppStartIpAddress
+    }
+}
+function Import-createpeConfig() {
+    # Import Other configurations like functions
+    $global:createpecfg = [string] (Get-Content -Path (join-path $global:envpath "config" "vnet" "createpe.json"))
+    $global:createpecfg = ConvertFrom-Json $global:createpecfg
+}
+function Import-groupidConfig() {
+    # Import Other configurations like functions
+    $global:groupidcfg = [string] (Get-Content -Path (join-path $global:envpath "config" "vnet" "groupid.json"))
+    $global:groupidcfg = ConvertFrom-Json $global:groupidcfg
+}
+
+function Import-VNETParams {
+
+    $global:vnetparams = New-Object -TypeName PSObject
+
+    $parametersJson = join-path $global:envpath "vnetparameters.json"
+
+    if (Test-Path -Path $parametersJson) {
+        # Loading Environment Parameters
+        $readParams = [string] (Get-Content -Path $parametersJson -ErrorAction SilentlyContinue)
+
+        if ($readParams) {
+            if ($readParams.Length -gt 0) {
+                $global:vnetparams = ConvertFrom-Json $readParams
             }
         }
     }
 
-    Write-Host ("VNet Integration completed for search service") -ForegroundColor Green
-    Write-Host "========================================"
-   
-
+    return $global:vnetparams
 }
-#endregion
+
 function Add-VNETParam($name, $value) {
-    if ( $global:vnetcfg.PSobject.Properties.name -eq $name) {
-        $global:vnetcfg.$name = $value
+
+    if ( $global:vnetparams.PSobject.Properties.name -eq $name) {
+        $global:vnetparams.$name = $value
     }
     else {
-        $global:vnetcfg | Add-Member -MemberType NoteProperty -Name $name -Value $value -ErrorAction Ignore
+        $global:vnetparams | Add-Member -MemberType NoteProperty -Name $name -Value $value -ErrorAction Ignore
     }
 }
 
 function Save-VNETParameters() {
-    $global:vnetcfg | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath (join-path $global:envpath "config" "vnet" "config.json") -Force    
-    $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
-    $poplocation = join-path $ScriptDir "\..\..\..\configuration"
-    $location = (join-path $poplocation "config" "vnet" "config.json")
-
-    $global:vnetcfg | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath $location -Force    
+    $global:vnetparams | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath (join-path $global:envpath "vnetparameters.json") -Force
 }
+#endregion
 
-#region approve private endpoints
+#region Approve private endpoints
 Function approve-privateEndpoints {
     foreach ($spaReq in $createpecfg.items) {
         if ($spaReq.properties.groupId -eq "vault") {

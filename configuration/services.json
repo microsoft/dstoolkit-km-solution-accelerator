@@ -8,7 +8,6 @@
     "logAnalyticsService": "{{config.name}}analytics",
     "techStorageAccountName": "{{config.name}}tech",
     "dataStorageAccountName": "{{config.name}}data",
-    "vnetnsg": "{{config.name}}nsg",
     "adf": "{{config.name}}adf",
     "aks": "{{config.name}}aks",
     "acr": "{{config.name}}acr.azurecr.io",
