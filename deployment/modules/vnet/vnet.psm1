@@ -520,8 +520,6 @@ function Enable-PrivaceAccess {
 #region WebApps & Functions
 function Add-VNETAppSettings {
  
-    Push-Location $global:envpath
- 
     foreach ($plan in $functionscfg.AppPlans) {
         foreach ($appService in $plan.FunctionApps) {   
             if ( $appService.vnetIntegration) {
@@ -551,8 +549,6 @@ function Add-VNETAppSettings {
      
         }
     }
-     
-    Pop-Location    
 }
  
 #endregion
