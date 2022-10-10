@@ -12,9 +12,5 @@
     "inboundRestrictSubnet": "{{config.name}}-subnet",
     "ipaddressrule": "172.17.5.0/24",
     "VnetFuncAppStartIpAddress": "172.17.50.0",
-    "VnetWebAppStartIpAddress": "172.17.100.0",
-    "inboundrulePriority": 453,
-    "subnetRuleNameCounter": 154,
-    "lastCreatedFuncAppIpAddress": "172.17.80.0",
-    "lastCreatedWebAppIpAddress": "172.17.128.0"
+    "VnetWebAppStartIpAddress": "172.17.100.0"
 }
