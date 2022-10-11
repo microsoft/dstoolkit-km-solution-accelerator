@@ -523,7 +523,7 @@
                     "targetName": "linked_entities"
                 }
             ],
-            "httpHeaders":{
+            "httpHeaders": {
                 "defaultLanguageCode": "en",
                 "minimumPrecision": "0.75"
             }

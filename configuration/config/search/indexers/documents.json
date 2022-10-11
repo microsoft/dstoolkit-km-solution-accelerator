@@ -79,7 +79,7 @@
       "targetFieldName": "slide_count",
       "mappingFunction": null
     }
-    ],
+  ],
   "outputFieldMappings": [
     {
       "sourceFieldName": "/document/skill_metadata/source_processing_date",
@@ -246,7 +246,6 @@
       "targetFieldName": "email",
       "mappingFunction": null
     }
-  
   ],
   "encryptionKey": null
 }

@@ -246,7 +246,7 @@
       "targetFieldName": "content_source",
       "mappingFunction": null
     },
-        {
+    {
       "sourceFieldName": "/document/skill_metadata/title",
       "targetFieldName": "title",
       "mappingFunction": null

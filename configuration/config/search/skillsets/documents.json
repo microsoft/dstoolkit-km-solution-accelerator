@@ -267,7 +267,7 @@
                     "targetName": "linked_entities"
                 }
             ],
-            "httpHeaders":{
+            "httpHeaders": {
                 "defaultLanguageCode": "en",
                 "minimumPrecision": "0.75"
             }
@@ -592,23 +592,23 @@
                 {
                     "name": "metadata_message_from",
                     "source": "/document/metadata_message_from"
-                  },
-                  {
+                },
+                {
                     "name": "metadata_message_to",
                     "source": "/document/metadata_message_to"
-                  },
-                  {
+                },
+                {
                     "name": "metadata_message_cc",
                     "source": "/document/metadata_message_cc"
-                  },
-                  {
+                },
+                {
                     "name": "metadata_message_bcc",
                     "source": "/document/metadata_message_bcc"
-                  },
-                  {
+                },
+                {
                     "name": "metadata_subject",
                     "source": "/document/metadata_subject"
-                  }
+                }
             ],
             "outputs": [
                 {
