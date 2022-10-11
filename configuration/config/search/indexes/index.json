@@ -597,6 +597,57 @@
       ]
     },
     {
+      "name": "email",
+      "type": "Edm.ComplexType",
+      "fields": [
+        {
+          "name": "message_to",
+          "type": "Edm.String",
+          "filterable": true,
+          "sortable": true,
+          "facetable": true,
+          "searchable": true,
+          "retrievable": true
+        },
+        {
+          "name": "message_from",
+          "type": "Edm.String",
+          "filterable": true,
+          "sortable": true,
+          "facetable": true,
+          "searchable": true,
+          "retrievable": true
+        },
+        {
+          "name": "message_cc",
+          "type": "Edm.String",
+          "filterable": true,
+          "sortable": true,
+          "facetable": true,
+          "searchable": true,
+          "retrievable": true
+        },
+        {
+          "name": "message_bcc",
+          "type": "Edm.String",
+          "filterable": true,
+          "sortable": true,
+          "facetable": true,
+          "searchable": true,
+          "retrievable": true
+        },
+        {
+          "name": "subject",
+          "type": "Edm.String",
+          "filterable": true,
+          "sortable": true,
+          "facetable": true,
+          "searchable": true,
+          "retrievable": true
+        }
+      ]
+    },
+    {
       "name": "title",
       "type": "Edm.String",
       "searchable": true,

@@ -240,7 +240,13 @@
       "sourceFieldName": "/document/skill_metadata/page_count",
       "targetFieldName": "page_count",
       "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/email_metadata",
+      "targetFieldName": "email",
+      "mappingFunction": null
     }
+  
   ],
   "encryptionKey": null
 }
