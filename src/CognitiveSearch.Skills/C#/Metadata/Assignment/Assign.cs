@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Collections.Concurrent;
+using Metadata.Assignment;
 
 namespace Assignment
 {
@@ -123,12 +124,44 @@ namespace Assignment
                     case ".bmp":
                         content_group = "Image";
                         break;
+                    case ".msg":
+                    case ".eml":
+                        content_group = Constants.email_content_group;
+                        break;
                     default:
                         break;
                 }
 
                 assignedMetadata[$"content_group"] = content_group;
 
+            }
+
+            //Email
+
+            if (assignedMetadata[$"content_group"].ToString().ToLower().Contains(Constants.email_content_group.ToLower())){
+                Dictionary<string, object> emailMetadata = new Dictionary<string, object>();
+
+                if (inRecord.Data.ContainsKey(Constants.email_to))
+                {
+                    emailMetadata[Constants.email_to_output] = inRecord.Data[Constants.email_to];
+                }
+                if (inRecord.Data.ContainsKey(Constants.email_from))
+                {
+                    emailMetadata[Constants.email_from_output] = inRecord.Data[Constants.email_from];
+                }
+                if (inRecord.Data.ContainsKey(Constants.email_cc))
+                {
+                    emailMetadata[Constants.email_cc_output] = inRecord.Data[Constants.email_cc];
+                }
+                if (inRecord.Data.ContainsKey(Constants.email_bcc))
+                {
+                    emailMetadata[Constants.email_bcc_output] = inRecord.Data[Constants.email_bcc];
+                }
+                if (inRecord.Data.ContainsKey(Constants.email_subject))
+                {
+                    emailMetadata[Constants.email_subject_output] = inRecord.Data[Constants.email_subject];
+                }
+                assignedMetadata["email_metadata"] = emailMetadata;
             }
 
             // Security

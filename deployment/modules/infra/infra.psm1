@@ -55,7 +55,7 @@ function New-AzureKeyVault()
     --key-permissions get list create delete `
     --secret-permissions get set list delete
     
-    $currentUserId = ((az ad signed-in-user show) | ConvertFrom-Json).objectId
+    $currentUserId = ((az ad signed-in-user show) | ConvertFrom-Json).id
     az keyvault set-policy --name $params.keyvault --object-id $currentUserId `
     --certificate-permissions get list create delete `
     --key-permissions get list create delete `
