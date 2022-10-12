@@ -21,6 +21,9 @@ Import-Module (join-path $modulePath "infra") -Global -DisableNameChecking -Forc
 Import-Module (join-path $modulePath "core") -Global -DisableNameChecking -Force
 Import-Module (join-path $modulePath "vnet") -Global -DisableNameChecking -Force
 
+# Set the extension to use dynamic installation
+az config set extension.use_dynamic_install=yes_without_prompt
+
 Get-Config -Name $Name -WorkDir $ScriptDir -Reload:$true
 
 if ( $config.overlayPath ) {
