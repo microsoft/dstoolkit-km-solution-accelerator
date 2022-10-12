@@ -11,8 +11,6 @@
                     "Id":"webappui",
                     "Name": "{{config.name}}ui",
                     "Path": "src\\CognitiveSearch.UI\\CognitiveSearch.UI",
-                    "VNetPrivateEndpoint":false,
-                    "VNetIntegration":true,
                     "AccessIPRestriction":false,
                     "AccessSubnetRestriction":true,
                     "slots":[
@@ -31,8 +29,6 @@
                     "Id":"tikaserver",
                     "Name": "{{config.name}}tikaserver",
                     "Image": "microsoft/tikaserver:latest",
-                    "VNetPrivateEndpoint":true,
-                    "VNetIntegration":true,
                     "AccessIPRestriction":false,
                     "AccessSubnetRestriction":true
                 }

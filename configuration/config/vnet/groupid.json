@@ -4,7 +4,7 @@
     "Tables": "table ",
     "SQLDatabase": "sqlServer",
     "MySql": "mysqlServer",
-    "KeyValut": "vault",
+    "KeyVault": "vault",
     "Functions": "sites",
     "WebApps": "sites",
     "CognitiveService": "account",

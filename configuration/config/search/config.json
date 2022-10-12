@@ -14,7 +14,6 @@
             "Name": "{{config.name}}search",
             "ResourceGroup": "{{config.resourceGroupName}}",
             "Sku":"Standard",
-            "VNetPrivateEndpoint": false,
             "EnablePrivateAccess":true,
             "AddIPAddressRule":false,
             "AddPrivateSharedLink":true
