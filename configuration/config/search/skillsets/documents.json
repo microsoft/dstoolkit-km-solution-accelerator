@@ -173,7 +173,7 @@
             "inputs": [
                 {
                     "name": "language",
-                    "source": "/document/language"
+                    "source": "/document/pages/0/translatedToLanguageCode"
                 },
                 {
                     "name": "text",
