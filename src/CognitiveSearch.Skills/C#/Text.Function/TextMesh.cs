@@ -107,7 +107,7 @@ namespace Text.Mesh
                         {
                             content_trim[^1] = content_trim[^1].Substring(0, content_trim[^1].Length - 1);
 
-                            if (values[i].StartsWith(WORD_CESURE_CHARACTER))
+                            if (values[i].StartsWith(WORD_CESURE_CHARACTER) && values[i].Length > 1)
                             {
                                 content_trim[^1] += values[i][1..^1];
                             }
