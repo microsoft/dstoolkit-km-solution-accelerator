@@ -883,8 +883,24 @@
             "httpHeaders": {}
         },
         {
+            "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
+            "context": "/document",
+            "inputs": [
+                {
+                    "name": "title",
+                    "source": "/document/skill_metadata/title"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "fields",
+                    "targetName": "fieldsToTranslate"
+                }
+            ]
+        },
+        {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
-            "name": "TitleTranslation",
+            "name": "FieldTranslation",
             "context": "/document",
             "uri": "{{param.language.Translator}}",
             "httpMethod": "POST",
