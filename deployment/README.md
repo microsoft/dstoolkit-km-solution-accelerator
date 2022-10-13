@@ -65,20 +65,13 @@ The below **contoso.json** environment configuration file you can easily adjust 
     "organisationLogoProviderUrl":"~/images/logos/provider-logo.png",
     "adminUser": "admin@contoso.com",
     "resourceGroupName": "kmcontoso-rg",
-    "searchDefaultFromLanguageCode": "en",
-    "searchDefaultToLanguageCode": "en",
     "spellCheckEnabled":false,
     "spellCheckProvider":"Bing",
     "webSearchEnabled": false,
     "webMarket": "en-uk",
     "mapSearchEnabled": false,
     "location": "YOUR AZURE LOCATION",
-    "searchSku": "Standard",
-    "searchVersion": "2021-04-30-Preview",
-    "searchManagementVersion": "2021-04-30-Preview",
     "semanticSearchEnabled":false,
-    "storageContainers":["documents", "images", "metadata"],
-    "searchIndexerEnvironment":"standard",
     "X_Tika_PDFAllPagesAsImages":true,
     "vnetEnable":false
 }
@@ -102,20 +95,13 @@ Below the list of most common entries your configuration file should contains:
 |organisationLogoProviderUrl|Relative or Absolute URL of your organization logo|
 |adminUser|(Optional)|
 |resourceGroupName|Resource Group the KM solution would be deployed|
-|searchDefaultFromLanguageCode|Default FROM language code for translation|
-|searchDefaultToLanguageCode|Default TO language code for translation|
 |spellCheckEnabled|Boolean indicating if your solution supports a spellChecking service.|
 |spellCheckProvider|String indicating which SpellChecking service you will use. By deafult we support "Bing". You may add your own.|
 |webSearchEnabled|Boolean indicating if your solution will use Bing as Web Search service.|
 |webMarket|When Web Search is enabled, indicates which market to use for querying.|
 |mapSearchEnabled|Boolean indicating if your solution will use Azure Maps.|
 |location|Azure location to deploy the services to.|
-|searchSku| Search Sku. Please refer to |
-|searchVersion| Search Version for query and index|
-|searchManagementVersion| Search Management version|
 |semanticSearchEnabled|Azure Cognitive Search (ACS) Semantic flag. Semantic Search is an option in ACS.|
-|storageContainers| list of storage containers to create in the target data storage.|
-|searchIndexerEnvironment| Search Indexer Environment setting. This is use for VNET support in ACS.|
 |X_Tika_PDFAllPagesAsImages| Flag for Tika processing. Set to true indicates that every page of aPDF document will be converted into an Image. Set to false, means embedded images of a PDF will be extracted.|
 |vnetEnable|Flag to indicate if the solution requires VNET integration.|
 
@@ -177,19 +163,12 @@ organisationLogoUrl           : ~/images/logos/microsoft-logo.png
 organisationLogoProviderUrl   : ~/images/logos/provider-logo.png
 adminUser                     : admin@contoso.com
 resourceGroupName             : kmcontoso-rg
-searchDefaultFromLanguageCode : en
-searchDefaultToLanguageCode   : en
 spellCheckEnabled             : False
 webSearchEnabled              : False
 webMarket                     : en-uk
 mapSearchEnabled              : False
 location                      : YOUR AZURE LOCATION
-searchSku                     : Standard
-searchVersion                 : 2021-04-30-Preview
-searchManagementVersion       : 2021-04-30-Preview
 semanticSearchEnabled         : False
-storageContainers             : {documents, images, metadata}
-searchIndexerEnvironment      : standard
 X_Tika_PDFAllPagesAsImages    : True
 vnetEnable                    : False
 
@@ -204,7 +183,6 @@ pricing.standard                  : S1
 pricing.premium                   : P1V2
 pricing.elastic                   : EP1
 searchServiceName                 : kmcontososearch
-cogServicesBundle                 : kmcontosocog
 cogSvcLanguage                : kmcontosocoglanguage
 cogSvcVision                  : kmcontosocogvision
 cogSvcForm                    : kmcontosocogform

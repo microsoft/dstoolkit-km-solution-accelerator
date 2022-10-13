@@ -20,7 +20,7 @@
       "failOnUnprocessableDocument": false,
       "indexStorageMetadataOnlyForOversizedDocuments": true,
       "indexedFileNameExtensions": ".jpg,.jpeg,.png,.bmp,.tiff,.tif,.gif",
-      "executionEnvironment": "{{config.searchIndexerEnvironment}}"
+      "executionEnvironment": "{{param.searchIndexerEnvironment}}"
     }
   },
   "fieldMappings": [

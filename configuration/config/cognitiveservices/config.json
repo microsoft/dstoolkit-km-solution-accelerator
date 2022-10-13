@@ -1,0 +1,43 @@
+{
+    "ServiceEndPoint":"Microsoft.CognitiveServices",
+    "GroupId":"CognitiveService",
+    "Apptype":"CognitiveService",
+    "Items": [
+        {
+            "Name": "{{config.name}}cogvision",
+            "Itemtype":"ComputerVision",
+            "Kind":"ComputerVision",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "Sku":"S1",
+            "EnablePrivateAccess":true,
+            "AddExistingSubnets":true
+        },
+        {
+            "Name": "{{config.name}}cogform",
+            "Itemtype":"FormRecognizer",
+            "Kind":"FormRecognizer",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "Sku":"S0",
+            "EnablePrivateAccess":true,
+            "AddExistingSubnets":true
+        },
+        {
+            "Name": "{{config.name}}cogtranslate",
+            "Itemtype":"Translate",
+            "Kind":"TextTranslation",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "Sku":"S1",
+            "EnablePrivateAccess":true,
+            "AddExistingSubnets":true
+        },
+        {
+            "Name": "{{config.name}}coglanguage",
+            "Itemtype":"Language",
+            "Kind":"TextAnalytics",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "Sku":"S",
+            "EnablePrivateAccess":true,
+            "AddExistingSubnets":true
+        }
+    ]
+}

@@ -1,7 +1,7 @@
 ### See https://docs.microsoft.com/en-us/rest/api/searchservice/suggestions#request-body
 
 ### Suggestions Test 1
-POST  https://{{param.searchServiceName}}.search.windows.net/indexes/{{param.indexName}}/docs/suggest?api-version={{config.searchVersion}}
+POST  https://{{param.searchServiceName}}.search.windows.net/indexes/{{param.indexName}}/docs/suggest?api-version={{param.searchVersion}}
 content-type: application/json;charset=utf-8
 api-key : {{param.searchServiceQueryKey}}
 

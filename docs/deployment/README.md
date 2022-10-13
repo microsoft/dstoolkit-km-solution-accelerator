@@ -62,7 +62,7 @@ Soft-deletion is now default on Key Vaults and Azure Cognitive Services. If you 
 ```ps
 az keyvault recover --subscription $config.subscriptionId -n $params.keyvault
 
-az cognitiveservices account recover -l $config.location -g $config.resourceGroupName -n $params.cogServicesBundle
+az cognitiveservices account recover -l $config.location -g $config.resourceGroupName -n $params.cogSvcXXXX
 ```
 
 # Others considerations

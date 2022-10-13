@@ -156,9 +156,9 @@
                 }
             ],
             "httpHeaders": {
-                "defaultFromLanguageCode": "{{config.searchDefaultFromLanguageCode}}",
-                "defaultToLanguageCode": "{{config.searchDefaultToLanguageCode}}",
-                "suggestedFrom": "{{config.searchDefaultFromLanguageCode}}"
+                "defaultFromLanguageCode": "{{param.searchDefaultFromLanguageCode}}",
+                "defaultToLanguageCode": "{{param.searchDefaultToLanguageCode}}",
+                "suggestedFrom": "{{param.searchDefaultFromLanguageCode}}"
             }
         },
         {
@@ -692,9 +692,9 @@
                 }
             ],
             "httpHeaders": {
-                "defaultFromLanguageCode": "{{config.searchDefaultFromLanguageCode}}",
-                "defaultToLanguageCode": "{{config.searchDefaultToLanguageCode}}",
-                "suggestedFrom": "{{config.searchDefaultFromLanguageCode}}"
+                "defaultFromLanguageCode": "{{param.searchDefaultFromLanguageCode}}",
+                "defaultToLanguageCode": "{{param.searchDefaultToLanguageCode}}",
+                "suggestedFrom": "{{param.searchDefaultFromLanguageCode}}"
             }
         }
     ]

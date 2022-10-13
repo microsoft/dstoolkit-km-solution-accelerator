@@ -43,7 +43,6 @@ The file services.json contains a pre-defined list of services names to deploy.
 ```json
 {
     "searchServiceName": "{{config.name}}search",
-    "cogServicesBundle": "{{config.name}}cog",
     "cogSvcLanguage": "{{config.name}}coglanguage",
     "cogSvcVision": "{{config.name}}cogvision",
     "cogSvcForm": "{{config.name}}cogform",

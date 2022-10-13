@@ -1,0 +1,14 @@
+{
+    "GroupId":"ContainerRegistry",
+    "ServiceEndPoint":"Microsoft.ContainerRegistry",
+    "Apptype":"ContainerRegistry",
+    "Items": [
+        {
+            "Name": "{{config.name}}acr",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "EnablePrivateAccess":true,
+            "AddExistingSubnets":true,
+            "IPAddressToAdd":[]
+        }
+    ]
+}

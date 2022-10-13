@@ -25,18 +25,37 @@ az extension add --name authV2
 az extension add --name application-insights
 
 # Deploy steps
+Write-Host "=============================================================="
 Set-Subscription
 
+Write-Host "=============================================================="
 Assert-Subscription
+
+Write-Host "=============================================================="
 New-ResourceGroups
+
+Write-Host "=============================================================="
 New-AzureKeyVault
+
+Write-Host "=============================================================="
 New-AppInsights
-New-TechnicalStorageAccount
-New-DataStorageAccountAndContainer
+
+Write-Host "=============================================================="
+New-StorageAccount
+
+Write-Host "=============================================================="
 New-CognitiveServices
+
+Write-Host "=============================================================="
 New-SearchServices
+
+Write-Host "=============================================================="
 New-ACRService
+
+Write-Host "=============================================================="
 New-AzureMapsService
+
+Write-Host "=============================================================="
 New-BingSearchService
 
 # Save and Apply the Parameters we got

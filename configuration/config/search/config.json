@@ -1,0 +1,22 @@
+{
+    "GroupId":"Search",
+    "ServiceEndPoint":"Microsoft.Search",
+    "Apptype":"Search",
+    "Parameters" : {
+        "searchDefaultFromLanguageCode": "en",
+        "searchDefaultToLanguageCode": "en",
+        "searchVersion": "2021-04-30-Preview",
+        "searchManagementVersion": "2021-04-30-Preview",
+        "searchIndexerEnvironment":"standard"
+    },
+    "Items": [
+        {
+            "Name": "{{config.name}}search",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "Sku":"Standard",
+            "EnablePrivateAccess":true,
+            "AddIPAddressRule":false,
+            "AddPrivateSharedLink":true
+        }
+    ]
+}

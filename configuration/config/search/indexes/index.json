@@ -328,7 +328,7 @@
       "sortable": false,
       "facetable": false,
       "key": false,
-      "analyzer": "{{config.searchDefaultToLanguageCode}}.microsoft"
+      "analyzer": "{{param.searchDefaultToLanguageCode}}.microsoft"
     },
     {
       "name": "paragraphs",
@@ -341,7 +341,7 @@
       "key": false,
       "indexAnalyzer": null,
       "searchAnalyzer": null,
-      "analyzer": "{{config.searchDefaultToLanguageCode}}.microsoft",
+      "analyzer": "{{param.searchDefaultToLanguageCode}}.microsoft",
       "synonymMaps": [
         "synonyms"
       ]
@@ -355,7 +355,7 @@
       "sortable": false,
       "facetable": false,
       "key": false,
-      "analyzer": "{{config.searchDefaultToLanguageCode}}.microsoft"
+      "analyzer": "{{param.searchDefaultToLanguageCode}}.microsoft"
     },
     {
       "name": "celebrities",
@@ -656,7 +656,7 @@
       "sortable": false,
       "facetable": false,
       "key": false,
-      "analyzer": "{{config.searchDefaultFromLanguageCode}}.microsoft",
+      "analyzer": "{{param.searchDefaultFromLanguageCode}}.microsoft",
       "synonymMaps": []
     },
     {
@@ -668,7 +668,7 @@
       "sortable": false,
       "facetable": false,
       "key": false,
-      "analyzer": "{{config.searchDefaultToLanguageCode}}.microsoft"
+      "analyzer": "{{param.searchDefaultToLanguageCode}}.microsoft"
     },
     {
       "name": "authors",

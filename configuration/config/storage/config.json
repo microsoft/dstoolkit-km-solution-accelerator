@@ -1,0 +1,30 @@
+{
+    "ServiceEndPoint": "Microsoft.Storage",
+    "GroupId": "Blob",
+    "Apptype": "Storage",
+    "Parameters": {
+        "storageContainers": [
+            "documents",
+            "images",
+            "metadata"
+        ]
+    },
+    "Items": [
+        {
+            "Name": "{{config.name}}data",
+            "Accountkind": "StorageV2",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "IsDataStorage": true,
+            "EnablePrivateAccess": true,
+            "AddExistingSubnets": true
+        },
+        {
+            "Name": "{{config.name}}tech",
+            "Accountkind": "StorageV2",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "IsDataStorage": false,
+            "EnablePrivateAccess": true,
+            "AddExistingSubnets": true
+        }
+    ]
+}

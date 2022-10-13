@@ -1,16 +1,16 @@
 ### Run {{param.documentsIndexer}} indexer
-POST https://{{param.searchServiceName}}.search.windows.net/indexers/{{param.documentsIndexer}}/run?api-version={{config.searchVersion}}  
+POST https://{{param.searchServiceName}}.search.windows.net/indexers/{{param.documentsIndexer}}/run?api-version={{param.searchVersion}}  
 content-type: application/json;charset=utf-8  
 api-key: {{param.searchServiceKey}}
 
 ### Status of {{param.documentsIndexer}} indexer
-GET https://{{param.searchServiceName}}.search.windows.net/indexers/{{param.documentsIndexer}}/status?api-version={{config.searchVersion}}  
+GET https://{{param.searchServiceName}}.search.windows.net/indexers/{{param.documentsIndexer}}/status?api-version={{param.searchVersion}}  
 content-type: application/json;charset=utf-8  
 api-key: {{param.searchServiceKey}}
 
 
 ### Reset {{param.documentsIndexer}} indexer
-POST https://{{param.searchServiceName}}.search.windows.net/indexers/{{param.documentsIndexer}}/reset?api-version={{config.searchVersion}}  
+POST https://{{param.searchServiceName}}.search.windows.net/indexers/{{param.documentsIndexer}}/reset?api-version={{param.searchVersion}}  
 content-type: application/json;charset=utf-8  
 api-key: {{param.searchServiceKey}}
 

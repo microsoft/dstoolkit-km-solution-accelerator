@@ -1,4 +1,5 @@
 {
+    "GroupId":"WebApps",
     "AppPlans": [
         {
             "Name": "{{config.name}}uiplan",
@@ -10,8 +11,8 @@
                     "Id":"webappui",
                     "Name": "{{config.name}}ui",
                     "Path": "src\\CognitiveSearch.UI\\CognitiveSearch.UI",
-                    "vnetPrivateEndpoint":false,
-                    "vnetIntegration":true,
+                    "AccessIPRestriction":false,
+                    "AccessSubnetRestriction":true,
                     "slots":[
                         "staging"
                     ]
@@ -28,8 +29,8 @@
                     "Id":"tikaserver",
                     "Name": "{{config.name}}tikaserver",
                     "Image": "microsoft/tikaserver:latest",
-                    "vnetPrivateEndpoint":true,
-                    "vnetIntegration":true
+                    "AccessIPRestriction":false,
+                    "AccessSubnetRestriction":true
                 }
             ]
         }

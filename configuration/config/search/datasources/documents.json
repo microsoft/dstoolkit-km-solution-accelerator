@@ -8,9 +8,9 @@
     "container": {
         "name": "{{param.documentsStorageContainerName}}"
     },
-    "dataDeletionDetectionPolicy" : {
-        "@odata.type" :"#Microsoft.Azure.Search.SoftDeleteColumnDeletionDetectionPolicy",
-        "softDeleteColumnName" : "IsDeleted",
-        "softDeleteMarkerValue" : "true"
+    "dataDeletionDetectionPolicy": {
+        "@odata.type": "#Microsoft.Azure.Search.SoftDeleteColumnDeletionDetectionPolicy",
+        "softDeleteColumnName": "IsDeleted",
+        "softDeleteMarkerValue": "true"
     }
 }

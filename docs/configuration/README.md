@@ -418,7 +418,7 @@ As an example of a .http located in the configuration/monitoring/search folder
 
 ```http
 ### Services Stats
-GET https://{{param.searchServiceName}}.search.windows.net/servicestats?api-version={{config.searchVersion}}
+GET https://{{param.searchServiceName}}.search.windows.net/servicestats?api-version={{param.searchVersion}}
 content-type: application/json;charset=utf-8
 api-key: {{param.searchServiceKey}}
 ```
