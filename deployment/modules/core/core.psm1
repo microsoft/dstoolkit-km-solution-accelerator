@@ -595,17 +595,17 @@ function Get-DataStorageAccountParameters {
 function Get-CognitiveServiceKey {
     
     foreach ($azureResource in $cogservicesecfg.Items) {
+        Write-Host "Checking Cognitive Service existence "$azureResource.Name
 
-        Write-Host "Fetching Cognitive Service key "$azureResource.Name;
-
-        $exists = az cognitiveservices account show --name $azureResource.Name --resource-group $azureResource.ResourceGroup --query id --out tsv | Out-Null
+        $exists = az cognitiveservices account show --name $azureResource.Name --resource-group $azureResource.ResourceGroup --query id --out tsv
 
         if ( $exists ) {
+            Write-Host "Fetching Cognitive Service key "$azureResource.Name
 
             $cogServicesKey = az cognitiveservices account keys list --name $azureResource.Name -g $azureResource.ResourceGroup --query key1 --out tsv
 
-            if ( $cogServicesKey -and $cogServicesKey.length -gt 0 ) {
-                Add-Param ($azureResource.Name + "Key") $cogServicesKey
+            if ( $cogServicesKey -and $cogServicesKey.Length -gt 0 ) {
+                Add-Param ($azureResource.Parameter+"Key") $cogServicesKey
             }
         }
     }
@@ -615,7 +615,7 @@ function Get-CognitiveServiceKey {
     
 function Get-AzureMapsSubscriptionKey {
     
-    if ($config.mapSearchEnabled) {
+    if ($params.mapSearchEnabled) {
         $mapsKey = az maps account keys list --name $params.maps --resource-group $config.resourceGroupName --query primaryKey --out tsv
         Add-Param "mapsSubscriptionKey" $mapsKey
     
@@ -819,7 +819,7 @@ function Update-SearchSynonyms {
 }
 function Update-SearchIndex {
     param (
-        [string]$name = "*",
+        [string]$name,
         [switch]$AllowIndexDowntime
     )
     Write-Debug -Message "Creating/Updating existing Search Index(es)"
@@ -828,7 +828,15 @@ function Update-SearchIndex {
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        Invoke-SearchAPI -url ("/indexes/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion + "&allowIndexDowntime=" + $AllowIndexDowntime) -body $configBody
+
+        if ( $name ) {
+            if ($jsonobj.name.indexOf($name) -ge 0) {
+                Invoke-SearchAPI -url ("/indexes/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion + "&allowIndexDowntime=" + $AllowIndexDowntime) -body $configBody
+            }    
+        }
+        else {
+            Invoke-SearchAPI -url ("/indexes/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion + "&allowIndexDowntime=" + $AllowIndexDowntime) -body $configBody
+        }
     }
 }
     
@@ -860,7 +868,15 @@ function Update-SearchDataSource {
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        Invoke-SearchAPI -url ("/datasources/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
+
+        if ( $name ) {
+            if ($jsonobj.name.indexOf($name) -ge 0) {
+                Invoke-SearchAPI -url ("/datasources/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
+            }    
+        }
+        else {
+            Invoke-SearchAPI -url ("/datasources/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
+        }
     }
 }
     
@@ -874,7 +890,15 @@ function Update-SearchSkillSet {
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        Invoke-SearchAPI -url ("/skillsets/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
+
+        if ( $name ) {
+            if ($jsonobj.name.indexOf($name) -ge 0) {
+                Invoke-SearchAPI -url ("/skillsets/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
+            }    
+        }
+        else {
+            Invoke-SearchAPI -url ("/skillsets/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
+        }
     }
 }
     
