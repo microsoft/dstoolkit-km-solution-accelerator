@@ -1,34 +1,31 @@
 # Module containing functions for the infrastructure deployment
 
-function Set-Subscription {
+function Set-Subscription
+{
     # Select subscription
     Write-Host "Selecting subscription '$config.subscriptionId'";
     az account set --subscription $config.subscriptionId
 }
-function Assert-Subscription {
-    # Required RPs
-    $resourceProviders = @("microsoft.cognitiveservices", "microsoft.insights", "microsoft.search", "microsoft.storage", "Microsoft.KeyVault");
-    if ($resourceProviders.length) {
-        Write-Host "Registering Required Resource Providers"
-        foreach ($resourceProvider in $resourceProviders) {
-            az provider register --namespace $resourceProvider
-        }
-    }
 
-    # Optional RPs
-    $resourceProviders = @("microsoft.maps", "microsoft.bing");
+function Assert-Subscription
+{
+    # Register RPs
+    $resourceProviders = @("microsoft.cognitiveservices", "microsoft.insights", "microsoft.search", "microsoft.storage","microsoft.maps","microsoft.bing","Microsoft.KeyVault");
     if ($resourceProviders.length) {
-        Write-Host "Registering Optional Resource Providers"
+        Write-Host "Registering resource providers"
         foreach ($resourceProvider in $resourceProviders) {
             az provider register --namespace $resourceProvider
         }
     }
 }
 
-function New-ResourceGroups {
-    function FindOrCreateResourceGroup($resourceGroupName) {    
+function New-ResourceGroups
+{
+    function FindOrCreateResourceGroup($resourceGroupName)
+    {    
         $test = az group exists -n $resourceGroupName
-        if ($test -eq $true) {
+        if ($test -eq $true) 
+        {
             Write-Host "Using existing resource group '$resourceGroupName'";
         }
         else {
@@ -42,218 +39,212 @@ function New-ResourceGroups {
     }
     
     FindOrCreateResourceGroup $config.resourceGroupName 
-
-    if ($config.vnetEnable) {
-        FindOrCreateResourceGroup $vnetcfg.vnetResourceGroup
-    }
 }
 
-function New-AzureKeyVault() {
+function New-AzureKeyVault() 
+{
+    Write-Host "=============================================================="
 
-    foreach ($azureResource in $keyvaultcfg.Items) {
-        Write-Host ("Key Vault Service Name  " + $azureResource.Name) -ForegroundColor Yellow
+    az keyvault create --location $config.location --name $params.keyvault --resource-group $config.resourceGroupName
 
-        $exists = az keyvault show --name $azureResource.Name --resource-group $azureResource.ResourceGroup --query id --out tsv
+    Write-Host "Adding Az Cli required permissions to KeyVault" -ForegroundColor Yellow
 
-        if ( $exists ) {
-            Write-Host "Key Vault service already exists...Skipping.";
-        }
-        else {    
-            az keyvault create --location $config.location `
-                --name $azureResource.Name `
-                --resource-group $azureResource.ResourceGroup `
-                --sku $azureResource.Sku
-
-            Write-Host "Adding Az Cli required permissions to KeyVault" -ForegroundColor Yellow
-
-            # 04b07795-8ddb-461a-bbee-02f9e1bf7b46 is AZ CLI client id
-            az keyvault set-policy --name $azureResource.Name --object-id 04b07795-8ddb-461a-bbee-02f9e1bf7b46 `
-                --certificate-permissions get list create delete `
-                --key-permissions get list create delete `
-                --secret-permissions get set list delete
-            
-            $currentUserId = ((az ad signed-in-user show) | ConvertFrom-Json).objectId
-            az keyvault set-policy --name $azureResource.Name --object-id $currentUserId `
-                --certificate-permissions get list create delete `
-                --key-permissions get list create delete `
-                --secret-permissions get set list delete
-        }
-    }
+    # 04b07795-8ddb-461a-bbee-02f9e1bf7b46 is AZ CLI client id
+    az keyvault set-policy --name $params.keyvault --object-id 04b07795-8ddb-461a-bbee-02f9e1bf7b46 `
+    --certificate-permissions get list create delete `
+    --key-permissions get list create delete `
+    --secret-permissions get set list delete
+    
+    $currentUserId = ((az ad signed-in-user show) | ConvertFrom-Json).id
+    az keyvault set-policy --name $params.keyvault --object-id $currentUserId `
+    --certificate-permissions get list create delete `
+    --key-permissions get list create delete `
+    --secret-permissions get set list delete
+    
+    Write-Host "=============================================================="
 }
 
-function New-AppInsights {
-
-    $exists = az monitor app-insights component show --app $params.appInsightsService --resource-group $config.resourceGroupName --query id --out tsv
-
-    if ( $exists ) {
-        Write-Host "App Insights service already exists...Skipping.";
-    }
-    else {
-        Write-Host "Creating App Insights & Log Analytics workspace";
-        # az monitor app-insights component create --app $params.appInsightsService `
-        #     --location $config.location `
-        #     --resource-group $config.resourceGroupName
-
-        # $workspace="/subscriptions/"+$config.subscriptionId+"/resourcegroups/"+$config.resourceGroupName `
-        #     + "/providers/microsoft.operationalinsights/workspaces/" + $params.appInsightsService
-
-        az monitor log-analytics workspace create --resource-group $config.resourceGroupName `
-            --workspace-name $params.logAnalyticsService
-
-        az monitor app-insights component create --app $params.appInsightsService `
-            --location $config.location `
-            --kind web `
-            --resource-group $config.resourceGroupName `
-            --workspace $params.logAnalyticsService
-    }
+function New-AppInsights
+{
+    Write-Host "Creating App Insights";
+    az monitor app-insights component create --app $params.appInsightsService --location $config.location  --resource-group $config.resourceGroupName
 
     Get-AppInsightsInstrumentationKey
 }
 
-#
-# Create Storage Account Services 
-#
-function New-StorageAccount {
+# Create a technical storage account 
+function New-TechnicalStorageAccount {
 
-    foreach ($azureResource in $storagecfg.Items) {
-        Write-Host ("Service Name  " + $azureResource.Name) -ForegroundColor Yellow
-        $exists = az storage account show --name $azureResource.Name --resource-group $azureResource.ResourceGroup --query id --out tsv
+    Write-Host "Creating Technical Storage Account";
 
-        if ( $exists ) {
-            Write-Host "Storage service already exists...Skipping.";
-        }
-        else {    
-            az storage account create --name $azureResource.Name `
-                --location $config.location `
-                --resource-group $azureResource.ResourceGroup `
-                --sku Standard_LRS `
-                --assign-identity `
-                --allow-blob-public-access false `
-                --enable-hierarchical-namespace true `
-                --kind $azureResource.Accountkind
+    az storage account create --name $params.techStorageAccountName `
+    --location $config.location `
+    --resource-group $config.resourceGroupName `
+    --assign-identity `
+    --allow-blob-public-access false `
+    --sku Standard_LRS
 
-            if ($azureResource.IsDataStorage) {
-
-                Get-DataStorageAccountParameters; 
-
-                # Iterate through the list of containers to create. 
-                foreach ($container in $params.storageContainers) {
-                    az storage container create -n $container `
-                        --account-name $params.dataStorageAccountName `
-                        --account-key $params.storageAccountKey `
-                        --resource-group $config.resourceGroupName            
-                }
-
-                # Soft blob deletion policy (7 days)
-                az storage account blob-service-properties update --account-name $params.dataStorageAccountName `
-                    --resource-group $config.resourceGroupName `
-                    --enable-delete-retention true `
-                    --delete-retention-days 7
-            }
-            else { 
-                Get-TechStorageAccountParameters;            
-            }
-        }
-    }
+    Get-TechStorageAccountParameters;
 }
 
-function New-CognitiveServices {
+function New-DataStorageAccountAndContainer
+{
+    Write-Host "Creating Data Storage Account";
 
-    foreach ($azureResource in $cogservicesecfg.Items) {
-        Write-Host "Provisionning Cognitive Service "$azureResource.Name;
+    az storage account create --name $params.dataStorageAccountName `
+    --location $config.location `
+    --resource-group $config.resourceGroupName `
+    --sku Standard_LRS `
+    --assign-identity `
+    --allow-blob-public-access false `
+    --enable-hierarchical-namespace true `
+    --kind StorageV2
+    
+    Get-DataStorageAccountParameters; 
 
-        $exists = az cognitiveservices account show --name $azureResource.Name --resource-group $azureResource.ResourceGroup --query id --out tsv
+    # Iterate through the list of containers to create. 
+    foreach ($container in $config.storageContainers) {
+        az storage container create -n $container `
+        --account-name $params.dataStorageAccountName `
+        --account-key $params.storageAccountKey `
+        --resource-group $config.resourceGroupName            
+    }
 
-        if ( $exists ) {
-            Write-Host "Service already exists...Skipping.";
-        }
-        else {    
-            az cognitiveservices account create `
-            -n $azureResource.Name `
-            -g $azureResource.ResourceGroup `
-            --kind $azureResource.Kind `
-            --sku $azureResource.Sku `
-            --location $config.location `
-            --yes
+    # Soft blob deletion policy (7 days)
+    az storage account blob-service-properties update --account-name $params.dataStorageAccountName `
+    --resource-group $config.resourceGroupName `
+    --enable-delete-retention true `
+    --delete-retention-days 7
 
-            az cognitiveservices account identity assign -n $azureResource.Name -g $azureResource.ResourceGroup
-        }
+}
+
+function New-CognitiveServices
+{
+    if ($config.cogServicesBundleDisabled) {
+
+        # az cognitiveservices account list-kinds
+
+        # Language 
+        Write-Host "Creating TextAnalytics Cognitive Service";
+        az cognitiveservices account create `
+        -n $params.cogSvcLanguage `
+        -g $config.resourceGroupName `
+        --kind TextAnalytics `
+        --sku S `
+        --location $config.location `
+        --yes
+
+        az cognitiveservices account identity assign -n $params.cogSvcLanguage -g $config.resourceGroupName
+
+        # Vision
+        Write-Host "Creating ComputerVision Cognitive Service";
+        az cognitiveservices account create `
+        -n $params.cogSvcVision `
+        -g $config.resourceGroupName `
+        --kind ComputerVision `
+        --sku S1 `
+        --location $config.location `
+        --yes
+
+        az cognitiveservices account identity assign -n $params.cogSvcVision -g $config.resourceGroupName
+
+        # Form
+        Write-Host "Creating FormRecognizer Cognitive Service";
+        az cognitiveservices account create `
+        -n $params.cogSvcForm `
+        -g $config.resourceGroupName `
+        --kind FormRecognizer `
+        --sku S0 `
+        --location $config.location `
+        --yes
+
+        az cognitiveservices account identity assign -n $params.cogSvcForm -g $config.resourceGroupName
+
+        # Translation
+        Write-Host "Creating Translation Cognitive Service";
+        az cognitiveservices account create `
+        -n $params.cogSvcTranslate `
+        -g $config.resourceGroupName `
+        --kind TextTranslation `
+        --sku S1 `
+        --location $config.location `
+        --yes
+
+        az cognitiveservices account identity assign -n $params.cogSvcTranslate -g $config.resourceGroupName
+        
+    }
+    else {
+        Write-Host "Creating Bundle Cognitive Services";
+        az cognitiveservices account create `
+        -n $params.cogServicesBundle `
+        -g $config.resourceGroupName `
+        --kind CognitiveServices `
+        --sku S0 `
+        --location $config.location `
+        --yes    
+
+        az cognitiveservices account identity assign -n $params.cogServicesBundle -g $config.resourceGroupName
     }
 
     Get-CognitiveServiceKey;
 }
+function New-SearchServices
+{
+    Write-Host "Provisionning Search Service";
 
-function New-SearchServices {
+    $exists = az search service show --name $params.searchServiceName --resource-group $config.resourceGroupName --query id --out tsv
 
-    foreach ($azureResource in $searchservicecfg.Items) {
-
-        Write-Host "Provisionning Search Service "$azureResource.Name;
-
-        $exists = az search service show --name $azureResource.Name --resource-group $azureResource.ResourceGroup --query id --out tsv
-
-        if ( $exists ) {
-            Write-Host "Search Service already exists...Skipping.";
-        }
-        else {
-            az search service create `
-                --name  $azureResource.Name `
-                --resource-group $azureResource.ResourceGroup `
-                --sku $azureResource.Sku `
-                --location $config.location `
-                --partition-count 1 `
-                --replica-count 1
-        }
-
-        az search service update --name  $azureResource.Name --resource-group $azureResource.ResourceGroup --identity-type "SystemAssigned"
-
+    if ( $exists ) {
+        Write-Host "Search Service already exists...";
     }
+    else {
+        az search service create `
+        --name  $params.searchServiceName `
+        --resource-group $config.resourceGroupName `
+        --sku $config.searchSku `
+        --location $config.location `
+        --partition-count 1 `
+        --replica-count 1
+    }
+
+    az search service update --name  $params.searchServiceName --resource-group $config.resourceGroupName --identity-type "SystemAssigned"
 
     Get-SearchServiceKeys; 
-
 }
 
-function New-ACRService {
+function New-ACRService
+{
+    Write-Host "Provisionning ACR service";
 
-    foreach ($azureResource in $conregistrycfg.Items) {
+    $exists = az acr show -g $config.resourceGroupName -n $params.acr_prefix --query id --out tsv
 
-        Write-Host "Provisionning ACR service "$azureResource.Name;
+    if ( $exists ) {
+        Write-Host "ACR service already exists...";
+    }
+    else {
+        az acr create -g $config.resourceGroupName -n $params.acr_prefix --sku Premium --admin-enabled true --location $config.location
 
-        $exists = az acr show -g $azureResource.ResourceGroup -n $azureResource.Name --query id --out tsv
-
-        if ( $exists ) {
-            Write-Host "ACR service already exists...Skipping.";
-        }
-        else {
-            az acr create -g $azureResource.ResourceGroup -n $azureResource.Name --sku Premium --admin-enabled true --location $config.location
-
-            az acr identity assign --identities '[system]' -g $azureResource.ResourceGroup -n $azureResource.Name
-        }
+        az acr identity assign --identities '[system]' -g $config.resourceGroupName -n $params.acr_prefix
     }
 }
 
-function New-AzureMapsService() {
+function New-AzureMapsService()
+{
     if ($config.mapSearchEnabled) {
-
-        $exists = az maps account show -g $config.resourceGroupName -n $params.maps --query id --out tsv
-
-        if ($exists) {
-            Write-Host "Azure Maps service already exists...Skipping.";
-        }
-        else {
-            az maps account create --name $params.maps `
+        az maps account create --name $params.maps `
             --resource-group $config.resourceGroupName `
             --sku S0 `
             --subscription $config.subscriptionId `
             --accept-tos
 
-            $mapsKey = az maps account keys list --name $params.maps --resource-group $config.resourceGroupName --query primaryKey --out tsv
+        $mapsKey = az maps account keys list --name $params.maps --resource-group $config.resourceGroupName --query primaryKey --out tsv
 
-            Add-Param "mapsSubscriptionKey" $mapsKey
-        }
+        Add-Param "mapsSubscriptionKey" $mapsKey
     }
 }
 
-function New-BingSearchService() {
+function New-BingSearchService()
+{
     if ( $config.webSearchEnabled -or ($config.spellCheckEnabled -and $config.spellCheckProvider.Equals("Bing")) ) {
         Write-Host "Provision Bing Search service manually. When provisionned..." -ForegroundColor Red    
         $bingKey = Read-Host "Provide Bing Search Key " -MaskInput

@@ -24,6 +24,10 @@
                     "targetName": "trimmed_content"
                 },
                 {
+                    "name": "trimmed_content_size",
+                    "targetName": "trimmed_content_size"
+                },
+                {
                     "name": "trimmed_content_lines_count",
                     "targetName": "trimmed_content_lines_count"
                 },
@@ -169,7 +173,7 @@
             "inputs": [
                 {
                     "name": "language",
-                    "source": "/document/language"
+                    "source": "/document/pages/0/translatedToLanguageCode"
                 },
                 {
                     "name": "text",
@@ -263,7 +267,7 @@
                     "targetName": "linked_entities"
                 }
             ],
-            "httpHeaders":{
+            "httpHeaders": {
                 "defaultLanguageCode": "en",
                 "minimumPrecision": "0.75"
             }
@@ -584,6 +588,26 @@
                 {
                     "name": "metadata_page_count",
                     "source": "/document/metadata_page_count"
+                },
+                {
+                    "name": "metadata_message_from",
+                    "source": "/document/metadata_message_from"
+                },
+                {
+                    "name": "metadata_message_to",
+                    "source": "/document/metadata_message_to"
+                },
+                {
+                    "name": "metadata_message_cc",
+                    "source": "/document/metadata_message_cc"
+                },
+                {
+                    "name": "metadata_message_bcc",
+                    "source": "/document/metadata_message_bcc"
+                },
+                {
+                    "name": "metadata_subject",
+                    "source": "/document/metadata_subject"
                 }
             ],
             "outputs": [

@@ -270,7 +270,11 @@
             "outputs": [
                 {
                     "name": "trimmed_content",
-                    "targetName": "merged_content"
+                    "targetName": "trimmed_content"
+                },
+                {
+                    "name": "trimmed_content_size",
+                    "targetName": "trimmed_content_size"
                 },
                 {
                     "name": "trimmed_content_lines_count",
@@ -297,7 +301,7 @@
             "inputs": [
                 {
                     "name": "text",
-                    "source": "/document/merged_content"
+                    "source": "/document/trimmed_content"
                 }
             ],
             "outputs": [
@@ -325,7 +329,7 @@
             "inputs": [
                 {
                     "name": "text",
-                    "source": "/document/merged_content"
+                    "source": "/document/trimmed_content"
                 },
                 {
                     "name": "languageCode",
@@ -519,7 +523,7 @@
                     "targetName": "linked_entities"
                 }
             ],
-            "httpHeaders":{
+            "httpHeaders": {
                 "defaultLanguageCode": "en",
                 "minimumPrecision": "0.75"
             }

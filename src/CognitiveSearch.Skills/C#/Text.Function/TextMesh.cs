@@ -107,7 +107,7 @@ namespace Text.Mesh
                         {
                             content_trim[^1] = content_trim[^1].Substring(0, content_trim[^1].Length - 1);
 
-                            if (values[i].StartsWith(WORD_CESURE_CHARACTER))
+                            if (values[i].StartsWith(WORD_CESURE_CHARACTER) && values[i].Length > 1)
                             {
                                 content_trim[^1] += values[i][1..^1];
                             }
@@ -139,7 +139,9 @@ namespace Text.Mesh
                 }
             }
 
-            outRecord.Data["trimmed_content"] = String.Join(Environment.NewLine, content_trim.ToArray<string>());
+            string trimmed_content = String.Join(Environment.NewLine, content_trim.ToArray<string>());
+            outRecord.Data["trimmed_content"] = trimmed_content;
+            outRecord.Data["trimmed_content_size"] = trimmed_content.Length;
             outRecord.Data["trimmed_content_lines_count"] = content_trim.Count;
             outRecord.Data["trimmed_content_lines_matches"] = matches;
 

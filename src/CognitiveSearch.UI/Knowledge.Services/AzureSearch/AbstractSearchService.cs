@@ -49,6 +49,7 @@ namespace Knowledge.Services.AzureSearch
                 }
                 catch (Exception)
                 {
+                    throw new Exception("Could not initialise Search Models. Validate Search connectivity.");
                 }
             }
         }

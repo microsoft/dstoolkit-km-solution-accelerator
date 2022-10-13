@@ -127,8 +127,13 @@
       "mappingFunction": null
     },
     {
-      "sourceFieldName": "/document/merged_content",
+      "sourceFieldName": "/document/trimmed_content",
       "targetFieldName": "content",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/trimmed_content_size",
+      "targetFieldName": "content_size",
       "mappingFunction": null
     },
     {
@@ -241,7 +246,7 @@
       "targetFieldName": "content_source",
       "mappingFunction": null
     },
-        {
+    {
       "sourceFieldName": "/document/skill_metadata/title",
       "targetFieldName": "title",
       "mappingFunction": null

@@ -8,7 +8,6 @@
     <Folder Include="Answers\QnA\" />
     <Folder Include="Graph\Gremlin\" />
     <Folder Include="Graph\Neo4J\" />
-    <Folder Include="MicrosoftSearch\" />
     <Folder Include="Translation\" />
   </ItemGroup>
   <ItemGroup>

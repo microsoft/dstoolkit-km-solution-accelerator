@@ -127,8 +127,13 @@
       "mappingFunction": null
     },
     {
-      "sourceFieldName": "/document/merged_content",
+      "sourceFieldName": "/document/trimmed_content",
       "targetFieldName": "content",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/trimmed_content_size",
+      "targetFieldName": "content_size",
       "mappingFunction": null
     },
     {
