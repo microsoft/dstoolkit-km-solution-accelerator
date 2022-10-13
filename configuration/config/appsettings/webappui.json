@@ -96,7 +96,7 @@
   },
   {
     "name": "MapConfig:IsEnabled",
-    "value": "{{config.mapSearchEnabled}}",
+    "value": "{{param.mapSearchEnabled}}",
     "slotSetting": false
   },
   {
@@ -352,7 +352,7 @@
   },
   {
     "name": "WebSearchConfig:IsEnabled",
-    "value": "{{config.webSearchEnabled}}",
+    "value": "{{param.webSearchEnabled}}",
     "slotSetting": false
   },
   {
@@ -367,12 +367,12 @@
   },
   {
     "name": "WebSearchConfig:Market",
-    "value": "{{config.webMarket}}",
+    "value": "{{param.webMarket}}",
     "slotSetting": false
   },
   {
     "name": "SemanticSearchConfig:IsEnabled",
-    "value": "{{config.semanticSearchEnabled}}",
+    "value": "{{param.semanticSearchEnabled}}",
     "slotSetting": false
   },
   {

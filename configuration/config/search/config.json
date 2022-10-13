@@ -1,22 +1,24 @@
 {
-    "GroupId":"Search",
-    "ServiceEndPoint":"Microsoft.Search",
-    "Apptype":"Search",
-    "Parameters" : {
+    "GroupId": "Search",
+    "ServiceEndPoint": "Microsoft.Search",
+    "Apptype": "Search",
+    "Parameters": {
+        "searchServiceName": "{{config.name}}search",
         "searchDefaultFromLanguageCode": "en",
         "searchDefaultToLanguageCode": "en",
         "searchVersion": "2021-04-30-Preview",
         "searchManagementVersion": "2021-04-30-Preview",
-        "searchIndexerEnvironment":"standard"
+        "searchIndexerEnvironment": "standard",
+        "semanticSearchEnabled": true
     },
     "Items": [
         {
             "Name": "{{config.name}}search",
             "ResourceGroup": "{{config.resourceGroupName}}",
-            "Sku":"Standard",
-            "EnablePrivateAccess":true,
-            "AddIPAddressRule":false,
-            "AddPrivateSharedLink":true
+            "Sku": "Standard",
+            "EnablePrivateAccess": true,
+            "AddIPAddressRule": false,
+            "AddPrivateSharedLink": true
         }
     ]
 }

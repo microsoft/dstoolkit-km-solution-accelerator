@@ -35,11 +35,11 @@ spec:
         - name: ContainerName
           value: "{{param.documentsStorageContainerName}}"
         - name: TikaContainerUrl
-          value: "{{config.kubernetesGateway}}"
+          value: "{{param.kubernetesGateway}}"
         - name: UserAgent
           value: "MicrosoftPOC/1.0"
         - name: X_Tika_PDFAllPagesAsImages
-          value: "{{config.X_Tika_PDFAllPagesAsImages}}"
+          value: "{{param.X_Tika_PDFAllPagesAsImages}}"
         resources:
           requests:
             cpu: 500m

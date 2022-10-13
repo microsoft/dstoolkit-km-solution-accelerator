@@ -2,6 +2,10 @@
     "GroupId":"ContainerRegistry",
     "ServiceEndPoint":"Microsoft.ContainerRegistry",
     "Apptype":"ContainerRegistry",
+    "Parameters" : {
+        "acr": "{{config.name}}acr.azurecr.io",
+        "acr_prefix": "{{config.name}}acr"    
+    },
     "Items": [
         {
             "Name": "{{config.name}}acr",

@@ -67,12 +67,7 @@ The below **contoso.json** environment configuration file you can easily adjust 
     "resourceGroupName": "kmcontoso-rg",
     "spellCheckEnabled":false,
     "spellCheckProvider":"Bing",
-    "webSearchEnabled": false,
-    "webMarket": "en-uk",
-    "mapSearchEnabled": false,
     "location": "YOUR AZURE LOCATION",
-    "semanticSearchEnabled":false,
-    "X_Tika_PDFAllPagesAsImages":true,
     "vnetEnable":false
 }
 
@@ -97,12 +92,7 @@ Below the list of most common entries your configuration file should contains:
 |resourceGroupName|Resource Group the KM solution would be deployed|
 |spellCheckEnabled|Boolean indicating if your solution supports a spellChecking service.|
 |spellCheckProvider|String indicating which SpellChecking service you will use. By deafult we support "Bing". You may add your own.|
-|webSearchEnabled|Boolean indicating if your solution will use Bing as Web Search service.|
-|webMarket|When Web Search is enabled, indicates which market to use for querying.|
-|mapSearchEnabled|Boolean indicating if your solution will use Azure Maps.|
 |location|Azure location to deploy the services to.|
-|semanticSearchEnabled|Azure Cognitive Search (ACS) Semantic flag. Semantic Search is an option in ACS.|
-|X_Tika_PDFAllPagesAsImages| Flag for Tika processing. Set to true indicates that every page of aPDF document will be converted into an Image. Set to false, means embedded images of a PDF will be extracted.|
 |vnetEnable|Flag to indicate if the solution requires VNET integration.|
 
 ## 3 Initialize your environment
@@ -164,12 +154,7 @@ organisationLogoProviderUrl   : ~/images/logos/provider-logo.png
 adminUser                     : admin@contoso.com
 resourceGroupName             : kmcontoso-rg
 spellCheckEnabled             : False
-webSearchEnabled              : False
-webMarket                     : en-uk
-mapSearchEnabled              : False
 location                      : YOUR AZURE LOCATION
-semanticSearchEnabled         : False
-X_Tika_PDFAllPagesAsImages    : True
 vnetEnable                    : False
 
 ```

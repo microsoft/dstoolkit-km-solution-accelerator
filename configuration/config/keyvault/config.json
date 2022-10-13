@@ -2,6 +2,9 @@
     "ServiceEndPoint":"Microsoft.KeyVault",
     "GroupId":"KeyVault",
     "Apptype":"KeyVault",
+    "Parameters" : {
+        "keyvault": "{{config.name}}kv"
+    },
     "Items": [
         {
             "Name": "{{config.name}}kv",

@@ -230,7 +230,7 @@ function New-ACRService
 
 function New-AzureMapsService()
 {
-    if ($config.mapSearchEnabled) {
+    if ($params.mapSearchEnabled) {
         az maps account create --name $params.maps `
             --resource-group $config.resourceGroupName `
             --sku S0 `
@@ -245,7 +245,7 @@ function New-AzureMapsService()
 
 function New-BingSearchService()
 {
-    if ( $config.webSearchEnabled -or ($config.spellCheckEnabled -and $config.spellCheckProvider.Equals("Bing")) ) {
+    if ( $params.webSearchEnabled -or ($config.spellCheckEnabled -and $config.spellCheckProvider.Equals("Bing")) ) {
         Write-Host "Provision Bing Search service manually. When provisionned..." -ForegroundColor Red    
         $bingKey = Read-Host "Provide Bing Search Key " -MaskInput
         Add-Param "bingServicesKey" $bingKey

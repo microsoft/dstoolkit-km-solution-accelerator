@@ -15,12 +15,7 @@
     "resourceGroupName": "kmcontoso-rg",
     "spellCheckEnabled": false,
     "spellCheckProvider": "Bing",
-    "webSearchEnabled": false,
-    "webMarket": "en-uk",
-    "mapSearchEnabled": false,
     "location": "YOUR AZURE LOCATION",
-    "semanticSearchEnabled": false,
     "clarityProjectId": "",
-    "X_Tika_PDFAllPagesAsImages": true,
     "vnetEnable": false
 }

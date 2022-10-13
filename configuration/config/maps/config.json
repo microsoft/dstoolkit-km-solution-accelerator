@@ -1,0 +1,12 @@
+{
+    "Parameters": {
+        "maps":"{{config.name}}maps",
+        "mapSearchEnabled": false
+    },
+    "Items": [
+        {
+            "Name": "{{config.name}}maps",
+            "ResourceGroup": "{{config.resourceGroupName}}"
+        }
+    ]
+}

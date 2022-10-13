@@ -36,7 +36,7 @@
     },
     {
         "name": "X_Tika_PDFAllPagesAsImages",
-        "value": "{{config.X_Tika_PDFAllPagesAsImages}}",
+        "value": "{{param.X_Tika_PDFAllPagesAsImages}}",
         "slotSetting": false
     }
 ]

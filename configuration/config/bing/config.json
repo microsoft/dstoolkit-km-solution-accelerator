@@ -1,0 +1,12 @@
+{
+    "Parameters": {
+        "webSearchEnabled": false,
+        "webMarket": "en-uk"
+    },
+    "Items": [
+        {
+            "Name": "{{config.name}}bing",
+            "ResourceGroup": "{{config.resourceGroupName}}"
+        }
+    ]
+}
