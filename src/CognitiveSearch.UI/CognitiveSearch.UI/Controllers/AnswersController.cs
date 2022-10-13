@@ -36,12 +36,6 @@ namespace CognitiveSearch.UI.Controllers
                 vm.selectedFacets = JsonConvert.DeserializeObject<SearchFacet[]>(this.Base64Decode(facets));
             }
 
-            //if (!this._searchConfig.semanticSearchEnabled)
-            //{
-            //    ViewBag.Message = "Semantic Search is disabled. Please contact your solution admin to enable it.";
-            //    ViewBag.Style = "alert-danger";
-            //}
-
             return View(vm);
         }
     }
