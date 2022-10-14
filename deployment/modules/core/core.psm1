@@ -53,8 +53,8 @@ function Import-StorageConfig() {
 
 function Import-CognitiveServicesConfig() {
     # Import Other configurations like functions
-    $global:cogservicesecfg = [string] (Get-Content -Path (join-path $global:envpath "config" "cognitiveservices" "config.json"))
-    $global:cogservicesecfg = ConvertFrom-Json $global:cogservicesecfg
+    $global:cogservicescfg  = [string] (Get-Content -Path (join-path $global:envpath "config" "cogservices" "config.json"))
+    $global:cogservicescfg  = ConvertFrom-Json $global:cogservicescfg 
 }
 function Import-ContainerRegistryConfig() {
     # Import Other configurations like functions
@@ -77,7 +77,7 @@ function Import-ConfigParameters ($inputcfg) {
 
     # Automatically ad the services parameters to the global parameters variable. 
     if ($inputcfg.Parameters) {
-        foreach ($entry in $($inputcfg.Parameters | Get-Member -MemberType NoteProperty)) {
+        foreach ($entry in $(Get-Member -InputObject $inputcfg.Parameters -MemberType NoteProperty)) {
             $value = $entry.Name
             Add-Param $entry.Name $inputcfg.Parameters.$value
         }
@@ -352,7 +352,7 @@ function Sync-Config() {
     
     Write-Debug -Message "Configuration synched "
 }
-    
+
 function Sync-Parameters() {
     Save-Parameters
     
@@ -594,7 +594,7 @@ function Get-DataStorageAccountParameters {
     
 function Get-CognitiveServiceKey {
     
-    foreach ($azureResource in $cogservicesecfg.Items) {
+    foreach ($azureResource in $cogservicescfg .Items) {
         Write-Host "Checking Cognitive Service existence "$azureResource.Name
 
         $exists = az cognitiveservices account show --name $azureResource.Name --resource-group $azureResource.ResourceGroup --query id --out tsv
@@ -1463,13 +1463,13 @@ function Publish-FunctionsSettings() {
     Push-Location $global:envpath
     foreach ($plan in $functionscfg.AppPlans) {                    
         foreach ($functionApp in $plan.FunctionApps) {
-            $settingspath = "config/appsettings/" + $functionApp.Id + ".json" 
+            $settingspath = "config/functions/" + $functionApp.Id + ".json" 
     
             if (Test-Path $settingspath) {
                 az webapp config appsettings set -g $plan.ResourceGroup -n $functionApp.Name --settings @$settingspath
             }
     
-            $settingspath = "config/appsettings/" + $functionApp.Id + "." + $config.id + ".json"
+            $settingspath = "config/functions/" + $functionApp.Id + "." + $config.id + ".json"
     
             if (Test-Path $settingspath) {
                 az webapp config appsettings set -g $plan.ResourceGroup -n $functionApp.Name --settings @$settingspath
@@ -1865,7 +1865,7 @@ function Publish-WebAppsSettings {
         foreach ($webApp in $plan.WebApps) {
             Write-Host $webApp
     
-            $settingspath = "config/appsettings/" + $webApp.Id + ".json" 
+            $settingspath = "config/webapps/" + $webApp.Id + ".json" 
     
             if (Test-Path $settingspath) {
                 if (-not $plan.IsLinux) {
@@ -1892,7 +1892,7 @@ function Publish-WebAppsSettings {
                 }
             }
     
-            $settingspath = "config/appsettings/" + $webApp.Id + "." + $config.id + ".json"
+            $settingspath = "config/webapps/" + $webApp.Id + "." + $config.id + ".json"
     
             if (Test-Path $settingspath) {
                 if (-not $plan.IsLinux) {

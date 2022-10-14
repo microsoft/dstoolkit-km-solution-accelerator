@@ -63,7 +63,7 @@ As your Enterprise Application is created, amend your environment deployment con
 
 # Web App Setting related to Azure EasyAuth
 
-In the configuration/config/appsettings/webappui.json, you will find the below entries for the Azure AAD Authentication integration. 
+In the configuration/config/webapps/webappui.json, you will find the below entries for the Azure AAD Authentication integration. 
 
 ```json
   {

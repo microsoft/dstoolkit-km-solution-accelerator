@@ -17,8 +17,9 @@ Documentation on Azure Functions :
 ### Simple
 By default the solution accelerator will use a Function App service to deploy the corresponding function in Azure. The exception is Java-Apache Tika which is deployed in Web App. Apache Tika is served by a Jetty engine.
 
-All Application Settings - Environment Variables of the Function and Web Application services are located 
-[..\configuration\config\appsettings](..\..\configuration\config\appsettings)
+All Application Settings - Environment Variables of Functions and Web Application services are located under their respective directories:
+- [..\configuration\config\functions](..\..\configuration\config\functions)
+- [..\configuration\config\webapps](..\..\configuration\config\webapps)
 
 ### Complex
 In complex deployment, you may want to deploy all skills in Azure Kubernetes cluster. We provide the matching YAML deployment files in the configuration/config/yaml folder. 

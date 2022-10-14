@@ -140,7 +140,7 @@ function Add-NewSubnettoAllResources {
         $subnetName
     )
 
-    $azureResourcesArray = ($cogservicesecfg, $storagecfg, $keyvaultcfg, $conregistrycfg)
+    $azureResourcesArray = ($cogservicescfg , $storagecfg, $keyvaultcfg, $conregistrycfg)
     foreach ($azureResource in $azureResourcesArray) {
         $serviceEndpoint = $azureResource.ServiceEndPoint
         foreach ($item in $azureResource.items) {
@@ -763,7 +763,7 @@ function Initialize-VNET {
     Set-VNETWebApps 
     Save-VNETParameters
 
-    Set-VNETResource $cogservicesecfg
+    Set-VNETResource $cogservicescfg 
     Set-VNETResource $storagecfg
     Set-VNETResource $keyvaultcfg
     Set-VNETResource $conregistrycfg
