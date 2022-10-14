@@ -54,7 +54,7 @@ function Import-StorageConfig() {
 function Import-CognitiveServicesConfig() {
     # Import Other configurations like functions
     $global:cogservicescfg  = [string] (Get-Content -Path (join-path $global:envpath "config" "cogservices" "config.json"))
-    $global:cogservicescfg  = ConvertFrom-Json $global:cogservicescfg 
+    $global:cogservicescfg  = ConvertFrom-Json $global:cogservicescfg
 }
 function Import-ContainerRegistryConfig() {
     # Import Other configurations like functions
@@ -594,7 +594,7 @@ function Get-DataStorageAccountParameters {
     
 function Get-CognitiveServiceKey {
     
-    foreach ($azureResource in $cogservicescfg .Items) {
+    foreach ($azureResource in $cogservicescfg.Items) {
         Write-Host "Checking Cognitive Service existence "$azureResource.Name
 
         $exists = az cognitiveservices account show --name $azureResource.Name --resource-group $azureResource.ResourceGroup --query id --out tsv

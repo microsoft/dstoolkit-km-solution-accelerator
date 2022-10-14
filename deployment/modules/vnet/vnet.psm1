@@ -140,7 +140,7 @@ function Add-NewSubnettoAllResources {
         $subnetName
     )
 
-    $azureResourcesArray = ($cogservicescfg , $storagecfg, $keyvaultcfg, $conregistrycfg)
+    $azureResourcesArray = ($cogservicescfg, $storagecfg, $keyvaultcfg, $conregistrycfg)
     foreach ($azureResource in $azureResourcesArray) {
         $serviceEndpoint = $azureResource.ServiceEndPoint
         foreach ($item in $azureResource.items) {
