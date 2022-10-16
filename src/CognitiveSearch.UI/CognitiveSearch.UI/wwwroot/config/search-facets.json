@@ -29,6 +29,24 @@
     "target": "key_phrases"
   },
   {
+    "id": "message_from",
+    "name": "Message From",
+    "type": "dynamic",
+    "target": "email/message_from"
+  },
+  {
+    "id": "message_to",
+    "name": "Message To",
+    "type": "dynamic",
+    "target": "email/message_to"
+  },
+  {
+    "id": "message_subject",
+    "name": "Message Subject",
+    "type": "dynamic",
+    "target": "email/subject"
+  },
+  {
     "id": "sciencesstuff",
     "name": "Sciences",
     "type": "static",
