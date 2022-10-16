@@ -342,9 +342,14 @@ Microsoft.Search = {
     },
 
     //TODO
+
+    SupportCoverImage: function(docresult) {
+        return (docresult.content_group != "Email") ;
+    },
+
     RenderCoverImage: function (docresult) {
         var documentHtml = '';
-        if (hasCoverImage) {
+        if (this.SupportCoverImage(docresult)) {
             documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
         }
         else {
@@ -756,7 +761,7 @@ Microsoft.Search.Results = {
     },
 
     // Search Results as list item 
-    RenderResultAsListItem: function (result, hasCoverImage = true, showMethod = "Microsoft.Results.Details.ShowDocumentById") {
+    RenderResultAsListItem: function (result, showMethod = "Microsoft.Results.Details.ShowDocumentById") {
         var documentHtml = '';
         var classList = "row results-list-item pb-1";
 
@@ -783,6 +788,8 @@ Microsoft.Search.Results = {
 
             var pathLower = path.toLowerCase();
             var pathExtension = pathLower.split('.').pop();
+
+            var hasCoverImage = Microsoft.Search.SupportCoverImage(docresult);
 
             // First Column
             if (hasCoverImage) {
