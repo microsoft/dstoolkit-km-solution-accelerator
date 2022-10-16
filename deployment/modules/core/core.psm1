@@ -32,16 +32,22 @@ function Import-Functions() {
     # Import Other configurations like functions
     $global:functionscfg = [string] (Get-Content -Path (join-path $global:envpath "config" "functions" "config.json"))
     $global:functionscfg = ConvertFrom-Json $global:functionscfg
+
+    Import-ConfigParameters $global:functionscfg
 }
 function Import-WebAppsConfig() {
     # Import Other configurations like functions
     $global:webappscfg = [string] (Get-Content -Path (join-path $global:envpath "config" "webapps" "config.json"))
     $global:webappscfg = ConvertFrom-Json $global:webappscfg
+
+    Import-ConfigParameters $global:webappscfg
 }
 function Import-DockerConfig() {
     # Import Other configurations like functions
     $global:dockercfg = [string] (Get-Content -Path (join-path $global:envpath "config" "docker" "config.json"))
     $global:dockercfg = ConvertFrom-Json $global:dockercfg
+
+    Import-ConfigParameters $global:dockercfg
 }
 function Import-StorageConfig() {
     # Import Other configurations like functions
@@ -55,16 +61,22 @@ function Import-CognitiveServicesConfig() {
     # Import Other configurations like functions
     $global:cogservicescfg  = [string] (Get-Content -Path (join-path $global:envpath "config" "cogservices" "config.json"))
     $global:cogservicescfg  = ConvertFrom-Json $global:cogservicescfg
+
+    Import-ConfigParameters $global:cogservicescfg
 }
 function Import-ContainerRegistryConfig() {
     # Import Other configurations like functions
     $global:conregistrycfg = [string] (Get-Content -Path (join-path $global:envpath "config" "containerregistry" "config.json"))
     $global:conregistrycfg = ConvertFrom-Json $global:conregistrycfg
+
+    Import-ConfigParameters $global:conregistrycfg
 }
 function Import-keyvaultConfig() {
     # Import Other configurations like functions
     $global:keyvaultcfg = [string] (Get-Content -Path (join-path $global:envpath "config" "keyvault" "config.json"))
     $global:keyvaultcfg = ConvertFrom-Json $global:keyvaultcfg
+
+    Import-ConfigParameters $global:keyvaultcfg
 }
 function Import-searchserviceConfig() {
     # Import Other configurations like functions
@@ -74,7 +86,7 @@ function Import-searchserviceConfig() {
     Import-ConfigParameters $global:searchservicecfg
 }
 function Import-ConfigParameters ($inputcfg) {
-
+    Write-Debug "Import configuration "
     # Automatically ad the services parameters to the global parameters variable. 
     if ($inputcfg.Parameters) {
         foreach ($entry in $(Get-Member -InputObject $inputcfg.Parameters -MemberType NoteProperty)) {
@@ -183,7 +195,7 @@ function Import-Params() {
     Add-ServicesParameters
 
     if ($PSVersionTable.Platform -eq "Win32NT") {
-        # Decrypt secured string
+        Write-Debug "Decrypt secured strings..."
         $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
 
         foreach ($prop in $parameterslist) {
@@ -296,30 +308,32 @@ function Save-Parameters() {
     # Create a blank object 
     $securedparams = New-Object -TypeName PSObject
 
-    $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
+    if ($global:params) {
+        $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
 
-    foreach ($prop in $parameterslist) {
-
-        $propValue = Get-ParamValue $prop.Name
-        
-        if ($PSVersionTable.Platform -eq "Win32NT") {
-            if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
-                if ($propValue) {
-                    $propValue = ConvertTo-SecureString -String $propValue -AsPlainText -Force | ConvertFrom-SecureString
+        foreach ($prop in $parameterslist) {
+    
+            $propValue = Get-ParamValue $prop.Name
+            
+            if ($PSVersionTable.Platform -eq "Win32NT") {
+                if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
+                    if ($propValue) {
+                        $propValue = ConvertTo-SecureString -String $propValue -AsPlainText -Force | ConvertFrom-SecureString
+                    }
                 }
             }
-        }
-
-        $securedparams | Add-Member -MemberType NoteProperty -Name $prop.Name -Value $propValue -ErrorAction Ignore
+    
+            $securedparams | Add-Member -MemberType NoteProperty -Name $prop.Name -Value $propValue -ErrorAction Ignore
+        }    
     }
 
     $securedparams | Add-Member -MemberType NoteProperty -Name "LastModifiedDate" -Value (Get-Date) -ErrorAction Ignore
 
-    $securedparams | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath $global:envpath\"parameters.json" -Force
+    $securedparams | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath (Join-Path $global:envpath "parameters.json") -Force
 }
     
 function Save-Config() {
-    $global:config | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath $global:envpath\"config.json" -Force -Encoding utf8
+    $global:config | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath (Join-Path $global:envpath "config.json") -Force -Encoding utf8
 }
     
 function Sync-Config() {
@@ -354,26 +368,28 @@ function Sync-Config() {
 }
 
 function Sync-Parameters() {
+
     Save-Parameters
     
-    $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
+    if ($global:params) {
+        $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
     
-    $folders = @("config", "monitoring", "tests")
-    
-    foreach ($folder in $folders) {
-        $templates = Get-ChildItem -File -Path (join-path $global:envpath $folder) -Recurse
-        foreach ($temp in $templates) {
-            $jsontemp = Get-Content -Path $temp.FullName
-            foreach ($prop in $parameterslist) {
-                $propValue = Get-ParamValue $prop.Name
-                # $propValue = $global:params | Select-Object -ExpandProperty $prop.Name
-                $jsontemp = $jsontemp -replace ("{{param." + $prop.Name + "}}"), $propValue 
-            }
-            $jsontemp | Out-File -FilePath $temp.FullName -Force
-        }
-    }
+        $folders = @("config", "monitoring", "tests")
         
-    Write-Debug -Message "Parameters synched"
+        foreach ($folder in $folders) {
+            $templates = Get-ChildItem -File -Path (join-path $global:envpath $folder) -Recurse
+            foreach ($temp in $templates) {
+                $jsontemp = Get-Content -Path $temp.FullName
+                foreach ($prop in $parameterslist) {
+                    $propValue = Get-ParamValue $prop.Name
+                    # $propValue = $global:params | Select-Object -ExpandProperty $prop.Name
+                    $jsontemp = $jsontemp -replace ("{{param." + $prop.Name + "}}"), $propValue 
+                }
+                $jsontemp | Out-File -FilePath $temp.FullName -Force
+            }
+        }
+        Write-Debug -Message "Parameters synched"
+    }
 }
     
 function Sync-Modules() {
@@ -423,7 +439,7 @@ function Initialize-Config() {
     $global:workpath = $WorkDir
     
     $originalConfigPath = (join-path $WorkDir ".." "configuration" "*")
-    Copy-Item -Path $originalConfigPath -Destination (join-path $configpath "\") -Recurse -Force -ErrorAction SilentlyContinue
+    Copy-Item -Path $originalConfigPath -Destination $configpath"\" -Recurse -Force -ErrorAction SilentlyContinue
     Write-Debug -Message ("Config created and copied on " + $configpath)
         
     # Override - Only relevant when initializing a deployment
@@ -626,9 +642,11 @@ function Get-AzureMapsSubscriptionKey {
 #region SEARCH
     
 function Initialize-SearchConfig {
-    if ($config.searchBlobPartitions) {
-        for ($i = 0; $i -lt $config.searchBlobPartitions.Count; $i++) {
-            $partitionName = $config.searchBlobPartitions[$i]
+
+    if ($searchservicecfg.searchBlobPartitions) {
+        Write-Host "Blob partitionning enabled ..."
+        for ($i = 0; $i -lt $searchservicecfg.searchBlobPartitions.Count; $i++) {
+            $partitionName = $searchservicecfg.searchBlobPartitions[$i]
     
             $indexerPath = join-path $global:envpath "config" "search" "indexers" "documents.json"
             if ( test-path $indexerPath) {
@@ -644,8 +662,7 @@ function Initialize-SearchConfig {
                 $jsonobj = ConvertFrom-Json $datasource
                 $jsonobj.name = ($config.name + "-documents-" + $i)
                 $jsonobj.dataSourceName = ($config.name + "-documents-" + $i)
-                $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "config" "search" "indexers" ("documents-" + $i + ".json")) -Force
-    
+                $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "config" "search" "indexers" ("documents-" + $i + ".json")) -Force    
             }
     
             $indexerPath = join-path $global:envpath "config" "search" "indexers" "images.json"
@@ -666,9 +683,7 @@ function Initialize-SearchConfig {
     
             }
         }
-        # Remove-Item (join-path $global:envpath "config" "search" "datasources" "documents.json") -Force
         Remove-item (join-path $global:envpath "config" "search" "indexers" "documents.json") -Force -ErrorAction SilentlyContinue
-        # Remove-Item (join-path $global:envpath "config" "search" "datasources" "images.json") -Force
         Remove-Item (join-path $global:envpath "config" "search" "indexers" "images.json") -Force -ErrorAction SilentlyContinue
     }
     
@@ -689,7 +704,7 @@ function Initialize-SearchParameters {
         $synonymmaps += $value
     }
     Add-Param "searchSynonymMaps" $synonymmaps
-    Write-Debug -Message "`tParameters Synonyms created"
+    Write-Debug -Message "Parameters Synonyms created"
     
     # Get the list of SkillsSets
     $skillslist = @()
@@ -701,7 +716,7 @@ function Initialize-SearchParameters {
         $skillslist += $value
     }
     Add-Param "searchSkillSets" $skillslist
-    Write-Debug -Message "`tParameters SkillSet created"
+    Write-Debug -Message "Parameters SkillSet created"
     
     # Get the list of Indexes
     $indexeslist = @()
@@ -714,7 +729,7 @@ function Initialize-SearchParameters {
     }
     Add-Param "searchIndexes" ($indexeslist | Join-String -Property $_ -Separator ",")
     Add-Param "searchIndexesList" $indexeslist
-    Write-Debug -Message "`tParameters Indexes created"
+    Write-Debug -Message "Parameters Indexes created"
     
     # Get the list of DataSources
     $datasourceslist = @()
@@ -727,7 +742,7 @@ function Initialize-SearchParameters {
         $datasourceslist += $value
     }
     Add-Param "searchDataSources" $datasourceslist
-    Write-Debug -Message "`tParameters DataSources created"
+    Write-Debug -Message "Parameters DataSources created"
     
     # Get the list of Indexers
     $indexersList = @()
@@ -741,7 +756,7 @@ function Initialize-SearchParameters {
     }
     Add-Param "searchIndexers" ($indexersList | Join-String -Property $_ -Separator ",")
     Add-Param "searchIndexersList" $indexersList
-    Write-Debug -Message "`tParameters Indexers created"
+    Write-Debug -Message "Parameters Indexers created"
 }
     
 function Get-SearchServiceKeys {
