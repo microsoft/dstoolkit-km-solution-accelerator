@@ -85,6 +85,21 @@ function Import-searchserviceConfig() {
 
     Import-ConfigParameters $global:searchservicecfg
 }
+function Import-bingConfig() {
+    # Import Other configurations like functions
+    $global:bingcfg = [string] (Get-Content -Path (join-path $global:envpath "config" "bing" "config.json"))
+    $global:bingcfg = ConvertFrom-Json $global:bingcfg
+
+    Import-ConfigParameters $global:bingcfg
+}
+function Import-mapsConfig() {
+    # Import Other configurations like functions
+    $global:mapscfg = [string] (Get-Content -Path (join-path $global:envpath "config" "maps" "config.json"))
+    $global:mapscfg = ConvertFrom-Json $global:mapscfg
+
+    Import-ConfigParameters $global:mapscfg
+}
+
 function Import-ConfigParameters ($inputcfg) {
     Write-Debug "Import configuration "
     # Automatically ad the services parameters to the global parameters variable. 
@@ -163,7 +178,10 @@ function Import-Config() {
     Import-ContainerRegistryConfig
     Import-keyvaultConfig
     Import-searchserviceConfig
-    
+
+    Import-bingConfig
+    Import-mapsConfig
+
     return $global:config
 }
 
