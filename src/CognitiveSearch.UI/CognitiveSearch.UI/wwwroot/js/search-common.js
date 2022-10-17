@@ -341,8 +341,7 @@ Microsoft.Search = {
         }
     },
 
-    //TODO
-
+    // Cover Image
     SupportCoverImage: function(docresult) {
         return (docresult.content_group != "Email") ;
     },
@@ -388,6 +387,11 @@ Microsoft.Search = {
                 });
             });
         }
+    },
+
+    // Page Count
+    SupportPageCount: function(docresult) {
+        return (docresult.content_group != "Email") && (docresult.page_count);
     }
 }
 
@@ -840,7 +844,7 @@ Microsoft.Search.Results = {
             documentHtml += '<div class="col-md-1">'
             documentHtml += '<span class="badge rounded-pill bg-dark text-uppercase me-1" title="Detected language is '+docresult.language+'">'+docresult.language+'</span>';
             
-            if (docresult.page_count) {
+            if (Microsoft.Search.SupportPageCount(docresult)) {
                 var pagetitle = 'Document has '+docresult.page_count+' slides or pages.';
                 if (docresult.page_count > 0) {
                     documentHtml += '<span class="badge rounded-pill bg-success" title="'+pagetitle+'">'+docresult.page_count+'</span>';

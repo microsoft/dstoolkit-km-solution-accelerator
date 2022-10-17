@@ -95,7 +95,7 @@ Microsoft.Tags = {
 
                                 if ((tagEntry.length > 0) && (tagEntry[0].length > 0)) {
 
-                                    tagsHTML += "<" + htmlTagElt +" class='tdcolumn tdcolumn-" + Microsoft.Utils.jqid(name) + "'>";
+                                    tagsHTML += "<" + htmlTagElt +" class='tdcolumn tdcolumn-" + Microsoft.Utils.jqclass(name) + "'>";
 
                                     tagEntry.forEach(function (tagValue, i, tagArray) {
                                         var eligible = true;
@@ -114,7 +114,7 @@ Microsoft.Tags = {
                                                         tagDisplayValue = tagValue.substring(0, Microsoft.Tags.MaxTagValueLengthToDisplay) + '...';
                                                     }
 
-                                                    var tagclasses = "tag tag-" + Microsoft.Utils.jqid(name);
+                                                    var tagclasses = "tag tag-" + Microsoft.Utils.jqclass(name);
 
                                                     //if (highlights) {
                                                     //    if (highlights[name]) {

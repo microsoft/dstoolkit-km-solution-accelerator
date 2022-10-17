@@ -24,6 +24,9 @@ Microsoft.Utils = {
         // return (!id) ? null : id.replace(/(\/|:|\.|\\|\[|\+|\]|,|=|@)/g, '\\$1');
         return (!id) ? null : Base64.encode(id,true);
     },
+    jqclass: function (id) {
+        return (!id) ? null : id.replace(/(\/|:|\.|\\|\[|\+|\]|,|=|@)/g, '\\$1');
+    },
 
     replaceAll: function (str, find, replace) {
         return str.replace(new RegExp(find, 'g'), replace);

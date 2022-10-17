@@ -287,7 +287,7 @@ Microsoft.Facets = {
 
                             var title = Microsoft.Utils.GetFacetDisplayTitle(name);
                             var nameid = name.toLowerCase().replace(" ", "-");
-                            var facetid = Microsoft.Utils.jqid(nameid + "_" + Microsoft.Facets.EncodeFacetValue(item2.value).replaceAll("=", ""));
+                            var facetid = Microsoft.Utils.jqid(nameid + "_" + Microsoft.Facets.EncodeFacetValue(item2.value, true));
 
                             htmlString += '<button id="' + facetid +'-btn" type="button" class="btn btn-outline-danger btn-sm facet-button me-2">';
                             htmlString += item2.value + ' <a class="filter-anchor" title="Remove ' + title + ' filter ' + item2.value + '..." href="javascript:void(0)" onclick="Microsoft.Facets.RemoveFilter(\'' + name + '\', \'' + Microsoft.Facets.EncodeFacetValue(item2.value) + '\')"><span class="bi bi-x text-danger"></span></a><br>';
@@ -470,8 +470,8 @@ Microsoft.Facets = {
         $(tagid).append(facetResultsHTML);
     },
 
-    EncodeFacetValue: function (value) {
-        return Base64.encode(value);
+    EncodeFacetValue: function (value, padding=false) {
+        return Base64.encode(value, padding);
     },
 
 
