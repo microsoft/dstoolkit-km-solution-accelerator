@@ -7,6 +7,10 @@
             "documents",
             "images",
             "metadata"
+        ],
+        "storageFileShares": [
+            "neo4jdata",
+            "neo4jlogs"
         ]
     },
     "Items": [
