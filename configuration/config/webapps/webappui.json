@@ -122,7 +122,7 @@
   },
   {
     "name": "SearchServiceConfig:FacetsAsString",
-    "value": "language,persons,organizations,locations,countries,content_group,authors,key_phrases,topics,image_tags,image_categories,image_captions",
+    "value": "language,persons,organizations,locations,countries,content_group,authors,email/message_from,email/message_to,email/subject,key_phrases,topics,image_tags,image_categories,image_captions",
     "slotSetting": false
   },
   {
@@ -192,7 +192,7 @@
   },
   {
     "name": "SearchServiceConfig:TagsAsString",
-    "value": "organizations,countries",
+    "value": "organizations,countries,email/message_from,email/message_to",
     "slotSetting": false
   },
   {
