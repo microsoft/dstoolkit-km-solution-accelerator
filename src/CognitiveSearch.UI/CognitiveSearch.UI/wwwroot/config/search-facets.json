@@ -41,12 +41,6 @@
     "target": "email/message_to"
   },
   {
-    "id": "message_subject",
-    "name": "Message Subject",
-    "type": "dynamic",
-    "target": "email/subject"
-  },
-  {
     "id": "sciencesstuff",
     "name": "Sciences",
     "type": "static",
