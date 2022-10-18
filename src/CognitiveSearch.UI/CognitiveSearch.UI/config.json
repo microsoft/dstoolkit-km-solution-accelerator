@@ -65,21 +65,15 @@
         "placeHolder": "Explore all data...",
         "ResultsRenderings": [
           {
-            "name": "allresults",
-            "title": "Search documents",
-            "fonticon": "bi bi-grid",
-            "isdefault": true,
-            "method": "Microsoft.All.UpdateResultsAsCard"
-          },
-          {
-            "name": "blank"
-          },
-          {
             "name": "document",
+            "isdefault": true,
             "title": "Only search documents",
             "fonticon": "bi bi-list",
             "method": "Microsoft.All.UpdateResultsAsList",
             "filter": "(document_embedded eq false)"
+          },
+          {
+            "name": "blank"
           },
           {
             "name": "pages",
@@ -101,6 +95,16 @@
             "fonticon": "bi bi-table",
             "method": "Microsoft.Tables.UpdateTablesResults",
             "filter": "(tables_count ge 1)"
+          },
+          {
+            "name": "blank"
+          },
+          {
+            "name": "emails",
+            "title": "Only search emails",
+            "fonticon": "bi bi-envelope",
+            "method": "Microsoft.All.UpdateResultsAsList",
+            "filter": "(content_group eq 'Email')"
           }
         ]
       },
