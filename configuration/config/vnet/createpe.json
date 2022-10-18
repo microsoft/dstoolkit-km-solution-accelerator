@@ -1,9 +1,17 @@
 {
   "items":[
     {
-      "name": "blob-spa",
+      "name": "blobdata-spa",
       "properties": {
         "privateLinkResourceId": "/subscriptions/{{config.subscriptionId}}/resourceGroups/{{config.resourceGroupName}}/providers/Microsoft.Storage/storageAccounts/{{config.name}}data",
+        "groupId": "blob",
+        "requestMessage": "please approve"
+      }
+    },
+    {
+      "name": "blobtech-spa",
+      "properties": {
+        "privateLinkResourceId": "/subscriptions/{{config.subscriptionId}}/resourceGroups/{{config.resourceGroupName}}/providers/Microsoft.Storage/storageAccounts/{{config.name}}tech",
         "groupId": "blob",
         "requestMessage": "please approve"
       }

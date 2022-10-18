@@ -666,15 +666,7 @@ function Set-VNETSearch {
        }
        
         Add-PrivateEndPoint  $searchserviceType $srchservice.Name ($srchservice.Name + "-pe") ($srchservice.Name + "-connection") $searchsrvcpGroupId $vnetcfg.privateEndPointSubnet 
-
-        if ( $srchservice.AddIPAddressRule) {
-            Write-Host("=========================") -ForegroundColor Yellow
-            Write-Host("Adding Ip Address rule on resource:" + $srchservice.Name) -ForegroundColor Yellow
-
-            az search service update --name $srchservice.Name --resource-group $config.resourceGroupName --public-access "enabled" --ip-rules $vnetcfg.ipaddressrule
-            Write-Host("=========================") -ForegroundColor Green
-            Write-Host("Added Ip Address rule on resource:" + $srchservice.Name) -ForegroundColor Green
-        }
+        az search service update --name $srchservice.Name --resource-group $config.resourceGroupName --public-access --public-network-access "disabled"
 
        if ( $srchservice.AddPrivateSharedLink) {
             foreach ($spaReq in $createpecfg.items) {
@@ -692,7 +684,7 @@ function Set-VNETSearch {
                 
                 Write-Host("created shared private access with name: " + $spaReq.name) -ForegroundColor Green
                 Write-Host("=========================") -ForegroundColor Green
-
+                Start-Sleep -Seconds 120
             }
        }
     }
