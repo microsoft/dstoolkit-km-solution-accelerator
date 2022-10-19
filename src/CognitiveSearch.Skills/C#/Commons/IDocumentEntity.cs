@@ -2,9 +2,7 @@
 // Licensed under the MIT License.
 
 using Commons;
-using System;
 using System.IO;
-using System.Web;
 
 namespace Microsoft.Services.Common
 {

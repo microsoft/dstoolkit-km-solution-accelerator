@@ -113,7 +113,9 @@ namespace Text.HTML
                     }
                 }
 
-                if (await BlobHelper.IsBlobExistsAsync(metadatacontainer, metadataFileName))
+                bool noExtraction = docitem.IsPageImage() && (await BlobHelper.IsBlobExistsAsync(metadatacontainer, metadataFileName)); 
+
+                if (noExtraction)
                 {
                     BlobClient metadataBlob = metadatacontainer.GetBlobClient(metadataFileName);
 

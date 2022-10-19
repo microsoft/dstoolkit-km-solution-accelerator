@@ -74,10 +74,12 @@ namespace Image.Commons.Extraction
 
             if (container != null)
             {
-                if (await BlobHelper.IsBlobExistsAsync(container, IDocumentEntity.GetRelativeContentBlobPath(docitem, container.Uri.ToString())))
+                string contentBlobPath = IDocumentEntity.GetRelativeContentBlobPath(docitem, container.Uri.ToString());
+
+                if (await BlobHelper.IsBlobExistsAsync(container, contentBlobPath))
                 {
                     // Open the Document
-                    BlobClient docblob = container.GetBlobClient(IDocumentEntity.GetRelativeContentBlobPath(docitem, container.Uri.ToString()));
+                    BlobClient docblob = container.GetBlobClient(contentBlobPath);
 
                     Stream documentstream = await docblob.OpenReadAsync();
                     documentstream.CopyTo(mstream);
