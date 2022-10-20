@@ -78,6 +78,26 @@ namespace Assignment
             // Source Processing Date
             assignedMetadata[$"source_processing_date"] = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
 
+            // Document Url Segments from document_url
+            string[] pathTokens = null;
+
+            assignedMetadata[$"document_segments"] = new List<string>();
+
+            if (inRecord.Data.ContainsKey("document_url"))
+            {
+                string furl = (string)inRecord.Data["document_url"];
+                if (!String.IsNullOrEmpty(furl))
+                {
+                    string decoded_url = UrlUtility.UrlDecode(furl);
+
+                    pathTokens = decoded_url.ToLowerInvariant().Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+                   if (pathTokens.Length > 4) {
+                        assignedMetadata[$"document_segments"] = pathTokens[3..^1];
+                   }
+                }
+            }
+
             // Content Group
             if (headers != null && headers.ContainsKey("content_group"))
             {
@@ -136,7 +156,7 @@ namespace Assignment
 
             }
 
-            //Email
+            //Email Support 
 
             if (assignedMetadata[$"content_group"].ToString().ToLower().Contains(Constants.email_content_group.ToLower())){
                 Dictionary<string, object> emailMetadata = new Dictionary<string, object>();
@@ -259,6 +279,7 @@ namespace Assignment
                 assignedMetadata[$"authors"] = new List<string>();
             }
 
+            // Part where we map file metadata into skill metadata for indexing.
             if (inRecord.Data.ContainsKey("file_metadata"))
             {
                 JObject filemetadata = (JObject)inRecord.Data["file_metadata"];
