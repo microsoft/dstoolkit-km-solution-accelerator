@@ -108,7 +108,6 @@ def transform_value(headers, record):
         else:
             image_features=[VisualFeatureTypes.image_type,VisualFeatureTypes.faces,VisualFeatureTypes.categories,
         VisualFeatureTypes.color,VisualFeatureTypes.tags,VisualFeatureTypes.description,VisualFeatureTypes.objects,VisualFeatureTypes.brands]
-        # details = [Details.celebrities, Details.landmarks]
         details = [Details.landmarks]
 
         details = []
@@ -117,7 +116,6 @@ def transform_value(headers, record):
             for detail in detailsList:
                 details.append(detailsDict[str(detail)])
         else:
-            # details = [Details.celebrities, Details.landmarks]
             details = [Details.landmarks]
 
         # image_type = "ImageType"
