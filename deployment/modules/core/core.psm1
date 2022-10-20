@@ -542,8 +542,7 @@ function Get-ContainerFilesList ($container, $path) {
     
     return $files
 }
-    
-    
+
 function Add-BlobRetryTag () {
     param (
         [Parameter(Mandatory = $true)]
@@ -560,6 +559,9 @@ function Add-BlobRetryTag () {
 #endregion
     
 function Get-AllServicesKeys() {
+    param (
+        [switch] $AddToKeyVault
+    )
     Get-AppInsightsInstrumentationKey
     Get-TechStorageAccountParameters
     Get-DataStorageAccountParameters
@@ -569,6 +571,10 @@ function Get-AllServicesKeys() {
     Get-SearchServiceKeys
     
     Sync-Parameters
+
+    if ($AddToKeyVault) {
+        Add-KeyVaultSecrets
+    }
 }
 function Get-AppInsightsInstrumentationKey {
     $tuples = Get-Parameters "appInsightsService"
@@ -1373,7 +1379,7 @@ function Build-Functions () {
             # Windows
             if (-not $plan.IsLinux) {
                 if ( -not $LinuxOnly ) {
-                    Write-Host ("Building Windows Function App" + $functionApp.Name) -ForegroundColor DarkCyan
+                    Write-Host ("Building Windows Function App " + $functionApp.Name) -ForegroundColor DarkCyan
     
                     # Build the configured functions
                     Push-Location (join-path $global:workpath ".." $functionApp.Path)
