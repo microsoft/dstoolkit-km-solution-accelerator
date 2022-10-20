@@ -723,22 +723,22 @@ Microsoft.Maps = {
 
                 for (var i = 0; i < Microsoft.Search.results.length; i++) {
 
-                    var image = Microsoft.Search.results[i].Document !== undefined ? Microsoft.Search.results[i].Document : Microsoft.Search.results[i];
+                    var docresult = Microsoft.Search.results[i].Document !== undefined ? Microsoft.Search.results[i].Document : Microsoft.Search.results[i];
 
-                    if (image.locations) {
-                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, image.locations, image);
+                    if (docresult.locations) {
+                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, docresult.locations, docresult);
                     }
-                    if (image.countries) {
-                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, image.countries, image);
+                    if (docresult.countries) {
+                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, docresult.countries, docresult);
                     }
-                    if (image.capitals) {
-                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, image.capitals, image);
+                    if (docresult.capitals) {
+                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, docresult.capitals, docresult);
                     }
-                    if (image.cities) {
-                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, image.cities, image);
+                    if (docresult.cities) {
+                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, docresult.cities, docresult);
                     }
-                    if (image.landmarks) {
-                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, image.landmarks, image);
+                    if (docresult.image.landmarks) {
+                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, docresult.image.landmarks, docresult);
                     }
                 }
 

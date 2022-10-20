@@ -21,6 +21,6 @@
         "type": "forced-directed"
       }
     ],
-    "GraphFacet": "image_categories,image_tags,key_phrases,organizations,countries"    
+    "GraphFacet": "image/categories,image/tags,key_phrases,organizations,countries"    
     }
 }

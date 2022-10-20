@@ -429,23 +429,23 @@ Microsoft.Utils = {
 
     },
 
-    GetLocationsFromResult: function (result) {
+    GetLocationsFromResult: function (docresult) {
         var locs = [];
 
-        if (result.locations) {
-            locs = locs.concat(result.locations);
+        if (docresult.locations) {
+            locs = locs.concat(docresult.locations);
         }
-        if (result.countries) {
-            locs = locs.concat(result.countries);
+        if (docresult.countries) {
+            locs = locs.concat(docresult.countries);
         }
-        if (result.capitals) {
-            locs = locs.concat(result.capitals);
+        if (docresult.capitals) {
+            locs = locs.concat(docresult.capitals);
         }
-        if (result.cities) {
-            locs = locs.concat(result.cities);
+        if (docresult.cities) {
+            locs = locs.concat(docresult.cities);
         }
-        if (result.landmarks) {
-            locs = locs.concat(result.landmarks);
+        if (docresult.image.landmarks) {
+            locs = locs.concat(docresult.image.landmarks);
         }
 
         return window.btoa(locs.join('|'));
