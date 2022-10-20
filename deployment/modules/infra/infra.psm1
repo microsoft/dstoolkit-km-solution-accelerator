@@ -160,7 +160,7 @@ function New-StorageAccount {
 
 function New-CognitiveServices {
 
-    foreach ($azureResource in $cogservicesecfg.Items) {
+    foreach ($azureResource in $cogservicescfg.Items) {
         Write-Host "Provisionning Cognitive Service "$azureResource.Name;
 
         $exists = az cognitiveservices account show --name $azureResource.Name --resource-group $azureResource.ResourceGroup --query id --out tsv
@@ -168,7 +168,7 @@ function New-CognitiveServices {
         if ( $exists ) {
             Write-Host "Service already exists...Skipping.";
         }
-        else {    
+        else {
             az cognitiveservices account create `
             -n $azureResource.Name `
             -g $azureResource.ResourceGroup `
