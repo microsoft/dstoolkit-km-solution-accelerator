@@ -576,6 +576,7 @@ function Get-AllServicesKeys() {
         Add-KeyVaultSecrets
     }
 }
+
 function Get-AppInsightsInstrumentationKey {
     $tuples = Get-Parameters "appInsightsService"
     
@@ -621,6 +622,7 @@ function Get-TechStorageAccountParameters {
     
     Save-Parameters
 }
+
 function Get-DataStorageAccountParameters {
     
     $global:storageAccountKey = az storage account keys list --account-name $params.dataStorageAccountName -g $config.resourceGroupName --query [0].value --out tsv
