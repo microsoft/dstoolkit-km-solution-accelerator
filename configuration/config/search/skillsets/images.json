@@ -80,52 +80,52 @@
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
             "name": "ImagesAnalysisEntitiesDeduplication",
             "description": "A custom skill to normalize and deduplicate values of entities.",
-            "context": "/document/normalized_images/*",
+            "context": "/document",
             "uri": "{{param.entities.deduplication}}",
             "httpMethod": "POST",
-            "timeout": "PT30S",
+            "timeout": "PT3M",
             "batchSize": 1,
             "degreeOfParallelism": null,
             "inputs": [
                 {
                     "name": "categories",
-                    "source": "/document/normalized_images/*/raw_categories/*/name",
+                    "source": "/document/normalized_images/*/raw_categories/*/name/*",
                     "sourceContext": null,
                     "inputs": []
                 },
                 {
                     "name": "tags",
-                    "source": "/document/normalized_images/*/raw_tags/*/name",
+                    "source": "/document/normalized_images/*/raw_tags/*/name/*",
                     "sourceContext": null,
                     "inputs": []
                 },
                 {
                     "name": "captions",
-                    "source": "/document/normalized_images/*/raw_description/captions/*/text",
+                    "source": "/document/normalized_images/*/raw_description/captions/*/text/*",
                     "sourceContext": null,
                     "inputs": []
                 },
                 {
                     "name": "brands",
-                    "source": "/document/normalized_images/*/raw_brands/*/name",
+                    "source": "/document/normalized_images/*/raw_brands/*/name/*",
                     "sourceContext": null,
                     "inputs": []
                 },
                 {
                     "name": "objects",
-                    "source": "/document/normalized_images/*/raw_objects/*/object",
+                    "source": "/document/normalized_images/*/raw_objects/*/object/*",
                     "sourceContext": null,
                     "inputs": []
                 },
                 {
                     "name": "celebrities",
-                    "source": "/document/normalized_images/*/raw_categories/*/detail/celebrities/*/name",
+                    "source": "/document/normalized_images/*/raw_categories/*/detail/celebrities/*/name/*",
                     "sourceContext": null,
                     "inputs": []
                 },
                 {
                     "name": "landmarks",
-                    "source": "/document/normalized_images/*/raw_categories/*/detail/landmarks/*/name",
+                    "source": "/document/normalized_images/*/raw_categories/*/detail/landmarks/*/name/*",
                     "sourceContext": null,
                     "inputs": []
                 }
@@ -133,31 +133,31 @@
             "outputs": [
                 {
                     "name": "categories",
-                    "targetName": "image_categories"
+                    "targetName": "image_metadata/categories"
                 },
                 {
                     "name": "tags",
-                    "targetName": "image_tags"
+                    "targetName": "image_metadata/tags"
                 },
                 {
                     "name": "captions",
-                    "targetName": "image_captions"
+                    "targetName": "image_metadata/captions"
                 },
                 {
                     "name": "brands",
-                    "targetName": "brands"
+                    "targetName": "image_metadata/brands"
                 },
                 {
                     "name": "objects",
-                    "targetName": "objects"
+                    "targetName": "image_metadata/objects"
                 },
                 {
                     "name": "celebrities",
-                    "targetName": "celebrities"
+                    "targetName": "image_metadata/celebrities"
                 },
                 {
                     "name": "landmarks",
-                    "targetName": "landmarks"
+                    "targetName": "image_metadata/landmarks"
                 }
             ],
             "httpHeaders": {}
@@ -196,7 +196,7 @@
             "context": "/document/normalized_images/*",
             "uri": "{{param.vision.azureocrlayout}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": null,
             "inputs": [
@@ -258,7 +258,7 @@
             "context": "/document",
             "uri": "{{param.text.TextMesh}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": 5,
             "inputs": [
@@ -567,7 +567,7 @@
             "context": "/document",
             "uri": "{{param.entities.deduplication}}",
             "httpMethod": "POST",
-            "timeout": "PT30S",
+            "timeout": "PT3M",
             "batchSize": 1,
             "degreeOfParallelism": null,
             "inputs": [
@@ -623,7 +623,7 @@
             "context": "/document",
             "uri": "{{param.geolocations.locations}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": null,
             "inputs": [
@@ -659,7 +659,7 @@
             "context": "/document",
             "uri": "{{param.entities.keyphrases-cleansing}}",
             "httpMethod": "POST",
-            "timeout": "PT30S",
+            "timeout": "PT3M",
             "batchSize": 1,
             "degreeOfParallelism": null,
             "inputs": [
@@ -712,7 +712,7 @@
             "context": "/document",
             "uri": "{{param.text.TranslationMerge}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": null,
             "inputs": [
@@ -800,6 +800,14 @@
                 {
                     "name": "tables_count",
                     "targetName": "tables_count"
+                },
+                {
+                    "name": "paragraphs",
+                    "targetName": "paragraphs"
+                },
+                {
+                    "name": "paragraphs_count",
+                    "targetName": "paragraphs_count"
                 },
                 {
                     "name": "kvs",
@@ -893,7 +901,7 @@
             ],
             "outputs": [
                 {
-                    "name": "fields",
+                    "name": "output",
                     "targetName": "fieldsToTranslate"
                 }
             ]

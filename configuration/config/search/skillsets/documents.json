@@ -311,7 +311,7 @@
             "context": "/document",
             "uri": "{{param.entities.deduplication}}",
             "httpMethod": "POST",
-            "timeout": "PT30S",
+            "timeout": "PT3M",
             "batchSize": 1,
             "degreeOfParallelism": null,
             "inputs": [
@@ -367,7 +367,7 @@
             "context": "/document",
             "uri": "{{param.geolocations.locations}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": null,
             "inputs": [
@@ -403,7 +403,7 @@
             "context": "/document",
             "uri": "{{param.entities.keyphrases-cleansing}}",
             "httpMethod": "POST",
-            "timeout": "PT30S",
+            "timeout": "PT3M",
             "batchSize": 1,
             "degreeOfParallelism": null,
             "inputs": [
@@ -450,7 +450,7 @@
             "context": "/document",
             "uri": "{{param.text.TranslationMerge}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": null,
             "inputs": [
@@ -553,7 +553,7 @@
             "context": "/document",
             "uri": "{{param.mtda.Assign}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": null,
             "inputs": [
@@ -625,7 +625,7 @@
             "context": "/document",
             "uri": "{{param.imgext.DurableImageExtractionSkill_HttpStart}}",
             "httpMethod": "POST",
-            "timeout": "PT30S",
+            "timeout": "PT3M",
             "batchSize": 1,
             "degreeOfParallelism": 5,
             "inputs": [
@@ -669,7 +669,7 @@
             ],
             "outputs": [
                 {
-                    "name": "fields",
+                    "name": "output",
                     "targetName": "fieldsToTranslate"
                 }
             ]

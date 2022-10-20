@@ -140,6 +140,10 @@
       "mappingFunction": null
     },
     {
+      "sourceFieldName": "/document/pages/0/translatedToLanguageCode",
+      "targetFieldName": "translated_language"
+    },
+    {
       "sourceFieldName": "/document/acronyms",
       "targetFieldName": "acronyms",
       "mappingFunction": null

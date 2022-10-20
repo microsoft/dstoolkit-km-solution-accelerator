@@ -112,11 +112,6 @@
       "mappingFunction": null
     },
     {
-      "sourceFieldName": "/document/paragraphs",
-      "targetFieldName": "paragraphs",
-      "mappingFunction": null
-    },
-    {
       "sourceFieldName": "/document/links",
       "targetFieldName": "links",
       "mappingFunction": null
@@ -155,36 +150,12 @@
       "targetFieldName": "language"
     },
     {
+      "sourceFieldName": "/document/pages/0/translatedToLanguageCode",
+      "targetFieldName": "translated_language"
+    },
+    {
       "sourceFieldName": "/document/image_metadata",
       "targetFieldName": "image"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/celebrities",
-      "targetFieldName": "celebrities"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/landmarks",
-      "targetFieldName": "landmarks"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/image_categories",
-      "targetFieldName": "image_categories"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/image_tags",
-      "targetFieldName": "image_tags"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/image_captions",
-      "targetFieldName": "image_captions"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/brands",
-      "targetFieldName": "brands"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/objects",
-      "targetFieldName": "objects"
     },
     {
       "sourceFieldName": "/document/countries",
@@ -201,6 +172,18 @@
     {
       "sourceFieldName": "/document/tables",
       "targetFieldName": "tables"
+    },
+    {
+      "sourceFieldName": "/document/tables_count",
+      "targetFieldName": "tables_count"
+    },
+    {
+      "sourceFieldName": "/document/paragraphs",
+      "targetFieldName": "paragraphs"
+    },
+    {
+      "sourceFieldName": "/document/paragraphs_count",
+      "targetFieldName": "paragraphs_count"
     },
     {
       "sourceFieldName": "/document/topics",

@@ -29,7 +29,7 @@
                     "Id":"tikaserver",
                     "Name": "{{config.name}}tikaserver",
                     "Image": "microsoft/tikaserver:latest",
-                    "AccessIPRestriction":false,
+                    "AccessIPRestriction":true,
                     "AccessSubnetRestriction":true
                 }
             ]
