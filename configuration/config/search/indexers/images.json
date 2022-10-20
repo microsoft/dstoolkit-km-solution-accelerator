@@ -254,6 +254,11 @@
       "sourceFieldName": "/document/skill_metadata/page_number",
       "targetFieldName": "page_number",
       "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/document_segments",
+      "targetFieldName": "document_segments",
+      "mappingFunction": null
     }
   ],
   "encryptionKey": null

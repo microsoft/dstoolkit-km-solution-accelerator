@@ -885,6 +885,20 @@
       "fields": []
     },
     {
+      "name": "document_segments",
+      "type": "Collection(Edm.String)",
+      "searchable": true,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": true,
+      "key": false,
+      "indexAnalyzer": null,
+      "searchAnalyzer": null,
+      "analyzer": null,
+      "synonymMaps": []
+    },
+    {
       "name": "markets",
       "type": "Collection(Edm.String)",
       "searchable": true,

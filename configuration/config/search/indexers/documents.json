@@ -249,6 +249,11 @@
       "sourceFieldName": "/document/skill_metadata/email_metadata",
       "targetFieldName": "email",
       "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/document_segments",
+      "targetFieldName": "document_segments",
+      "mappingFunction": null
     }
   ],
   "encryptionKey": null
