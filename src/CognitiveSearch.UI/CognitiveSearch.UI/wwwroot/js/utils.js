@@ -336,10 +336,10 @@ Microsoft.Utils = {
 
         var startTag = '<a target="_blank" href="' + Microsoft.Search.GetSASTokenFromPath(docresult.metadata_storage_path) + '">';
         if (docresult.restricted) {
-            startTag += '<h5 class="document-title bi bi-lock"> ';
+            startTag += '<h5 class="document-title text-break bi bi-lock"> ';
         }
         else {
-            startTag += '<h5 class="document-title"> ';
+            startTag += '<h5 class="document-title text-break"> ';
         }
         var endTag = '</h5></a>';
 
