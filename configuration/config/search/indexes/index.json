@@ -893,8 +893,6 @@
       "sortable": false,
       "facetable": true,
       "key": false,
-      "indexAnalyzer": null,
-      "searchAnalyzer": null,
       "analyzer": null,
       "synonymMaps": []
     },
@@ -1168,7 +1166,8 @@
         "topics",
         "organizations",
         "countries",
-        "capitals"
+        "capitals",
+        "document_segments"
       ]
     }
   ],

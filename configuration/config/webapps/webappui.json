@@ -192,7 +192,7 @@
   },
   {
     "name": "SearchServiceConfig:TagsAsString",
-    "value": "organizations,countries,email/message_from,email/message_to",
+    "value": "organizations,countries,document_segments,email/message_from,email/message_to",
     "slotSetting": false
   },
   {
