@@ -32,7 +32,6 @@ Microsoft.Facets = {
         });
     },
 
-
     dateRanges: {},
 
     initDateRangeFilter: function () {
@@ -315,8 +314,7 @@ Microsoft.Facets = {
 
     RemoveFilter: function (facet, value, search = true) {
 
-        var nameid = facet.toLowerCase().replace(" ", "-");
-        var facetid = Microsoft.Utils.jqid(nameid + "_" + value.replaceAll("=", ""));
+        var facetid = Microsoft.Utils.jqid(facet + "_" + value.replaceAll("=", ""));
 
         if ($('#' + facetid)) {
             $('#' + facetid).prop('checked', false);
@@ -357,6 +355,17 @@ Microsoft.Facets = {
 
     RenderFacets: function (facets = this.facets, only_facets_with_target = false, keepOpen = false, tagid = this.FACET_DEFAULT_TAGID, rendering_type = "dynamic", overwrite_mode = true) {
 
+        // Clear Dynamic facets configured outside the Other Refiners section in the Navigation
+        // same as clear not seen facets.
+        for (var i = 0; i < this.static_facets.length; i++) {
+            var facet = this.static_facets[i]; 
+            if (facet.type === 'dynamic') {
+                var nameid = Microsoft.Utils.jqid(facet.target);
+                var facet_id_tag = nameid + "-accordion-item";
+                $('#' + facet_id_tag).addClass("d-none");
+            }
+        }
+
         if (overwrite_mode) {
             $(tagid).empty();
         }
@@ -374,7 +383,7 @@ Microsoft.Facets = {
                     var data = facets[idx].values
                 }
                 else {
-                    var nameid = Microsoft.Utils.jqid(item.toLowerCase().replace(" ", "-"));
+                    var nameid = Microsoft.Utils.jqid(item);
                     var name = item;
                     var data = facets[item]
                 }
@@ -458,6 +467,7 @@ Microsoft.Facets = {
                 facet_html += '</div>';
                 facet_html += '</div></div>';
 
+                // In the case of dynamic filter configured outside the Other Refiners section in the Navigation               
                 if ($(facet_body_tag).length) {
                     $('#' + facet_id_tag).removeClass("d-none");
                     $(facet_body_tag).html(facet_body_html);
@@ -471,6 +481,7 @@ Microsoft.Facets = {
         facetResultsHTML += '</div>';
 
         $(tagid).append(facetResultsHTML);
+
     },
 
     EncodeFacetValue: function (value, padding=false) {
