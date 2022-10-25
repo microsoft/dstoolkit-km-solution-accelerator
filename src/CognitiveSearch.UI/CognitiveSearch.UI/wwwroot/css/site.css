@@ -807,7 +807,7 @@ body {
     padding: 0px 0px 0px 0px !important;
     margin: 10px 10px 10px 10px !important;
     display: block;
-    max-height: 32px !important;
+    max-height: 64px !important;
 }
 
 .image-result-map {

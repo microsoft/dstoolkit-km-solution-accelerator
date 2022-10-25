@@ -1,24 +1,23 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using System.Web;
 using Commons;
-using Microsoft.Services.Common;
+using Metadata.Assignment;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Services.Common;
 using Microsoft.Services.Common.WebApiSkills;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Linq;
+using System;
 using System.Collections.Concurrent;
-using Metadata.Assignment;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Assignment
 {
@@ -73,7 +72,7 @@ namespace Assignment
             // Extract metadata 
             string filename = (string)inRecord.Data["document_filename"];
 
-            Dictionary<string,object> assignedMetadata = new Dictionary<string,object>();
+            Dictionary<string, object> assignedMetadata = new Dictionary<string, object>();
 
             // Source Processing Date
             assignedMetadata[$"source_processing_date"] = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
@@ -198,12 +197,30 @@ namespace Assignment
             // Page Number
             assignedMetadata[$"page_number"] = 0;
 
-            // Document Embedded if we have a parent key presence
-            assignedMetadata[$"document_embedded"] = false;
-            
-            if (inRecord.Data.ContainsKey("imageparentid"))
+            // Document Converted
+            if (inRecord.Data.ContainsKey("document_converted"))
             {
-                assignedMetadata[$"document_embedded"] = true;
+                assignedMetadata[$"document_converted"] = inRecord.Data["document_converted"];
+            }
+            else
+            {
+                assignedMetadata[$"document_converted"] = false;
+            }
+
+            // Document Embedded
+            if (inRecord.Data.ContainsKey("document_embedded"))
+            {
+                assignedMetadata[$"document_embedded"] = inRecord.Data["document_embedded"];
+            }
+            else
+            {
+                assignedMetadata[$"document_embedded"] = false;
+            }
+
+            // Is this an embedded document ?
+            if (inRecord.Data.ContainsKey("parentid"))
+            {
+                //assignedMetadata[$"document_embedded"] = true;
 
                 // Page Number
                 try
@@ -403,10 +420,10 @@ namespace Assignment
                     pathTokens = decoded_url.ToLowerInvariant().Split('/', StringSplitOptions.RemoveEmptyEntries);
                 }
             }
-            // image_parenturl
-            if (inRecord.Data.ContainsKey("imageparenturl"))
+            // parent.url
+            if (inRecord.Data.ContainsKey("parenturl"))
             {
-                string furl = (string)inRecord.Data["imageparenturl"];
+                string furl = (string)inRecord.Data["parenturl"];
                 if (!String.IsNullOrEmpty(furl))
                 {
                     string decoded_url = UrlUtility.UrlDecode(IHelpers.Base64Decode(furl));
@@ -459,10 +476,10 @@ namespace Assignment
                         }
                     }
                 }
-                // image_parenturl
-                if (inRecord.Data.ContainsKey("imageparenturl"))
+                // parent.url
+                if (inRecord.Data.ContainsKey("parenturl"))
                 {
-                    string furl = (string)inRecord.Data["imageparenturl"];
+                    string furl = (string)inRecord.Data["parenturl"];
                     if (!String.IsNullOrEmpty(furl))
                     {
                         string decoded_url = UrlUtility.UrlDecode(IHelpers.Base64Decode(furl));
@@ -490,6 +507,7 @@ namespace Assignment
                 }
             }
         }
+        
         public static List<string> SplitGeneric(string input, char separator)
         {
             List<string> results = new List<string>();
@@ -528,8 +546,6 @@ namespace Assignment
             }
             return results;
         }
-
-
     }
 
     public class MappingEntry

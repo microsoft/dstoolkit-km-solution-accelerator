@@ -761,8 +761,8 @@
                     "source": "/document/document_url"
                 },
                 {
-                    "name": "imageparenturl",
-                    "source": "/document/imageparenturl"
+                    "name": "parenturl",
+                    "source": "/document/parenturl"
                 }
             ],
             "outputs": [
@@ -858,6 +858,14 @@
                     "source": "/document/metadata_creation_date"
                 },
                 {
+                    "name": "document_embedded",
+                    "source": "/document/documentembedded"
+                },
+                {
+                    "name": "document_converted",
+                    "source": "/document/documentconverted"
+                },
+                {
                     "name": "topics",
                     "source": "/document/topics"
                 },
@@ -866,20 +874,20 @@
                     "source": "/document/tables"
                 },
                 {
-                    "name": "imageparentkey",
-                    "source": "/document/imageparentkey"
+                    "name": "parentkey",
+                    "source": "/document/parentkey"
                 },
                 {
-                    "name": "imageparentid",
-                    "source": "/document/imageparentid"
+                    "name": "parentid",
+                    "source": "/document/parentid"
                 },
                 {
-                    "name": "imageparenturl",
-                    "source": "/document/imageparenturl"
+                    "name": "parenturl",
+                    "source": "/document/parenturl"
                 },
                 {
-                    "name": "imageparentfilename",
-                    "source": "/document/imageparentfilename"
+                    "name": "parentfilename",
+                    "source": "/document/parentfilename"
                 }
             ],
             "outputs": [
@@ -892,6 +900,44 @@
         },
         {
             "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
+            "name": "ParentShaper",
+            "context": "/document",
+            "inputs": [
+                {
+                    "name": "key",
+                    "source": "/document/parentkey"
+                },
+                {
+                    "name": "id",
+                    "source": "/document/parentid"
+                },
+                {
+                    "name": "url",
+                    "source": "/document/parenturl"
+                },
+                {
+                    "name": "filename",
+                    "source": "/document/parentfilename"
+                },
+                {
+                    "name": "content_group",
+                    "source": "/document/parentcontentgroup"
+                },
+                {
+                    "name": "document_embedded",
+                    "source": "/document/parentdocumentembedded"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "output",
+                    "targetName": "parent_metadata"
+                }
+            ]
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
+            "name": "FieldsTranslationShaper",
             "context": "/document",
             "inputs": [
                 {

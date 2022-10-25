@@ -159,7 +159,7 @@ Microsoft.Utils = {
 
     GetImageFileTitle: function (result) {
         var filename;
-        var pathExtension = Base64.decode(result.image_parentfilename).toLowerCase().split('.').pop();
+        var pathExtension = Base64.decode(result.parent.filename).toLowerCase().split('.').pop();
 
         if (pathExtension === "ppt" || pathExtension === "pptx") {
             filename = "Slide " + this.GetImagePageorSlideNumber(result.metadata_storage_name);
@@ -177,7 +177,7 @@ Microsoft.Utils = {
     },
 
     GetParentPathFromImage: function (result) {
-        return Base64.decode(result.image_parenturl)
+        return Base64.decode(result.parent.url)
     },
 
     MaxItemsPerPage: 500,
@@ -335,29 +335,35 @@ Microsoft.Utils = {
     GetDocumentTitle: function (docresult, only_parent = false) {
 
         var startTag = '<a target="_blank" href="' + Microsoft.Search.GetSASTokenFromPath(docresult.metadata_storage_path) + '">';
+
+        var titleClassName = 'document-title text-break';
+
         if (docresult.restricted) {
-            startTag += '<h5 class="document-title text-break bi bi-lock"> ';
+            titleClassName += ' bi bi-lock ';
         }
-        else {
-            startTag += '<h5 class="document-title text-break"> ';
+        
+        if (docresult.document_embedded && !docresult.document_converted) {
+            titleClassName += ' bi bi-paperclip ';
         }
+
+        startTag += '<h5 class="'+titleClassName+'"> ';
         var endTag = '</h5></a>';
 
-        if (docresult.document_embedded) {
+        if (docresult.document_embedded && docresult.document_converted) {
 
             var page_slide = this.GetImagePageorSlideNumber(docresult.metadata_storage_name);
 
             var parentExtension = this.GetImageParentDocumentExtension(docresult);
 
             if (only_parent) {
-                return startTag + Base64.decode(docresult.image_parentfilename) + endTag;
+                return startTag + Base64.decode(docresult.parent.filename) + endTag;
             }
             else {
                 if (parentExtension === "ppt" || parentExtension === "pptx") {
-                    return startTag + 'Slide ' + page_slide + ' - ' + Base64.decode(docresult.image_parentfilename) + endTag;
+                    return startTag + 'Slide ' + page_slide + ' - ' + Base64.decode(docresult.parent.filename) + endTag;
                 }
                 else {
-                    return startTag + 'Page ' + page_slide + ' - ' + Base64.decode(docresult.image_parentfilename) + endTag;
+                    return startTag + 'Page ' + page_slide + ' - ' + Base64.decode(docresult.parent.filename) + endTag;
                 }
             }
         }

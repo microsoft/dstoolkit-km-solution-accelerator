@@ -96,10 +96,10 @@ namespace Text.HTML
                 // Skip the metadata piece if this is an image with -99999 in filename
                 if (docitem.IsPageImage())
                 {
-                    if (inRecord.Data.ContainsKey("imageparenturl"))
+                    if (inRecord.Data.ContainsKey("parenturl"))
                     {
                         //// Take the parent metadata file here so we have consistency
-                        string parentUrl = (string)inRecord.Data["imageparenturl"];
+                        string parentUrl = (string)inRecord.Data["parenturl"];
                         docitem.ParentUrl = IHelpers.Base64Decode(parentUrl);
 
                         BlobUriBuilder parentBlobUriBuilder = new BlobUriBuilder(new Uri(UrlUtility.UrlDecode(docitem.ParentUrl)));

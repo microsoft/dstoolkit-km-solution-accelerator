@@ -102,7 +102,7 @@ Microsoft.Search.Actions = {
         htmlDiv += '    <div class="col-md-12" style="padding: 5px;">';
         htmlDiv += '            <div class="d-grid gap-2 d-md-flex" >';
         if (docresult.document_embedded) {
-            htmlDiv += '<button onclick="Microsoft.Results.Details.ShowDocumentById(\'' + docresult.image_parentid + '\')" class="btn btn-outline-success btn-sm" ><span class="bi bi-file-earmark" title="Show source document details"></span></button>'
+            htmlDiv += '<button onclick="Microsoft.Results.Details.ShowDocumentById(\'' + docresult.parent.id + '\')" class="btn btn-outline-success btn-sm" ><span class="bi bi-file-earmark" title="Show source document details"></span></button>'
         }
 
         for (var i = 0; i < this.actions.length; i++) {
@@ -132,7 +132,7 @@ Microsoft.Search.Actions = {
 
         if (docresult.document_embedded) {
             htmlDiv += '<li>';
-            htmlDiv += '<button onclick="Microsoft.Results.Details.ShowDocumentById(\'' + docresult.image_parentid + '\')" class="dropdown-item btn btn-outline-success btn-sm">';
+            htmlDiv += '<button onclick="Microsoft.Results.Details.ShowDocumentById(\'' + docresult.parent.id + '\')" class="dropdown-item btn btn-outline-success btn-sm">';
             htmlDiv += '<span class="bi bi-file-earmark me-2" title="Show parent ]document details"></span>';
             htmlDiv += '<span>Open Parent</span>';
             htmlDiv += '</button>';

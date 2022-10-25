@@ -11,7 +11,7 @@ Microsoft.Tables = {
         var classList = "table-result-div";
         var resultsHtml = '';
 
-        var document_key = docresult.image_parentid !== null ? docresult.image_parentid : docresult.document_id;
+        var document_key = docresult.parent !== null ? docresult.parent.id : docresult.document_id;
 
         //docresult.idx = i;
         Microsoft.Search.results_keys_index.push(docresult.index_key);

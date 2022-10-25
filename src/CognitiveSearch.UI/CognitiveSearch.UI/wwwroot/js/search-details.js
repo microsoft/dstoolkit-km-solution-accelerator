@@ -93,17 +93,23 @@ Microsoft.Results.Details = {
         var pathExtension = result.metadata_storage_path.toLowerCase().split('.').pop();
         var override_icon = tabular.fonticon;
 
-        // Images
+        // Embedded objects
         if (result.document_embedded) {
-            fileName = Microsoft.Utils.GetImageFileTitle(result);
-            override_icon = 'bi bi-file-image';
+            if (Microsoft.Utils.IsImageExtension(pathExtension)) {
+                fileName = Microsoft.Utils.GetImageFileTitle(result);
+                override_icon = 'bi bi-file-image';
+            }
+            else {
+                fileName = "Attachment";
+                override_icon = 'bi bi-paperclip text-warning';
+            }
         }
         else {
             if (Microsoft.Utils.IsImageExtension(pathExtension)) {
                 override_icon = 'bi bi-file-image';
             }
         }
-
+        
         // Videos 
         if (Microsoft.Utils.IsVideoExtension(pathExtension)) {
             fileName = "Video"
@@ -260,7 +266,7 @@ Microsoft.Results.Details = {
         } else {
             // If embedded images tab is not relevant then skip
             if (!Microsoft.Utils.IsImageExtension(pathExtension)) {
-                headerContainerHTML += '<img style="width: 32px;height: 32px;margin-left: 15px;" title="'+docresult.title+'" src="' + iconPath + '" />';
+                headerContainerHTML += '<img class="ms-1 me-2" style="width: 32px;height: 32px;margin-left: 15px;" title="'+docresult.title+'" src="' + iconPath + '" />';
             }
         }
     

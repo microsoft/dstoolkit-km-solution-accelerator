@@ -61,13 +61,13 @@
         "enable": true,
         "path": "/Home/Search",
         "searchMethod": "Microsoft.All.Search",
-        "svgicon":"10834-icon-service-Search.svg",
+        "svgicon": "10834-icon-service-Search.svg",
         "placeHolder": "Explore all data...",
         "ResultsRenderings": [
           {
             "name": "document",
             "isdefault": true,
-            "title": "Only search documents",
+            "title": "Only search Documents",
             "fonticon": "bi bi-list",
             "method": "Microsoft.All.UpdateResultsAsList",
             "filter": "(document_embedded eq false)"
@@ -80,7 +80,7 @@
             "title": "Only search document pages or slides",
             "fonticon": "bi bi-files",
             "method": "Microsoft.All.UpdateResultsAsCard",
-            "filter": "(document_embedded eq true)"
+            "filter": "(document_converted eq true)"
           },
           {
             "name": "images",
@@ -101,10 +101,17 @@
           },
           {
             "name": "emails",
-            "title": "Only search emails",
+            "title": "Only search Emails",
             "fonticon": "bi bi-envelope",
             "method": "Microsoft.All.UpdateResultsAsList",
             "filter": "(content_group eq 'Email')"
+          },
+          {
+            "name": "attachments",
+            "title": "Only search Emails' attachments",
+            "fonticon": "bi bi-paperclip",
+            "method": "Microsoft.All.UpdateResultsAsList",
+            "filter": "(document_embedded eq true and parent/content_group eq 'Email')"
           }
         ]
       },
@@ -116,7 +123,7 @@
         "enable": true,
         "path": "/Web/Index",
         "searchMethod": "Microsoft.Web.WebSearch",
-        "svgicon":"newBing_ic_16.svg",
+        "svgicon": "newBing_ic_16.svg",
         "placeHolder": "Explore the web ...",
         "isSemanticCapable": false,
         "enableExcelExport": false,

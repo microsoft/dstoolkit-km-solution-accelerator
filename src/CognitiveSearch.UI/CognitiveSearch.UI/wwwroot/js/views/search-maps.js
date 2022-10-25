@@ -333,9 +333,9 @@ Microsoft.Maps = {
             items.push('</center>');
 
             if (image.document_embedded) {
-                items.push('<span class="d-inline-block text-truncate" style="max-width: 250px;">' + Base64.decode(image.image_parentfilename) + '</span>');
+                items.push('<span class="d-inline-block text-truncate" style="max-width: 250px;">' + Base64.decode(image.parent.filename) + '</span>');
                 items.push('<div class="image-result-img d-block w-100" onclick="Microsoft.Results.Details.ShowDocument(\'' + image.index_key + '\');">');
-                items.push('<img class="image-result-map" src="data:image/png;base64, ' + image.image.thumbnail_medium + '" title="' + Base64.decode(image.image_parentfilename) + '" />');
+                items.push('<img class="image-result-map" src="data:image/png;base64, ' + image.image.thumbnail_medium + '" title="' + Base64.decode(image.parent.filename) + '" />');
                 items.push('</div>');
             }
             else {

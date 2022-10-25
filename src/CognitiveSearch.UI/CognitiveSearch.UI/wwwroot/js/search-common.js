@@ -476,7 +476,7 @@ Microsoft.Search.Utils.Excel = Microsoft.Search.Utils.Excel || {};
 
 Microsoft.Search.Utils.Excel = {
 
-    columnsExclusionList: ["index_key", "image_parentid", "image_parentfilename", "image_parenturl", "image_data", "thumbnail_small", "thumbnail_medium", "document_id"],
+    columnsExclusionList: ["index_key", "parent/id", "parent.filename", "parent/url", "image_data", "thumbnail_small", "thumbnail_medium", "document_id"],
     //Credits Search Team 
     jsonToCSVConvertor: function (jsonData, ReportTitle, ShowLabel) {
         //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
@@ -628,9 +628,9 @@ Microsoft.Search.Results = Microsoft.Search.Results || {};
 Microsoft.Search.Results = {
 
     RenderSearchResultPreview: function (result) {
-        return this.render_file_container(result.document_embedded, result.metadata_storage_path, result.image ? result.image.image_data : null, result.page_number, result.image_parentid, result.image_parentfilename);
+        return this.render_file_container(result.document_embedded, result.metadata_storage_path, result.image ? result.image.image_data : null, result.page_number, result.parent);
     },
-    render_file_container: function (document_embedded, path, image_data, pagenumber, parentid, parentfilename) {
+    render_file_container: function (document_embedded, path, image_data, pagenumber, parent) {
         var fileContainerHTML = '';
         if (path !== null) {
 
@@ -664,8 +664,8 @@ Microsoft.Search.Results = {
                 fileContainerHTML += '<div id="extendable-image-after-container">';
 
                 //Next Page Support for PDF embedded page
-                if (document_embedded && Microsoft.Utils.IsPDF(parentfilename)) {
-                    fileContainerHTML += '<button type="button" class="btn btn-light" onclick="Microsoft.Search.Results.get_next_page(\'' + parentid + '\',' + pagenumber + ');" >Next Page</button>'
+                if (document_embedded && Microsoft.Utils.IsPDF(parent.filename)) {
+                    fileContainerHTML += '<button type="button" class="btn btn-light" onclick="Microsoft.Search.Results.get_next_page(\'' + parent.id + '\',' + pagenumber + ');" >Next Page</button>'
                 }
 
                 fileContainerHTML += '</div>';
@@ -720,7 +720,7 @@ Microsoft.Search.Results = {
         $.postAPIJSON('/api/document/getsiblings',
             {
                 document_id: document_id,
-                incomingFilter: "image_parentid eq '" + document_id + "' and (page_number ge " + (pagenumber + 1) + ")",
+                incomingFilter: "parent/id eq '" + document_id + "' and (page_number ge " + (pagenumber + 1) + ")",
                 parameters: {
                     RowCount: 1,
                     inOrderBy: ["page_number asc"]
@@ -755,7 +755,7 @@ Microsoft.Search.Results = {
 
                 // Next Page
                 if (docresult.document_embedded) {
-                    fileContainerHTML += '<button id="next_page_button" type="button" class="btn btn-success" onclick="Microsoft.Search.Results.get_next_page(\'' + docresult.image_parentid + '\',' + docresult.page_number + ');" >Next Page</button>'
+                    fileContainerHTML += '<button id="next_page_button" type="button" class="btn btn-success" onclick="Microsoft.Search.Results.get_next_page(\'' + docresult.parent.id + '\',' + docresult.page_number + ');" >Next Page</button>'
                 }
             }
             //else if (Microsoft.Utils.IsImageExtension(pathExtension)) {
@@ -770,7 +770,7 @@ Microsoft.Search.Results = {
         var classList = "row results-list-item pb-1";
 
         var docresult = result.Document !== undefined ? result.Document : result;
-        var document_key = docresult.image_parentid !== null ? docresult.image_parentid : docresult.document_id;
+        var document_key = docresult.parent !== null ? docresult.parent.id : docresult.document_id;
 
         Microsoft.Search.results_keys_index.push(docresult.index_key);
         docresult.idx = Microsoft.Search.results_keys_index.length - 1;
@@ -806,10 +806,10 @@ Microsoft.Search.Results = {
             var iconPath = Microsoft.Utils.GetIconPathFromExtension(pathExtension);
             documentHtml += '<a href="javascript:void(0)" onclick="' + showMethod + '(\'' + docresult.document_id + '\');" >';
 
-            if (Microsoft.Utils.images_extensions.includes(pathExtension)) {
+            if (Microsoft.Utils.IsImageExtension(pathExtension)) {
                 if (docresult.document_embedded) {
                     name = Microsoft.Utils.GetImageFileTitle(docresult);
-                    documentHtml += '<img alt="' + name + '" class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.image_parentfilename) + '" />';
+                    documentHtml += '<img alt="' + name + '" class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.parent.filename) + '" />';
                 }
                 else {
                     documentHtml += '<img alt="' + name + '" class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + docresult.metadata_storage_name + '" />';
@@ -868,6 +868,7 @@ Microsoft.Search.Results = {
             if (highlights.length > 0) {
                 documentHtml += highlights;
             }
+            // TODO Take the tags list from backend.
             documentHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['organizations', 'key_phrases']);
             documentHtml += '</div>';
 
@@ -975,13 +976,16 @@ Microsoft.Search.Results.Metadata = {
 
         var excluding_fields = ["content", "merged_content", "translated_text", "tables", "paragraphs", "image_data", "thumbnail_small", "thumbnail_medium", "tokens_html"];
 
-        for (var key in result) {
+        var keys = Object.keys(result).sort();
+
+        for (var k = 0; k < keys.length; k++) {
+            var key = keys[k];
             if (result.hasOwnProperty(key)) {
                 if (!excluding_fields.includes(key)) {
                     if (result[key] !== null) {
                         var value = result[key];
                         if (value.length && value.length > 0) {
-                            if (key === "image_parentfilename" || key === "image_parenturl") {
+                            if (key.indexOf("parentfilename") > -1 || key.indexOf("parenturl") > -1) {
                                 value = Base64.decode(value);
                             }
                             metadataContainerHTML += '<tr><td class="key">' + key + '</td><td class="wrapword text-break">' + value + '</td></tr>';
@@ -995,7 +999,11 @@ Microsoft.Search.Results.Metadata = {
                                     for (var subkey in value) {
                                         if (!excluding_fields.includes(subkey)) {
                                             if (value[subkey]) {
-                                                metadataContainerHTML += '<tr><td class="key">' + key + '/' + subkey + '</td><td class="wrapword text-break">' + value[subkey] + '</td></tr>';
+                                                var displayValue = value[subkey];
+                                                if (subkey.indexOf("parentfilename") > -1 || subkey.indexOf("parenturl") > -1) {
+                                                    displayValue = Base64.decode(displayValue);
+                                                }
+                                                metadataContainerHTML += '<tr><td class="key">' + key + '/' + subkey + '</td><td class="wrapword text-break">' + displayValue + '</td></tr>';
                                             }
                                         }
                                     }
@@ -1005,7 +1013,7 @@ Microsoft.Search.Results.Metadata = {
                     }
                 }
             }
-        }
+        };
 
         metadataContainerHTML += '</tbody>';
         metadataContainerHTML += '</table></div><br/>';
@@ -1083,7 +1091,7 @@ Microsoft.Search.Results.Embedded = {
         var embeddedContainerHTML = '';
         var pathExtension = result.metadata_storage_path.toLowerCase().split('.').pop();
 
-        if (!result.document_embedded) {
+        if (!result.document_converted) {
             // Show the Embedded Images if relevant
             if (!Microsoft.Utils.IsImageExtension(pathExtension)) {
                 embeddedContainerHTML = this.render_embedded_results(result);
@@ -1103,15 +1111,21 @@ Microsoft.Search.Results.Embedded = {
 
                 var containerHTML = '';
 
-                // List of embedded images 
+                // List of embedded documents : images or attachments
                 if (data && data.count > 0) {
                     var results = data.results;
 
-                    containerHTML += '<div class="imagesResults">';
+                    if (results[0].Document.content_group === 'Image') {
 
-                    for (var i = 0; i < results.length; i++) {
+                        containerHTML += '<div class="imagesResults">';
 
-                        containerHTML += Microsoft.Images.render_image_result(results[i]);
+                        for (var i = 0; i < results.length; i++) {
+                            containerHTML += Microsoft.Images.render_image_result(results[i]);
+                        }
+                    }
+                    else { 
+                        containerHTML += '<div class="row">';
+                        containerHTML += Microsoft.All.UpdateResultsAsList(results);
                     }
 
                     containerHTML += '</div>';
@@ -1150,10 +1164,11 @@ Microsoft.Search.Results.Siblings = {
 
         var containerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role = "progressbar" style = "width: 100%" aria - valuenow="100" aria - valuemin="0" aria - valuemax="100"></div></div>';
 
-        $.postAPIJSON('/api/document/getsiblings',
+        if (result.parent) {
+            $.postAPIJSON('/api/document/getsiblings',
             {
-                document_id: result.image_parentid,
-                incomingFilter: "image_parentid eq '" + result.image_parentid + "' ",
+                document_id: result.parent.id,
+                incomingFilter: "parent/id eq '" + result.parent.id + "' ",
                 parameters: {
                     RowCount: 50,
                     inOrderBy: ["page_number asc"]
@@ -1162,6 +1177,7 @@ Microsoft.Search.Results.Siblings = {
             function (data) {
                 Microsoft.Search.Results.Siblings.append_siblings(data.results);
             });
+        }
 
         return containerHTML;
     },
@@ -1221,7 +1237,6 @@ Microsoft.Search.Results.Parent = {
         return embeddedContainerHTML;
     }
 }
-
 
 // TRANSCRIPT
 

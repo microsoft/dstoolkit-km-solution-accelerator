@@ -16,18 +16,19 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Image.Commons.Extraction
 {
     public static class ImageExtraction
     {
         // Create a single, static HttpClient
-        private static readonly HttpClient webclient = new HttpClient();
+        private static readonly HttpClient webclient = new();
 
-        private static readonly Dictionary<string, BlobContainerClient> containers = new Dictionary<string, BlobContainerClient>();
+        private static readonly string ImageTargetContainer = "images"; 
 
-        private static readonly BlobContainerClient metadatacontainer = new BlobContainerClient(IConstants.ContainerConnectionString, IConstants.MetadataContainerName);
+        private static readonly Dictionary<string, BlobContainerClient> containers = new();
+
+        private static readonly BlobContainerClient metadatacontainer = new(IConstants.ContainerConnectionString, IConstants.MetadataContainerName);
 
         static ImageExtraction()
         {
@@ -43,13 +44,18 @@ namespace Image.Commons.Extraction
         {
             try
             {
-                IDocumentEntity docitem = new IDocumentEntity
+                IDocumentEntity docitem = new()
                 {
                     IndexKey = (string)inRecord.Data["document_index_key"],
                     Id = (string)inRecord.Data["document_id"],
                     Name = (string)inRecord.Data["document_filename"],
                     WebUrl = (string)inRecord.Data["document_url"]
                 };
+
+                if (inRecord.Data.ContainsKey("document_metadata"))
+                {
+                    docitem.Metadata = (JObject) inRecord.Data["document_metadata"];
+                }
 
                 outRecord.Data["extracted_images"] = await ExtractAsync(headers, docitem);
             }
@@ -65,10 +71,10 @@ namespace Image.Commons.Extraction
             string response = string.Empty;
 
             //container.Uri
-            MemoryStream mstream = new MemoryStream();
+            MemoryStream mstream = new();
 
             // Find the container from the docitem url
-            BlobUriBuilder blobUriBuilder = new BlobUriBuilder(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
+            BlobUriBuilder blobUriBuilder = new(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
 
             containers.TryGetValue(blobUriBuilder.BlobContainerName, out BlobContainerClient container);
 
@@ -94,11 +100,8 @@ namespace Image.Commons.Extraction
                             {
                                 try
                                 {
-                                    string metadataFileName = IDocumentEntity.GetRelativeMetadataPath(docitem, container.Name, container.Uri.ToString()).TrimStart('/') + ".json";
-
-                                    BlobClient metadataBlob = metadatacontainer.GetBlobClient(metadataFileName);
-
                                     string tikaRequestUrl = IConstants.tikaEndpoint;
+
                                     bool isConvertible = false;
 
                                     if (IConstants.tikaConvertExtensions.Count > 0)
@@ -144,15 +147,43 @@ namespace Image.Commons.Extraction
                                     AddTikaHeader(tikarequest.Headers, "X-Tika-PDFGraphicsToImage", "true");
                                     AddTikaHeader(tikarequest.Headers, "X-Tika-PDFGraphicsToImageThreshold", "1000000");
 
-                                    AddTikaHeader(tikarequest.Headers, "X-TIKA-AZURE-CONTAINER", "images");
-                                    AddTikaHeader(tikarequest.Headers, "X-TIKA-AZURE-CONTAINER-DIRECTORY", IHelpers.Base64Encode(IDocumentEntity.GetRelativeImagesPath(docitem, container.Name, container.Uri.ToString())));
+                                    string directory = IDocumentEntity.GetRelativeImagesPath(docitem, container.Name, container.Uri.ToString());
+
+                                    // We can extract in the same folder due to Azure Storage limitation
+                                    // Can't create a directory with the same name as an existing file.
+                                    if (container.Name == ImageTargetContainer)
+                                    {
+                                        directory = UrlUtility.UrlDecode(contentBlobPath+".images");
+                                    }
+                                    AddTikaHeader(tikarequest.Headers, "X-TIKA-AZURE-CONTAINER", ImageTargetContainer);
+                                    AddTikaHeader(tikarequest.Headers, "X-TIKA-AZURE-CONTAINER-DIRECTORY", IHelpers.Base64Encode(directory));
                                     AddTikaHeader(tikarequest.Headers, "X-TIKA-AZURE-CONTAINER-DIRECTORY-BASE64ENCODED", "true");
 
                                     // Id is already base64 encoded. 
-                                    tikarequest.Headers.Add("X-TIKA-AZURE-META-imageparentkey", docitem.IndexKey);
-                                    tikarequest.Headers.Add("X-TIKA-AZURE-META-imageparentid", docitem.Id);
-                                    tikarequest.Headers.Add("X-TIKA-AZURE-META-imageparentfilename", IHelpers.Base64Encode(docitem.Name));
-                                    tikarequest.Headers.Add("X-TIKA-AZURE-META-imageparenturl", IHelpers.Base64Encode(docitem.WebUrl));
+                                    tikarequest.Headers.Add("X-TIKA-AZURE-META-parentkey", docitem.IndexKey);
+                                    tikarequest.Headers.Add("X-TIKA-AZURE-META-parentid", docitem.Id);
+                                    tikarequest.Headers.Add("X-TIKA-AZURE-META-parentfilename", IHelpers.Base64Encode(docitem.Name));
+                                    tikarequest.Headers.Add("X-TIKA-AZURE-META-parenturl", IHelpers.Base64Encode(docitem.WebUrl));
+
+                                    if (docitem.Metadata.ContainsKey("content_group"))
+                                    {
+                                        tikarequest.Headers.Add("X-TIKA-AZURE-META-parentcontentgroup", (string)docitem.Metadata["content_group"]);
+                                    }
+
+                                    if (docitem.Metadata.ContainsKey("document_embedded"))
+                                    {
+                                        tikarequest.Headers.Add("X-TIKA-AZURE-META-parentdocumentembedded", (string)docitem.Metadata["document_embedded"]);
+                                    }
+                                    //if (docitem.Metadata.ContainsKey("title"))
+                                    //{
+                                    //    tikarequest.Headers.Add("X-TIKA-AZURE-META-imageparenttitle", IHelpers.Base64Encode(docitem.Metadata["title"]));
+                                    //}
+
+                                    // Document Converted flag
+                                    tikarequest.Headers.Add("X-TIKA-AZURE-META-documentconverted", isConvertible.ToString());
+
+                                    // Document Embedded flag
+                                    tikarequest.Headers.Add("X-TIKA-AZURE-META-documentembedded", "true");
 
                                     tikarequest.Content = new ByteArrayContent(mstream.ToArray());
                                     tikarequest.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
@@ -171,6 +202,10 @@ namespace Image.Commons.Extraction
 
                                         if (tikares.Length > 0)
                                         {
+                                            string metadataFileName = IDocumentEntity.GetRelativeMetadataPath(docitem, container.Name, container.Uri.ToString()).TrimStart('/') + ".json";
+
+                                            BlobClient metadataBlob = metadatacontainer.GetBlobClient(metadataFileName);
+
                                             try
                                             {
                                                 List<JObject> items = JsonConvert.DeserializeObject<List<JObject>>(tikares);
@@ -178,7 +213,7 @@ namespace Image.Commons.Extraction
                                                 // Only persist the first item representing the document metadata
                                                 JObject item = items[0];
 
-                                                BlobHttpHeaders httpHeaders = new BlobHttpHeaders();
+                                                BlobHttpHeaders httpHeaders = new();
                                                 IDictionary<string, string> metadata = new Dictionary<string, string>();
 
                                                 httpHeaders.ContentType = "application/json";
@@ -189,7 +224,7 @@ namespace Image.Commons.Extraction
                                                 metadata.Add("document_url", IHelpers.Base64Encode(docitem.WebUrl));
 
                                                 byte[] byteArray = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(item));
-                                                MemoryStream stream = new MemoryStream(byteArray);
+                                                MemoryStream stream = new(byteArray);
 
                                                 await metadataBlob.UploadAsync(stream, httpHeaders, metadata);
                                             }
@@ -222,8 +257,12 @@ namespace Image.Commons.Extraction
                 }
                 else
                 {
-                    throw new FileNotFoundException($"Blob not found {docitem.WebUrl} - {container.Uri.ToString()}. Sending to retry.");
+                    throw new FileNotFoundException($"Blob not found {docitem.WebUrl} - {container.Uri}. Sending to retry.");
                 }
+            }
+            else
+            {
+                throw new IOException($"Unknown container identified.");
             }
 
             return response;

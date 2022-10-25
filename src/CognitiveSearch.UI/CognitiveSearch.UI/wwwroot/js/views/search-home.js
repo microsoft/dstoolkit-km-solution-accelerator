@@ -118,7 +118,9 @@ Microsoft.Home = {
                     var displayName = name;
     
                     if (docresult.document_embedded) {
-                        displayName = Microsoft.Utils.GetImageFileTitle(docresult)
+                        if (Microsoft.Utils.IsImageExtension(pathExtension)) {
+                            displayName = Microsoft.Utils.GetImageFileTitle(docresult);
+                        }
                     }
     
                     resultsHtml += '<a id="' + id + '" target="_blank" href="' + Microsoft.Search.GetSASTokenFromPath(path) + '">';
@@ -224,7 +226,9 @@ Microsoft.Home = {
                     var displayName = name;
     
                     if (docresult.document_embedded) {
-                        displayName = Microsoft.Utils.GetImageFileTitle(docresult)
+                        if (Microsoft.Utils.IsImageExtension(pathExtension)) {
+                            displayName = Microsoft.Utils.GetImageFileTitle(docresult);
+                        }
                     }
     
                     if (Microsoft.Utils.IsOfficeDocument(pathExtension)) {

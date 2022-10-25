@@ -243,7 +243,7 @@ Microsoft.Answers = {
     
                     if (Microsoft.Utils.images_extensions.includes(pathExtension)) {
                         answersHtml += '<a target="_blank" href="' + src + '" >';
-                        answersHtml += '<img class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.image_parentfilename) + '" />';
+                        answersHtml += '<img class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.parent.filename) + '" />';
                         answersHtml += '</a>';
                     }
                     else {

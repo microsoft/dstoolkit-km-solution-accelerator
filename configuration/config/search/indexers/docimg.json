@@ -85,16 +85,8 @@
       "targetFieldName": "document_embedded"
     },
     {
-      "sourceFieldName": "/document/imageparentid",
-      "targetFieldName": "image_parentid"
-    },
-    {
-      "sourceFieldName": "/document/imageparentfilename",
-      "targetFieldName": "image_parentfilename"
-    },
-    {
-      "sourceFieldName": "/document/imageparenturl",
-      "targetFieldName": "image_parenturl"
+      "sourceFieldName": "/document/skill_metadata/document_converted",
+      "targetFieldName": "document_converted"
     },
     {
       "sourceFieldName": "/document/organizations",

@@ -1,14 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Commons;
@@ -21,6 +13,13 @@ using Microsoft.Services.Common;
 using Microsoft.Services.Common.WebApiSkills;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Metadata.Extraction
 {
@@ -32,7 +31,6 @@ namespace Metadata.Extraction
         private static readonly HttpClient webclient = new HttpClient();
 
         private static readonly Dictionary<string, BlobContainerClient> containers = new Dictionary<string, BlobContainerClient>();
-        //private static readonly BlobContainerClient documentsContainer = new BlobContainerClient(IConstants.ContainerConnectionString, IConstants.ContainerNames);
 
         private static readonly BlobContainerClient imagesContainer = new BlobContainerClient(IConstants.ContainerConnectionString, IConstants.ImageContainerName);
         private static readonly BlobContainerClient metadatacontainer = new BlobContainerClient(IConstants.ContainerConnectionString, IConstants.MetadataContainerName);
@@ -98,10 +96,10 @@ namespace Metadata.Extraction
                 // Skip the metadata piece if this is an image with -99999 in filename
                 if (docitem.IsPageImage())
                 {
-                    if (inRecord.Data.ContainsKey("imageparenturl"))
+                    if (inRecord.Data.ContainsKey("parenturl"))
                     {
                         //// Take the parent metadata file here so we have consistency
-                        string parentUrl = (string)inRecord.Data["imageparenturl"];
+                        string parentUrl = (string)inRecord.Data["parenturl"];
                         docitem.ParentUrl = IHelpers.Base64Decode(parentUrl);
 
                         BlobUriBuilder parentBlobUriBuilder = new(new Uri(UrlUtility.UrlDecode(docitem.ParentUrl)));

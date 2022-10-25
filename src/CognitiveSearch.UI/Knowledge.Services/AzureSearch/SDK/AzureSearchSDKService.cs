@@ -487,11 +487,11 @@ namespace Knowledge.Services.AzureSearch.SDK
             }
         }
 
-        // IMAGES Search 
+        // Embedded Search 
 
         public async Task<SearchResponse> GetDocumentEmbedded(IngressSearchRequest request)
         {
-            var embeddedfilter = $"image_parentid eq '{request.document_id}'";
+            var embeddedfilter = $"parent/id eq '{request.document_id}'";
 
             QueryParameters queryParameters = request.parameters ?? (new());
             queryParameters.RowCount = 100;
@@ -536,7 +536,7 @@ namespace Knowledge.Services.AzureSearch.SDK
 
         public async Task<SearchResponse> GetDocumentCoverImage(IngressSearchRequest request)
         {
-            var embeddedfilter = $"(image_parentid eq '{request.document_id}' and ((page_number ge 1) or (document_filename eq 'thumbnail.jpeg')))";
+            var embeddedfilter = $"(parent/id eq '{request.document_id}' and ((page_number ge 1) or (document_filename eq 'thumbnail.jpeg')))";
             // Support for document itself if it is an image...
             embeddedfilter += $" or (document_id eq '{request.document_id}' and content_group eq 'Image')";
 
