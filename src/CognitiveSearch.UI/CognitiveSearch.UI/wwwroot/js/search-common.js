@@ -349,7 +349,7 @@ Microsoft.Search = {
     RenderCoverImage: function (docresult) {
         var documentHtml = '';
         if (this.SupportCoverImage(docresult)) {
-            documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+            documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
         }
         else {
             documentHtml += '   <img alt="' + name + '" class="image-result-nocover" src="' + iconPath + '" title="' + docresult.title + '"/>';
@@ -768,9 +768,7 @@ Microsoft.Search.Results = {
     RenderResultAsListItem: function (result, showMethod = "Microsoft.Results.Details.ShowDocumentById") {
         var documentHtml = '';
         var classList = "row results-list-item pb-1";
-
         var docresult = result.Document !== undefined ? result.Document : result;
-        var document_key = docresult.parent !== null ? docresult.parent.id : docresult.document_id;
 
         Microsoft.Search.results_keys_index.push(docresult.index_key);
         docresult.idx = Microsoft.Search.results_keys_index.length - 1;
@@ -817,7 +815,7 @@ Microsoft.Search.Results = {
             }
             else {
                 if (hasCoverImage) {
-                    documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                    documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                 }
                 else {
                     documentHtml += '   <img alt="' + name + '" class="image-result-nocover" src="' + iconPath + '" title="' + docresult.title + '"/>';

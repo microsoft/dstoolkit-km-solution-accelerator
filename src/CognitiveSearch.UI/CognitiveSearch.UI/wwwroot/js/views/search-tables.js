@@ -8,12 +8,8 @@ Microsoft.Tables = {
     view_tag_id: "#search-results-content",
 
     render_table_result: function (docresult, target_tag_id) {
-        var classList = "table-result-div";
         var resultsHtml = '';
 
-        var document_key = docresult.parent !== null ? docresult.parent.id : docresult.document_id;
-
-        //docresult.idx = i;
         Microsoft.Search.results_keys_index.push(docresult.index_key);
         docresult.idx = Microsoft.Search.results_keys_index.length - 1;
 
@@ -35,7 +31,7 @@ Microsoft.Tables = {
                 resultsHtml += '<img alt="' + name + '" class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + docresult.metadata_storage_name + '" />';
             }
             else {
-                resultsHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                resultsHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
             }
 
             resultsHtml += '</a>';
