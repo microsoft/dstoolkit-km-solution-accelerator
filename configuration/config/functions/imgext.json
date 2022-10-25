@@ -16,7 +16,7 @@
     },
     {
         "name": "ContainerName",
-        "value": "{{param.documentsStorageContainerName}}",
+        "value": "{{param.documentsStorageContainerName}},{{param.imagesStorageContainerName}}",
         "slotSetting": false
     },
     {
