@@ -26,6 +26,10 @@ az config set extension.use_dynamic_install=yes_without_prompt
 
 Get-Config -Name $Name -WorkDir $ScriptDir -Reload:$true
 
+if ($config.vnetEnable) {
+    Import-VNETConfig
+}
+
 if ( $config.overlayPath ) {
     Write-Host "Environment overlay "$config.overlayPath -ForegroundColor DarkGreen
 }

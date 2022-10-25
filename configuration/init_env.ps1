@@ -11,6 +11,10 @@ az config set extension.use_dynamic_install=yes_without_prompt
 $global:config = Import-Config -WorkDir $global:envpath
 $global:params = Import-Params
 
+if ($global:config.vnetEnable) {
+    Import-VNETConfig
+}
+
 # Set the Azure Cloud environment
 az cloud set -n $global:config.cloud
 
