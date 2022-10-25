@@ -53,7 +53,10 @@ function Get-AvailableSubnets {
 
 }
  
-# get the private zone based on resource type
+# Get the private zone based on resource type
+#
+# https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns
+#
 function Get-PrivateDNSZone {
     param (
         $resourceType        
@@ -87,8 +90,22 @@ function Get-PrivateDNSZone {
         return "privatelink.table.cosmos.azure.com"
     }
 }
- 
-# get the private ip address of azure resource.
+
+# Create the Private DNS Zone and link them to the VNET
+function Add-PrivateDNSZone {
+    foreach ($zone in $vnetcfg.privateDNSZones) {
+        az network private-dns zone create --resource-group $vnetcfg.vnetResourceGroup --name $zone
+
+        az network private-dns link vnet create `
+            --resource-group $vnetcfg.vnetResourceGroup `
+            --zone-name $zone `
+            --name $zone".link" `
+            --virtual-network $vnetcfg.vnetName `
+            --registration-enabled false
+    }
+}
+
+# Get the private ip address of azure resource.
 function Get-PrivateIPAddress {
     param(
         $vnetResourceGroup,
@@ -98,7 +115,7 @@ function Get-PrivateIPAddress {
     return (az network private-endpoint show --name $privateEndPointName --resource-group $vnetResourceGroup --query 'customDnsConfigs[0].{IPAddress:ipAddresses[0]}' --output tsv)
 }
  
-# get the public outbound ip address of webapp/function app.
+# Get the public outbound ip address of webapp/function app.
 function Get-PublicOutboundIPAddress {
     param(
         $appResourceGroupName,
@@ -128,8 +145,8 @@ function Add-Subnet {
     Write-Host("creating subnet with name: " + $subnetName) -ForegroundColor "Yellow"
     az network vnet subnet create -g $resourceGroupName --vnet-name $vnetName -n $subnetName `
     --address-prefixes $ipaddress --network-security-group $networkSecurityGroup `
-    --disable-private-endpoint-network-policies false `
-    --service-endpoints Microsoft.Storage Microsoft.CognitiveServices Microsoft.ContainerRegistry Microsoft.KeyVault Microsoft.Web
+    --disable-private-endpoint-network-policies $vnetcfg.disablePENetworkPolicies
+    # --service-endpoints Microsoft.Storage Microsoft.CognitiveServices Microsoft.ContainerRegistry Microsoft.KeyVault Microsoft.Web
 
     Add-NewSubnettoAllResources $subnetName
     Write-Host("created subnet with name: " + $subnetName) -ForegroundColor "Green"
@@ -757,6 +774,10 @@ function Initialize-VNET {
 
     Import-VNETConfig
 
+    Add-VNET
+
+    Add-PrivateDNSZone
+
     Set-VNETFunctions
     Save-VNETParameters
 
@@ -779,6 +800,7 @@ function Import-VNETConfig {
 
     $global:vnetcfg = [string] (Get-Content -Path (join-path $global:envpath "config" "vnet" "config.json"))
     $global:vnetcfg = ConvertFrom-Json $global:vnetcfg
+
     $global:availableSubnets = Get-AvailableSubnets
     $global:existingSubnets = Get-AvailableSubnets
 
