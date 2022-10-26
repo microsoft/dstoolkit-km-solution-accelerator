@@ -1016,41 +1016,43 @@ Microsoft.Search.Results.Metadata = {
         metadataContainerHTML += '</tbody>';
         metadataContainerHTML += '</table></div><br/>';
 
-        $.postAPIJSON('/api/document/getmetadata',
-            {
-                path: result.metadata_storage_path
-            },
-            function (data) {
-                if (data && data.length > 0) {
-                    try {
-                        result = JSON.parse(data)
-                        var extraMetadataContainerHTML = $("#metadata-viewer").html();
+        if (! result.document_converted) {
+            $.postAPIJSON('/api/document/getmetadata',
+                {
+                    path: result.metadata_storage_path
+                },
+                function (data) {
+                    if (data && data.length > 0) {
+                        try {
+                            result = JSON.parse(data)
+                            var extraMetadataContainerHTML = $("#metadata-viewer").html();
 
-                        extraMetadataContainerHTML += '<h4 id="available_metadata">File Metadata</h4><div style="overflow-x:auto;">';
-                        extraMetadataContainerHTML += '<table class="table metadata-table table-hover table-striped">';
-                        extraMetadataContainerHTML += '<thead><tr><th data-field="key" class="key">Key</th><th data-field="key" class="key">Normalized</th><th data-field="value">Value</th></tr></thead>';
-                        extraMetadataContainerHTML += '<tbody>';
+                            extraMetadataContainerHTML += '<h4 id="available_metadata">File Metadata</h4><div style="overflow-x:auto;">';
+                            extraMetadataContainerHTML += '<table class="table metadata-table table-hover table-striped">';
+                            extraMetadataContainerHTML += '<thead><tr><th data-field="key" class="key">Key</th><th data-field="key" class="key">Normalized</th><th data-field="value">Value</th></tr></thead>';
+                            extraMetadataContainerHTML += '<tbody>';
 
-                        var keys = Object.keys(result).sort();
+                            var keys = Object.keys(result).sort();
 
-                        for (var k = 0; k < keys.length; k++) {
-                            var key = keys[k];
-                            if (result.hasOwnProperty(key)) {
-                                if (!key.startsWith("X-TIKA")) {
-                                    extraMetadataContainerHTML += '<tr><td class="key">' + key + '</td><td class="key">' + Microsoft.Utils.replaceAll(Microsoft.Utils.replaceAll(key," ","-"),":","-") + '</td><td class="wrapword text-break">' + result[key] + '</td></tr>';                                    
+                            for (var k = 0; k < keys.length; k++) {
+                                var key = keys[k];
+                                if (result.hasOwnProperty(key)) {
+                                    if (!key.startsWith("X-TIKA")) {
+                                        extraMetadataContainerHTML += '<tr><td class="key">' + key + '</td><td class="key">' + Microsoft.Utils.replaceAll(Microsoft.Utils.replaceAll(key," ","-"),":","-") + '</td><td class="wrapword text-break">' + result[key] + '</td></tr>';                                    
+                                    }
                                 }
-                            }
-                        };
+                            };
 
-                        extraMetadataContainerHTML += '</tbody>';
-                        extraMetadataContainerHTML += '</table></div><br/>';
+                            extraMetadataContainerHTML += '</tbody>';
+                            extraMetadataContainerHTML += '</table></div><br/>';
 
-                        $("#metadata-viewer").html(extraMetadataContainerHTML);
+                            $("#metadata-viewer").html(extraMetadataContainerHTML);
+                        }
+                        catch (exception) {
+                        }
                     }
-                    catch (exception) {
-                    }
-                }
-            });
+                });
+        }
 
         return metadataContainerHTML;
     }
