@@ -74,7 +74,8 @@ namespace Image.Commons.Extraction
             MemoryStream mstream = new();
 
             // Find the container from the docitem url
-            BlobUriBuilder blobUriBuilder = new(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
+            // BlobUriBuilder blobUriBuilder = new(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
+            BlobUriBuilder blobUriBuilder = new(new Uri(docitem.WebUrl));
 
             containers.TryGetValue(blobUriBuilder.BlobContainerName, out BlobContainerClient container);
 

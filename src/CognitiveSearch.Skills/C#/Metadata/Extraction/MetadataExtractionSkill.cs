@@ -72,7 +72,8 @@ namespace Metadata.Extraction
             };
 
             // Find the right source container 
-            BlobUriBuilder blobUriBuilder = new(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
+            //BlobUriBuilder blobUriBuilder = new(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
+            BlobUriBuilder blobUriBuilder = new(new Uri(docitem.WebUrl));
 
             containers.TryGetValue(blobUriBuilder.BlobContainerName, out BlobContainerClient container);
 
