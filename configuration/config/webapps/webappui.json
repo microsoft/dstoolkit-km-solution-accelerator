@@ -104,7 +104,6 @@
     "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/mapsSubscriptionKey)",
     "slotSetting": false
   },
-
   {
     "name": "SearchServiceConfig:AdminKey",
     "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/searchServiceKey)",
@@ -226,13 +225,18 @@
     "slotSetting": true
   },
   {
+    "name": "Storageconfig:StorageAccountName",
+    "value": "{{param.dataStorageAccountName}}",
+    "slotSetting": false
+  },
+  {
     "name": "Storageconfig:StorageAccountKey",
     "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/storageAccountKey)",
     "slotSetting": false
   },
   {
-    "name": "Storageconfig:StorageAccountName",
-    "value": "{{param.dataStorageAccountName}}",
+    "name": "Storageconfig:StorageConnectionString",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/storageConnectionString)",
     "slotSetting": false
   },
   {
