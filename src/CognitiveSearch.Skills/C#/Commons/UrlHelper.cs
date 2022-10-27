@@ -11,5 +11,9 @@ namespace Commons
         {
             return HttpUtility.UrlDecode(url.Replace("+", "%2B").Replace("(", "%28").Replace(")", "%29"));
         }
+        public static string UrlEncode(string url)
+        {
+            return HttpUtility.UrlEncode(url);
+        }
     }
 }
