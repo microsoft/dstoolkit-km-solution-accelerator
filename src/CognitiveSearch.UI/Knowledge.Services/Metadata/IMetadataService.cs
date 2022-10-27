@@ -7,6 +7,11 @@ namespace Knowledge.Services.Metadata
 {
     public interface IMetadataService
     {
-        public Task<string> GetDocumentMetadataAsync(string documentPath); 
+        public static string Container = "metadata";
+
+        public static string HtmlMetadata = ".html";
+        public static string JsonMetadata = ".json";
+
+        public Task<string> GetDocumentMetadataAsync(string documentPath, string type); 
     }
 }

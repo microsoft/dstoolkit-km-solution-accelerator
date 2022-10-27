@@ -13,9 +13,10 @@
     "outputFileName": "wwwroot/js/site.min.js",
     "inputFiles": [
       "wwwroot/js/site.js",
-      "wwwroot/js/search-common.js",
+      "wwwroot/js/common.js",
       "wwwroot/js/commons/*.js",
-      "wwwroot/js/search-details.js",
+      "wwwroot/js/details.js",
+      "wwwroot/js/details/*.js"
       "wwwroot/js/views/*.js"
     ],
     // Optionally specify minification options

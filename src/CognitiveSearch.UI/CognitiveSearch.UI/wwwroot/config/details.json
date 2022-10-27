@@ -3,14 +3,26 @@
     "id": "file",
     "enable": true,
     "active": true,
-    "renderingMethod": "Microsoft.Search.Results.RenderSearchResultPreview",
+    "renderingMethod": "Microsoft.Search.Results.File.RenderSearchResultPreview",
     "fonticon": "bi bi-file-earmark",
     "adaptiveIcon": true,
     "viewerClass": "details-max-height-viewer",
     "localization": {
       "en": {
-        "name": "Document",
+        "name": "Preview",
         "title": "Preview your document or image"
+      }
+    }
+  },
+  {
+    "id": "html",
+    "enable": true,
+    "renderingMethod": "Microsoft.Search.Results.HTML.render_tab",
+    "fonticon": "bi bi-filetype-html",
+    "localization": {
+      "en": {
+        "name": "Preview",
+        "title": "HTML Preview of a document."
       }
     }
   },

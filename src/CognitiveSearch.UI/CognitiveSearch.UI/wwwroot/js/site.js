@@ -41,6 +41,10 @@ jQuery["postXML"] = function (url, data, callback) {
 
 // Web API Backend Support
 
+jQuery["postAPIText"] = function (url, data, callback) {
+    return createJQueryRequest(url, data, callback, 'POST', 'text');
+};
+
 jQuery["postAPIJSON"] = function (url, data, callback) {
     return createJQueryRequest(url, data, callback, 'POST', 'json');
 };
