@@ -15,6 +15,9 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     word-wrap: break-word;
 }
 
+dl {
+    background-color: #e6d2ad41 !important;
+}
 dd {
     display: list-item !important;
 }
