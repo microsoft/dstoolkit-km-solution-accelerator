@@ -154,10 +154,10 @@ namespace Image.Commons.Extraction
                                     // Can't create a directory with the same name as an existing file.
                                     if (container.Name == ImageTargetContainer)
                                     {
-                                        directory = UrlUtility.UrlDecode(contentBlobPath+".images");
+                                        directory = contentBlobPath+".images";
                                     }
                                     AddTikaHeader(tikarequest.Headers, "X-TIKA-AZURE-CONTAINER", ImageTargetContainer);
-                                    AddTikaHeader(tikarequest.Headers, "X-TIKA-AZURE-CONTAINER-DIRECTORY", IHelpers.Base64Encode(directory));
+                                    AddTikaHeader(tikarequest.Headers, "X-TIKA-AZURE-CONTAINER-DIRECTORY", IHelpers.Base64Encode(UrlUtility.UrlEncode(directory)));
                                     AddTikaHeader(tikarequest.Headers, "X-TIKA-AZURE-CONTAINER-DIRECTORY-BASE64ENCODED", "true");
 
                                     // Id is already base64 encoded. 
