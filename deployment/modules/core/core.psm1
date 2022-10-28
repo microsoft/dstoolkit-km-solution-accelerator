@@ -785,10 +785,11 @@ function Initialize-SearchParameters {
     Write-Debug -Message "Parameters Indexers created"
 }
     
-function Get-SearchServiceKeys {
-    
-    $global:searchServiceKey = az search admin-key show --resource-group $config.resourceGroupName --service-name $params.searchServiceName  --query primaryKey --out tsv
-    Add-Param "searchServiceKey" $global:searchServiceKey
+function Get-SearchServiceKeys {    
+    Write-Host "Fetching Search service keys..." -ForegroundColor DarkBlue
+
+    $searchServiceKey = az search admin-key show --resource-group $config.resourceGroupName --service-name $params.searchServiceName  --query primaryKey --out tsv
+    Add-Param "searchServiceKey" $searchServiceKey
         
     $searchServiceQueryKey = az search query-key list --resource-group $config.resourceGroupName --service-name $params.searchServiceName  --query [0].key --out tsv
     Add-Param "searchServiceQueryKey" $searchServiceQueryKey
@@ -802,6 +803,10 @@ function Invoke-SearchAPI {
         [string]$method = "PUT"
     )
     
+    if (! $params.searchServiceKey) {
+        Get-SearchServiceKeys
+    }
+
     $headers = @{
         'api-key'      = $params.searchServiceKey
         'Content-Type' = 'application/json'
