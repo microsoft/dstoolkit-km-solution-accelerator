@@ -21,7 +21,7 @@
             "outputs": [
                 {
                     "name": "image_metadata",
-                    "targetName": "image_metadata"
+                    "targetName": "raw_image_metadata"
                 },
                 {
                     "name": "normalized_images",
@@ -89,43 +89,43 @@
             "inputs": [
                 {
                     "name": "categories",
-                    "source": "/document/normalized_images/*/raw_categories/*/name/*",
+                    "source": "/document/normalized_images/*/raw_categories/*/name",
                     "sourceContext": null,
                     "inputs": []
                 },
                 {
                     "name": "tags",
-                    "source": "/document/normalized_images/*/raw_tags/*/name/*",
+                    "source": "/document/normalized_images/*/raw_tags/*/name",
                     "sourceContext": null,
                     "inputs": []
                 },
                 {
                     "name": "captions",
-                    "source": "/document/normalized_images/*/raw_description/captions/*/text/*",
+                    "source": "/document/normalized_images/*/raw_description/captions/*/text",
                     "sourceContext": null,
                     "inputs": []
                 },
                 {
                     "name": "brands",
-                    "source": "/document/normalized_images/*/raw_brands/*/name/*",
+                    "source": "/document/normalized_images/*/raw_brands/*/name",
                     "sourceContext": null,
                     "inputs": []
                 },
                 {
                     "name": "objects",
-                    "source": "/document/normalized_images/*/raw_objects/*/object/*",
+                    "source": "/document/normalized_images/*/raw_objects/*/object",
                     "sourceContext": null,
                     "inputs": []
                 },
                 {
                     "name": "celebrities",
-                    "source": "/document/normalized_images/*/raw_categories/*/detail/celebrities/*/name/*",
+                    "source": "/document/normalized_images/*/raw_categories/*/detail/celebrities/*/name",
                     "sourceContext": null,
                     "inputs": []
                 },
                 {
                     "name": "landmarks",
-                    "source": "/document/normalized_images/*/raw_categories/*/detail/landmarks/*/name/*",
+                    "source": "/document/normalized_images/*/raw_categories/*/detail/landmarks/*/name",
                     "sourceContext": null,
                     "inputs": []
                 }
@@ -133,31 +133,31 @@
             "outputs": [
                 {
                     "name": "categories",
-                    "targetName": "image_metadata/categories"
+                    "targetName": "img_categories"
                 },
                 {
                     "name": "tags",
-                    "targetName": "image_metadata/tags"
+                    "targetName": "img_tags"
                 },
                 {
                     "name": "captions",
-                    "targetName": "image_metadata/captions"
+                    "targetName": "img_captions"
                 },
                 {
                     "name": "brands",
-                    "targetName": "image_metadata/brands"
+                    "targetName": "img_brands"
                 },
                 {
                     "name": "objects",
-                    "targetName": "image_metadata/objects"
+                    "targetName": "img_objects"
                 },
                 {
                     "name": "celebrities",
-                    "targetName": "image_metadata/celebrities"
+                    "targetName": "img_celebrities"
                 },
                 {
                     "name": "landmarks",
-                    "targetName": "image_metadata/landmarks"
+                    "targetName": "img_landmarks"
                 }
             ],
             "httpHeaders": {}
@@ -212,6 +212,67 @@
                 }
             ],
             "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
+            "description": "Shape the image metadata object",
+            "context": "/document",
+            "inputs": [
+                {
+                    "name": "width",
+                    "source": "/document/raw_image_metadata/width"
+                },
+                {
+                    "name": "height",
+                    "source": "/document/raw_image_metadata/height"
+                },
+                {
+                    "name": "ratio",
+                    "source": "/document/raw_image_metadata/ratio"
+                },
+                {
+                    "name": "thumbnail_medium",
+                    "source": "/document/raw_image_metadata/thumbnail_medium"
+                },
+                {
+                    "name": "thumbnail_small",
+                    "source": "/document/raw_image_metadata/thumbnail_small"
+                },
+                {
+                    "name": "categories",
+                    "source": "/document/img_categories"
+                },
+                {
+                    "name": "tags",
+                    "source": "/document/img_tags"
+                },
+                {
+                    "name": "captions",
+                    "source": "/document/img_captions"
+                },
+                {
+                    "name": "brands",
+                    "source": "/document/img_brands"
+                },
+                {
+                    "name": "objects",
+                    "source": "/document/img_objects"
+                },
+                {
+                    "name": "celebrities",
+                    "source": "/document/img_celebrities"
+                },
+                {
+                    "name": "landmarks",
+                    "source": "/document/img_landmarks"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "output",
+                    "targetName": "image_metadata"
+                }
+            ]
         },
         {
             "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
