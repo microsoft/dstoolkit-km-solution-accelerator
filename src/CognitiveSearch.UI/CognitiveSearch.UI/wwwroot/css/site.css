@@ -1406,3 +1406,7 @@ help {
     width: 24px !important;
     max-height: 24px !important;
 }
+
+.cover-image {
+    width: 100% !important;
+}

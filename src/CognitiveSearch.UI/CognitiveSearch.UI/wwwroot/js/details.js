@@ -100,7 +100,6 @@ Microsoft.Results.Details = {
                 override_icon = 'bi bi-file-image';
             }
             else {
-                fileName = "Attachment";
                 override_icon = 'bi bi-paperclip text-warning';
             }
         }

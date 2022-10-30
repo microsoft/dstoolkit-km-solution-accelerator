@@ -20,6 +20,7 @@ Microsoft.Search.Results.Embedded = {
         }
         return embeddedContainerHTML;
     },
+
     render_embedded_results: function (result) {
 
         var containerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role = "progressbar" style = "width: 100%" aria - valuenow="100" aria - valuemin="0" aria - valuemax="100"></div></div>';
@@ -32,11 +33,13 @@ Microsoft.Search.Results.Embedded = {
 
                 var containerHTML = '';
 
-                // List of embedded documents : images or attachments
+                // List of embedded : images (pages/slides) or attachments
                 if (data && data.count > 0) {
                     var results = data.results;
 
-                    if (results[0].Document.content_group === 'Image') {
+                    var isImageEmbedded = results[0].Document.content_group === 'Image';
+
+                    if (isImageEmbedded) {
 
                         containerHTML += '<div class="imagesResults">';
 
@@ -51,8 +54,11 @@ Microsoft.Search.Results.Embedded = {
 
                     containerHTML += '</div>';
 
-                    $('#images-pivot-link').append(' (' + data.count + ')');
+                    if (! isImageEmbedded) {
+                        $('#images-pivot-link').addClass('bi bi-paperclip').text(' Attachments')
+                    }
 
+                    $('#images-pivot-link').append(' (' + data.count + ')');
                 }
                 else {
                     $('#images-pivot-link').hide();
