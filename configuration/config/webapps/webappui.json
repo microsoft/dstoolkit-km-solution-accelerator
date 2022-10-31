@@ -121,7 +121,7 @@
   },
   {
     "name": "SearchServiceConfig:FacetsAsString",
-    "value": "language,persons,organizations,locations,countries,content_group,authors,email/message_from,email/message_to,key_phrases,topics,image/tags,image/categories,image/captions",
+    "value": "language,persons,organizations,locations,countries,content_group,document_segments,authors,email/message_from,email/message_to,key_phrases,topics,image/tags,image/categories,image/captions",
     "slotSetting": false
   },
   {
