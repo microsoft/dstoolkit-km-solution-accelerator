@@ -807,8 +807,8 @@ Microsoft.Search.Results = {
         if (Microsoft.View.config.resultsRenderings && Microsoft.View.config.resultsRenderings.length > 0) {
             var renderingHtml = '';
 
-            var switchClassList = "view-switch-button btn btn-outline-secondary btn-sm";
-            var switchClassListActive = "view-switch-button btn btn-outline-secondary btn-sm active";
+            var switchClassList = "view-switch-button btn btn-sm";
+            var switchClassListActive = "view-switch-button btn btn-sm active";
 
             // For each rendering of the search vertical
             for (var i = 0; i < Microsoft.View.config.resultsRenderings.length; i++) {
@@ -816,7 +816,16 @@ Microsoft.Search.Results = {
 
                 if (rendering.name !== "blank")
                 {
-                    renderingHtml += '        <label id="switch-' + rendering.name + '" title="' + rendering.title + '"  class="' + (Microsoft.Search.results_rendering === i ? switchClassListActive : switchClassList) + '" onclick="Microsoft.Search.Results.switchResultsView(' + i + ');">';
+                    var finalClass = (Microsoft.Search.results_rendering === i ? switchClassListActive : switchClassList); 
+                    if (rendering.classList)
+                    {
+                        finalClass += ' ' + rendering.classList;
+                    }
+                    else 
+                    {
+                        finalClass += ' btn-outline-secondary';
+                    }
+                    renderingHtml += '        <label id="switch-' + rendering.name + '" title="' + rendering.title + '"  class="' + finalClass + '" onclick="Microsoft.Search.Results.switchResultsView(' + i + ');">';
                     renderingHtml += '             <span class="' + rendering.fonticon + '"/>';
                     renderingHtml += '        </label>';    
                 }
