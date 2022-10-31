@@ -8,6 +8,7 @@
         "searchDefaultToLanguageCode": "en",
         "searchVersion": "2021-04-30-Preview",
         "searchManagementVersion": "2021-04-30-Preview",
+        "searchSku": "standard",
         "searchIndexerEnvironment": "standard",
         "semanticSearchEnabled": true
     },

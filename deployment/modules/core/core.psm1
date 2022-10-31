@@ -796,6 +796,7 @@ function Get-SearchServiceKeys {
     
     Save-Parameters
 }
+
 function Invoke-SearchAPI {
     param (
         [string]$url,
@@ -819,7 +820,13 @@ function Invoke-SearchAPI {
     
     Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method $method -Body $body | ConvertTo-Json -Depth 100
 }
-    
+
+function Get-SearchMgtUrl () {
+    $mgturl = "https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName
+    $mgturl += "?api-version="+$searchservicecfg.Parameters.searchManagementVersion
+    return $mgturl
+}
+
 function Initialize-Search {
     param (
         [switch]$AllowIndexDowntime
@@ -1124,8 +1131,7 @@ function Get-SearchIndexerStatus {
 }
     
 function Get-SearchServiceDetails() {
-    # az rest --method GET --url ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName + "?api-version=" + $searchservicecfg.Parameters.searchManagementVersion)
-    az rest --method GET --url ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName + "?api-version=2021-04-01-Preview")
+    az rest --method GET --url $(Get-SearchMgtUrl)
 }
     
 # https://docs.microsoft.com/en-us/rest/api/searchservice/preview-api/reset-documents
@@ -1145,7 +1151,39 @@ function Reset-SearchDocument {
     }
     Invoke-SearchAPI -url ("/indexers/documents/resetdocs?api-version=" + $searchservicecfg.Parameters.searchVersion) -method "POST" -body $body
 }
-    
+
+# https://learn.microsoft.com/en-us/azure/search/semantic-search-overview
+
+function Enable-SemanticSearch ($searchServiceName) {
+
+    $mgturl = ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/")
+    if ($searchServiceName) {
+        $mgturl += $searchServiceName
+    }
+    else {
+        $mgturl += $params.searchServiceName
+    }
+    $mgturl += "?api-version=2021-04-01-Preview"
+
+    Push-Location (Join-Path $global:envpath "config" "search" "semantic")
+    az rest --method PUT --url $mgturl --body '@enable.json'
+    Pop-Location
+}
+
+function Disable-SemanticSearch ($searchServiceName) {
+    $mgturl = ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/")
+    if ($searchServiceName) {
+        $mgturl += $searchServiceName
+    }
+    else {
+        $mgturl += $params.searchServiceName
+    }
+    $mgturl += "?api-version=2021-04-01-Preview"
+
+    Push-Location (Join-Path $global:envpath "config" "search" "semantic")
+    az rest --method PUT --url $mgturl --body '@disable.json'
+    Pop-Location
+}
 #endregion
     
     

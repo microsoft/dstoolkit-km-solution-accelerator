@@ -205,7 +205,12 @@ function New-SearchServices {
                 --replica-count 1
         }
 
-        az search service update --name  $azureResource.Name --resource-group $azureResource.ResourceGroup --identity-type "SystemAssigned"
+        az search service update --name $azureResource.Name --resource-group $azureResource.ResourceGroup --identity-type "SystemAssigned"
+
+        if ($searchservicecfg.Parameters.semanticSearchEnabled)
+        {
+            Enable-SemanticSearch $azureResource.Name
+        }
 
     }
 

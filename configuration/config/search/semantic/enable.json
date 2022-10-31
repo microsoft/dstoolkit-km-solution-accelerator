@@ -1,0 +1,9 @@
+{
+    "location": "{{config.location}}",
+    "sku": {
+        "name": "{{param.searchSku}}"
+    },
+    "properties": {
+        "semanticSearch": "free"
+    }
+}
