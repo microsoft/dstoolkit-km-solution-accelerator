@@ -175,6 +175,7 @@ function New-CognitiveServices {
             --kind $azureResource.Kind `
             --sku $azureResource.Sku `
             --location $config.location `
+            --custom-domain $azureResource.Name `
             --yes
 
             az cognitiveservices account identity assign -n $azureResource.Name -g $azureResource.ResourceGroup

@@ -16,7 +16,7 @@
     },
     {
         "name": "FORMS_RECOGNIZER_ENDPOINT",
-        "value": "https://{{config.location}}.api.cognitive.microsoft.com",
+        "value": "https://{{param.cogSvcForm}}.cognitiveservices.azure.com",
         "slotSetting": false
     },
     {
@@ -26,7 +26,7 @@
     },
     {
         "name": "COMPUTER_VISION_ENDPOINT",
-        "value": "https://{{config.location}}.api.cognitive.microsoft.com",
+        "value": "https://{{param.cogSvcVision}}.cognitiveservices.azure.com",
         "slotSetting": false
     },
     {

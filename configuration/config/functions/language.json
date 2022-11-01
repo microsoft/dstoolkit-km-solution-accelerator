@@ -21,7 +21,7 @@
     },
     {
         "name": "TEXT_ANALYTICS_ENDPOINT",
-        "value": "https://{{config.location}}.api.cognitive.microsoft.com",
+        "value": "https://{{param.cogSvcLanguage}}.cognitiveservices.azure.com",
         "slotSetting": false
     },
     {
