@@ -2,6 +2,7 @@
     "GroupId":"ContainerRegistry",
     "ServiceEndPoint":"Microsoft.ContainerRegistry",
     "Apptype":"ContainerRegistry",
+    "PrivateDNSZone":"privatelink.azurecr.io",
     "Parameters" : {
         "acr": "{{config.name}}acr.azurecr.io",
         "acr_prefix": "{{config.name}}acr"    
@@ -11,7 +12,7 @@
             "Name": "{{config.name}}acr",
             "ResourceGroup": "{{config.resourceGroupName}}",
             "EnablePrivateAccess":true,
-            "AddExistingSubnets":true,
+            "AccessSubnetRestriction":true,
             "IPAddressToAdd":[]
         }
     ]

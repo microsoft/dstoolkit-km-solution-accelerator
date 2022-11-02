@@ -1312,7 +1312,7 @@ function New-Functions {
             Write-Host "Consumption Plan. Skipping App Service Plan creation."
         }
     
-        foreach ($functionApp in $plan.FunctionApps) {
+        foreach ($functionApp in $plan.Services) {
             if ($plan.IsLinux) {
                 $imageName = $params.acr + "/" + $functionApp.Image
     
@@ -1420,7 +1420,7 @@ function Build-Functions () {
     }   
     
     foreach ($plan in $functionscfg.AppPlans) {
-        foreach ($functionApp in $plan.FunctionApps) {
+        foreach ($functionApp in $plan.Services) {
             # Windows
             if (-not $plan.IsLinux) {
                 if ( -not $LinuxOnly ) {
@@ -1483,7 +1483,7 @@ function Publish-Functions() {
     Push-Location $global:envpath
     
     foreach ($plan in $functionscfg.AppPlans) {
-        foreach ($functionApp in $plan.FunctionApps) {
+        foreach ($functionApp in $plan.Services) {
             if (! $plan.IsLinux) {
                 if (-not $LinuxOnly) {
                     Write-host "Publishing Windows function "$functionApp.Name
@@ -1516,7 +1516,7 @@ function Upgrade-Functions() {
     Push-Location $global:envpath
     
     foreach ($plan in $functionscfg.AppPlans) {
-        foreach ($functionApp in $plan.FunctionApps) {
+        foreach ($functionApp in $plan.Services) {
             az functionapp config appsettings set --settings FUNCTIONS_EXTENSION_VERSION=~4 --resource-group $plan.ResourceGroup --name $functionApp.Name
     
             if (! $plan.IsLinux) {
@@ -1531,7 +1531,7 @@ function Upgrade-Functions() {
 function Restart-Functions() {   
     Push-Location $global:envpath
     foreach ($plan in $functionscfg.AppPlans) {
-        foreach ($functionApp in $plan.FunctionApps) {
+        foreach ($functionApp in $plan.Services) {
             az functionapp stop --resource-group $plan.ResourceGroup --name $functionApp.Name
             az functionapp start --resource-group $plan.ResourceGroup --name $functionApp.Name 
         }
@@ -1546,7 +1546,7 @@ function Publish-FunctionsSettings() {
     
     Push-Location $global:envpath
     foreach ($plan in $functionscfg.AppPlans) {                    
-        foreach ($functionApp in $plan.FunctionApps) {
+        foreach ($functionApp in $plan.Services) {
             $settingspath = "config/functions/" + $functionApp.Id + ".json" 
     
             if (Test-Path $settingspath) {
@@ -1565,7 +1565,7 @@ function Publish-FunctionsSettings() {
 
 function New-FunctionsKeys() {
     foreach ($plan in $functionscfg.AppPlans) {
-        foreach ($functionApp in $plan.FunctionApps) {
+        foreach ($functionApp in $plan.Services) {
             foreach ($function in $functionApp.Functions) {
                 az functionapp function keys set -g $plan.ResourceGroup `
                     -n $functionApp.Name `
@@ -1579,7 +1579,7 @@ function New-FunctionsKeys() {
 
 function Get-FunctionsKeys() {
     foreach ($plan in $functionscfg.AppPlans) {
-        foreach ($functionApp in $plan.FunctionApps) {
+        foreach ($functionApp in $plan.Services) {
             foreach ($function in $functionApp.Functions) {
                 $url = az functionapp function show -g $plan.ResourceGroup -n $functionApp.Name --function-name $function.Name --query invokeUrlTemplate --out tsv
                 if ($url) {
@@ -1617,7 +1617,7 @@ function Test-Functions() {
     foreach ($plan in $functionscfg.AppPlans) {
         Write-Host "--------------------"
         Write-Host "Testing Plan "$plan.name -ForegroundColor DarkCyan
-        foreach ($functionApp in $plan.FunctionApps) {
+        foreach ($functionApp in $plan.Services) {
             Write-Host "Testing App "$functionApp.name -ForegroundColor DarkYellow
             foreach ($function in $functionApp.Functions) {
                 Write-Host "Testing Function "$function.name -ForegroundColor DarkBlue
@@ -1702,7 +1702,7 @@ function New-WebApps {
             }
         }
     
-        foreach ($webApp in $plan.WebApps) {
+        foreach ($webApp in $plan.Services) {
             if ($plan.IsLinux) {
                 if (-not $WindowsOnly) {
                     $imageName = $params.acr + "/" + $webApp.Image
@@ -1805,7 +1805,7 @@ function Build-WebApps {
     # dotnet publish -r linux-x64 --self-contained false
     
     foreach ($plan in $webappscfg.AppPlans) {
-        foreach ($webApp in $plan.WebApps) {
+        foreach ($webApp in $plan.Services) {
             if (-not $webApp.Image) {
     
                 Write-Host "Building Cross-Platform WebApp "$webApp.Name -ForegroundColor DarkGreen
@@ -1860,7 +1860,7 @@ function Restart-WebApps {
     
     Push-Location $global:envpath
     foreach ($plan in $webappscfg.AppPlans) {
-        foreach ($webApp in $plan.WebApps) {
+        foreach ($webApp in $plan.Services) {
             if (-not $webApp.Image) {
                 if ($production) {
                     az webapp stop --resource-group $plan.ResourceGroup `
@@ -1903,7 +1903,7 @@ function Publish-WebApps {
     Push-Location $global:envpath 
     foreach ($plan in $webappscfg.AppPlans) {
     
-        foreach ($webApp in $plan.WebApps) {
+        foreach ($webApp in $plan.Services) {
     
             if (-not $webApp.Image) {
                 if (-not $plan.IsLinux) {
@@ -1946,7 +1946,7 @@ function Publish-WebAppsSettings {
     
     Push-Location $global:envpath
     foreach ($plan in $webappscfg.AppPlans) {
-        foreach ($webApp in $plan.WebApps) {
+        foreach ($webApp in $plan.Services) {
             Write-Host $webApp
     
             $settingspath = "config/webapps/" + $webApp.Id + ".json" 
@@ -2090,7 +2090,7 @@ function Add-KeyVaultFunctionsPolicies {
     
     # Shared Policies for Functions
     foreach ($plan in $functionscfg.AppPlans) {
-        foreach ($functionApp in $plan.FunctionApps) {
+        foreach ($functionApp in $plan.Services) {
             $principalId = az functionapp identity show -n $functionApp.Name -g $plan.ResourceGroup --query principalId
     
             az keyvault set-policy -n $params.keyvault -g $plan.ResourceGroup --object-id $principalId --secret-permissions get 
@@ -2099,7 +2099,7 @@ function Add-KeyVaultFunctionsPolicies {
 }
 function Add-KeyVaultWebAppsPolicies {
     foreach ($plan in $webappscfg.AppPlans) {
-        foreach ($webApp in $plan.WebApps) {
+        foreach ($webApp in $plan.Services) {
             $principalId = az webapp identity show -n $webApp.Name -g $plan.ResourceGroup --query principalId
             az keyvault set-policy -n $params.keyvault -g $plan.ResourceGroup --object-id $principalId --secret-permissions get 
     

@@ -2,6 +2,7 @@
     "ServiceEndPoint": "Microsoft.Storage",
     "GroupId": "Blob",
     "Apptype": "Storage",
+    "PrivateDNSZone":"privatelink.blob.core.windows.net",
     "Parameters": {
         "storageContainers": [
             "documents",
@@ -20,7 +21,7 @@
             "ResourceGroup": "{{config.resourceGroupName}}",
             "IsDataStorage": true,
             "EnablePrivateAccess": true,
-            "AddExistingSubnets": true
+            "AccessSubnetRestriction": true
         },
         {
             "Name": "{{config.name}}tech",
@@ -28,7 +29,7 @@
             "ResourceGroup": "{{config.resourceGroupName}}",
             "IsDataStorage": false,
             "EnablePrivateAccess": true,
-            "AddExistingSubnets": true
+            "AccessSubnetRestriction": true
         }
     ]
 }

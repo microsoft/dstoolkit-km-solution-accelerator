@@ -1,5 +1,7 @@
 {
     "GroupId": "Functions",
+    "Apptype": "FunctionApp",
+    "PrivateDNSZone":"privatelink.azurewebsites.net",
     "AppPlans": [
          {
             "Id": "skillsplan",
@@ -7,7 +9,7 @@
             "Sku": "{{param.pricing.premium}}",
             "ResourceGroup": "{{config.resourceGroupName}}",
             "IsLinux": false,
-            "FunctionApps": [
+            "Services": [
                 {
                     "Id": "geolocations",
                     "Name": "{{config.name}}geolocations",
@@ -19,7 +21,7 @@
                         }
                     ],
                     "AccessIPRestriction": false,
-                    "AccessSubnetRestriction": false
+                    "AccessSubnetRestriction": true
                 },
                 {
                     "Id": "text",
@@ -41,7 +43,7 @@
                         }
                     ],
                     "AccessIPRestriction": false,
-                    "AccessSubnetRestriction": false
+                    "AccessSubnetRestriction": true
                 },
                 {
                     "Id": "entities",
@@ -60,7 +62,7 @@
                         }
                     ],
                     "AccessIPRestriction": false,
-                    "AccessSubnetRestriction": false
+                    "AccessSubnetRestriction": true
                 }
             ]
         },
@@ -70,7 +72,7 @@
             "Sku": "{{param.pricing.premium}}",
             "ResourceGroup": "{{config.resourceGroupName}}",
             "IsLinux": false,
-            "FunctionApps": [
+            "Services": [
                 {
                     "Id": "imgext",
                     "Name": "{{config.name}}imgext",
@@ -82,7 +84,7 @@
                         }
                     ],
                     "AccessIPRestriction": false,
-                    "AccessSubnetRestriction": false
+                    "AccessSubnetRestriction": true
                 }
             ]
         },
@@ -92,7 +94,7 @@
             "Sku": "{{param.pricing.premium}}",
             "ResourceGroup": "{{config.resourceGroupName}}",
             "IsLinux": false,
-            "FunctionApps": [
+            "Services": [
                 {
                     "Id": "mtda",
                     "Name": "{{config.name}}mtda",
@@ -104,7 +106,7 @@
                         }
                     ],
                     "AccessIPRestriction": false,
-                    "AccessSubnetRestriction": false
+                    "AccessSubnetRestriction": true
                 },
                 {
                     "Id": "mtdext",
@@ -117,7 +119,7 @@
                         }
                     ],
                     "AccessIPRestriction": false,
-                    "AccessSubnetRestriction": false
+                    "AccessSubnetRestriction": true
                 }
             ]
         },
@@ -127,7 +129,7 @@
             "Sku": "{{param.pricing.premium}}",
             "ResourceGroup": "{{config.resourceGroupName}}",
             "IsLinux": true,
-            "FunctionApps": [
+            "Services": [
                 {
                     "Id": "vision",
                     "Name": "{{config.name}}vision",
@@ -158,7 +160,7 @@
                         }
                     ],
                     "AccessIPRestriction": false,
-                    "AccessSubnetRestriction": false
+                    "AccessSubnetRestriction": true
                 }
             ]
         },
@@ -168,7 +170,7 @@
             "Sku": "{{param.pricing.premium}}",
             "ResourceGroup": "{{config.resourceGroupName}}",
             "IsLinux": true,
-            "FunctionApps": [
+            "Services": [
                 {
                     "Id": "language",
                     "Name": "{{config.name}}language",
@@ -196,7 +198,7 @@
                         }
                     ],
                     "AccessIPRestriction": false,
-                    "AccessSubnetRestriction": false
+                    "AccessSubnetRestriction": true
                 }
             ]
         }

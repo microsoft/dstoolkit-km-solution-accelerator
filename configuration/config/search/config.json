@@ -2,6 +2,7 @@
     "GroupId": "Search",
     "ServiceEndPoint": "Microsoft.Search",
     "Apptype": "Search",
+    "PrivateDNSZone":"privatelink.search.windows.net",
     "Parameters": {
         "searchServiceName": "{{config.name}}search",
         "searchDefaultFromLanguageCode": "en",
