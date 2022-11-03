@@ -7,7 +7,6 @@
 Microsoft.Suggestions = Microsoft.Suggestions || {};
 Microsoft.Suggestions = {
     suggestions: [],
-
     suggestions_dict : {},
     engines_dict: {},
 

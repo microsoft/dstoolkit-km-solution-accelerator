@@ -12,5 +12,19 @@
     "inboundRestrictSubnet": "{{config.name}}-subnet",
     "ipaddressrule": "172.17.5.0/24",
     "VnetFuncAppStartIpAddress": "172.17.50.0",
-    "VnetWebAppStartIpAddress": "172.17.100.0"
+    "VnetWebAppStartIpAddress": "172.17.100.0",
+    "privateDNSZones":[
+        "privatelink.blob.core.windows.net",
+        "privatelink.table.core.windows.net",
+        "privatelink.queue.core.windows.net",
+        "privatelink.file.core.windows.net",
+        "privatelink.dfs.core.windows.net",
+        "privatelink.documents.azure.com",
+        "privatelink.search.windows.net",
+        "privatelink.azurecr.io",
+        "privatelink.cognitiveservices.azure.com",
+        "privatelink.redis.cache.windows.net",
+        "privatelink.redisenterprise.cache.azure.net",
+        "privatelink.azurewebsites.net"
+    ]
 }

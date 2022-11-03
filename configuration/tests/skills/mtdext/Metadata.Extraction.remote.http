@@ -1,5 +1,5 @@
 ###
-POST {{param.mtdext.DurableMetadataExtractionSkill_HttpStart}}
+POST {{param.mtdext.MetadataExtractionSkill}}
 content-type: application/json;charset=utf-8
 
 {

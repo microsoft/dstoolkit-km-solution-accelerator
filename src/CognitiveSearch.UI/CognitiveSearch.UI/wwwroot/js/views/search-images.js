@@ -29,7 +29,7 @@ Microsoft.Images = {
                 resultsHtml += '<div class="image-result-div pt-2 pb-2 pr-2 pl-2 d-inline-flex flex-column justify-content-center">';
                 resultsHtml += '        <div class="image-result-img" onclick="Microsoft.Results.Details.ShowDocument(\'' + id + '\',' + docresult.idx + ');">';
 
-                resultsHtml += '<img class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.image_parentfilename) + '" />';
+                resultsHtml += '<img class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.parent.filename) + '" />';
                 resultsHtml += '        </div>';
 
                 resultsHtml += '    <div class="image-result-path" >';

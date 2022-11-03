@@ -6,9 +6,10 @@ content-type: application/json;charset=utf-8
         {
             "recordId": "1",
             "data": {
+                "document_index_key": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvU2FtcGxlRGF0YTEwLVdpbmQvV2luZCBFbmVyZ3kgMTAxLnBkZg",
                 "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvU2FtcGxlRGF0YTEwLVdpbmQvV2luZCBFbmVyZ3kgMTAxLnBkZg",
-                "document_filename":"Wind Energy 101.pdf",
-                "document_url":"https://{{param.dataStorageAccountName}}.blob.core.windows.net/documents/SampleData10-Wind/Wind Energy 101.pdf"
+                "document_filename":"Test.pptx",
+                "document_url":"https://kmsolacdata.blob.core.windows.net/images/documents/emails/TestEmail.msg/Test.pptx"
             }
         }
     ]
@@ -22,9 +23,10 @@ content-type: application/json;charset=utf-8
         {
             "recordId": "1",
             "data": {
+                "document_index_key": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvU2FtcGxlRGF0YTEwLVdpbmQvV2luZCBFbmVyZ3kgMTAxLnBkZg",
                 "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvU2FtcGxlRGF0YTEwLVdpbmQvV2luZCBFbmVyZ3kgMTAxLnBkZg",
-                "document_filename":"Wind Energy 101.pdf",
-                "document_url":"https://{{param.dataStorageAccountName}}.blob.core.windows.net/documents/SampleData10-Wind/Wind%20Energy%20101.pdf"
+                "document_filename":"Test.pptx",
+                "document_url":"https://kmsolacdata.blob.core.windows.net/images/documents/emails/TestEmail.msg/Test.pptx"
             }
         }
     ]

@@ -1,6 +1,6 @@
 ﻿{
-  "name": "{{param.documentsIndexer}}",
-  "dataSourceName": "{{param.documentsDataSource}}",
+  "name": "{{param.attachmentsIndexer}}",
+  "dataSourceName": "{{param.imagesDataSource}}",
   "targetIndexName": "{{param.indexName}}",
   "skillsetName": "{{param.documentsSkillSet}}",
   "disabled": null,
@@ -92,6 +92,10 @@
     {
       "sourceFieldName": "/document/skill_metadata/document_converted",
       "targetFieldName": "document_converted"
+    },
+    {
+      "sourceFieldName": "/document/parent_metadata",
+      "targetFieldName": "parent"
     },
     {
       "sourceFieldName": "/document/organizations",

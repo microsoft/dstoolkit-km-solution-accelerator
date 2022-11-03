@@ -12,6 +12,7 @@ namespace CognitiveSearch.UI.Models
         public string svgicon { get; set; }
         public string method { get; set; }
         public string filter { get;set; }
+        public string classList { get;set; }
         public bool isDefault { get; set; }
     }
 }

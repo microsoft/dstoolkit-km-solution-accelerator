@@ -72,7 +72,8 @@ namespace Text.HTML
             };
 
             // Find the right source container 
-            BlobUriBuilder blobUriBuilder = new(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
+            // BlobUriBuilder blobUriBuilder = new(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
+            BlobUriBuilder blobUriBuilder = new(new Uri(docitem.WebUrl));
 
             containers.TryGetValue(blobUriBuilder.BlobContainerName, out BlobContainerClient container);
 
@@ -96,10 +97,10 @@ namespace Text.HTML
                 // Skip the metadata piece if this is an image with -99999 in filename
                 if (docitem.IsPageImage())
                 {
-                    if (inRecord.Data.ContainsKey("imageparenturl"))
+                    if (inRecord.Data.ContainsKey("parenturl"))
                     {
                         //// Take the parent metadata file here so we have consistency
-                        string parentUrl = (string)inRecord.Data["imageparenturl"];
+                        string parentUrl = (string)inRecord.Data["parenturl"];
                         docitem.ParentUrl = IHelpers.Base64Decode(parentUrl);
 
                         BlobUriBuilder parentBlobUriBuilder = new BlobUriBuilder(new Uri(UrlUtility.UrlDecode(docitem.ParentUrl)));
@@ -113,7 +114,9 @@ namespace Text.HTML
                     }
                 }
 
-                if (await BlobHelper.IsBlobExistsAsync(metadatacontainer, metadataFileName))
+                bool noExtraction = docitem.IsPageImage() && (await BlobHelper.IsBlobExistsAsync(metadatacontainer, metadataFileName)); 
+
+                if (noExtraction)
                 {
                     BlobClient metadataBlob = metadatacontainer.GetBlobClient(metadataFileName);
 

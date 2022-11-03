@@ -349,7 +349,7 @@ Microsoft.Search = {
     RenderCoverImage: function (docresult) {
         var documentHtml = '';
         if (this.SupportCoverImage(docresult)) {
-            documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+            documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
         }
         else {
             documentHtml += '   <img alt="' + name + '" class="image-result-nocover" src="' + iconPath + '" title="' + docresult.title + '"/>';
@@ -392,6 +392,10 @@ Microsoft.Search = {
     // Page Count
     SupportPageCount: function(docresult) {
         return (docresult.content_group != "Email") && (docresult.page_count);
+    },
+
+    SupportHTMLPreview: function(docresult) {
+        return (docresult.content_group == "Email" && !docresult.document_converted) ;
     }
 }
 
@@ -476,7 +480,7 @@ Microsoft.Search.Utils.Excel = Microsoft.Search.Utils.Excel || {};
 
 Microsoft.Search.Utils.Excel = {
 
-    columnsExclusionList: ["index_key", "image_parentid", "image_parentfilename", "image_parenturl", "image_data", "thumbnail_small", "thumbnail_medium", "document_id"],
+    columnsExclusionList: ["index_key", "parent/id", "parent.filename", "parent/url", "image_data", "thumbnail_small", "thumbnail_medium", "document_id"],
     //Credits Search Team 
     jsonToCSVConvertor: function (jsonData, ReportTitle, ShowLabel) {
         //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
@@ -627,100 +631,11 @@ Microsoft.Search = Microsoft.Search || {};
 Microsoft.Search.Results = Microsoft.Search.Results || {};
 Microsoft.Search.Results = {
 
-    RenderSearchResultPreview: function (result) {
-        return this.render_file_container(result.document_embedded, result.metadata_storage_path, result.image ? result.image.image_data : null, result.page_number, result.image_parentid, result.image_parentfilename);
-    },
-    render_file_container: function (document_embedded, path, image_data, pagenumber, parentid, parentfilename) {
-        var fileContainerHTML = '';
-        if (path !== null) {
-
-            var pathLower = path.toLowerCase();
-
-            var pathExtension = pathLower.split('.').pop();
-
-            if (Microsoft.Utils.IsPDF(pathLower)) {
-                if (pagenumber) {
-                    fileContainerHTML = '<embed class="file-container" src="' + Microsoft.Search.GetSASTokenFromPath(path) + '#page=' + pagenumber + '" type="application/pdf"/>';
-                }
-                else {
-                    fileContainerHTML = '<embed class="file-container" src="' + Microsoft.Search.GetSASTokenFromPath(path) + '" type="application/pdf"/>';
-                }
-            }
-            else if (Microsoft.Utils.IsImageExtension(pathExtension)) {
-                fileContainerHTML = '<div class="file-container">';
-
-                fileContainerHTML += '  <div class="image-container">';
-
-                fileContainerHTML += '<div id="extendable-image-before-container">';
-                fileContainerHTML += '</div>';
-
-                if (Microsoft.Utils.IsTIFFImage(pathExtension)) {
-                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" title="File Viewer" src="data:image/png;base64, ' + image_data + '"/>';
-                }
-                else {
-                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" title="File Viewer" src="' + Microsoft.Search.GetSASTokenFromPath(path) + '"/>';
-                }
-
-                fileContainerHTML += '<div id="extendable-image-after-container">';
-
-                //Next Page Support for PDF embedded page
-                if (document_embedded && Microsoft.Utils.IsPDF(parentfilename)) {
-                    fileContainerHTML += '<button type="button" class="btn btn-light" onclick="Microsoft.Search.Results.get_next_page(\'' + parentid + '\',' + pagenumber + ');" >Next Page</button>'
-                }
-
-                fileContainerHTML += '</div>';
-
-                fileContainerHTML += '  </div>';
-                fileContainerHTML += '</div>';
-            }
-            else if (pathExtension === "xml") {
-                fileContainerHTML = '<iframe class="file-container" src="' + Microsoft.Search.GetSASTokenFromPath(path) + '" type="text/xml">';
-                fileContainerHTML += '  This browser does not support XMLs. Please download the XML to view it: <a href="' + Microsoft.Search.GetSASTokenFromPath(path) + '">Download XML</a>"';
-                fileContainerHTML += '</iframe>';
-            }
-            else if (pathExtension === "htm" || pathExtension === "html") {
-                fileContainerHTML = '<iframe class="file-container" src="' + Microsoft.Search.GetSASTokenFromPath(path) + '" type="text/html">';
-                fileContainerHTML += '  Error viewing. Please download the HTML to view it: <a href="' + Microsoft.Search.GetSASTokenFromPath(path) + '">Download HTML</a>"';
-                fileContainerHTML += '</iframe>';
-            }
-            else if (pathExtension === "mp3") {
-                fileContainerHTML = '<audio controls>';
-                fileContainerHTML += '<source src="' + Microsoft.Search.GetSASTokenFromPath(path) + '" type="audio/mp3">';
-                fileContainerHTML += '                 Your browser does not support the audio tag.';
-                fileContainerHTML += '</audio>';
-            }
-            else if (pathExtension === "mp4") {
-                fileContainerHTML = '<video controls class="video-result">';
-                fileContainerHTML += '  <source src="' + Microsoft.Search.GetSASTokenFromPath(path) + '" type="video/mp4">';
-                fileContainerHTML += '      Your browser does not support the video tag.';
-                fileContainerHTML += '</video>';
-            }
-            // SECURITY WARNING - Office Viewer requires public access to the data !! 
-            else if (Microsoft.Utils.IsOfficeDocument(pathExtension)) {
-
-                var src = "https://view.officeapps.live.com/op/view.aspx?src=" + encodeURIComponent(Microsoft.Search.GetSASTokenFromPath(path));
-
-                fileContainerHTML =
-                    '<iframe class="file-container" src="' + src + '"></iframe>';
-            }
-            else {
-                //    fileContainerHTML =
-                //        '<div>This file cannot be previewed. Download it here to view: <a href="' + Microsoft.Search.GetSASTokenFromPath(path) + '">Download</a></div>';
-            }
-        }
-        else {
-            //    fileContainerHTML =
-            //        '<div>This file cannot be previewed or downloaded.';
-        }
-
-        return fileContainerHTML;
-    },
-
     get_next_page: function (document_id, pagenumber) {
         $.postAPIJSON('/api/document/getsiblings',
             {
                 document_id: document_id,
-                incomingFilter: "image_parentid eq '" + document_id + "' and (page_number ge " + (pagenumber + 1) + ")",
+                incomingFilter: "parent/id eq '" + document_id + "' and (page_number ge " + (pagenumber + 1) + ")",
                 parameters: {
                     RowCount: 1,
                     inOrderBy: ["page_number asc"]
@@ -755,7 +670,7 @@ Microsoft.Search.Results = {
 
                 // Next Page
                 if (docresult.document_embedded) {
-                    fileContainerHTML += '<button id="next_page_button" type="button" class="btn btn-success" onclick="Microsoft.Search.Results.get_next_page(\'' + docresult.image_parentid + '\',' + docresult.page_number + ');" >Next Page</button>'
+                    fileContainerHTML += '<button id="next_page_button" type="button" class="btn btn-success" onclick="Microsoft.Search.Results.get_next_page(\'' + docresult.parent.id + '\',' + docresult.page_number + ');" >Next Page</button>'
                 }
             }
             //else if (Microsoft.Utils.IsImageExtension(pathExtension)) {
@@ -768,9 +683,7 @@ Microsoft.Search.Results = {
     RenderResultAsListItem: function (result, showMethod = "Microsoft.Results.Details.ShowDocumentById") {
         var documentHtml = '';
         var classList = "row results-list-item pb-1";
-
         var docresult = result.Document !== undefined ? result.Document : result;
-        var document_key = docresult.image_parentid !== null ? docresult.image_parentid : docresult.document_id;
 
         Microsoft.Search.results_keys_index.push(docresult.index_key);
         docresult.idx = Microsoft.Search.results_keys_index.length - 1;
@@ -806,10 +719,10 @@ Microsoft.Search.Results = {
             var iconPath = Microsoft.Utils.GetIconPathFromExtension(pathExtension);
             documentHtml += '<a href="javascript:void(0)" onclick="' + showMethod + '(\'' + docresult.document_id + '\');" >';
 
-            if (Microsoft.Utils.images_extensions.includes(pathExtension)) {
+            if (Microsoft.Utils.IsImageExtension(pathExtension)) {
                 if (docresult.document_embedded) {
                     name = Microsoft.Utils.GetImageFileTitle(docresult);
-                    documentHtml += '<img alt="' + name + '" class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.image_parentfilename) + '" />';
+                    documentHtml += '<img alt="' + name + '" class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.parent.filename) + '" />';
                 }
                 else {
                     documentHtml += '<img alt="' + name + '" class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + docresult.metadata_storage_name + '" />';
@@ -817,7 +730,7 @@ Microsoft.Search.Results = {
             }
             else {
                 if (hasCoverImage) {
-                    documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + document_key + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                    documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                 }
                 else {
                     documentHtml += '   <img alt="' + name + '" class="image-result-nocover" src="' + iconPath + '" title="' + docresult.title + '"/>';
@@ -868,6 +781,7 @@ Microsoft.Search.Results = {
             if (highlights.length > 0) {
                 documentHtml += highlights;
             }
+            // TODO Take the tags list from backend.
             documentHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['organizations', 'key_phrases']);
             documentHtml += '</div>';
 
@@ -893,8 +807,8 @@ Microsoft.Search.Results = {
         if (Microsoft.View.config.resultsRenderings && Microsoft.View.config.resultsRenderings.length > 0) {
             var renderingHtml = '';
 
-            var switchClassList = "view-switch-button btn btn-outline-secondary btn-sm";
-            var switchClassListActive = "view-switch-button btn btn-outline-secondary btn-sm active";
+            var switchClassList = "view-switch-button btn btn-sm";
+            var switchClassListActive = "view-switch-button btn btn-sm active";
 
             // For each rendering of the search vertical
             for (var i = 0; i < Microsoft.View.config.resultsRenderings.length; i++) {
@@ -902,7 +816,16 @@ Microsoft.Search.Results = {
 
                 if (rendering.name !== "blank")
                 {
-                    renderingHtml += '        <label id="switch-' + rendering.name + '" title="' + rendering.title + '"  class="' + (Microsoft.Search.results_rendering === i ? switchClassListActive : switchClassList) + '" onclick="Microsoft.Search.Results.switchResultsView(' + i + ');">';
+                    var finalClass = (Microsoft.Search.results_rendering === i ? switchClassListActive : switchClassList); 
+                    if (rendering.classList)
+                    {
+                        finalClass += ' ' + rendering.classList;
+                    }
+                    else 
+                    {
+                        finalClass += ' btn-outline-secondary';
+                    }
+                    renderingHtml += '        <label id="switch-' + rendering.name + '" title="' + rendering.title + '"  class="' + finalClass + '" onclick="Microsoft.Search.Results.switchResultsView(' + i + ');">';
                     renderingHtml += '             <span class="' + rendering.fonticon + '"/>';
                     renderingHtml += '        </label>';    
                 }
@@ -958,529 +881,6 @@ Microsoft.Search.Results = {
             return -1;
         }
     },
-}
-
-// METADATA
-
-Microsoft.Search = Microsoft.Search || {};
-Microsoft.Search.Results.Metadata = Microsoft.Search.Results.Metadata || {};
-Microsoft.Search.Results.Metadata = {
-    render_tab: function (result) {
-
-        var metadataContainerHTML = $("#metadata-viewer").html();
-
-        metadataContainerHTML = '';
-        metadataContainerHTML += '<table class="table metadata-table table-hover table-striped"><thead><tr><th data-field="key" class="key">Key</th><th data-field="value">Value</th></tr></thead>';
-        metadataContainerHTML += '<tbody>';
-
-        var excluding_fields = ["content", "merged_content", "translated_text", "tables", "paragraphs", "image_data", "thumbnail_small", "thumbnail_medium", "tokens_html"];
-
-        for (var key in result) {
-            if (result.hasOwnProperty(key)) {
-                if (!excluding_fields.includes(key)) {
-                    if (result[key] !== null) {
-                        var value = result[key];
-                        if (value.length && value.length > 0) {
-                            if (key === "image_parentfilename" || key === "image_parenturl") {
-                                value = Base64.decode(value);
-                            }
-                            metadataContainerHTML += '<tr><td class="key">' + key + '</td><td class="wrapword text-break">' + value + '</td></tr>';
-                        }
-                        else {
-                            if (Number.isInteger(value) || (typeof value === 'boolean')) {
-                                metadataContainerHTML += '<tr><td class="key">' + key + '</td><td class="wrapword text-break">' + value + '</td></tr>';
-                            }
-                            else {
-                                if (Object.keys(value).length > 0) {
-                                    for (var subkey in value) {
-                                        if (!excluding_fields.includes(subkey)) {
-                                            if (value[subkey]) {
-                                                metadataContainerHTML += '<tr><td class="key">' + key + '/' + subkey + '</td><td class="wrapword text-break">' + value[subkey] + '</td></tr>';
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        metadataContainerHTML += '</tbody>';
-        metadataContainerHTML += '</table></div><br/>';
-
-        $.postAPIJSON('/api/document/getmetadata',
-            {
-                path: result.metadata_storage_path
-            },
-            function (data) {
-                if (data && data.length > 0) {
-                    try {
-                        result = JSON.parse(data)
-                        var extraMetadataContainerHTML = $("#metadata-viewer").html();
-
-                        extraMetadataContainerHTML += '<h4 id="available_metadata">File Metadata</h4><div style="overflow-x:auto;">';
-                        extraMetadataContainerHTML += '<table class="table metadata-table table-hover table-striped">';
-                        extraMetadataContainerHTML += '<thead><tr><th data-field="key" class="key">Key</th><th data-field="key" class="key">Normalized</th><th data-field="value">Value</th></tr></thead>';
-                        extraMetadataContainerHTML += '<tbody>';
-
-                        var keys = Object.keys(result).sort();
-
-                        for (var k = 0; k < keys.length; k++) {
-                            var key = keys[k];
-                            if (result.hasOwnProperty(key)) {
-                                if (!key.startsWith("X-TIKA")) {
-                                    extraMetadataContainerHTML += '<tr><td class="key">' + key + '</td><td class="key">' + Microsoft.Utils.replaceAll(Microsoft.Utils.replaceAll(key," ","-"),":","-") + '</td><td class="wrapword text-break">' + result[key] + '</td></tr>';                                    
-                                }
-                            }
-                        };
-
-                        extraMetadataContainerHTML += '</tbody>';
-                        extraMetadataContainerHTML += '</table></div><br/>';
-
-                        $("#metadata-viewer").html(extraMetadataContainerHTML);
-                    }
-                    catch (exception) {
-                    }
-                }
-            });
-
-        return metadataContainerHTML;
-    }
-}
-
-// Entities Tokens HTML
-
-Microsoft.Search = Microsoft.Search || {};
-Microsoft.Search.Results.Tokens = Microsoft.Search.Results.Tokens || {};
-Microsoft.Search.Results.Tokens = {
-    render_tab: function (result) {
-
-        var tokensContainerHTML = $("#tokens-viewer").html();
-
-        if (result.tokens_html) {
-            if (result.tokens_html.length > 0) {
-                tokensContainerHTML += '<div class="entities-visualization">'
-                for (var i = 0; i < result.tokens_html.length; i++) {
-                    tokensContainerHTML += result.tokens_html[i]
-                }
-                tokensContainerHTML += '</div>'
-            }
-        }
-        return tokensContainerHTML;
-    }
-}
-
-
-// EMBEDDED Images
-
-Microsoft.Search = Microsoft.Search || {};
-Microsoft.Search.Results.Embedded = Microsoft.Search.Results.Embedded || {};
-Microsoft.Search.Results.Embedded = {
-    render_tab: function (result) {
-        // Embedded Images Tab content
-        var embeddedContainerHTML = '';
-        var pathExtension = result.metadata_storage_path.toLowerCase().split('.').pop();
-
-        if (!result.document_embedded) {
-            // Show the Embedded Images if relevant
-            if (!Microsoft.Utils.IsImageExtension(pathExtension)) {
-                embeddedContainerHTML = this.render_embedded_results(result);
-            }
-        }
-        return embeddedContainerHTML;
-    },
-    render_embedded_results: function (result) {
-
-        var containerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role = "progressbar" style = "width: 100%" aria - valuenow="100" aria - valuemin="0" aria - valuemax="100"></div></div>';
-
-        $.postAPIJSON('/api/document/getembedded',
-            {
-                document_id: result.document_id
-            },
-            function (data) {
-
-                var containerHTML = '';
-
-                // List of embedded images 
-                if (data && data.count > 0) {
-                    var results = data.results;
-
-                    containerHTML += '<div class="imagesResults">';
-
-                    for (var i = 0; i < results.length; i++) {
-
-                        containerHTML += Microsoft.Images.render_image_result(results[i]);
-                    }
-
-                    containerHTML += '</div>';
-
-                    $('#images-pivot-link').append(' (' + data.count + ')');
-
-                }
-                else {
-                    $('#images-pivot-link').hide();
-                }
-
-                $('#images-viewer').html(containerHTML);
-            });
-
-        return containerHTML;
-    }
-}
-
-// SIBLINGS 
-
-Microsoft.Search = Microsoft.Search || {};
-Microsoft.Search.Results.Siblings = Microsoft.Search.Results.Siblings || {};
-Microsoft.Search.Results.Siblings = {
-    render_tab: function (result, tabular) {
-        var containerHTML = '';
-        var pathExtension = result.metadata_storage_path.toLowerCase().split('.').pop();
-
-        if (result.document_embedded) {
-            if (Microsoft.Utils.IsImageExtension(pathExtension)) {
-                containerHTML = this.render_siblings_results(result, tabular);
-            }
-        }
-        return containerHTML;
-    },
-    render_siblings_results: function (result, tabular) {
-
-        var containerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role = "progressbar" style = "width: 100%" aria - valuenow="100" aria - valuemin="0" aria - valuemax="100"></div></div>';
-
-        $.postAPIJSON('/api/document/getsiblings',
-            {
-                document_id: result.image_parentid,
-                incomingFilter: "image_parentid eq '" + result.image_parentid + "' ",
-                parameters: {
-                    RowCount: 50,
-                    inOrderBy: ["page_number asc"]
-                }
-            },
-            function (data) {
-                Microsoft.Search.Results.Siblings.append_siblings(data.results);
-            });
-
-        return containerHTML;
-    },
-    append_siblings: function (results) {
-
-        var fileContainerHTML = '';
-        $('#siblings-viewer').html(fileContainerHTML);
-
-        if (results && results.length > 0) {
-
-            for (var i = 0; i < results.length; i++) {
-
-                var docresult = results[i].Document !== undefined ? results[i].Document : results[i];
-
-                var path = docresult.metadata_storage_path;
-                var pathLower = path.toLowerCase();
-                var pathExtension = pathLower.split('.').pop();
-
-                fileContainerHTML += '  <div class="image-container border border-1 mb-2">';
-
-                if (Microsoft.Utils.IsTIFFImage(pathExtension)) {
-                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" title="Sibling Viewer" src="data:image/png;base64, ' + docresult.image.image_data + '"/>';
-                }
-                else {
-                    fileContainerHTML += '<img id="image-rotate" rotate="0" class="image-viewport img-fluid" title="Sibling Viewer" src="' + Microsoft.Search.GetSASTokenFromPath(path) + '"/>';
-                }
-
-                fileContainerHTML += '  </div>';
-            }
-        }
-
-        $('#siblings-viewer').append(fileContainerHTML);
-    }
-}
-
-// PARENT (Source) document
-
-Microsoft.Search = Microsoft.Search || {};
-Microsoft.Search.Results.Parent = Microsoft.Search.Results.Parent || {};
-Microsoft.Search.Results.Parent = {
-    render_tab_with_fallback: function (result, tabular) {
-        return this.render_tab(result, tabular, true);
-    },
-    render_tab: function (result, tabular, fallback = false) {
-        // Embedded Images Tab content
-        var embeddedContainerHTML = '';
-
-        if (result.document_embedded) {
-            embeddedContainerHTML = Microsoft.Search.Results.render_file_container(result.document_embedded, Microsoft.Utils.GetParentPathFromImage(result), result.image_data, result.page_number);
-        }
-        else {
-            if (fallback && Microsoft.Utils.IsPDF(result.metadata_storage_path)) {
-                embeddedContainerHTML = Microsoft.Search.Results.RenderSearchResultPreview(result)
-            }
-        }
-
-        return embeddedContainerHTML;
-    }
-}
-
-
-// TRANSCRIPT
-
-Microsoft.Search = Microsoft.Search || {};
-Microsoft.Search.Results.Transcript = Microsoft.Search.Results.Transcript || {};
-Microsoft.Search.Results.Transcript = {
-
-    // All functions about Transcript 
-
-    RenderTranscriptHTML: function (result) {
-
-        var transcriptContainerHTML = '';
-
-        var full_content = "";
-
-        // If we have merged content, let's use it.
-        if (result.merged_content) {
-            if (result.merged_content.length > 0) {
-                full_content = this.RenderTranscript(result.merged_content);
-            }
-        }
-        else {
-            if (result.content) {
-                if (result.content.length > 0) {
-                    full_content = this.RenderTranscript(result.content);
-                }
-            }
-        }
-
-        if (full_content === null || full_content === "") {
-            // not much to display
-            return '';
-        }
-
-        var full_translated_text = "";
-        if (!!result.translated_text && result.translated_text !== null && result.language !== "en") {
-            if (result.translated_text.length > 0) {
-                full_translated_text = this.RenderTranscript(result.translated_text);
-            }
-        }
-
-        if (full_translated_text.length > 0) {
-            transcriptContainerHTML += '<div style="overflow-x:initial;"><table class="table"><thead><tr><th>Original Content</th><th>Translated (En)</th></tr></thead>';
-            transcriptContainerHTML += '<tbody>';
-            transcriptContainerHTML += '<tr><td class="wrapword text-break" style="width:50%"><div id="transcript-viewer-pre">' + full_content + '</div></td><td class="wrapword text-break"><div id="translated-transcript-viewer-pre">' + full_translated_text + '</div></td></tr>';
-            transcriptContainerHTML += '</tbody>';
-            transcriptContainerHTML += '</table></div>';
-        }
-        else {
-            transcriptContainerHTML += '<div style="overflow-x:initial;"><table class="table"><thead><tr><th>Original Content</th></tr></thead>';
-            transcriptContainerHTML += '<tbody>';
-            transcriptContainerHTML += '<tr><td class="wrapword text-break"><div id="transcript-viewer-pre">' + full_content + '</div></td></tr>';
-            transcriptContainerHTML += '</tbody>';
-            transcriptContainerHTML += '</table></div>';
-        }
-
-        return transcriptContainerHTML;
-    },
-
-    RenderTranscript: function (content) {
-        var full_content = '';
-        var lines = content.trim().split('\n');
-        lines.forEach((line, idx) => {
-            var classname = "p-highlight-" + idx;
-            full_content += '<p class="p-highlight ' + classname + ' text-break" onmouseover="Microsoft.Results.Details.pMouseOver(\'' + classname + '\');" onmouseout="Microsoft.Results.Details.pMouseOut(\'' + classname + '\');" >' + Microsoft.Utils.htmlDecode(line).trim() + '</p>';
-        });
-
-        return full_content;
-    },
-
-    FindMatches: function (regex, transcriptText) {
-        var i = -1;
-        var response = transcriptText.replace(regex, function (str) {
-            i++;
-            var shortname = str.slice(0, 20).replace(/[^a-zA-Z ]/g, " ").replace(new RegExp(" ", 'g'), "_");
-            return '<span id=\'' + i + '_' + shortname + '\' class="highlight">' + str + '</span>';
-        });
-
-        return { html: response, count: i + 1 };
-    },
-
-    GetReferences: function (searchText, targetTranslatedText) {
-
-        if (searchText === '*')
-            return;
-
-        var targetTag = '#transcript-viewer-pre';
-
-        var transcriptText;
-        var lines = [];
-        var ptags = $(targetTag).find('p');
-
-        for (var i = 0; i < ptags.length; i++) {
-            lines.push(ptags[i].textContent);
-        }
-
-        if (!targetTranslatedText) {
-            $('#reference-viewer').empty();
-            transcriptText = $(targetTag).text();
-        }
-        else {
-            transcriptText = $(targetTag).html();
-        }
-
-        var phraseSearch = searchText;
-        //var phraseSearch = searchText.trim();
-        //phraseSearch += "\b";
-        //phraseSearch = phraseSearch.replace(" ", "\b ");
-
-        // find all matches in transcript
-        var regex = new RegExp(phraseSearch, 'gi');
-
-        var response = [];
-
-        // Round #1
-        // for each line try to find PhraseSearch reference first
-        lines.forEach((line, lineidx) => {
-            var line_response = this.FindMatches(regex, line);
-            if (line_response.count > 0) response.push(line_response);
-        });
-
-        // Round #2
-        if (response.count === 0) {
-            // for each line try to find Tokens references
-            lines.forEach((line, lineidx) => {
-                var tokens = searchText.split(' ');
-                if (tokens.length > 1) {
-                    regex = new RegExp("(" + tokens.join('|') + ")", 'gi');
-                    var line_response = this.FindMatches(regex, line);
-                    if (line_response.count > 0) response.push(line_response);
-                }
-            });
-        }
-
-        //var response = this.FindMatches(regex, transcriptText);
-
-        //// if the phrase search doesn't return anything let's try tokens
-        //if (response.count === 0) {
-        //    var tokens = searchText.split(' ');
-        //    if (tokens.length > 1) {
-        //        regex = new RegExp("(" + tokens.join('|') + ")", 'gi');
-        //        response = this.FindMatches(regex, transcriptText);
-        //    }
-        //}
-
-        // Round #3 
-        // If no response found in the original text, go to the translated text
-        if (response.count === 0) {
-            regex = new RegExp(phraseSearch, 'gi');
-
-            // Do another round on the translated text
-            targetTag = '#translated-transcript-viewer-pre';
-            transcriptText = $(targetTag).text();
-            if (transcriptText.length > 0) {
-                lines.forEach((line, lineidx) => {
-                    var line_response = this.FindMatches(regex, line);
-                    if (line_response.count > 0) response.push(line_response);
-                });
-            }
-        }
-
-        if (response.count > 0) {
-            $(targetTag).html(response.html);
-        }
-
-        // for each match, select prev 50 and following 50 characters and add selections to list
-        var transcriptCopy = transcriptText;
-
-        // Calc height of reference viewer
-        var contentHeight = $('.ms-Pivot-content').innerHeight();
-        var tagViewerHeight = $('#tag-viewer').innerHeight();
-        var detailsViewerHeight = $('#details-viewer').innerHeight();
-
-        $('#reference-viewer').css("height", contentHeight - tagViewerHeight - detailsViewerHeight - 110);
-
-        $.each(transcriptCopy.match(regex), function (index, value) {
-
-            var startIdx;
-            var ln = 400;
-
-            if (value.length > 150) {
-                startIdx = transcriptCopy.indexOf(value);
-                ln = value.length;
-            }
-            else {
-                if (transcriptCopy.indexOf(value) < 200) {
-                    startIdx = 0;
-                }
-                else {
-                    startIdx = transcriptCopy.indexOf(value) - 200;
-                }
-
-                ln = 400 + value.length;
-            }
-
-            var reference = transcriptCopy.substr(startIdx, ln);
-            transcriptCopy = transcriptCopy.replace(value, "");
-
-            reference = reference.replace(value, function (str) {
-                return '<span class="highlight">' + str + '</span>';
-            });
-
-            var shortName = value.slice(0, 20).replace(/[^a-zA-Z ]/g, " ").replace(new RegExp(" ", 'g'), "_");
-
-            $('#reference-viewer').append('<li class=\'reference list-group-item\' onclick=\'Microsoft.Search.Transcript.GoToReference("' + index + '_' + shortName + '")\'>...' + reference + '...</li>');
-        });
-    },
-
-    GoToReference: function (selector) {
-
-        var triggerEl = document.querySelector('#details-pivot-links a[href="#transcript-pivot"]')
-
-        var tabinstance = bootstrap.Tab.getInstance(triggerEl);
-
-        if (tabinstance) {
-            tabinstance.show();
-        }
-        else {
-            var tab = new bootstrap.Tab(triggerEl);
-            tab.show();
-        }
-
-        var container = $('#transcript-viewer');
-        var scrollTo = $("#" + selector);
-
-        container.animate({
-            scrollTop: scrollTo.offset().top - container.offset().top + container.scrollTop()
-        });
-    },
-
-    GetMatches: function (string, regex, index) {
-        var matches = [];
-        var match;
-        while (match === regex.exec(string)) {
-            matches.push(match[index]);
-        }
-        return matches;
-    },
-
-    GetSearchReferences: function (q) {
-        var copy = q;
-
-        copy = copy.replace(/~\d+/gi, "");
-        var matches = this.GetMatches(copy, /\w+/gi, 0);
-
-        matches.forEach(function (match) {
-            Microsoft.Search.Transcript.GetReferences(match, true);
-        });
-    },
-
-    SearchTranscript: function (searchText) {
-        $('#reference-viewer').empty();
-
-        if (searchText !== "") {
-            // get whole phrase
-            Microsoft.Search.Results.Transcript.GetReferences(searchText, false);
-        }
-    }
-
 }
 
 // export default Microsoft.Search;

@@ -311,7 +311,7 @@
             "context": "/document",
             "uri": "{{param.entities.deduplication}}",
             "httpMethod": "POST",
-            "timeout": "PT30S",
+            "timeout": "PT3M",
             "batchSize": 1,
             "degreeOfParallelism": null,
             "inputs": [
@@ -367,7 +367,7 @@
             "context": "/document",
             "uri": "{{param.geolocations.locations}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": null,
             "inputs": [
@@ -403,7 +403,7 @@
             "context": "/document",
             "uri": "{{param.entities.keyphrases-cleansing}}",
             "httpMethod": "POST",
-            "timeout": "PT30S",
+            "timeout": "PT3M",
             "batchSize": 1,
             "degreeOfParallelism": null,
             "inputs": [
@@ -450,7 +450,7 @@
             "context": "/document",
             "uri": "{{param.text.TranslationMerge}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": null,
             "inputs": [
@@ -553,7 +553,7 @@
             "context": "/document",
             "uri": "{{param.mtda.Assign}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": null,
             "inputs": [
@@ -608,6 +608,14 @@
                 {
                     "name": "metadata_subject",
                     "source": "/document/metadata_subject"
+                },
+                {
+                    "name": "document_embedded",
+                    "source": "/document/documentembedded"
+                },
+                {
+                    "name": "document_converted",
+                    "source": "/document/documentconverted"
                 }
             ],
             "outputs": [
@@ -625,7 +633,7 @@
             "context": "/document",
             "uri": "{{param.imgext.DurableImageExtractionSkill_HttpStart}}",
             "httpMethod": "POST",
-            "timeout": "PT30S",
+            "timeout": "PT3M",
             "batchSize": 1,
             "degreeOfParallelism": 5,
             "inputs": [
@@ -660,6 +668,43 @@
         },
         {
             "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
+            "name": "ParentShaper",
+            "context": "/document",
+            "inputs": [
+                {
+                    "name": "key",
+                    "source": "/document/parentkey"
+                },
+                {
+                    "name": "id",
+                    "source": "/document/parentid"
+                },
+                {
+                    "name": "url",
+                    "source": "/document/parenturl"
+                },
+                {
+                    "name": "filename",
+                    "source": "/document/parentfilename"
+                },
+                {
+                    "name": "content_group",
+                    "source": "/document/parentcontentgroup"
+                },
+                {
+                    "name": "document_embedded",
+                    "source": "/document/parentdocumentembedded"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "output",
+                    "targetName": "parent_metadata"
+                }
+            ]
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
             "context": "/document",
             "inputs": [
                 {
@@ -669,7 +714,7 @@
             ],
             "outputs": [
                 {
-                    "name": "fields",
+                    "name": "output",
                     "targetName": "fieldsToTranslate"
                 }
             ]

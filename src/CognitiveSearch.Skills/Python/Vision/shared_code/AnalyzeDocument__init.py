@@ -169,6 +169,16 @@ def extract_pages(result):
             )
 
 #
+# Extract Paragraphs (Layout)
+#
+def extract_paragraphs(result):
+    paragraphs=[]
+    for paragraph in result.paragraphs:
+        paragraphs.append(paragraph.content)
+
+    return paragraphs
+
+#
 # Extract KV pairs
 #
 def extract_kv(result):
@@ -225,6 +235,9 @@ def transform_value(value):
         # Extract Pages
         # pages = extract_pages(result)
 
+        # Extract Paragraphs
+        paragraphs = extract_paragraphs(result)
+
         # Extract Tables
         tables = extract_tables(result)
         
@@ -244,6 +257,8 @@ def transform_value(value):
             "data": {
                 "tables": [],
                 "tables_count": 0,
+                "paragraphs": [],
+                "paragraphs_count": 0,
                 "kvs": [],
                 "kvs_count": 0
             },
@@ -256,6 +271,8 @@ def transform_value(value):
             "data": {
                 "tables": [],
                 "tables_count": 0,
+                "paragraphs": [],
+                "paragraphs_count": 0,
                 "kvs": [],
                 "kvs_count": 0
             },
@@ -266,6 +283,8 @@ def transform_value(value):
             "data": {
                 "tables": tables,
                 "tables_count": len(tables),
+                "paragraphs": paragraphs,
+                "paragraphs_count": len(paragraphs),
                 "kvs": kvs,
                 "kvs_count": len(kvs)
             }

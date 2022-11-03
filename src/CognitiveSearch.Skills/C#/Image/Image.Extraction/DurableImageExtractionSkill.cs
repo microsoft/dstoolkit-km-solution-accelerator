@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Services.Common;
 using Microsoft.Services.Common.WebApiSkills;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,7 +37,7 @@ namespace Image.Extraction
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-            WebApiEnricherResponse response = new WebApiEnricherResponse
+            WebApiEnricherResponse response = new()
             {
                 Values = new List<WebApiResponseRecord>()
             };
@@ -47,7 +48,7 @@ namespace Image.Extraction
             {
                 if (record.Data.ContainsKey("document_url"))
                 {
-                    DurableInputRecord inObj = new DurableInputRecord()
+                    DurableInputRecord inObj = new()
                     {
                         headers = HeadersHelper.ConvertFunctionHeaders(req.Headers),
                         record = record
@@ -58,7 +59,7 @@ namespace Image.Extraction
 
                     log.LogInformation($"Started orchestration with ID '{instanceId}' for file {(string)record.Data["document_url"]}");
 
-                    WebApiResponseRecord responseRecord = new WebApiResponseRecord
+                    WebApiResponseRecord responseRecord = new()
                     {
                         Data = new Dictionary<string, object>
                         {
@@ -105,7 +106,7 @@ namespace Image.Extraction
         {
             try
             {
-                IDocumentEntity docitem = new IDocumentEntity
+                IDocumentEntity docitem = new()
                 {
                     IndexKey = (string)inObj.record.Data["document_index_key"],
                     Id = (string)inObj.record.Data["document_id"],
@@ -114,6 +115,13 @@ namespace Image.Extraction
                 };
 
                 log.LogInformation($"Source {docitem.Id} {docitem.Name} {docitem.WebUrl}");
+
+                if (inObj.record.Data.ContainsKey("document_metadata"))
+                {
+                    docitem.Metadata = (JObject) inObj.record.Data["document_metadata"];
+                }
+
+                log.LogInformation($"Contains metadata {inObj.record.Data.ContainsKey("document_metadata")}");
 
                 string res = String.Empty; 
 

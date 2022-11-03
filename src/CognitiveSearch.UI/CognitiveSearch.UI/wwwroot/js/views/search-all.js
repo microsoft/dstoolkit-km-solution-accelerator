@@ -107,10 +107,7 @@ Microsoft.All = {
         var resultsHtml = '';
 
         for (var i = 0; i < results.length; i++) {
-
-            var documentHtml = Microsoft.Search.Results.RenderResultAsListItem(results[i]);
-
-            resultsHtml += documentHtml;
+            resultsHtml += Microsoft.Search.Results.RenderResultAsListItem(results[i]);
         }
 
         return resultsHtml;
@@ -150,7 +147,7 @@ Microsoft.All = {
                 //
                 // Rendering the search result div 
                 // 
-                if (Microsoft.Utils.images_extensions.includes(pathExtension)) {
+                if (Microsoft.Utils.IsImageExtension(pathExtension)) {
                     var iconPath = Microsoft.Utils.GetIconPathFromExtension(pathExtension);
 
                     resultsHtml += '<div class="' + classList + '" onmouseover="Microsoft.Search.Actions.hideShowActions(\'' + id + '\');" onmouseout="Microsoft.Search.Actions.hideShowActions(\'' + id + '\');">';
@@ -186,7 +183,7 @@ Microsoft.All = {
                         resultsHtml += '<h5 title=\'' + path + '\'>';
 
                         resultsHtml += '<a target="_blank" href=\'' + Microsoft.Search.GetSASTokenFromPath(path) + '\'>' + Microsoft.Utils.GetImageFileTitle(docresult) + '</a>';
-                        resultsHtml += ' - <a target="_blank" href=\'' + Microsoft.Search.GetSASTokenFromPath(containerPath) + '\'>' + Base64.decode(docresult.image_parentfilename) + '</a>';
+                        resultsHtml += ' - <a target="_blank" href=\'' + Microsoft.Search.GetSASTokenFromPath(containerPath) + '\'>' + Base64.decode(docresult.parent.filename) + '</a>';
                         resultsHtml += '</h5>';
                         resultsHtml += '</div>';
                         resultsHtml += '</div>';
@@ -206,7 +203,7 @@ Microsoft.All = {
                     resultsHtml += '            <div class="row col-md-12 " onclick="Microsoft.Results.Details.ShowDocument(\'' + id + '\',' + docresult.idx + ');">';
                     resultsHtml += Microsoft.Utils.GetModificationLine(docresult);
 
-                    var display_title = docresult.document_embedded ? Base64.decode(docresult.image_parentfilename) : docresult.metadata_storage_name;
+                    var display_title = docresult.document_embedded ? Base64.decode(docresult.parent.filename) : docresult.metadata_storage_name;
 
                     if (docresult.image.thumbnail_medium) {
                         resultsHtml += '<img alt="' + name + '" class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + display_title + '" />';

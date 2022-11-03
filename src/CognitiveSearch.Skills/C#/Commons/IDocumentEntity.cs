@@ -2,9 +2,8 @@
 // Licensed under the MIT License.
 
 using Commons;
-using System;
+using Newtonsoft.Json.Linq;
 using System.IO;
-using System.Web;
 
 namespace Microsoft.Services.Common
 {
@@ -25,6 +24,13 @@ namespace Microsoft.Services.Common
         public bool IsFolder { get; set; }
 
         public string ParentUrl { get; set; }
+
+        public JObject Metadata { get; set; }
+
+        public IDocumentEntity()
+        {
+            Metadata = new JObject();
+        }
 
         public string GetExtension()
         {

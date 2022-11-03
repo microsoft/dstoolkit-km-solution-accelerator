@@ -2,8 +2,6 @@
 // Licensed under the MIT License.
 
 using Azure.Storage.Blobs;
-using System.Web;
-using System;
 
 namespace Microsoft.Services.Common
 {
@@ -11,12 +9,34 @@ namespace Microsoft.Services.Common
 
     public class BlobHelper
     {
+        public static string ReplaceFirstOccurrence(string Source, string Find, string Replace)
+        {
+            int Place = Source.IndexOf(Find);
+
+            if (Place >= 0)
+            {
+                return Source.Remove(Place, Find.Length).Insert(Place, Replace);
+            }
+            else { return Source; }
+        }
+
+        public static string ReplaceLastOccurrence(string Source, string Find, string Replace)
+        {
+            int Place = Source.LastIndexOf(Find);
+            if (Place >= 0)
+            {
+                return Source.Remove(Place, Find.Length).Insert(Place, Replace);
+            }
+            else { return Source; }
+        }
+
         public static async System.Threading.Tasks.Task<bool> IsBlobExistsAsync(BlobContainerClient container, IDocumentEntity docitem)
         {
             string blobpath = IDocumentEntity.GetContentBlobPath(docitem, container.Name, container.Uri.ToString());
 
-            string blobname = blobpath.Replace(container.Name + "/", "");
-          
+            //string blobname = blobpath.Replace(container.Name + "/", "");
+            string blobname = ReplaceFirstOccurrence(blobpath, container.Name + "/", "");
+
             BlobClient blob = container.GetBlobClient(blobname);
 
             bool existingblob = await blob.ExistsAsync();
@@ -25,7 +45,8 @@ namespace Microsoft.Services.Common
         }
         public static async System.Threading.Tasks.Task<bool> IsBlobExistsAsync(BlobContainerClient container, string blobpath)
         {
-            string blobname = blobpath.Replace(container.Name + "/", "");
+            //string blobname = blobpath.Replace(container.Name + "/", "");
+            string blobname = ReplaceFirstOccurrence(blobpath, container.Name + "/", "");
 
             BlobClient blob = container.GetBlobClient(blobname);
 

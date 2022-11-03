@@ -85,16 +85,12 @@
       "targetFieldName": "document_embedded"
     },
     {
-      "sourceFieldName": "/document/imageparentid",
-      "targetFieldName": "image_parentid"
+      "sourceFieldName": "/document/skill_metadata/document_converted",
+      "targetFieldName": "document_converted"
     },
     {
-      "sourceFieldName": "/document/imageparentfilename",
-      "targetFieldName": "image_parentfilename"
-    },
-    {
-      "sourceFieldName": "/document/imageparenturl",
-      "targetFieldName": "image_parenturl"
+      "sourceFieldName": "/document/parent_metadata",
+      "targetFieldName": "parent"
     },
     {
       "sourceFieldName": "/document/organizations",
@@ -109,11 +105,6 @@
     {
       "sourceFieldName": "/document/keyPhrases",
       "targetFieldName": "key_phrases",
-      "mappingFunction": null
-    },
-    {
-      "sourceFieldName": "/document/paragraphs",
-      "targetFieldName": "paragraphs",
       "mappingFunction": null
     },
     {
@@ -155,36 +146,12 @@
       "targetFieldName": "language"
     },
     {
+      "sourceFieldName": "/document/pages/0/translatedToLanguageCode",
+      "targetFieldName": "translated_language"
+    },
+    {
       "sourceFieldName": "/document/image_metadata",
       "targetFieldName": "image"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/celebrities",
-      "targetFieldName": "celebrities"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/landmarks",
-      "targetFieldName": "landmarks"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/image_categories",
-      "targetFieldName": "image_categories"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/image_tags",
-      "targetFieldName": "image_tags"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/image_captions",
-      "targetFieldName": "image_captions"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/brands",
-      "targetFieldName": "brands"
-    },
-    {
-      "sourceFieldName": "/document/normalized_images/0/objects",
-      "targetFieldName": "objects"
     },
     {
       "sourceFieldName": "/document/countries",
@@ -205,6 +172,14 @@
     {
       "sourceFieldName": "/document/tables_count",
       "targetFieldName": "tables_count"
+    },
+    {
+      "sourceFieldName": "/document/paragraphs",
+      "targetFieldName": "paragraphs"
+    },
+    {
+      "sourceFieldName": "/document/paragraphs_count",
+      "targetFieldName": "paragraphs_count"
     },
     {
       "sourceFieldName": "/document/topics",
@@ -274,6 +249,11 @@
     {
       "sourceFieldName": "/document/skill_metadata/page_number",
       "targetFieldName": "page_number",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/skill_metadata/document_segments",
+      "targetFieldName": "document_segments",
       "mappingFunction": null
     }
   ],

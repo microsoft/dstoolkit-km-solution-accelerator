@@ -32,7 +32,6 @@ Microsoft.Facets = {
         });
     },
 
-
     dateRanges: {},
 
     initDateRangeFilter: function () {
@@ -122,6 +121,18 @@ Microsoft.Facets = {
         }
     },
 
+    GetFacetAccordionHeaderId(nameid) {
+        return nameid + '-facets';
+    },
+
+    GetFacetAccordionHeaderButtonId(nameid) {
+        return this.GetFacetAccordionHeaderId(nameid) + '-button';
+    },
+
+    GetFacetAccordionItemId(nameid) {
+        return this.GetFacetAccordionHeaderId(nameid) + "-accordion-item";
+    },
+
     renderHomeFacets: function () {
         var facetResultsHTML = '';
 
@@ -179,12 +190,13 @@ Microsoft.Facets = {
 
                 }
                 else {
-                    var facetId = nameid + '-facets';
+                    var facetId = this.GetFacetAccordionHeaderId(nameid);
+                    var facetButton = this.GetFacetAccordionHeaderButtonId(nameid);
+
                     facetResultsHTML += '<div class="col accordion accordion-flush mb-3" id="parent-' + nameid + '">';
-                    //facetResultsHTML += '<div class="col">';
                     facetResultsHTML += '<div class="accordion-item web-facet-accordion-item rounded">';
                     facetResultsHTML += '<h2 class="accordion-header accordion-item-' + nameid + '" id="' + facetId + '">';
-                    facetResultsHTML += '<button class="accordion-button web-facet-accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#' + nameid + '" aria-expanded="false" aria-controls="' + nameid + '">';
+                    facetResultsHTML += '<button id="'+facetButton+'" class="accordion-button web-facet-accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#' + nameid + '" aria-expanded="false" aria-controls="' + nameid + '">';
                     facetResultsHTML += title;
                     facetResultsHTML += '</button>';
                     facetResultsHTML += '</h2>';
@@ -241,9 +253,10 @@ Microsoft.Facets = {
         if (this.selectedFacets.length > 0) {
 
             $('.facet-checkbox').prop('checked', false);
-
             $('.facet-button').hide();
 
+            $('.accordion-button').removeClass('text-danger');
+            
             this.selectedFacets = [];
 
             $("#filterReset").empty();
@@ -259,6 +272,7 @@ Microsoft.Facets = {
 
         if (this.selectedFacets && this.selectedFacets.length > 0) {
             $('#navigation-btn').addClass('btn-danger');
+            $('#navigation-clear-all').addClass('btn-danger');
 
             htmlString += '<div class="btn-group" role="group" aria-label="Filters">';
 
@@ -286,13 +300,16 @@ Microsoft.Facets = {
                         item.values.forEach(function (item2, index2, array) {
 
                             var title = Microsoft.Utils.GetFacetDisplayTitle(name);
-                            var facetid = Microsoft.Facets.GetFacetId(name, item2.value);
+                            var facetValueId = Microsoft.Facets.GetFacetValueId(name, item2.value);
 
-                            htmlString += '<button id="' + facetid +'-btn" type="button" class="btn btn-outline-danger btn-sm facet-button me-2">';
+                            htmlString += '<button id="' + facetValueId +'-btn" type="button" class="btn btn-outline-danger btn-sm facet-button me-2">';
                             htmlString += item2.value + ' <a class="filter-anchor" title="Remove ' + title + ' filter ' + item2.value + '..." href="javascript:void(0)" onclick="Microsoft.Facets.RemoveFilter(\'' + name + '\', \'' + Microsoft.Facets.EncodeFacetValue(item2.value) + '\')"><span class="bi bi-x text-danger"></span></a><br>';
 
-                            if ($('#' + facetid)) {
-                                $('#' + facetid).prop('checked', true);
+                            if ($('#' + facetValueId)) {
+                                $('#' + facetValueId).prop('checked', true);
+                                // Update the text color of the parent dropdown
+                                var facetButton = Microsoft.Facets.GetFacetAccordionHeaderButtonId(Microsoft.Utils.jqid(name));
+                                $('#'+facetButton).addClass('text-danger');
                             }
 
                             htmlString += '</button>';
@@ -305,18 +322,18 @@ Microsoft.Facets = {
         }
         else {
             $('#navigation-btn').removeClass('btn-danger');
+            $('#navigation-clear-all').removeClass('btn-danger');
         }
         $("#filterReset").html(htmlString);
     },
 
-    GetFacetId: function (name,value,padding=true) {
+    GetFacetValueId: function (name,value,padding=true) {
         return Microsoft.Utils.jqid(name) + "_" + Microsoft.Facets.EncodeFacetValue(value, padding);
     },
 
     RemoveFilter: function (facet, value, search = true) {
 
-        var nameid = facet.toLowerCase().replace(" ", "-");
-        var facetid = Microsoft.Utils.jqid(nameid + "_" + value.replaceAll("=", ""));
+        var facetid = Microsoft.Utils.jqid(facet + "_" + value.replaceAll("=", ""));
 
         if ($('#' + facetid)) {
             $('#' + facetid).prop('checked', false);
@@ -357,6 +374,21 @@ Microsoft.Facets = {
 
     RenderFacets: function (facets = this.facets, only_facets_with_target = false, keepOpen = false, tagid = this.FACET_DEFAULT_TAGID, rendering_type = "dynamic", overwrite_mode = true) {
 
+        // Clear Dynamic facets configured outside the Other Refiners section in the Navigation
+        // same as clear not seen facets.
+        for (var i = 0; i < this.static_facets.length; i++) {
+            var facet = this.static_facets[i]; 
+            if (facet.type === 'dynamic') {
+                var nameid = Microsoft.Utils.jqid(facet.target);
+                // Header button
+                var facetButton = Microsoft.Facets.GetFacetAccordionHeaderButtonId(nameid);
+                $('#'+facetButton).removeClass('text-danger');
+                // Hide it                
+                var facet_id_tag = nameid + "-accordion-item";
+                $('#' + facet_id_tag).addClass("d-none");
+            }
+        }
+
         if (overwrite_mode) {
             $(tagid).empty();
         }
@@ -374,7 +406,7 @@ Microsoft.Facets = {
                     var data = facets[idx].values
                 }
                 else {
-                    var nameid = Microsoft.Utils.jqid(item.toLowerCase().replace(" ", "-"));
+                    var nameid = Microsoft.Utils.jqid(item);
                     var name = item;
                     var data = facets[item]
                 }
@@ -385,8 +417,9 @@ Microsoft.Facets = {
                     return;
                 }
 
-                var facetId = nameid + '-facets';
-                var facet_id_tag = nameid + "-accordion-item";
+                var facetId = this.GetFacetAccordionHeaderId(nameid);
+                var facetButton = this.GetFacetAccordionHeaderButtonId(nameid);
+                var facet_id_tag = this.GetFacetAccordionItemId(nameid);
 
                 var facet_html = '';
 
@@ -397,9 +430,9 @@ Microsoft.Facets = {
                     facet_html += '<div class="accordion-item" id="' + facet_id_tag + '">';
                 }
 
-                //facet_html += '<div class="accordion-item" id="' + facet_id_tag + '">';
                 facet_html += '<h2 class="accordion-header accordion-item-' + nameid + '" id="' + facetId + '">';
-                facet_html += '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#' + nameid + '" aria-expanded="true" aria-controls="' + nameid + '">';
+
+                facet_html += '<button id="'+facetButton+'" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#' + nameid + '" aria-expanded="true" aria-controls="' + nameid + '">';
 
                 facet_html += title;
                 facet_html += '</button>';
@@ -458,6 +491,7 @@ Microsoft.Facets = {
                 facet_html += '</div>';
                 facet_html += '</div></div>';
 
+                // In the case of dynamic filter configured outside the Other Refiners section in the Navigation               
                 if ($(facet_body_tag).length) {
                     $('#' + facet_id_tag).removeClass("d-none");
                     $(facet_body_tag).html(facet_body_html);
@@ -471,6 +505,7 @@ Microsoft.Facets = {
         facetResultsHTML += '</div>';
 
         $(tagid).append(facetResultsHTML);
+
     },
 
     EncodeFacetValue: function (value, padding=false) {
@@ -500,7 +535,6 @@ Microsoft.Facets = {
                 //if (!result.values.includes(value)) {
                 if (!valueResult) {
                     // Checking event
-                    //result.values.push(value);
                     if (valueIdx) {
                         result.values.push(facet_source[valueIdx]);
                     }
@@ -510,9 +544,14 @@ Microsoft.Facets = {
                     Microsoft.Facets.selectedFacets[idx] = result;
                 }
                 else {
-                    // Unchecking event - Remove when last value 
+                    // Unchecking event - Remove when last value
                     if (result.values.length <= 1) {
                         Microsoft.Facets.selectedFacets.splice(idx, 1);
+
+                        if (facet_type === "static") {
+                            var facetButton = Microsoft.Facets.GetFacetAccordionHeaderButtonId(Microsoft.Utils.jqid(facet_key));
+                            $('#'+facetButton).removeClass('text-danger');
+                        }
                     }
                     else {
                         // Remove facet value entry

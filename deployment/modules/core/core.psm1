@@ -542,8 +542,7 @@ function Get-ContainerFilesList ($container, $path) {
     
     return $files
 }
-    
-    
+
 function Add-BlobRetryTag () {
     param (
         [Parameter(Mandatory = $true)]
@@ -560,6 +559,9 @@ function Add-BlobRetryTag () {
 #endregion
     
 function Get-AllServicesKeys() {
+    param (
+        [switch] $AddToKeyVault
+    )
     Get-AppInsightsInstrumentationKey
     Get-TechStorageAccountParameters
     Get-DataStorageAccountParameters
@@ -569,7 +571,12 @@ function Get-AllServicesKeys() {
     Get-SearchServiceKeys
     
     Sync-Parameters
+
+    if ($AddToKeyVault) {
+        Add-KeyVaultSecrets
+    }
 }
+
 function Get-AppInsightsInstrumentationKey {
     $tuples = Get-Parameters "appInsightsService"
     
@@ -615,6 +622,7 @@ function Get-TechStorageAccountParameters {
     
     Save-Parameters
 }
+
 function Get-DataStorageAccountParameters {
     
     $global:storageAccountKey = az storage account keys list --account-name $params.dataStorageAccountName -g $config.resourceGroupName --query [0].value --out tsv
@@ -777,16 +785,18 @@ function Initialize-SearchParameters {
     Write-Debug -Message "Parameters Indexers created"
 }
     
-function Get-SearchServiceKeys {
-    
-    $global:searchServiceKey = az search admin-key show --resource-group $config.resourceGroupName --service-name $params.searchServiceName  --query primaryKey --out tsv
-    Add-Param "searchServiceKey" $global:searchServiceKey
+function Get-SearchServiceKeys {    
+    Write-Host "Fetching Search service keys..." -ForegroundColor DarkBlue
+
+    $searchServiceKey = az search admin-key show --resource-group $config.resourceGroupName --service-name $params.searchServiceName  --query primaryKey --out tsv
+    Add-Param "searchServiceKey" $searchServiceKey
         
     $searchServiceQueryKey = az search query-key list --resource-group $config.resourceGroupName --service-name $params.searchServiceName  --query [0].key --out tsv
     Add-Param "searchServiceQueryKey" $searchServiceQueryKey
     
     Save-Parameters
 }
+
 function Invoke-SearchAPI {
     param (
         [string]$url,
@@ -794,6 +804,10 @@ function Invoke-SearchAPI {
         [string]$method = "PUT"
     )
     
+    if (! $params.searchServiceKey) {
+        Get-SearchServiceKeys
+    }
+
     $headers = @{
         'api-key'      = $params.searchServiceKey
         'Content-Type' = 'application/json'
@@ -806,7 +820,13 @@ function Invoke-SearchAPI {
     
     Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method $method -Body $body | ConvertTo-Json -Depth 100
 }
-    
+
+function Get-SearchMgtUrl () {
+    $mgturl = "https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName
+    $mgturl += "?api-version="+$searchservicecfg.Parameters.searchManagementVersion
+    return $mgturl
+}
+
 function Initialize-Search {
     param (
         [switch]$AllowIndexDowntime
@@ -1111,8 +1131,7 @@ function Get-SearchIndexerStatus {
 }
     
 function Get-SearchServiceDetails() {
-    # az rest --method GET --url ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName + "?api-version=" + $searchservicecfg.Parameters.searchManagementVersion)
-    az rest --method GET --url ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName + "?api-version=2021-04-01-Preview")
+    az rest --method GET --url $(Get-SearchMgtUrl)
 }
     
 # https://docs.microsoft.com/en-us/rest/api/searchservice/preview-api/reset-documents
@@ -1132,7 +1151,39 @@ function Reset-SearchDocument {
     }
     Invoke-SearchAPI -url ("/indexers/documents/resetdocs?api-version=" + $searchservicecfg.Parameters.searchVersion) -method "POST" -body $body
 }
-    
+
+# https://learn.microsoft.com/en-us/azure/search/semantic-search-overview
+
+function Enable-SemanticSearch ($searchServiceName) {
+
+    $mgturl = ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/")
+    if ($searchServiceName) {
+        $mgturl += $searchServiceName
+    }
+    else {
+        $mgturl += $params.searchServiceName
+    }
+    $mgturl += "?api-version=2021-04-01-Preview"
+
+    Push-Location (Join-Path $global:envpath "config" "search" "semantic")
+    az rest --method PUT --url $mgturl --body '@enable.json'
+    Pop-Location
+}
+
+function Disable-SemanticSearch ($searchServiceName) {
+    $mgturl = ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/")
+    if ($searchServiceName) {
+        $mgturl += $searchServiceName
+    }
+    else {
+        $mgturl += $params.searchServiceName
+    }
+    $mgturl += "?api-version=2021-04-01-Preview"
+
+    Push-Location (Join-Path $global:envpath "config" "search" "semantic")
+    az rest --method PUT --url $mgturl --body '@disable.json'
+    Pop-Location
+}
 #endregion
     
     
@@ -1373,7 +1424,7 @@ function Build-Functions () {
             # Windows
             if (-not $plan.IsLinux) {
                 if ( -not $LinuxOnly ) {
-                    Write-Host ("Building Windows Function App" + $functionApp.Name) -ForegroundColor DarkCyan
+                    Write-Host ("Building Windows Function App " + $functionApp.Name) -ForegroundColor DarkCyan
     
                     # Build the configured functions
                     Push-Location (join-path $global:workpath ".." $functionApp.Path)

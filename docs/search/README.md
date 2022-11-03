@@ -15,7 +15,7 @@ This accelerator is configured to ingest data from an Azure Storage Data Lake. B
 | Container | Description | Is indexed ? |
 |--|--|--|
 |**documents**|where you would push your data|Yes|
-|**images**|Where pages/slides images are extracted|Yes|
+|**images**|Where converted pages/slides & attachments are extracted|Yes|
 |**metadata**|Where we stored all documents full metadata output and an HTML representation of a document.|No|
 ||||
 
@@ -116,8 +116,7 @@ The below diagram highlights the document processing flow.
 
 ![Document Processing](media/Document_Processing.png)
 
-
-Out of processing a document it produces images (pages/slides) 
+Out of processing a document it produces images (pages/slides) but also extract embedded objects such as emails' attachments.
 
 ## Image Processing
 

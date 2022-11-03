@@ -8,6 +8,7 @@ using Knowledge.Services;
 using Knowledge.Services.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System.Net;
 
 namespace Knowledge.API.Controllers
 {
@@ -137,9 +138,27 @@ namespace Knowledge.API.Controllers
         {
             if (!string.IsNullOrEmpty(request.path))
             {
-                var result = await metadataService.GetDocumentMetadataAsync(request.path);
+                var result = await metadataService.GetDocumentMetadataAsync(request.path,IMetadataService.JsonMetadata);
 
                 return CreateContentResultResponse(result);
+            }
+
+            return new BadRequestResult();
+        }
+
+        [HttpPost("gethtml")]
+        public async Task<IActionResult> GetDocumentHTMLAsync(ApiMetadataRequest request)
+        {
+            if (!string.IsNullOrEmpty(request.path))
+            {
+                var result = await metadataService.GetDocumentMetadataAsync(request.path, IMetadataService.HtmlMetadata);
+                ContentResult response = new()
+                {
+                    Content = result,
+                    ContentType = "text/plain",
+                    StatusCode = (int)HttpStatusCode.OK
+                };
+                return response;
             }
 
             return new BadRequestResult();

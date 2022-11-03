@@ -26,5 +26,12 @@
     "template": {
       "header": "<h5 class=\"suggestions-group-name\">Organizations</h5>"
     }
+  },
+  {
+    "name": "folders",
+    "url": "/api/search/suggest?highlights=false&fuzzy=false&targetField=document_segments",
+    "template": {
+      "header": "<h5 class=\"suggestions-group-name\">Folders</h5>"
+    }
   }
 ]

@@ -21,7 +21,7 @@
             "outputs": [
                 {
                     "name": "image_metadata",
-                    "targetName": "image_metadata"
+                    "targetName": "raw_image_metadata"
                 },
                 {
                     "name": "normalized_images",
@@ -80,10 +80,10 @@
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
             "name": "ImagesAnalysisEntitiesDeduplication",
             "description": "A custom skill to normalize and deduplicate values of entities.",
-            "context": "/document/normalized_images/*",
+            "context": "/document",
             "uri": "{{param.entities.deduplication}}",
             "httpMethod": "POST",
-            "timeout": "PT30S",
+            "timeout": "PT3M",
             "batchSize": 1,
             "degreeOfParallelism": null,
             "inputs": [
@@ -133,31 +133,31 @@
             "outputs": [
                 {
                     "name": "categories",
-                    "targetName": "image_categories"
+                    "targetName": "img_categories"
                 },
                 {
                     "name": "tags",
-                    "targetName": "image_tags"
+                    "targetName": "img_tags"
                 },
                 {
                     "name": "captions",
-                    "targetName": "image_captions"
+                    "targetName": "img_captions"
                 },
                 {
                     "name": "brands",
-                    "targetName": "brands"
+                    "targetName": "img_brands"
                 },
                 {
                     "name": "objects",
-                    "targetName": "objects"
+                    "targetName": "img_objects"
                 },
                 {
                     "name": "celebrities",
-                    "targetName": "celebrities"
+                    "targetName": "img_celebrities"
                 },
                 {
                     "name": "landmarks",
-                    "targetName": "landmarks"
+                    "targetName": "img_landmarks"
                 }
             ],
             "httpHeaders": {}
@@ -196,7 +196,7 @@
             "context": "/document/normalized_images/*",
             "uri": "{{param.vision.azureocrlayout}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": null,
             "inputs": [
@@ -212,6 +212,67 @@
                 }
             ],
             "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
+            "description": "Shape the image metadata object",
+            "context": "/document",
+            "inputs": [
+                {
+                    "name": "width",
+                    "source": "/document/raw_image_metadata/width"
+                },
+                {
+                    "name": "height",
+                    "source": "/document/raw_image_metadata/height"
+                },
+                {
+                    "name": "ratio",
+                    "source": "/document/raw_image_metadata/ratio"
+                },
+                {
+                    "name": "thumbnail_medium",
+                    "source": "/document/raw_image_metadata/thumbnail_medium"
+                },
+                {
+                    "name": "thumbnail_small",
+                    "source": "/document/raw_image_metadata/thumbnail_small"
+                },
+                {
+                    "name": "categories",
+                    "source": "/document/img_categories"
+                },
+                {
+                    "name": "tags",
+                    "source": "/document/img_tags"
+                },
+                {
+                    "name": "captions",
+                    "source": "/document/img_captions"
+                },
+                {
+                    "name": "brands",
+                    "source": "/document/img_brands"
+                },
+                {
+                    "name": "objects",
+                    "source": "/document/img_objects"
+                },
+                {
+                    "name": "celebrities",
+                    "source": "/document/img_celebrities"
+                },
+                {
+                    "name": "landmarks",
+                    "source": "/document/img_landmarks"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "output",
+                    "targetName": "image_metadata"
+                }
+            ]
         },
         {
             "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
@@ -258,7 +319,7 @@
             "context": "/document",
             "uri": "{{param.text.TextMesh}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": 5,
             "inputs": [
@@ -399,7 +460,7 @@
             "inputs": [
                 {
                     "name": "language",
-                    "source": "/document/language"
+                    "source": "/document/pages/0/translatedToLanguageCode"
                 },
                 {
                     "name": "text",
@@ -567,7 +628,7 @@
             "context": "/document",
             "uri": "{{param.entities.deduplication}}",
             "httpMethod": "POST",
-            "timeout": "PT30S",
+            "timeout": "PT3M",
             "batchSize": 1,
             "degreeOfParallelism": null,
             "inputs": [
@@ -623,7 +684,7 @@
             "context": "/document",
             "uri": "{{param.geolocations.locations}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": null,
             "inputs": [
@@ -659,7 +720,7 @@
             "context": "/document",
             "uri": "{{param.entities.keyphrases-cleansing}}",
             "httpMethod": "POST",
-            "timeout": "PT30S",
+            "timeout": "PT3M",
             "batchSize": 1,
             "degreeOfParallelism": null,
             "inputs": [
@@ -712,7 +773,7 @@
             "context": "/document",
             "uri": "{{param.text.TranslationMerge}}",
             "httpMethod": "POST",
-            "timeout": "PT1M",
+            "timeout": "PT3M",
             "batchSize": 5,
             "degreeOfParallelism": null,
             "inputs": [
@@ -761,8 +822,8 @@
                     "source": "/document/document_url"
                 },
                 {
-                    "name": "imageparenturl",
-                    "source": "/document/imageparenturl"
+                    "name": "parenturl",
+                    "source": "/document/parenturl"
                 }
             ],
             "outputs": [
@@ -800,6 +861,14 @@
                 {
                     "name": "tables_count",
                     "targetName": "tables_count"
+                },
+                {
+                    "name": "paragraphs",
+                    "targetName": "paragraphs"
+                },
+                {
+                    "name": "paragraphs_count",
+                    "targetName": "paragraphs_count"
                 },
                 {
                     "name": "kvs",
@@ -850,6 +919,14 @@
                     "source": "/document/metadata_creation_date"
                 },
                 {
+                    "name": "document_embedded",
+                    "source": "/document/documentembedded"
+                },
+                {
+                    "name": "document_converted",
+                    "source": "/document/documentconverted"
+                },
+                {
                     "name": "topics",
                     "source": "/document/topics"
                 },
@@ -858,20 +935,20 @@
                     "source": "/document/tables"
                 },
                 {
-                    "name": "imageparentkey",
-                    "source": "/document/imageparentkey"
+                    "name": "parentkey",
+                    "source": "/document/parentkey"
                 },
                 {
-                    "name": "imageparentid",
-                    "source": "/document/imageparentid"
+                    "name": "parentid",
+                    "source": "/document/parentid"
                 },
                 {
-                    "name": "imageparenturl",
-                    "source": "/document/imageparenturl"
+                    "name": "parenturl",
+                    "source": "/document/parenturl"
                 },
                 {
-                    "name": "imageparentfilename",
-                    "source": "/document/imageparentfilename"
+                    "name": "parentfilename",
+                    "source": "/document/parentfilename"
                 }
             ],
             "outputs": [
@@ -884,6 +961,44 @@
         },
         {
             "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
+            "name": "ParentShaper",
+            "context": "/document",
+            "inputs": [
+                {
+                    "name": "key",
+                    "source": "/document/parentkey"
+                },
+                {
+                    "name": "id",
+                    "source": "/document/parentid"
+                },
+                {
+                    "name": "url",
+                    "source": "/document/parenturl"
+                },
+                {
+                    "name": "filename",
+                    "source": "/document/parentfilename"
+                },
+                {
+                    "name": "content_group",
+                    "source": "/document/parentcontentgroup"
+                },
+                {
+                    "name": "document_embedded",
+                    "source": "/document/parentdocumentembedded"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "output",
+                    "targetName": "parent_metadata"
+                }
+            ]
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
+            "name": "FieldsTranslationShaper",
             "context": "/document",
             "inputs": [
                 {
@@ -893,7 +1008,7 @@
             ],
             "outputs": [
                 {
-                    "name": "fields",
+                    "name": "output",
                     "targetName": "fieldsToTranslate"
                 }
             ]

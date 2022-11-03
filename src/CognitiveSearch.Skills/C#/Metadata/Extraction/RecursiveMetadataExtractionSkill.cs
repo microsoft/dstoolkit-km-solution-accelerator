@@ -43,7 +43,8 @@ namespace Metadata.Extraction
             MemoryStream mstream = new MemoryStream();
 
             // Find the right source container 
-            BlobUriBuilder blobUriBuilder = new BlobUriBuilder(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
+            // BlobUriBuilder blobUriBuilder = new BlobUriBuilder(new Uri(UrlUtility.UrlDecode(docitem.WebUrl)));
+            BlobUriBuilder blobUriBuilder = new(new Uri(docitem.WebUrl));
 
             containers.TryGetValue(blobUriBuilder.BlobContainerName, out BlobContainerClient container);
 
@@ -142,9 +143,9 @@ namespace Metadata.Extraction
                                                         httpHeaders.ContentType = "application/json";
                                                         //Because the filename is not used to store the document (avoid special chars and long names issues) 
                                                         //We set the filename as custom Metadata
-                                                        metadata.Add("imageparentid", docitem.Id);
-                                                        metadata.Add("imageparentfilename", IHelpers.Base64Encode(docitem.Name));
-                                                        metadata.Add("imageparenturl", IHelpers.Base64Encode(docitem.WebUrl));
+                                                        metadata.Add("parentid", docitem.Id);
+                                                        metadata.Add("parentfilename", IHelpers.Base64Encode(docitem.Name));
+                                                        metadata.Add("parenturl", IHelpers.Base64Encode(docitem.WebUrl));
 
                                                         byte[] byteArray = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(item));
                                                         MemoryStream stream = new MemoryStream(byteArray);

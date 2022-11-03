@@ -1,0 +1,44 @@
+/* Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the MIT License. */
+
+body {
+    font-family: Verdana, sans-serif !important;
+    font-size: 14px;
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 6rem;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: Segoe UI, sans-serif !important;
+    color: #4A4A4A;
+    word-wrap: break-word;
+}
+
+dl {
+    background-color: #e6d2ad41 !important;
+}
+dd {
+    display: list-item !important;
+}
+
+.message-body {
+    border-radius: 2px;
+    background-color: #add8e661 !important;
+    padding: 2px;
+}
+
+.attachment-entry {
+    display: none;
+}
+
+.email-entry { 
+    border-radius: 2px;
+    background-color: #add8e661 !important;
+    padding: 2px;
+}
+
+.email-entry :hover{ 
+    border-radius: 2px;
+    background-color: #25406138 !important;
+}

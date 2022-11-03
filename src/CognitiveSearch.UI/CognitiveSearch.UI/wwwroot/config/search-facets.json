@@ -29,6 +29,12 @@
     "target": "key_phrases"
   },
   {
+    "id": "folders",
+    "name": "Folders",
+    "type": "dynamic",
+    "target": "document_segments"
+  },
+  {
     "id": "message_from",
     "name": "Message From",
     "type": "dynamic",

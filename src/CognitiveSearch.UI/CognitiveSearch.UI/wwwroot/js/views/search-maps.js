@@ -333,9 +333,9 @@ Microsoft.Maps = {
             items.push('</center>');
 
             if (image.document_embedded) {
-                items.push('<span class="d-inline-block text-truncate" style="max-width: 250px;">' + Base64.decode(image.image_parentfilename) + '</span>');
+                items.push('<span class="d-inline-block text-truncate" style="max-width: 250px;">' + Base64.decode(image.parent.filename) + '</span>');
                 items.push('<div class="image-result-img d-block w-100" onclick="Microsoft.Results.Details.ShowDocument(\'' + image.index_key + '\');">');
-                items.push('<img class="image-result-map" src="data:image/png;base64, ' + image.image.thumbnail_medium + '" title="' + Base64.decode(image.image_parentfilename) + '" />');
+                items.push('<img class="image-result-map" src="data:image/png;base64, ' + image.image.thumbnail_medium + '" title="' + Base64.decode(image.parent.filename) + '" />');
                 items.push('</div>');
             }
             else {
@@ -723,22 +723,22 @@ Microsoft.Maps = {
 
                 for (var i = 0; i < Microsoft.Search.results.length; i++) {
 
-                    var image = Microsoft.Search.results[i].Document !== undefined ? Microsoft.Search.results[i].Document : Microsoft.Search.results[i];
+                    var docresult = Microsoft.Search.results[i].Document !== undefined ? Microsoft.Search.results[i].Document : Microsoft.Search.results[i];
 
-                    if (image.locations) {
-                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, image.locations, image);
+                    if (docresult.locations) {
+                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, docresult.locations, docresult);
                     }
-                    if (image.countries) {
-                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, image.countries, image);
+                    if (docresult.countries) {
+                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, docresult.countries, docresult);
                     }
-                    if (image.capitals) {
-                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, image.capitals, image);
+                    if (docresult.capitals) {
+                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, docresult.capitals, docresult);
                     }
-                    if (image.cities) {
-                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, image.cities, image);
+                    if (docresult.cities) {
+                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, docresult.cities, docresult);
                     }
-                    if (image.landmarks) {
-                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, image.landmarks, image);
+                    if (docresult.image.landmarks) {
+                        coordinates = Microsoft.Maps.addImageLocationsToMap(targetDataSource, docresult.image.landmarks, docresult);
                     }
                 }
 
