@@ -170,6 +170,14 @@
       "targetFieldName": "tables_count"
     },
     {
+      "sourceFieldName": "/document/kvs",
+      "targetFieldName": "kvs"
+    },
+    {
+      "sourceFieldName": "/document/kvs_count",
+      "targetFieldName": "kvs_count"
+    },
+    {
       "sourceFieldName": "/document/paragraphs",
       "targetFieldName": "paragraphs"
     },

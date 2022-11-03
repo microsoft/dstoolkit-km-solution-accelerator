@@ -16,24 +16,26 @@ The platform would be Web with the below Redirect URIs
 - "https://{{config.name}}ui.azurewebsites.net/.auth/login/aad/callback",
 
 
+__Check the ID Tokens__
+
+
 ## API Permissions
 
 All permissions would be Delegated. Minimum permission required is  
 
-Microsoft Graph / User.Read (Sign In and read user profile)
+- Microsoft Graph / User.Read (Sign In and read user profile)
 
 You might want to add more permissions as you see fit. Microsoft Graph has extensive set of APIs for collaboration. 
 
 ## Expose an API section
 
-Application ID URI would show 
+Application ID URI would show (typically)
 
 - api://{{config.clientId}}
 
-Scopes defined by this API would list the user_impersonation scope 
+__Scopes defined by this API__ should list the user_impersonation scope 
 
 - api://{{config.clientId}}/user_impersonation
-
 
 ## Manifest section - Emit Security Groups Claims 
 
