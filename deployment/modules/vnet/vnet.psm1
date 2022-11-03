@@ -337,14 +337,26 @@ function Add-WebAppAccessRestrictionRule {
     Write-Host "========================================"
     if ($ipaddress) {
         Write-Host "Adding Inbound rule with IPAddress $ipaddress $appResourceGroupName $ruleName $ipaddress)  $priority to Resource: $appName" -ForegroundColor "Yellow"
-        az webapp config access-restriction add --resource-group $appResourceGroupName --name $appName `
-        --rule-name $ruleName --action Allow --ip-address $ipaddress --priority $priority
+        az webapp config access-restriction add `
+            --resource-group $appResourceGroupName `
+            --name $appName `
+            --rule-name $ruleName `
+            --action Allow `
+            --ip-address $ipaddress `
+            --priority $priority
         Write-Host "Added Inbound rule with IPAddress $ipaddress to Resource: $appName" -ForegroundColor "Green"
     }
     elseif (($subnetName)) {
         Write-Host "Adding Inbound rule with subnet  $subnetName to Resource: $appName" -ForegroundColor "Yellow"
-        az webapp config access-restriction add -g $appResourceGroupName -n $appName `
-        --rule-name $ruleName --action Allow --vnet-name $vnetName --subnet $subnetName --priority $priority --vnet-resource-group $vnetcfg.vnetResourceGroup
+        az webapp config access-restriction add `
+            -g $appResourceGroupName `
+            -n $appName `
+            --rule-name $ruleName `
+            --action Allow `
+            --vnet-name $vnetName `
+            --subnet $subnetName `
+            --priority $priority `
+            --vnet-resource-group $vnetcfg.vnetResourceGroup
         Write-Host "Added Inbound rule with subnet  $subnetName to Resource: $appName" -ForegroundColor "Green"
     }
     Write-Host "========================================"
@@ -371,7 +383,7 @@ function Add-KeyVaultNetworkRule {
     Write-Host "========================================"
     Write-Host "Updated outbound ip address of app services in the keyvault: $keyvaultName." -ForegroundColor "Green"
 }
- 
+
 # update keyvault to remove ip address of all web app/function apps
 function Remove-KeyVaultNetworkRule {
     param(
@@ -539,16 +551,16 @@ function Add-SubnetToNetworkRule {
     }
     elseif ($serviceEndpoints -eq "Microsoft.CognitiveServices") {
         az cognitiveservices account network-rule add `
-        -g $config.resourceGroupName -n $resourcename `
-        --subnet $subnetid
+            -g $config.resourceGroupName `
+            -n $resourcename `
+            --subnet $subnetid
     }
     elseif ($serviceEndpoints -eq "Microsoft.ContainerRegistry") {
         foreach ($ipAddress in $ipAddresses) {
             az acr network-rule add `
-            --name $resourcename `
-            --ip-address $ipAddress
+                --name $resourcename `
+                --ip-address $ipAddress
         }
-
     }
     elseif ($serviceEndpoints -eq "Microsoft.KeyVault") {
         az keyvault network-rule add --resource-group $config.resourceGroupName --name $resourcename --subnet $subnetId
@@ -576,6 +588,9 @@ function Enable-PrivaceAccess {
     }
     elseif ($appType -eq "Search") {
         az search service update --name $resourcename --resource-group $config.resourceGroupName --public-access "Disabled"
+    }
+    elseif ($appType -eq "WebApp" -or $appType -eq "FunctionApp") {
+        az resource update --ids $resourceId  --set properties.publicNetworkAccess="Disabled"
     }
     else {
         az resource update --ids $resourceId  --set properties.networkAcls="{'defaultAction':'Deny'}"
@@ -672,7 +687,12 @@ function Set-VNETAppServices {
                 Write-Host("Adding subnet: $subnetName to outbound rule")
                 $vnetId = az network vnet show -n $vnetcfg.vnetName -g $vnetcfg.vnetResourceGroup --query id  -o tsv  
 
-                az appservice vnet-integration add -g $config.resourceGroupName -n $appService.Name --vnet $vnetId --subnet $subnetName
+                if ($appServicesCfg.Apptype -eq "WebApp") {
+                    az webapp vnet-integration add -g $config.resourceGroupName -n $appService.Name --vnet $vnetId --subnet $subnetName
+                }
+                else {
+                    az functionapp vnet-integration add -g $config.resourceGroupName -n $appService.Name --vnet $vnetId --subnet $subnetName
+                }
             }
 
             if (!$SkipAccessIPRestriction) {
@@ -779,7 +799,6 @@ function Set-VNETResource {
         $appType = $azureResource.Apptype
         Write-Host ("App type is  " + $appType) -ForegroundColor Yellow
 
-        $serviceEndPoint = $azureResource.ServiceEndPoint
         $azServiceGroupId = $azureResource.GroupId
         $azureResourceGroupId = $groupidcfg.$azServiceGroupId
         Write-Host ("VNet Integration started for resource with types " + $appType) -ForegroundColor Yellow
@@ -799,7 +818,7 @@ function Set-VNETResource {
                 if ( $item.AccessSubnetRestriction) {
                     foreach ($subnet in $vnetparams.existingSubnets) {
                         Write-Host("$subnet adding subnet") -ForegroundColor Yellow
-                        Add-SubnetToNetworkRule $item.Name $subnet.Trim() $serviceEndPoint 
+                        Add-SubnetToNetworkRule $item.Name $subnet.Trim() $azureResource.ServiceEndPoint 
                     }
                 }
             }
