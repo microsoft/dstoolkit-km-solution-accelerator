@@ -1,26 +1,33 @@
-Few tips to demo the Knowledge Mining solution. 
+Few tips to demo the Knowledge Mining solution accelerator. 
 
 This demo script assumes you have pushed and indexed the test data. 
 
 # Landing Experience 
 
-# Exploration 
+Example of possible landing pages showing latest documents, images and news. 
 
 # Navigation 
 
 - Static (Taxononmy) vs Dynamic 
 
-# Search Renderings 
+# Exploration mode
 
+## Using the Navigation, explore internal and external content. 
 
-# Suggestions
+## Explore all verticals.  
+
+# Search mode
+
+Classic search mode.  
+
+## Suggestions
 
 Suggestions are defined per Entities. 
 
 Sugestions as Filter feature  
 - Change Energy
 
-# Semantic Search
+## Semantic Search
 
 The below queries should triggered semantic extracted answers. 
 
@@ -28,13 +35,13 @@ The below queries should triggered semantic extracted answers.
 - Council of Ministers
 - NIKKEI Decarbonization
 
-# Query Translation
+## Query Translation
 
 - プロジェクト  will return content matching the world Project.
 - アワード : will return content matching the world Award.
 - Energie solaire: 
 
-# Content Translation
+## Content Translation
 
 - Search for __NIKKEI Decarbonization__
 - click on the first answer
