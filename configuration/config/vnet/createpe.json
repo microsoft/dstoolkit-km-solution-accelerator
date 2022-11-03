@@ -9,6 +9,14 @@
       }
     },
     {
+      "name": "dfs-spa",
+      "properties": {
+        "privateLinkResourceId": "/subscriptions/{{config.subscriptionId}}/resourceGroups/{{config.resourceGroupName}}/providers/Microsoft.Storage/storageAccounts/{{config.name}}data",
+        "groupId": "dfs",
+        "requestMessage": "please approve"
+      }
+    },
+    {
       "name": "kv-spa",
       "properties": {
         "privateLinkResourceId": "/subscriptions/{{config.subscriptionId}}/resourceGroups/{{config.resourceGroupName}}/providers/Microsoft.KeyVault/vaults/{{config.name}}kv",
