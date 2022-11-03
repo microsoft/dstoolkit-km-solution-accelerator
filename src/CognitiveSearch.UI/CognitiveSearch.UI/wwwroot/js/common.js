@@ -352,7 +352,7 @@ Microsoft.Search = {
             documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
         }
         else {
-            documentHtml += '   <img alt="' + name + '" class="image-result-nocover" src="' + iconPath + '" title="' + docresult.title + '"/>';
+            documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="' + iconPath + '" title="' + docresult.title + '"/>';
         }
         return documentHtml;
     },
@@ -709,12 +709,7 @@ Microsoft.Search.Results = {
             var hasCoverImage = Microsoft.Search.SupportCoverImage(docresult);
 
             // First Column
-            if (hasCoverImage) {
-                documentHtml += '<div class="col-md-2">'
-            }
-            else {
-                documentHtml += '<div class="col-md-1">'
-            }
+            documentHtml += '<div class="col-md-2">'
 
             var iconPath = Microsoft.Utils.GetIconPathFromExtension(pathExtension);
             documentHtml += '<a href="javascript:void(0)" onclick="' + showMethod + '(\'' + docresult.document_id + '\');" >';
@@ -733,19 +728,14 @@ Microsoft.Search.Results = {
                     documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                 }
                 else {
-                    documentHtml += '   <img alt="' + name + '" class="image-result-nocover" src="' + iconPath + '" title="' + docresult.title + '"/>';
+                    documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="' + iconPath + '" title="' + docresult.title + '"/>';
                 }
             }
             documentHtml += '</a>';
             documentHtml += '</div>';
 
             // Second column
-            if (hasCoverImage) {
-                documentHtml += '<div class="col-md-10">'
-            }
-            else {
-                documentHtml += '<div class="col-md-11">'
-            }
+            documentHtml += '<div class="col-md-10">'
 
             documentHtml += '<div class="d-flex align-items-center">'
 
