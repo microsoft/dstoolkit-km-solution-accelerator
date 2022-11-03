@@ -885,6 +885,8 @@ function Import-VNETConfig {
     $global:vnetcfg = [string] (Get-Content -Path (join-path $global:envpath "config" "vnet" "config.json"))
     $global:vnetcfg = ConvertFrom-Json $global:vnetcfg
 
+    Import-ConfigParameters $global:vnetcfg
+
     Import-createpeConfig
     Import-groupidConfig
 

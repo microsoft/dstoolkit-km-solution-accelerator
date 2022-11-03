@@ -29,5 +29,9 @@
         "privatelink.redis.cache.windows.net",
         "privatelink.redisenterprise.cache.azure.net",
         "privatelink.azurewebsites.net"
-    ]
+    ],
+    "Parameters": {
+        "searchSku": "Standard2",
+        "searchIndexerEnvironment": "private"
+    }
 }
