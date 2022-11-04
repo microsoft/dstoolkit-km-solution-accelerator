@@ -15,6 +15,7 @@
                     "Name": "{{config.name}}geolocations",
                     "Path": "src\\CognitiveSearch.Skills\\C#\\Geo\\GeoLocations",
                     "Version": 4,
+                    "DotnetVersion": "V6.0",
                     "Functions": [
                         {
                             "Name": "locations"
@@ -28,6 +29,7 @@
                     "Name": "{{config.name}}text",
                     "Path": "src\\CognitiveSearch.Skills\\C#\\Text.Function",
                     "Version": 4,
+                    "DotnetVersion": "V6.0",
                     "Functions": [
                         {
                             "Name": "TextMesh"
@@ -50,6 +52,7 @@
                     "Name": "{{config.name}}entities",
                     "Path": "src\\CognitiveSearch.Skills\\C#\\Entities.Function",
                     "Version": 4,
+                    "DotnetVersion": "V6.0",
                     "Functions": [
                         {
                             "Name": "concatenation"
@@ -78,6 +81,7 @@
                     "Name": "{{config.name}}imgext",
                     "Path": "src\\CognitiveSearch.Skills\\C#\\Image\\Image.Extraction",
                     "Version": 4,
+                    "DotnetVersion": "V6.0",
                     "Functions": [
                         {
                             "Name": "DurableImageExtractionSkill_HttpStart"
@@ -100,6 +104,7 @@
                     "Name": "{{config.name}}mtda",
                     "Path": "src\\CognitiveSearch.Skills\\C#\\Metadata\\Assignment",
                     "Version": 4,
+                    "DotnetVersion": "V6.0",
                     "Functions": [
                         {
                             "Name": "Assign"
@@ -113,6 +118,7 @@
                     "Name": "{{config.name}}mtdext",
                     "Path": "src\\CognitiveSearch.Skills\\C#\\Metadata\\Extraction",
                     "Version": 4,
+                    "DotnetVersion": "V6.0",
                     "Functions": [
                         {
                             "Name": "MetadataExtractionSkill"
