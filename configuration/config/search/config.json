@@ -17,7 +17,6 @@
         {
             "Name": "{{config.name}}search",
             "ResourceGroup": "{{config.resourceGroupName}}",
-            "Sku": "Standard",
             "EnablePrivateAccess": true,
             "AddIPAddressRule": false,
             "AddPrivateSharedLink": true

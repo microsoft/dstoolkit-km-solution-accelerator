@@ -200,7 +200,7 @@ function New-SearchServices {
             az search service create `
                 --name  $azureResource.Name `
                 --resource-group $azureResource.ResourceGroup `
-                --sku $azureResource.Sku `
+                --sku $params.searchSku `
                 --location $config.location `
                 --partition-count 1 `
                 --replica-count 1
