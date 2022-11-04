@@ -135,25 +135,27 @@ function New-StorageAccount {
 
             if ($azureResource.IsDataStorage) {
 
-                Get-DataStorageAccountParameters; 
-
                 # Iterate through the list of containers to create. 
                 foreach ($container in $params.storageContainers) {
                     az storage container create -n $container `
                         --account-name $params.dataStorageAccountName `
                         --account-key $params.storageAccountKey `
-                        --resource-group $config.resourceGroupName            
+                        --resource-group $config.resourceGroupName
                 }
-
+    
                 # Soft blob deletion policy (7 days)
                 az storage account blob-service-properties update --account-name $params.dataStorageAccountName `
                     --resource-group $config.resourceGroupName `
                     --enable-delete-retention true `
                     --delete-retention-days 7
             }
-            else { 
-                Get-TechStorageAccountParameters;            
-            }
+        }
+
+        if ($azureResource.IsDataStorage) {
+            Get-DataStorageAccountAccessKeys; 
+        }
+        else {
+            Get-TechStorageAccountAccessKeys;            
         }
     }
 }
@@ -239,7 +241,8 @@ function New-ACRService {
 }
 
 function New-AzureMapsService() {
-    if ($config.mapSearchEnabled) {
+
+    if ($params.mapSearchEnabled) {
 
         $exists = az maps account show -g $config.resourceGroupName -n $params.maps --query id --out tsv
 
@@ -254,8 +257,8 @@ function New-AzureMapsService() {
             --accept-tos
 
             $mapsKey = az maps account keys list --name $params.maps --resource-group $config.resourceGroupName --query primaryKey --out tsv
-
             Add-Param "mapsSubscriptionKey" $mapsKey
+            Save-Parameters
         }
     }
 }
@@ -265,5 +268,6 @@ function New-BingSearchService() {
         Write-Host "Provision Bing Search service manually. When provisionned..." -ForegroundColor Red    
         $bingKey = Read-Host "Provide Bing Search Key " -MaskInput
         Add-Param "bingServicesKey" $bingKey
+        Save-Parameters
     }
 }

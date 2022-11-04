@@ -73,7 +73,7 @@ Get-AzureMapsSubscriptionKey      0.0     core
 Get-CognitiveServiceKey           0.0     core
 Get-Config                        0.0     core
 Get-ContainerFilesList            0.0     core
-Get-DataStorageAccountParameters  0.0     core
+Get-DataStorageAccountAccessKeys  0.0     core
 Get-DeploymentOverlayPath         0.0     core
 Get-Environment                   0.0     core
 Get-FunctionsKeys                 0.0     core
@@ -83,7 +83,7 @@ Get-SearchIndexersStatus          0.0     core
 Get-SearchIndexerStatus           0.0     core
 Get-SearchServiceDetails          0.0     core
 Get-SearchServiceKeys             0.0     core
-Get-TechStorageAccountParameters  0.0     core
+Get-TechStorageAccountAccessKeys  0.0     core
 Import-Config                     0.0     core
 Import-DockerConfig               0.0     core
 Import-Functions                  0.0     core

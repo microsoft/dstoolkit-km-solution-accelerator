@@ -45,7 +45,8 @@ Publish-Functions;
 Add-KeyVaultFunctionsPolicies;
 
 Get-FunctionsKeys;
-Sync-Parameters;
+
+Sync-Config
 
 Publish-FunctionsSettings;
 

@@ -126,8 +126,8 @@ function Get-Config() {
 
     $global:params = Import-Params -Reload:$Reload
     
-    Sync-Config
-    Sync-Parameters
+    # Sync-Config
+    # Sync-Parameters
 
     # Need to reload as configuration could have some parameterized arguments. 
     if ( $Reload ) {
@@ -170,17 +170,17 @@ function Import-Config() {
 
     Import-EnvironmentConfig
 
-    Import-Functions
-    Import-DockerConfig
-    Import-WebAppsConfig
-    Import-StorageConfig
-    Import-CognitiveServicesConfig
-    Import-ContainerRegistryConfig
-    Import-keyvaultConfig
-    Import-searchserviceConfig
+    # Import-Functions
+    # Import-DockerConfig
+    # Import-WebAppsConfig
+    # Import-StorageConfig
+    # Import-CognitiveServicesConfig
+    # Import-ContainerRegistryConfig
+    # Import-keyvaultConfig
+    # Import-searchserviceConfig
 
-    Import-bingConfig
-    Import-mapsConfig
+    # Import-bingConfig
+    # Import-mapsConfig
 
     return $global:config
 }
@@ -210,7 +210,7 @@ function Import-Params() {
         }
     }
     
-    Add-ServicesParameters
+    # Add-ServicesParameters
 
     if ($PSVersionTable.Platform -eq "Win32NT") {
         Write-Debug "Decrypt secured strings..."
@@ -321,7 +321,8 @@ function Get-ParamValue() {
 
     return $value
 }
-function Save-Parameters() {
+
+function Save-Parameters {
     
     # Create a blank object 
     $securedparams = New-Object -TypeName PSObject
@@ -350,11 +351,14 @@ function Save-Parameters() {
     $securedparams | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath (Join-Path $global:envpath "parameters.json") -Force
 }
     
-function Save-Config() {
+function Save-Config {
     $global:config | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath (Join-Path $global:envpath "config.json") -Force -Encoding utf8
 }
-    
-function Sync-Config() {
+
+function Sync-Config {
+
+    Write-Debug -Message "Configuration synch starting... "
+
     $parameters = Get-Member -InputObject $global:config -MemberType NoteProperty
     
     $folders = @("config", "monitoring", "tests")
@@ -382,10 +386,12 @@ function Sync-Config() {
         $jsontemp | Out-File -FilePath $file.FullName -Force
     }
     
-    Write-Debug -Message "Configuration synched "
+    Sync-Parameters
+
+    Write-Debug -Message "Configuration synch completed."
 }
 
-function Sync-Parameters() {
+function Sync-Parameters {
 
     Save-Parameters
     
@@ -408,9 +414,26 @@ function Sync-Parameters() {
         }
         Write-Debug -Message "Parameters synched"
     }
+
+    Add-ServicesParameters
+
+    # Once we have the latest configurations set, we can load them into variables.
+    Import-Functions
+    Import-DockerConfig
+    Import-WebAppsConfig
+    Import-StorageConfig
+    Import-CognitiveServicesConfig
+    Import-ContainerRegistryConfig
+    Import-keyvaultConfig
+    Import-searchserviceConfig
+
+    Import-bingConfig
+    Import-mapsConfig
+
+
 }
-    
-function Sync-Modules() {
+
+function Sync-Modules {
     $folders = @("modules", "scripts")
 
     foreach ($folder in $folders) {
@@ -422,8 +445,8 @@ function Sync-Modules() {
         Write-Debug -Message $folder
     }
 }
-    
-function Get-DeploymentOverlayPath() {
+
+function Get-DeploymentOverlayPath {
     param (
         [string] $relpath
     )
@@ -467,7 +490,7 @@ function Initialize-Config() {
         Copy-Item -Path $overridepath -Destination $configpath"\" -Recurse -Force
     }
     
-    Sync-Config
+    # Sync-Config
         
     $releasePath = join-path $WorkDir "releases"
     if ( Test-Path $releasePath ) {
@@ -563,14 +586,14 @@ function Get-AllServicesKeys() {
         [switch] $AddToKeyVault
     )
     Get-AppInsightsInstrumentationKey
-    Get-TechStorageAccountParameters
-    Get-DataStorageAccountParameters
+    Get-TechStorageAccountAccessKeys
+    Get-DataStorageAccountAccessKeys
     Get-CognitiveServiceKey
     Get-AzureMapsSubscriptionKey
     Get-FunctionsKeys
     Get-SearchServiceKeys
     
-    Sync-Parameters
+    Sync-Config
 
     if ($AddToKeyVault) {
         Add-KeyVaultSecrets
@@ -612,7 +635,7 @@ function Get-AppInsightsInstrumentationKey {
     Save-Parameters
 }
     
-function Get-TechStorageAccountParameters {
+function Get-TechStorageAccountAccessKeys {
     
     $techStorageAccountKey = az storage account keys list --account-name $params.techStorageAccountName -g $config.resourceGroupName --query [0].value  --out tsv
     Add-Param "techStorageAccountKey" $techStorageAccountKey
@@ -623,13 +646,13 @@ function Get-TechStorageAccountParameters {
     Save-Parameters
 }
 
-function Get-DataStorageAccountParameters {
+function Get-DataStorageAccountAccessKeys {
     
-    $global:storageAccountKey = az storage account keys list --account-name $params.dataStorageAccountName -g $config.resourceGroupName --query [0].value --out tsv
-    Add-Param "storageAccountKey" $global:storageAccountKey
+    $storageAccountKey = az storage account keys list --account-name $params.dataStorageAccountName -g $config.resourceGroupName --query [0].value --out tsv
+    Add-Param "storageAccountKey" $storageAccountKey
     
-    $global:storageConnectionString = 'DefaultEndpointsProtocol=https;AccountName=' + $params.dataStorageAccountName + ';AccountKey=' + $global:storageAccountKey + ';EndpointSuffix=core.windows.net'
-    Add-Param "storageConnectionString" $global:storageConnectionString
+    $storageConnectionString = 'DefaultEndpointsProtocol=https;AccountName=' + $params.dataStorageAccountName + ';AccountKey=' + $storageAccountKey + ';EndpointSuffix=core.windows.net'
+    Add-Param "storageConnectionString" $storageConnectionString
     
     Save-Parameters
 }
@@ -1261,8 +1284,6 @@ function Get-AzureFunctionFiles() {
     )
     
     $excludeFiles = @('local.settings.json', '.gitignore', '*.code-workspace')
-    # $excludeFolders = @('.venv', '.vscode', '__pycache__', 'tests', 'entities')
-    # $excludeFoldersRegex = $excludeFolders -join '|'
         
     return Get-ChildItem -Path $srcPath -Exclude $excludeFiles | Where-Object { ! $_.PSIsContainer }
 }
@@ -1313,6 +1334,7 @@ function New-Functions {
         }
     
         foreach ($functionApp in $plan.Services) {
+            # Linux-based function
             if ($plan.IsLinux) {
                 $imageName = $params.acr + "/" + $functionApp.Image
     
@@ -1367,6 +1389,7 @@ function New-Functions {
                     --settings AzureWebJobsStorage=$storekey
             }
             else {
+                # Windows-based function
                 if (!(Test-FunctionExistence $functionApp.Name)) {
                     if ($consumption) {
                         # Create a Function App service
@@ -1390,6 +1413,9 @@ function New-Functions {
                     }
                 }
     
+                # For Windows function apps only, also enable .NET 6.0 that is needed by the runtime
+                az functionapp config set --net-framework-version $functionApp.DotnetVersion --resource-group $plan.ResourceGroup --name $functionApp.Name
+
                 # Use 64 bits worker process
                 az functionapp config set -g $plan.ResourceGroup -n $functionApp.Name --use-32bit-worker-process false
             }
@@ -1399,12 +1425,10 @@ function New-Functions {
     
             # FTP State to FTPS Only
             az functionapp config set -g $plan.ResourceGroup -n $functionApp.Name --ftps-state FtpsOnly
-
-            # HTTPS Only flag => now integrated in the create command
-            # az functionapp update  -g $plan.ResourceGroup -n $functionApp.Name --set httpsOnly=true        
         }
     }
 }
+
 function Build-Functions () {
     param (
         [switch] $Publish,
@@ -1467,8 +1491,8 @@ function Build-Functions () {
     # add build version evertytime we build the webapp
     Add-Param "FunctionsBuildVersion" $now
         
-    Sync-Parameters
-    
+    Sync-Config
+
     if ($Publish) {
         Publish-Functions -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly
     }
@@ -1511,22 +1535,22 @@ function Publish-Functions() {
     }
     Pop-Location
 }
+
+# function Upgrade-Functions() {   
+#     Push-Location $global:envpath
     
-function Upgrade-Functions() {   
-    Push-Location $global:envpath
+#     foreach ($plan in $functionscfg.AppPlans) {
+#         foreach ($functionApp in $plan.Services) {
+#             az functionapp config appsettings set --settings FUNCTIONS_EXTENSION_VERSION=~4 --resource-group $plan.ResourceGroup --name $functionApp.Name
     
-    foreach ($plan in $functionscfg.AppPlans) {
-        foreach ($functionApp in $plan.Services) {
-            az functionapp config appsettings set --settings FUNCTIONS_EXTENSION_VERSION=~4 --resource-group $plan.ResourceGroup --name $functionApp.Name
-    
-            if (! $plan.IsLinux) {
-                # For Windows function apps only, also enable .NET 6.0 that is needed by the runtime
-                az functionapp config set --net-framework-version v6.0 --resource-group $plan.ResourceGroup --name $functionApp.Name
-            }
-        }
-    }
-    Pop-Location
-}
+#             if (! $plan.IsLinux) {
+#                 # For Windows function apps only, also enable .NET 6.0 that is needed by the runtime
+#                 az functionapp config set --net-framework-version v6.0 --resource-group $plan.ResourceGroup --name $functionApp.Name
+#             }
+#         }
+#     }
+#     Pop-Location
+# }
     
 function Restart-Functions() {   
     Push-Location $global:envpath
@@ -1540,9 +1564,9 @@ function Restart-Functions() {
 }
     
 function Publish-FunctionsSettings() {
+
     # Make sure we have the latest configuration & parameters in
     Sync-Config
-    Sync-Parameters
     
     Push-Location $global:envpath
     foreach ($plan in $functionscfg.AppPlans) {                    
@@ -1604,7 +1628,7 @@ function Get-FunctionsKeys() {
         }
     }
     
-    Sync-Parameters
+    Sync-Config
 }
     
 function Test-Functions() {
@@ -1843,7 +1867,7 @@ function Build-WebApps {
     # add build version evertytime we build the webapp
     Add-Param "WebAppBuildVersion" $now
     
-    Sync-Parameters
+    Sync-Config
     
     if ( $Publish ) { Publish-WebApps -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly } 
 }
@@ -1942,7 +1966,6 @@ function Publish-WebAppsSettings {
     
     # Make sure we have the latest configuration & parameters in
     Sync-Config
-    Sync-Parameters
     
     Push-Location $global:envpath
     foreach ($plan in $webappscfg.AppPlans) {
@@ -2065,7 +2088,7 @@ function Build-DockerImages {
     }
         
     # Save and Apply the Parameters we got
-    Sync-Parameters        
+    Sync-Config
 }
     
 #endregion
@@ -2074,18 +2097,31 @@ function Build-DockerImages {
 function Initialize-KeyVault {
     Add-KeyVaultSecrets
 }
+
 function Add-KeyVaultSecrets {
+    param (
+        [switch] $AddNew
+    )
     
     $secretExpiryDate = ((get-date).ToUniversalTime().AddYears(2)).ToString("yyyy-MM-ddTHH:mm:ssZ")
     
     $params.PSObject.Properties | ForEach-Object {
         if ( $_.Name.endswith("Key") -or $_.Name.endswith("ConnectionString") ) {
-            az keyvault secret set --name $_.Name --value $_.Value --vault-name $params.keyvault
-            az keyvault secret set-attributes --vault-name $params.keyvault --name $_.Name --expires $secretExpiryDate
-            Write-Host ("Added Secret to the Keyvault " + $_.Name) -ForegroundColor Green    
+            if ($_.Value) {
+                $exists = az keyvault secret show --name $_.Name --vault-name $params.keyvault --query name --out tsv
+                if ($exists -and $AddNew) {
+                    Write-Host "Skipping existing secret "$_.Name -ForegroundColor DarkYellow
+                }
+                else {
+                    az keyvault secret set --name $_.Name --value $_.Value --vault-name $params.keyvault
+                    az keyvault secret set-attributes --vault-name $params.keyvault --name $_.Name --expires $secretExpiryDate
+                    Write-Host ("Added Secret to the Keyvault " + $_.Name) -ForegroundColor Green
+                }
+            }
         }
     }
 }
+
 function Add-KeyVaultFunctionsPolicies {
     
     # Shared Policies for Functions
@@ -2097,6 +2133,7 @@ function Add-KeyVaultFunctionsPolicies {
         }
     }
 }
+
 function Add-KeyVaultWebAppsPolicies {
     foreach ($plan in $webappscfg.AppPlans) {
         foreach ($webApp in $plan.Services) {
@@ -2114,6 +2151,7 @@ function Add-KeyVaultWebAppsPolicies {
 #endregion
     
 #region Solution methods
+
 function Build-Solution {
     param (
         [switch] $Publish
@@ -2126,6 +2164,7 @@ function Build-Solution {
         Publish-Solution
     }
 }
+
 function Publish-Solution {
     param (
         [switch] $Production,
@@ -2137,7 +2176,6 @@ function Publish-Solution {
     }
     
     Sync-Config
-    Sync-Parameters
     
     Publish-Functions
     Publish-WebApps
@@ -2146,6 +2184,7 @@ function Publish-Solution {
     Publish-FunctionsSettings
     Publish-WebAppsSettings
 }
+
 function Optimize-Solution () {
     
     # Scale down the entire solution
@@ -2188,13 +2227,13 @@ function Optimize-Solution () {
     
     Pop-Location
 }
+
 function Publish-Environment {
     param (
         [switch] $CloudShell
     )
     
     Sync-Config
-    Sync-Parameters
     
     $dirName = [System.IO.Path]::GetFileName($global:envpath)
     
@@ -2211,6 +2250,7 @@ function Publish-Environment {
     }
     Pop-Location
 }
+
 function Get-Environment {
     param (
         [string] $Name
@@ -2220,6 +2260,7 @@ function Get-Environment {
     
     az storage file download --account-name $params.techStorageAccountName --account-key $params.techStorageAccountKey --share-name "cloudshell" --path $reldestpath --dest ".."
 }
+
 function Test-Solution {
     Test-Functions
 }
