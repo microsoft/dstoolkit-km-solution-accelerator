@@ -845,15 +845,23 @@
             "batchSize": 1,
             "inputs": [
                 {
-                    "name": "formUrl",
-                    "source": "/document/metadata_storage_path"
+                    "name": "file_data",
+                    "source": "/document/file_data"
                 },
                 {
-                    "name": "formSasToken",
-                    "source": "/document/metadata_storage_sas_token"
+                    "name": "document_url",
+                    "source": "/document/document_url"
                 }
             ],
             "outputs": [
+                {
+                    "name": "content",
+                    "targetName": "form_content"
+                },
+                {
+                    "name": "content_length",
+                    "targetName": "form_content_length"
+                },
                 {
                     "name": "tables",
                     "targetName": "tables"

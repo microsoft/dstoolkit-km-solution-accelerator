@@ -1,0 +1,17 @@
+### 1
+POST http://localhost:7071/vision/analyzedocument
+content-type: application/json;charset=utf-8
+
+< AnalyzeDocument.local.1.json
+
+### 2
+POST http://localhost:7071/vision/analyzedocument
+content-type: application/json;charset=utf-8
+
+< AnalyzeDocument.local.2.json
+
+### 3
+POST http://localhost:7071/vision/analyzedocument
+content-type: application/json;charset=utf-8
+
+< AnalyzeDocument.local.3.json
