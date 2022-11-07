@@ -349,7 +349,8 @@ Microsoft.Search = {
     RenderCoverImage: function (docresult, name, iconPath) {
         var documentHtml = '';
         if (this.SupportCoverImage(docresult)) {
-            documentHtml += '<img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+            // documentHtml += '<img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+            documentHtml += '<img alt="' + name + '" class="image-result cover-image" src="' + iconPath + '" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
         }
         else {
             documentHtml += '<img alt="' + name + '" class="image-result cover-image" src="' + iconPath + '" title="' + docresult.title + '"/>';
@@ -725,12 +726,6 @@ Microsoft.Search.Results = {
             }
             else {
                 documentHtml += Microsoft.Search.RenderCoverImage(docresult,name,iconPath);
-                // if (hasCoverImage) {
-                //     documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
-                // }
-                // else {
-                //     documentHtml += '   <img alt="' + name + '" class="image-result cover-image" src="' + iconPath + '" title="' + docresult.title + '"/>';
-                // }
             }
             documentHtml += '</a>';
             documentHtml += '</div>';

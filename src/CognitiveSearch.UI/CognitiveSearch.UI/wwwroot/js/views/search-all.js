@@ -322,9 +322,6 @@ Microsoft.All = {
                     resultsHtml += Microsoft.Utils.GetModificationLine(docresult);
 
                     resultsHtml += Microsoft.Search.RenderCoverImage(docresult,name,iconPath);
-                    // if (Microsoft.Search.SupportCoverImage(docresult)) {
-                    //     resultsHtml += '<img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
-                    // }
 
                     resultsHtml += '            <div class="results-body mt-2" >' + highlights + '</div>';
 

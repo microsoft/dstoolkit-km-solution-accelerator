@@ -239,7 +239,7 @@ Microsoft.Home = {
                         resultsHtml += '<a target="_blank" href=\'' + Microsoft.Search.GetSASTokenFromPath(path) + '\'>';
                     }
     
-                    resultsHtml += '<img class="document-carousel-item-image cover-image" title="' + displayName +'" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                    resultsHtml += '<img class="document-carousel-item-image cover-image" title="' + displayName +'" src="' + iconPath + '" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                     resultsHtml += '<div class="document-carousel-item-title">';
     
                     resultsHtml += '<h5 class="modification-time" title=\'' + path + '\'>' + displayName + '</h5>';

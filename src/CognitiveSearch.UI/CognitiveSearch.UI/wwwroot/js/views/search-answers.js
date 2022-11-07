@@ -48,14 +48,14 @@ Microsoft.Answers = {
 
                     if (item.highlights) {
                         answersHtml += ' <a title="'+item.text+'" href="javascript:void(0)" onclick="Microsoft.Results.Details.ShowDocument(\'' + index_key + '\',0);" class="list-group-item list-group-item-action d-flex" style="color:inherit !important">' ;
-                        answersHtml += '   <img title="' + item.text +'" class="image-result img-thumbnail cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimagebyindexkey?index_key=' + index_key + '" " onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                        answersHtml += '   <img title="' + item.text +'" class="image-result img-thumbnail cover-image" src="' + iconPath + '" data-src="/api/document/getcoverimagebyindexkey?index_key=' + index_key + '" " onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                         answersHtml += ' <span class="ms-1">' + item.highlights + '</span>';
                         answersHtml += ' </a>';
                     }
                     else {
                         if (item.text) {
                             answersHtml += ' <a title="'+item.text+'" href="javascript:void(0)" onclick="Microsoft.Results.Details.ShowDocument(\'' + index_key + '\',0);" class="list-group-item list-group-item-action d-flex" style="color:inherit !important">' ;
-                            answersHtml += '   <img title="' + item.text +'" class="image-result img-thumbnail cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimagebyindexkey?index_key=' + index_key + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                            answersHtml += '   <img title="' + item.text +'" class="image-result img-thumbnail cover-image" src="' + iconPath + '" data-src="/api/document/getcoverimagebyindexkey?index_key=' + index_key + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                             answersHtml += ' <span class="ms-1">' + item.text + '</span>';
                             answersHtml += ' </a>';
                         }
