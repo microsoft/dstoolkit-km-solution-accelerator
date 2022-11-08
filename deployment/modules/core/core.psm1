@@ -170,18 +170,6 @@ function Import-Config() {
 
     Import-EnvironmentConfig
 
-    # Import-Functions
-    # Import-DockerConfig
-    # Import-WebAppsConfig
-    # Import-StorageConfig
-    # Import-CognitiveServicesConfig
-    # Import-ContainerRegistryConfig
-    # Import-keyvaultConfig
-    # Import-searchserviceConfig
-
-    # Import-bingConfig
-    # Import-mapsConfig
-
     return $global:config
 }
 
@@ -210,8 +198,6 @@ function Import-Params() {
         }
     }
     
-    # Add-ServicesParameters
-
     if ($PSVersionTable.Platform -eq "Win32NT") {
         Write-Debug "Decrypt secured strings..."
         $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
@@ -281,20 +267,6 @@ function Add-ServicesParameters {
     else {
         Add-ExtendedParameters "services.json"
     }
-  
-    # Container
-    $dataStorageContainerName = $params.storageContainers[0];
-    Add-Param "dataStorageContainerName" $dataStorageContainerName
-    
-    # Create the containers entries for UI SAS access
-    $StorageContainerAddresses = @()
-    foreach ($container in $params.storageContainers) {
-        $url = "https://" + $global:params.dataStorageAccountName + ".blob.core.windows.net/" + $container
-        $StorageContainerAddresses += $url
-    }
-    Add-Param "StorageContainerAddressesAsString" $([String]::Join(',', $StorageContainerAddresses))
-    
-    Initialize-SearchConfig
 }
 
 function Add-Param($name, $value) {
@@ -421,15 +393,29 @@ function Sync-Parameters {
     Import-Functions
     Import-DockerConfig
     Import-WebAppsConfig
+
     Import-StorageConfig
+    # Container
+    $dataStorageContainerName = $params.storageContainers[0];
+    Add-Param "dataStorageContainerName" $dataStorageContainerName
+    
+    # Create the containers entries for UI SAS access
+    $StorageContainerAddresses = @()
+    foreach ($container in $params.storageContainers) {
+        $url = "https://" + $global:params.dataStorageAccountName + ".blob.core.windows.net/" + $container
+        $StorageContainerAddresses += $url
+    }
+    Add-Param "StorageContainerAddressesAsString" $([String]::Join(',', $StorageContainerAddresses))
+
     Import-CognitiveServicesConfig
     Import-ContainerRegistryConfig
     Import-keyvaultConfig
-    Import-searchserviceConfig
+
+    Import-searchserviceConfig    
+    Initialize-SearchConfig
 
     Import-bingConfig
     Import-mapsConfig
-
 
 }
 
