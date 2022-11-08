@@ -4,6 +4,7 @@
 using Knowledge.Configuration;
 using Knowledge.Models;
 using Knowledge.Models.Ingress;
+using Knowledge.Services.AzureSearch.REST;
 using Knowledge.Services.Helpers;
 using Knowledge.Services.QnA;
 using Knowledge.Services.SemanticSearch;
@@ -284,6 +285,15 @@ namespace Knowledge.Services
             QueryHelper.EnsureDefaultValues(request);
 
             SearchResponse result = await this.searchService.GetDocumentSiblings(request);
+
+            return result;
+        }
+
+        public async Task<SearchResponse> GetSimilarDocuments(IngressSearchRequest request)
+        {
+            QueryHelper.EnsureDefaultValues(request);
+
+            SearchResponse result = await this.searchService.GetSimilarDocuments(request);
 
             return result;
         }

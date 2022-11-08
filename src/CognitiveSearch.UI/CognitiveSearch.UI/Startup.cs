@@ -32,6 +32,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System.IO;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
+using Knowledge.Services.AzureSearch;
 
 namespace CognitiveSearch.UI
 {
@@ -201,9 +202,11 @@ namespace CognitiveSearch.UI
             services.AddSingleton<IMetadataService, MetadataService>();
             services.AddSingleton<ISemanticSearchService, SemanticSearch>();
             services.AddSingleton<IWebSearchService, WebSearchService>();
-            services.AddSingleton<IFacetGraphService, FacetGraphService>();
-            services.AddSingleton<IAzureSearchService, AzureSearchSDKService>();
+            services.AddSingleton<IAzureSearchService, AzureSearchService>();
+
             services.AddSingleton<IAzureSearchSDKService, AzureSearchSDKService>();
+            services.AddSingleton<IFacetGraphService, FacetGraphService>();
+
             services.AddSingleton<IQueryService, QueryService>();
 
         }

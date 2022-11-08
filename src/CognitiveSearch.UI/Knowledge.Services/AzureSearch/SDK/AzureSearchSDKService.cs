@@ -27,8 +27,8 @@ namespace Knowledge.Services.AzureSearch.SDK
     {
         private string SearchId;
 
-        private SemanticSearchConfig semanticConfig;
-        private ISemanticSearchService semanticSearch;
+        protected SemanticSearchConfig semanticConfig;
+        protected ISemanticSearchService semanticSearch;
 
         public AzureSearchSDKService(TelemetryClient telemetry,
             SearchServiceConfig configuration,
@@ -310,7 +310,7 @@ namespace Knowledge.Services.AzureSearch.SDK
             }
 
             var facetResults = new Dictionary<string, IList<FacetValue>>();
-            var tagsResults = new Dictionary<string, IList<FacetValue>>();
+            //var tagsResults = new Dictionary<string, IList<FacetValue>>();
 
             if (response != null)
             {
@@ -346,35 +346,35 @@ namespace Knowledge.Services.AzureSearch.SDK
                         }
                     }
 
-                    // Populate selected tags from the Search Model
-                    foreach (var tagResult in response.Facets.Where(t => this.GetModel(indexName).Tags.Where(x => x.Name == t.Key).Any()))
-                    {
-                        List<FacetValue> values = new List<FacetValue>();
+                    //// Populate selected tags from the Search Model
+                    //foreach (var tagResult in response.Facets.Where(t => this.GetModel(indexName).Tags.Where(x => x.Name == t.Key).Any()))
+                    //{
+                    //    List<FacetValue> values = new List<FacetValue>();
 
-                        foreach (FacetResult fr in tagResult.Value)
-                        {
-                            FacetValue fv = new FacetValue
-                            {
-                                count = (long)fr.Count
-                            };
+                    //    foreach (FacetResult fr in tagResult.Value)
+                    //    {
+                    //        FacetValue fv = new FacetValue
+                    //        {
+                    //            count = (long)fr.Count
+                    //        };
 
-                            if (fr.Value.GetType() == typeof(String))
-                            {
-                                fv.value = (string)fr.Value;
-                            }
-                            if (fr.Value.GetType() == typeof(DateTime))
-                            {
-                                fv.value = ((DateTime)fr.Value).ToString();
-                            }
+                    //        if (fr.Value.GetType() == typeof(String))
+                    //        {
+                    //            fv.value = (string)fr.Value;
+                    //        }
+                    //        if (fr.Value.GetType() == typeof(DateTime))
+                    //        {
+                    //            fv.value = ((DateTime)fr.Value).ToString();
+                    //        }
 
-                            values.Add(fv);
-                        }
+                    //        values.Add(fv);
+                    //    }
 
-                        if (values.Count() > 0)
-                        {
-                            tagsResults.Add(tagResult.Key, values);
-                        }
-                    }
+                    //    if (values.Count() > 0)
+                    //    {
+                    //        tagsResults.Add(tagResult.Key, values);
+                    //    }
+                    //}
                 }
             }
 
@@ -383,7 +383,7 @@ namespace Knowledge.Services.AzureSearch.SDK
                 IndexName = indexName,
                 Results = ConvertSearchDocuments(response),
                 Facets = facetResults,
-                Tags = tagsResults,
+                //Tags = tagsResults,
                 Count = (response == null ? 0 : Convert.ToInt32(response.TotalCount)),
                 SearchId = searchId,
                 IdField = this.serviceConfig.KeyField,
@@ -832,6 +832,11 @@ namespace Knowledge.Services.AzureSearch.SDK
         }
 
         public Task<SearchResponse> GetLatestNewsAsync(IngressSearchRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<SearchResponse> GetSimilarDocuments(IngressSearchRequest request)
         {
             throw new NotImplementedException();
         }
