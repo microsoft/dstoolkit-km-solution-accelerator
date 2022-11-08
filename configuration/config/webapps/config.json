@@ -2,6 +2,7 @@
     "GroupId": "WebApps",
     "Apptype": "WebApp",
     "PrivateDNSZone": "privatelink.azurewebsites.net",
+    "Parameters" : [],
     "AppPlans": [
         {
             "Name": "{{config.name}}uiplan",

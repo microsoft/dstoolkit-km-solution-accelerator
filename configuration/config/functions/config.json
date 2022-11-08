@@ -2,6 +2,7 @@
     "GroupId": "Functions",
     "Apptype": "FunctionApp",
     "PrivateDNSZone":"privatelink.azurewebsites.net",
+    "Parameters" : [],
     "AppPlans": [
          {
             "Id": "skillsplan",
