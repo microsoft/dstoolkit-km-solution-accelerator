@@ -12,13 +12,11 @@ namespace Knowledge.Models
 
         private List<string> graphfacets = new List<string>();
         private List<string> facets = new List<string>();
-        private List<string> tags = new List<string>();
 
         private List<string> resultFields = new List<string>();
 
         public List<SearchField> GraphFacets { get; set; }
         public List<SearchField> Facets { get; set; }
-        public List<SearchField> Tags { get; set; }
 
         public string[] AllRetrievableFields { get; set; }
         public string[] ReducedRetrievableFields { get; set; }
@@ -37,7 +35,6 @@ namespace Knowledge.Models
 
             GraphFacets = new List<SearchField>();
             Facets = new List<SearchField>();
-            Tags = new List<SearchField>();
 
             List<string> validatedResultFields = new List<string>();
 
@@ -105,26 +102,6 @@ namespace Knowledge.Models
                     {
                         GraphFacets.Add(field.Value);
                     }
-                }
-            }
-
-            // Tags
-            if (configuration.GetTags() != null) tags = configuration.GetTags();
-            if (tags.Count() > 0)
-            {
-                foreach (var field in tags)
-                {
-                    if (schema.Fields.ContainsKey(field) && schema.Fields[field].IsFacetable)
-                    {
-                        Tags.Add(schema.Fields[field]);
-                    }
-                }
-            }
-            else
-            {
-                foreach (var field in schema.Fields.Where(f => f.Value.IsFacetable))
-                {
-                    Tags.Add(field.Value);
                 }
             }
 

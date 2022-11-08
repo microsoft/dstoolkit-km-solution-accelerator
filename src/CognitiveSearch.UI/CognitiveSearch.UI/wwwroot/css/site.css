@@ -526,7 +526,7 @@ pre {
     background-color: lightgray;
     border: 1px solid transparent;
     border-radius: 0px 10px;
-    /*color: #fff;*/
+    cursor: pointer;
     display: inline-block;
     font-size: 13px;
     line-height: 1;
@@ -540,11 +540,6 @@ pre {
     transition: all .15s ease-in-out;
     white-space: pre-wrap;
 }
-
-/*#tags-card {
-    margin-top: 60px;
-}
-*/
 
 #tag-viewer {
     overflow-y: scroll;

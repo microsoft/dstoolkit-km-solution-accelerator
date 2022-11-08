@@ -190,11 +190,6 @@
     "slotSetting": false
   },
   {
-    "name": "SearchServiceConfig:TagsAsString",
-    "value": "organizations,countries,document_segments,email/message_from,email/message_to",
-    "slotSetting": false
-  },
-  {
     "name": "SearchServiceConfig:ImagesFilter",
     "value": "image/jpeg,image/png,image/bmp,image/gif,image/tiff,image/tiff-fx",
     "slotSetting": false

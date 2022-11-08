@@ -57,7 +57,6 @@ Microsoft.Search = {
 
         Microsoft.Search.results = data.results;
         Microsoft.Facets.facets = data.facets;
-        Microsoft.Tags.tags = data.tags;
         Microsoft.Search.tokens = data.tokens;
         Microsoft.View.searchId = data.searchId;
 
@@ -142,6 +141,9 @@ Microsoft.Search = {
         if (Microsoft.Facets.selectedFacets && Microsoft.Facets.selectedFacets.length > 0) {
             Microsoft.Facets.UpdateFilterReset();
         }
+
+        // Tags
+        Microsoft.Tags.tags = Microsoft.View.tags;
 
         window.document.title = vertical.pageTitle;
 

@@ -24,8 +24,6 @@ namespace Knowledge.Models
 
         public IDictionary<string, IList<FacetValue>> Facets { get; set; }
 
-        public IDictionary<string, IList<FacetValue>> Tags { get; set; }
-
         public string SearchId { get; set; }
 
         public string IdField { get; set; }

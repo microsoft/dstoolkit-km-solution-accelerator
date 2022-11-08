@@ -105,7 +105,7 @@
             "fonticon": "bi bi-envelope",
             "method": "Microsoft.All.UpdateResultsAsList",
             "filter": "(content_group eq 'Email')",
-            "classList" : "btn-outline-primary"
+            "classList": "btn-outline-primary"
           },
           {
             "name": "attachments",
@@ -113,9 +113,10 @@
             "fonticon": "bi bi-paperclip",
             "method": "Microsoft.All.UpdateResultsAsList",
             "filter": "(document_embedded eq true and parent/content_group eq 'Email')",
-            "classList" : "btn-outline-primary"
+            "classList": "btn-outline-primary"
           }
-        ]
+        ],
+        "Tags": "organizations,countries,key_phrases,celebrities,landmarks,email/message_from,email/message_to"
       },
       {
         "id": "web",
@@ -174,7 +175,8 @@
             "method": "Microsoft.Images.UpdateImagesResults",
             "filter": "(document_embedded eq false)"
           }
-        ]
+        ],
+        "Tags": "organizations,countries,key_phrases,celebrities,landmarks"
       },
       {
         "id": "map",
