@@ -36,11 +36,11 @@ spec:
           value: "https://{{param.cogSvcLanguage}}.cognitiveservices.azure.com"
         - name: TEXT_ANALYTICS_KEY
           value: "{{param.cogSvcLanguageKey}}"
-        - name: TRANSLATOR_ENDPOINT
+        - name: TEXT_TRANSLATION_ENDPOINT
           value: "https://{{param.cogSvcTranslate}}.cognitiveservices.azure.com/translator/text/v3.0"
-        - name: TRANSLATOR_KEY
+        - name: TEXT_TRANSLATION_KEY
           value: "{{param.cogSvcTranslateKey}}"
-        - name: TRANSLATOR_LOCATION
+        - name: TEXT_TRANSLATION_LOCATION
           value: "{{config.location}}"
         - name: MODEL_SIZE
           value: "lg"

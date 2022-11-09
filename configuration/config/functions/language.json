@@ -30,22 +30,37 @@
         "slotSetting": false
     },
     {
-        "name": "TRANSLATOR_ENDPOINT",
-        "value": "https://api.cognitive.microsofttranslator.com",
+        "name": "DOCUMENT_TRANSLATION_ENDPOINT",
+        "value": "https://{{param.cogSvcTranslate}}.cognitiveservices.azure.com",
         "slotSetting": false
     },
     {
-        "name": "TRANSLATOR_KEY",
+        "name": "DOCUMENT_TRANSLATION_KEY",
         "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcTranslateKey)",
         "slotSetting": false
     },
     {
-        "name": "TRANSLATOR_LOCATION",
+        "name": "DOCUMENT_TRANSLATION_LANGUAGE",
+        "value": "{{param.searchDefaultToLanguageCode}}",
+        "slotSetting": false
+    },
+    {
+        "name": "TEXT_TRANSLATION_ENDPOINT",
+        "value": "https://api.cognitive.microsofttranslator.com",
+        "slotSetting": false
+    },
+    {
+        "name": "TEXT_TRANSLATION_KEY",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcTranslateKey)",
+        "slotSetting": false
+    },
+    {
+        "name": "TEXT_TRANSLATION_LOCATION",
         "value": "{{config.location}}",
         "slotSetting": false
     },
     {
-        "name": "TRANSLATOR_VERSION",
+        "name": "TEXT_TRANSLATION_VERSION",
         "value": "3.0",
         "slotSetting": false
     },

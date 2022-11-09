@@ -7,7 +7,8 @@
         "storageContainers": [
             "documents",
             "images",
-            "metadata"
+            "metadata",
+            "translation"
         ],
         "storageFileShares": [
             "neo4jdata",

@@ -9,10 +9,10 @@ import json
 import requests, uuid
 import os
 
-endpoint = os.environ["TRANSLATOR_ENDPOINT"]
-subscription_key = os.environ["TRANSLATOR_KEY"]
-location = os.environ["TRANSLATOR_LOCATION"]
-version = os.environ["TRANSLATOR_VERSION"]
+endpoint = os.environ["TEXT_TRANSLATION_ENDPOINT"]
+subscription_key = os.environ["TEXT_TRANSLATION_KEY"]
+location = os.environ["TEXT_TRANSLATION_LOCATION"]
+version = os.environ["TEXT_TRANSLATION_VERSION"]
 
 #https://docs.microsoft.com/en-us/azure/cognitive-services/translator/request-limits
 MAX_CHARS_PER_DOC=int(os.environ["TRANSLATOR_MAX_CHARS_PER_DOC"])
