@@ -142,12 +142,22 @@ function New-StorageAccount {
                         --account-key $params.storageAccountKey `
                         --resource-group $config.resourceGroupName
                 }
-    
+                    
                 # Soft blob deletion policy (7 days)
                 az storage account blob-service-properties update --account-name $params.dataStorageAccountName `
                     --resource-group $config.resourceGroupName `
                     --enable-delete-retention true `
                     --delete-retention-days 7
+
+                # storageFileShares
+                foreach ($container in $params.storageFileShares) {
+                    az storage share-rm create `
+                    --resource-group $config.resourceGroupName `
+                    --storage-account $params.dataStorageAccountName `
+                    --name $container `
+                    --quota 1024 `
+                    --enabled-protocols SMB
+                }
             }
         }
 
