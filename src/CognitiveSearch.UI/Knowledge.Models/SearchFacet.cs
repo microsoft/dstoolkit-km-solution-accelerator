@@ -10,11 +10,14 @@ namespace Knowledge.Models
         public string? Key { get; set; }
         public FacetValue[] Values { get; set; }
         public string? Type { get; set; }
+        public string? Operator { get; set; }
         public string? Target{ get; set; }
 
         public SearchFacet()
         {
             Values = Array.Empty<FacetValue>();
+            // Default Operator for multi-valued facet
+            Operator = "any";
         }
 
         public string GetTarget()
@@ -26,6 +29,18 @@ namespace Knowledge.Models
             else
             {
                 return Target;
+            }
+        }
+
+        public string GetOperator()
+        {
+            if (String.IsNullOrEmpty(Operator))
+            {
+                return "any";
+            }
+            else
+            {
+                return Operator;
             }
         }
     }

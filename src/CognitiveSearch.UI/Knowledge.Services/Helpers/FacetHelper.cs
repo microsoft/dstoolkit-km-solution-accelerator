@@ -47,7 +47,7 @@ namespace Knowledge.Services.Helpers
                                 facetFilterStr = string.Join(FACET_VALUE_SEPARATOR, IterateFacetValues(item));
                                 facetFilterStr = QueryHelper.ODataFilterSingleQuoteConstraint(facetFilterStr);
 
-                                newfilter = $"{item.Target}/any(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
+                                newfilter = $"{item.Target}/{item.GetOperator()}(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
                             }
                         }
 
@@ -87,9 +87,9 @@ namespace Knowledge.Services.Helpers
                             if (facet.Type == typeof(string[]))
                             {
                                 if (string.IsNullOrEmpty(filter))
-                                    filter = $"{item.Key}/any(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
+                                    filter = $"{item.Key}/{item.GetOperator()}(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
                                 else
-                                    filter += $" and {item.Key}/any(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
+                                    filter += $" and {item.Key}/{item.GetOperator()}(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
                             }
                             // Construct string facet query
                             else if (facet.Type == typeof(string))
@@ -138,7 +138,7 @@ namespace Knowledge.Services.Helpers
                     else
                     {
                         //collection field
-                        newfilter = $"{facetValue.target}/any(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
+                        newfilter = $"{facetValue.target}/{facet.GetOperator()}(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
                     }
                 }
 
