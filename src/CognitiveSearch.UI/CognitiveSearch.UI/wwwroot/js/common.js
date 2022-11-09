@@ -814,7 +814,15 @@ Microsoft.Search.Results = {
                         finalClass += ' btn-outline-secondary';
                     }
                     renderingHtml += '        <label id="switch-' + rendering.name + '" title="' + rendering.title + '"  class="' + finalClass + '" onclick="Microsoft.Search.Results.switchResultsView(' + i + ');">';
-                    renderingHtml += '             <span class="' + rendering.fonticon + '"/>';
+                    if (rendering.fonticon) {
+                        renderingHtml += '             <span class="' + rendering.fonticon + '"/>';
+                    }
+                    else if (rendering.svgicon) {
+
+                        renderingHtml += '<svg width="16px" height="16px">';
+                        renderingHtml += '<image xlink:href="/icons/'+rendering.svgicon+'"/>'; 
+                        renderingHtml += '</svg>';
+                    }
                     renderingHtml += '        </label>';    
                 }
                 else {

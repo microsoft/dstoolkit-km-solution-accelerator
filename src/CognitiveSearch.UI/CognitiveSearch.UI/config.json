@@ -68,7 +68,7 @@
             "name": "document",
             "isdefault": true,
             "title": "Only search Documents",
-            "fonticon": "bi bi-list",
+            "svgicon": "bi-list-ul.svg",
             "method": "Microsoft.All.UpdateResultsAsList",
             "filter": "(document_embedded eq false)"
           },
@@ -78,21 +78,21 @@
           {
             "name": "pages",
             "title": "Only search document pages or slides",
-            "fonticon": "bi bi-files",
+            "svgicon": "bi-files.svg",
             "method": "Microsoft.All.UpdateResultsAsCard",
             "filter": "(document_converted eq true)"
           },
           {
             "name": "images",
             "title": "Only search Images",
-            "fonticon": "bi bi-image",
+            "svgicon": "bi-images.svg",
             "method": "Microsoft.Images.UpdateImagesResults",
             "filter": "(document_embedded eq false and content_group eq 'Image')"
           },
           {
             "name": "tables",
             "title": "Only search extracted tables",
-            "fonticon": "bi bi-table",
+            "svgicon": "bi-table.svg",
             "method": "Microsoft.Tables.UpdateTablesResults",
             "filter": "(tables_count ge 1)"
           },
@@ -102,7 +102,7 @@
           {
             "name": "emails",
             "title": "Only search Emails",
-            "fonticon": "bi bi-envelope",
+            "svgicon": "bi-envelope.svg",
             "method": "Microsoft.All.UpdateResultsAsList",
             "filter": "(content_group eq 'Email')",
             "classList": "btn-outline-primary"
@@ -110,7 +110,7 @@
           {
             "name": "attachments",
             "title": "Only search Emails' attachments",
-            "fonticon": "bi bi-paperclip",
+            "svgicon": "bi-paperclip.svg",
             "method": "Microsoft.All.UpdateResultsAsList",
             "filter": "(document_embedded eq true and parent/content_group eq 'Email')",
             "classList": "btn-outline-primary"
@@ -157,7 +157,7 @@
         "enable": true,
         "path": "/Images/Index",
         "searchMethod": "Microsoft.Images.ImagesSearch",
-        "svgicon": "bi-image.svg",
+        "svgicon": "bi-images.svg",
         "placeHolder": "Search your visual content...",
         "ResultsRenderings": [
           {
@@ -199,7 +199,7 @@
         "enable": true,
         "path": "/Tables/Index",
         "searchMethod": "Microsoft.Tables.TablesSearch",
-        "svgicon": "10841-icon-service-Table.svg",
+        "svgicon": "bi-table.svg",
         "placeHolder": "Search your tables content..."
       },
       {
