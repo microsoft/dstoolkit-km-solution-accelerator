@@ -520,7 +520,8 @@ Microsoft.Facets = {
 
         value = Base64.decode(value);
 
-        var facet_source = facet_type === "static" ? this.get_static_facet_by_id(facet_key).values : this.facets[facet_key];
+        var facet_cfg = this.get_static_facet_by_id(facet_key);        
+        var facet_source = facet_type === "static" ? facet_cfg.values : this.facets[facet_key];
 
         if (this.selectedFacets !== undefined) {
 
@@ -567,6 +568,7 @@ Microsoft.Facets = {
                     key: facet_key,
                     values: valueIdx ? [facet_source[valueIdx]] : [{ value: value }],
                     type: facet_type,
+                    operator: facet_cfg?.operator ? facet_cfg.operator : null,
                     target: target ? target : null
                 });
             }
