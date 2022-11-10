@@ -21,6 +21,7 @@
             "Accountkind": "StorageV2",
             "ResourceGroup": "{{config.resourceGroupName}}",
             "IsDataStorage": true,
+            "EnableHierarchicalNamespace": true,
             "EnablePrivateAccess": true,
             "AccessSubnetRestriction": true
         },
@@ -29,6 +30,7 @@
             "Accountkind": "StorageV2",
             "ResourceGroup": "{{config.resourceGroupName}}",
             "IsDataStorage": false,
+            "EnableHierarchicalNamespace": true,
             "EnablePrivateAccess": true,
             "AccessSubnetRestriction": true
         }

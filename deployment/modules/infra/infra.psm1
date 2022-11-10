@@ -123,14 +123,14 @@ function New-StorageAccount {
         if ( $exists ) {
             Write-Host "Storage service already exists...Skipping.";
         }
-        else {    
+        else {
             az storage account create --name $azureResource.Name `
                 --location $config.location `
                 --resource-group $azureResource.ResourceGroup `
                 --sku Standard_LRS `
                 --assign-identity `
                 --allow-blob-public-access false `
-                --enable-hierarchical-namespace true `
+                --enable-hierarchical-namespace $azureResource.EnableHierarchicalNamespace `
                 --kind $azureResource.Accountkind
 
             if ($azureResource.IsDataStorage) {
