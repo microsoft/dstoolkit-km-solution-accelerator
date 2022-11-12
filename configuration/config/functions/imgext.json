@@ -15,8 +15,8 @@
         "slotSetting": false
     },
     {
-        "name": "ContainerName",
-        "value": "{{param.documentsStorageContainerName}},{{param.imagesStorageContainerName}}",
+        "name": "ContainersList",
+        "value": "{{param.StorageContainersAsString}}",
         "slotSetting": false
     },
     {

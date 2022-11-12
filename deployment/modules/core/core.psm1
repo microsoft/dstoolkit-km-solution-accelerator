@@ -398,7 +398,9 @@ function Sync-Parameters {
     # Container
     $dataStorageContainerName = $params.storageContainers[0];
     Add-Param "dataStorageContainerName" $dataStorageContainerName
-    
+
+    Add-Param "StorageContainersAsString" $([String]::Join(',', $params.storageContainers))
+
     # Create the containers entries for UI SAS access
     $StorageContainerAddresses = @()
     foreach ($container in $params.storageContainers) {

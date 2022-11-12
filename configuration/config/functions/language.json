@@ -65,12 +65,12 @@
         "slotSetting": false
     },
     {
-        "name": "TRANSLATOR_MAX_CHARS_PER_DOC",
+        "name": "TEXT_TRANSLATION_MAX_CHARS_PER_DOC",
         "value": "10000",
         "slotSetting": false
     },
     {
-        "name": "TRANSLATOR_MAX_DOC_PER_REQUEST",
+        "name": "TEXT_TRANSLATION_MAX_DOC_PER_REQUEST",
         "value": "5",
         "slotSetting": false
     },

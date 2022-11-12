@@ -32,8 +32,8 @@ spec:
           value: "{{param.techStorageConnectionString}}"
         - name: ContainerConnectionString
           value: "{{param.storageConnectionString}}"
-        - name: ContainerName
-          value: "{{param.documentsStorageContainerName}}"
+        - name: ContainersList
+          value: "{{param.StorageContainersAsString}}"
         - name: TikaContainerUrl
           value: "{{param.kubernetesGateway}}"
         - name: TikaConverterSupportedExtensions
