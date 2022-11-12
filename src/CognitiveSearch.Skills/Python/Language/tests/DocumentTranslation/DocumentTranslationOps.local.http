@@ -1,0 +1,12 @@
+###
+GET http://localhost:7071/language/DocumentTranslationOps
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {}
+        }
+    ]
+}

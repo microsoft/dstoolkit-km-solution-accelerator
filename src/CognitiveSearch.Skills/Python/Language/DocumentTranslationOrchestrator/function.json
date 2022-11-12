@@ -1,0 +1,10 @@
+{
+    "scriptFile": "../shared_code/DocumentTranslation/Durable/Orchestrator_init.py",
+    "bindings": [
+        {
+            "name": "context",
+            "type": "orchestrationTrigger",
+            "direction": "in"
+        }
+    ]
+}

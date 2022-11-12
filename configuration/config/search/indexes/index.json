@@ -948,6 +948,48 @@
       "fields": []
     },
     {
+      "name": "document",
+      "type": "Edm.ComplexType",
+      "fields": [
+        {
+          "name": "embedded",
+          "type": "Edm.Boolean",
+          "filterable": true,
+          "sortable": false,
+          "facetable": true,
+          "searchable": false,
+          "retrievable": true
+        },
+        {
+          "name": "converted",
+          "type": "Edm.Boolean",
+          "filterable": true,
+          "sortable": false,
+          "facetable": true,
+          "searchable": false,
+          "retrievable": true
+        },
+        {
+          "name": "translated",
+          "type": "Edm.Boolean",
+          "filterable": true,
+          "sortable": false,
+          "facetable": true,
+          "searchable": false,
+          "retrievable": true
+        },
+        {
+          "name": "translatable",
+          "type": "Edm.Boolean",
+          "filterable": true,
+          "sortable": false,
+          "facetable": true,
+          "searchable": false,
+          "retrievable": true
+        }
+      ]
+    },
+    {
       "name": "document_segments",
       "type": "Collection(Edm.String)",
       "searchable": true,

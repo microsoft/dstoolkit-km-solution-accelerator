@@ -1,0 +1,33 @@
+###
+POST http://localhost:7071/language/orchestrators/DocumentTranslationOrchestrator
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "fromLanguageCode" : "ja",
+                "fileExtension": ".pdf",
+                "source_blob_url": "https://dstkkmdata.blob.core.windows.net/documents/Energy/2020eco.pdf"
+            }
+        }
+    ]
+}
+
+###
+POST http://localhost:7071/language/orchestrators/DocumentTranslationOrchestrator
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "fromLanguageCode" : "en",
+                "fileExtension": ".pdf",
+                "source_blob_url": "https://dstkkmdata.blob.core.windows.net/translation/documents/Energy/2020eco.pdf"
+            }
+        }
+    ]
+}

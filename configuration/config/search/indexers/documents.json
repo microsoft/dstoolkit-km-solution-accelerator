@@ -94,6 +94,10 @@
       "targetFieldName": "document_converted"
     },
     {
+      "sourceFieldName": "/document/document_shape",
+      "targetFieldName": "document"
+    },
+    {
       "sourceFieldName": "/document/organizations",
       "targetFieldName": "organizations",
       "mappingFunction": null

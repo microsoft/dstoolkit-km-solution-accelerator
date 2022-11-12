@@ -163,6 +163,53 @@
         },
         {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "DocumentTranslation",
+            "context": "/document",
+            "uri": "{{param.language.DocumentTranslation}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 5,
+            "degreeOfParallelism": 2,
+            "inputs": [
+                {
+                    "name": "source_blob_url",
+                    "source": "/document/document_url"
+                },
+                {
+                    "name": "fromLanguageCode",
+                    "source": "/document/language"
+                },
+                {
+                    "name": "fileExtension",
+                    "source": "/document/metadata_storage_file_extension"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "translation_opid",
+                    "targetName": "DocumentTranslationOperationId"
+                },
+                {
+                    "name": "translatedFromLanguageCode",
+                    "targetName": "DocumentTranslatedFromLanguageCode"
+                },
+                {
+                    "name": "translatedToLanguageCode",
+                    "targetName": "DocumentTranslatedToLanguageCode"
+                },
+                {
+                    "name": "document_translated",
+                    "targetName": "document_translated"
+                },
+                {
+                    "name": "document_translatable",
+                    "targetName": "document_translatable"
+                }
+            ],
+            "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
             "name": "DocumentSummary",
             "context": "/document",
             "uri": "{{param.language.Summarization}}",
@@ -705,6 +752,35 @@
         },
         {
             "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
+            "name": "DocumentShaper",
+            "context": "/document",
+            "inputs": [
+                {
+                    "name": "embedded",
+                    "source": "/document/skill_metadata/document_embedded"
+                },
+                {
+                    "name": "converted",
+                    "source": "/document/skill_metadata/document_converted"
+                },
+                {
+                    "name": "translated",
+                    "source": "/document/document_translated"
+                },
+                {
+                    "name": "translatable",
+                    "source": "/document/document_translatable"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "output",
+                    "targetName": "document_shape"
+                }
+            ]
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
             "context": "/document",
             "inputs": [
                 {
@@ -736,6 +812,10 @@
                 {
                     "name": "fromLanguageCode",
                     "source": "/document/language"
+                },
+                {
+                    "name": "translated",
+                    "source": "/document/document_translated"
                 }
             ],
             "outputs": [

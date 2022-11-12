@@ -15,8 +15,8 @@ location = os.environ["TEXT_TRANSLATION_LOCATION"]
 version = os.environ["TEXT_TRANSLATION_VERSION"]
 
 #https://docs.microsoft.com/en-us/azure/cognitive-services/translator/request-limits
-MAX_CHARS_PER_DOC=int(os.environ["TRANSLATOR_MAX_CHARS_PER_DOC"])
-MAX_DOC_PER_REQUEST=int(os.environ["TRANSLATOR_MAX_DOC_PER_REQUEST"])
+MAX_CHARS_PER_DOC=int(os.environ["TEXT_TRANSLATION_MAX_CHARS_PER_DOC"])
+MAX_DOC_PER_REQUEST=int(os.environ["TEXT_TRANSLATION_MAX_DOC_PER_REQUEST"])
 
 path = '/translate'
 constructed_url = endpoint + path
@@ -116,8 +116,10 @@ def transform_value(headers, record):
         document['data']['translatedFromLanguageCode'] = fromLanguageCode
         document['data']['translatedToLanguageCode'] = toLanguageCode
 
-        if "text" in data:
-            if fromLanguageCode != toLanguageCode:
+        # if "text" in data and 'translated' in data:
+        #     if fromLanguageCode != toLanguageCode or data['translated']:
+        if "text" in data and 'translated' in data:
+            if fromLanguageCode != toLanguageCode or data['translated']:
                 params = {
                     'api-version': version,
                     'from': fromLanguageCode,
