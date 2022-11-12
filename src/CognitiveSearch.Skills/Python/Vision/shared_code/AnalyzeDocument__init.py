@@ -12,7 +12,7 @@ import azure.functions as func
 from azure.ai.formrecognizer import FormRecognizerClient
 from azure.core.credentials import AzureKeyCredential
 from azure.ai.formrecognizer import DocumentAnalysisClient
-from azure.storage.blob import BlobClient, BlobServiceClient
+from azure.storage.blob import BlobClient
 import base64
 
 #
