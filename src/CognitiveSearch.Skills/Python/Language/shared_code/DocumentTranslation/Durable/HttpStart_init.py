@@ -5,6 +5,7 @@ import logging
 import json
 import azure.functions as func
 import azure.durable_functions as df
+from .. import DocumentTranslation
 
 async def main(req: func.HttpRequest, starter: str) -> func.HttpResponse:
     client = df.DurableOrchestrationClient(starter)
@@ -26,19 +27,14 @@ async def main(req: func.HttpRequest, starter: str) -> func.HttpResponse:
         results["values"] = []
 
         for value in values:
-            # inputRecord = { 
-            #     # "headers" : req.headers,
-            #     "record" : value
-            # }
-            instance_id = await client.start_new(req.route_params["functionName"], None, value)
 
-            logging.info(f"Started orchestration with ID = '{instance_id}'.")
+            output_record = DocumentTranslation.transform_value(value,simulation=True)
 
-            output_record = (
-            {
-                "recordId": value['recordId'],
-                "data": { "message": instance_id }
-            })
+            # Based on the simulation, if the document is candidate, we trigger an orchestration...
+            if output_record['data']['document_translatable']:
+                instance_id = await client.start_new("DocumentTranslationOrchestrator", None, value)
+                logging.info(f"Started orchestration with ID = '{instance_id}'.")
+                output_record['data']['message']=instance_id
 
             if output_record != None:
                 results["values"].append(output_record)
@@ -49,5 +45,3 @@ async def main(req: func.HttpRequest, starter: str) -> func.HttpResponse:
              "Invalid body",
              status_code=400
         )
-
-    # return client.create_check_status_response(req, instance_id)

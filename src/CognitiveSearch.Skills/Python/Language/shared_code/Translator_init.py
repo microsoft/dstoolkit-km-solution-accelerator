@@ -118,8 +118,8 @@ def transform_value(headers, record):
 
         # if "text" in data and 'translated' in data:
         #     if fromLanguageCode != toLanguageCode or data['translated']:
-        if "text" in data and 'translated' in data:
-            if fromLanguageCode != toLanguageCode or data['translated']:
+        if "text" in data:
+            if fromLanguageCode != toLanguageCode:
                 params = {
                     'api-version': version,
                     'from': fromLanguageCode,

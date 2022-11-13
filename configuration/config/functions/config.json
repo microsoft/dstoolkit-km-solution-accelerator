@@ -205,6 +205,9 @@
                         },
                         {
                             "Name": "DocumentTranslation"
+                        },
+                        {
+                            "Name": "DocumentTranslationHttpStart"
                         }
                     ],
                     "AccessIPRestriction": false,

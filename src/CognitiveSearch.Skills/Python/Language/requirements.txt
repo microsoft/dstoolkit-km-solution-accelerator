@@ -9,6 +9,7 @@ azure-storage-blob>=12.0.0
 azure-cosmosdb-table
 azure-identity
 
+python-magic
 numpy
 datetime
 click==8.0.4

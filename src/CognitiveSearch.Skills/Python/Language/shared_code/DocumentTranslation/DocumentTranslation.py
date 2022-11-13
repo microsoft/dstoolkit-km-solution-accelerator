@@ -7,7 +7,7 @@ import os
 from datetime import datetime, timedelta
 from azure.core.credentials import AzureKeyCredential
 from azure.ai.translation.document import DocumentTranslationClient
-from azure.storage.blob import BlobClient,generate_blob_sas, generate_container_sas,BlobSasPermissions,ContainerSasPermissions
+from azure.storage.blob import BlobClient,generate_blob_sas, generate_container_sas,BlobSasPermissions,ContainerSasPermissions, ContentSettings, BlobProperties
 
 endpoint = os.environ["DOCUMENT_TRANSLATION_ENDPOINT"]
 subscription_key = os.environ["DOCUMENT_TRANSLATION_KEY"]
@@ -71,7 +71,7 @@ def get_container_sas(container_name):
     return '?'+sas_token
 
 ## Perform an operation on a record
-def transform_value(headers, record, poll=False):
+def transform_value(record, poll=False, simulation=False):
     try:
         recordId = record['recordId']
     except AssertionError  as error:
@@ -125,30 +125,40 @@ def transform_value(headers, record, poll=False):
 
                     if blob_client.container_name != TRANSLATION_CONTAINER:
                         if fromLanguageCode != target_language:
-                            # Translation require
-                            source_blob_url_with_sas_token = source_blob_url + get_blob_sas_source(blob_client.container_name,blob_client.blob_name)
+                            if not simulation:
+                                # Translation require
+                                source_blob_url_with_sas_token = source_blob_url + get_blob_sas_source(blob_client.container_name,blob_client.blob_name)
 
-                            target_url = blob_client.scheme +'://'+blob_client.primary_hostname+'/'+TRANSLATION_CONTAINER+'/'+blob_client.container_name+"/"+blob_client.blob_name
-                            # target_url_with_sas_token=target_url+get_blob_sas_target(TRANSLATION_CONTAINER,blob_client.container_name+"/"+blob_client.blob_name)
-                            target_url_with_sas_token=target_url+get_container_sas(TRANSLATION_CONTAINER)
+                                target_url = blob_client.scheme +'://'+blob_client.primary_hostname+'/'+TRANSLATION_CONTAINER+'/'+blob_client.container_name+"/"+blob_client.blob_name
+                                # target_url_with_sas_token=target_url+get_blob_sas_target(TRANSLATION_CONTAINER,blob_client.container_name+"/"+blob_client.blob_name)
+                                target_url_with_sas_token=target_url+get_container_sas(TRANSLATION_CONTAINER)
 
-                            poller = document_translation_client.begin_translation(source_blob_url_with_sas_token, target_url_with_sas_token, target_language, storage_type="File")
-                            document['data']['translation_opid'] = poller.id
+                                poller = document_translation_client.begin_translation(source_blob_url_with_sas_token, target_url_with_sas_token, target_language, storage_type="File")
+                                document['data']['translation_opid'] = poller.id
 
-                            if poll:
-                                translation_result = poller.result()
+                                if poll:
+                                    translation_result = poller.result()
 
-                                for docresult in translation_result:
-                                    logging.info(f"Document ID: {docresult.id}")
-                                    logging.info(f"Document status: {docresult.status}")
-                                    if docresult.status == "Succeeded":
-                                        logging.info(f"Source document location: {docresult.source_document_url}")
-                                        logging.info(f"Translated document location: {docresult.translated_document_url}")
-                                        logging.info(f"Translated to language: {docresult.translated_to}\n")
-                                    else:
-                                        warning_message=f"Error Code: {docresult.error.code}, Message: {docresult.error.message}"
-                                        document['warnings'] = [ { "message": warning_message } ]
-                                        logging.error(f"Error Code: {warning_message}")
+                                    for docresult in translation_result:
+                                        logging.info(f"Document ID: {docresult.id}")
+                                        logging.info(f"Document status: {docresult.status}")
+                                        if docresult.status == "Succeeded":
+                                            logging.info(f"Source document location: {docresult.source_document_url}")
+                                            logging.info(f"Translated document location: {docresult.translated_document_url}")
+                                            logging.info(f"Translated to language: {docresult.translated_to}\n")
+
+                                            # TODO update the content type 
+                                            if 'contentType' in data:
+                                                blob_target = BlobClient.from_blob_url(target_url_with_sas_token)
+                                                blobprops = blob_target.get_blob_properties()
+                                                cnt_settings = blobprops.content_settings
+                                                cnt_settings.content_type = data['contentType']
+                                                cnt_settings.content_language = target_language
+                                                blob_target.set_http_headers(cnt_settings)
+                                        else:
+                                            warning_message=f"Error Code: {docresult.error.code}, Message: {docresult.error.message}"
+                                            document['warnings'] = [ { "message": warning_message } ]
+                                            logging.error(f"Error Code: {warning_message}")
 
                             document['data']['document_translatable'] = True
                     else:

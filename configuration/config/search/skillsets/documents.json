@@ -165,7 +165,7 @@
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
             "name": "DocumentTranslation",
             "context": "/document",
-            "uri": "{{param.language.DocumentTranslation}}",
+            "uri": "{{param.language.DocumentTranslationHttpStart}}",
             "httpMethod": "POST",
             "timeout": "PT3M",
             "batchSize": 5,
@@ -182,6 +182,10 @@
                 {
                     "name": "fileExtension",
                     "source": "/document/metadata_storage_file_extension"
+                },
+                {
+                    "name":"contentType",
+                    "source": "/document/metadata_content_type"
                 }
             ],
             "outputs": [

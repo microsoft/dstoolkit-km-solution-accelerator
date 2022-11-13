@@ -9,6 +9,7 @@ content-type: application/json;charset=utf-8
             "data": {
                 "fromLanguageCode" : "ja",
                 "fileExtension": ".pdf",
+                "contentType": "application/pdf",
                 "source_blob_url": "https://dstkkmdata.blob.core.windows.net/documents/Energy/2020eco.pdf"
             }
         }
@@ -26,6 +27,7 @@ content-type: application/json;charset=utf-8
             "data": {
                 "fromLanguageCode" : "en",
                 "fileExtension": ".pdf",
+                "contentType": "application/pdf",
                 "source_blob_url": "https://dstkkmdata.blob.core.windows.net/translation/documents/Energy/2020eco.pdf"
             }
         }
