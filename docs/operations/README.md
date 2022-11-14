@@ -253,6 +253,10 @@ Publish-FunctionsSettings
 ```ps
 Test-Functions
 ```
+- Get all your functions keys so parameters are aligned with new functions. 
+```ps
+Get-FunctionsKeys
+```
 - Re-configure the search service with your new skill(s) 
 ```ps
 Initialize-Search
