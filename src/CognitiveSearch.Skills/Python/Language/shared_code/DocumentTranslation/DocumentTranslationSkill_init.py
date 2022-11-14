@@ -51,8 +51,7 @@ def compose_response(headers, json_data):
     results["values"] = []
 
     for value in values:
-        output_record = DocumentTranslation.transform_value(headers, value, poll=False)
-
+        output_record = DocumentTranslation.transform_value(value, poll=False)
         if output_record != None:
             results["values"].append(output_record)
 
