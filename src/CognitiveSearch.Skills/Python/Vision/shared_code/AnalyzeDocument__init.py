@@ -211,6 +211,10 @@ def extract_tables(blobname,result):
 
     persist_output(blobname,".tables",result.tables)
 
+    # Pivoted tables TODO
+    pivoted_tables=[]
+    persist_output(blobname,".pivoted.tables",pivoted_tables)
+
     return tables
 
 #
