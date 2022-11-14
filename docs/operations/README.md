@@ -238,6 +238,30 @@ Publish-Functions -WindowsOnly
 Publish-FunctionsSettings
 ```
 
+### **Adding a new skill** 
+
+- Initialize your environment after your configuration changes are done. 
+- Build the function(s)
+```ps
+Build-Functions -Publish
+```
+- Publish the settings to ensure your function has all env variables it requires. 
+```ps
+Publish-FunctionsSettings
+```
+- Test all your functions
+```ps
+Test-Functions
+```
+- Re-configure the search service with your new skill(s) 
+```ps
+Initialize-Search
+```
+If your changes are only on the skillset 
+```ps
+Update-SearchSkillSet <skillsetname i.e. documents or images>
+```
+
 ## Azure Web App 
 
 Build and publishing web apps works the same way as functions.
