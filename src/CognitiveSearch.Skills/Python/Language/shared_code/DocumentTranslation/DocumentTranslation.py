@@ -147,7 +147,7 @@ def transform_value(record, poll=False, simulation=False):
                                             logging.info(f"Translated document location: {docresult.translated_document_url}")
                                             logging.info(f"Translated to language: {docresult.translated_to}\n")
 
-                                            # TODO update the content type 
+                                            # Update the content type and language 
                                             if 'contentType' in data:
                                                 blob_target = BlobClient.from_blob_url(target_url_with_sas_token)
                                                 blobprops = blob_target.get_blob_properties()
