@@ -20,12 +20,12 @@
         "slotSetting": false
     },
     {
-        "name": "TEXT_ANALYTICS_ENDPOINT",
+        "name": "LANGUAGE_ENDPOINT",
         "value": "https://{{param.cogSvcLanguage}}.cognitiveservices.azure.com",
         "slotSetting": false
     },
     {
-        "name": "TEXT_ANALYTICS_KEY",
+        "name": "LANGUAGE_KEY",
         "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcLanguageKey)",
         "slotSetting": false
     },

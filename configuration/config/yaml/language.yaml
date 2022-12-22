@@ -32,9 +32,9 @@ spec:
           value: "{{param.techStorageConnectionString}}"
         - name: BLOB_CONNECT_STRING
           value: "{{param.storageConnectionString}}"
-        - name: TEXT_ANALYTICS_ENDPOINT
+        - name: LANGUAGE_ENDPOINT
           value: "https://{{param.cogSvcLanguage}}.cognitiveservices.azure.com"
-        - name: TEXT_ANALYTICS_KEY
+        - name: LANGUAGE_KEY
           value: "{{param.cogSvcLanguageKey}}"
         - name: TEXT_TRANSLATION_ENDPOINT
           value: "https://{{param.cogSvcTranslate}}.cognitiveservices.azure.com/translator/text/v3.0"
