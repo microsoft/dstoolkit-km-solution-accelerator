@@ -45,7 +45,13 @@ content-type: application/json;charset=utf-8
         {
             "recordId": "2",
             "data": {
-                "text": "Washington, D.C. Autumn in DC is a uniquely beautiful season. The leaves fall from the trees in a city chockful of forrests, leaving yellow leaves on the ground and a clearer view of the blue sky above..."
+                "text": "ワシントン D.C. DC の秋は、独特の美しい季節です。 森がぎっしり詰まった街の木々から葉が落ち、地面に黄色い葉が残り、上の青い空がより鮮明に見えます..."
+            }
+        },
+        {
+            "recordId": "3",
+            "data": {
+                "text": "Washington, D.C. Der Herbst in DC ist eine einzigartig schöne Jahreszeit. Die Blätter fallen von den Bäumen in einer Stadt voller Wälder, hinterlassen gelbe Blätter auf dem Boden und einen klareren Blick auf den blauen Himmel darüber ..."
             }
         }
     ]

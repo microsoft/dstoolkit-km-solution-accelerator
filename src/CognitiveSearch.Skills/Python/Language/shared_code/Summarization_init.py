@@ -11,8 +11,8 @@ import requests, uuid
 import os
 import time
 
-endpoint = os.environ["TEXT_ANALYTICS_ENDPOINT"]
-subscription_key = os.environ["TEXT_ANALYTICS_KEY"]
+endpoint = os.environ["LANGUAGE_ENDPOINT"]
+subscription_key = os.environ["LANGUAGE_KEY"]
  
 #https://docs.microsoft.com/en-us/azure/cognitive-services/language-service/concepts/data-limits#maximum-characters-per-document
 MAX_CHARS_PER_DOC=int(os.environ["MAX_CHARS_PER_DOC"])
