@@ -278,3 +278,6 @@ dstoolkit*.json
 dstk*.json
 kmdev.json
 kmprod.json
+
+!overlay/OVERLAY.md
+overlay/*
