@@ -7,11 +7,12 @@ Microsoft.Search = Microsoft.Search || {};
 Microsoft.Search.Results = Microsoft.Search.Results || {};
 Microsoft.Search.Results.Siblings = Microsoft.Search.Results.Siblings || {};
 Microsoft.Search.Results.Siblings = {
+    
     render_tab: function (result, tabular) {
         var containerHTML = '';
         var pathExtension = result.metadata_storage_path.toLowerCase().split('.').pop();
 
-        if (result.document_embedded) {
+        if (result.document.embedded) {
             if (Microsoft.Utils.IsImageExtension(pathExtension)) {
                 containerHTML = this.render_siblings_results(result, tabular);
             }

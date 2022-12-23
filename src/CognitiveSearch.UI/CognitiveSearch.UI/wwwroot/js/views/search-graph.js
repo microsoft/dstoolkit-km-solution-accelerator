@@ -115,9 +115,9 @@ Microsoft.Graph = {
         // Clear the current SVG canva
         d3.select("svg").remove();
 
-        Microsoft.Search.setQueryInProgress();
-
-        Microsoft.Graph.GetGraph(Microsoft.View.currentQuery, checkedFacet, checkedModel);
+        if (Microsoft.Search.setQueryInProgress()) {
+            Microsoft.Graph.GetGraph(Microsoft.View.currentQuery, checkedFacet, checkedModel);
+        }
     },
 
 

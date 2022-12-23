@@ -70,7 +70,7 @@
             "title": "Only search Documents",
             "svgicon": "bi-list-ul.svg",
             "method": "Microsoft.All.UpdateResultsAsList",
-            "filter": "(document_embedded eq false)"
+            "filter": "(document/embedded eq false)"
           },
           {
             "name": "blank"
@@ -80,14 +80,14 @@
             "title": "Only search document pages or slides",
             "svgicon": "bi-files.svg",
             "method": "Microsoft.All.UpdateResultsAsCard",
-            "filter": "(document_converted eq true)"
+            "filter": "(document/converted eq true)"
           },
           {
             "name": "images",
             "title": "Only search Images",
             "svgicon": "bi-images.svg",
             "method": "Microsoft.Images.UpdateImagesResults",
-            "filter": "(document_embedded eq false and content_group eq 'Image')"
+            "filter": "(document/embedded eq false and content_group eq 'Image')"
           },
           {
             "name": "tables",
@@ -95,6 +95,17 @@
             "svgicon": "bi-table.svg",
             "method": "Microsoft.Tables.UpdateTablesResults",
             "filter": "(tables_count ge 1)"
+          },
+          {
+            "name": "blank"
+          },
+          {
+            "name": "translated",
+            "title": "Only search against translated documents",
+            "svgicon": "bi-translate.svg",
+            "method": "Microsoft.All.UpdateResultsAsList",
+            "filter": "(document/translated eq true)",
+            "classList": "btn-outline-warning rounded"
           },
           {
             "name": "blank"
@@ -112,7 +123,7 @@
             "title": "Only search Emails' attachments",
             "svgicon": "bi-paperclip.svg",
             "method": "Microsoft.All.UpdateResultsAsList",
-            "filter": "(document_embedded eq true and parent/content_group eq 'Email')",
+            "filter": "(document/embedded eq true and parent/content_group eq 'Email')",
             "classList": "btn-outline-primary"
           }
         ],
@@ -165,7 +176,7 @@
             "title": "Only view document pages or slides",
             "fonticon": "bi bi-files",
             "method": "Microsoft.All.UpdateResultsAsCard",
-            "filter": "(document_embedded eq true)",
+            "filter": "(document/embedded eq true)",
             "isdefault": true
           },
           {
@@ -173,7 +184,7 @@
             "title": "Only view standalones Images",
             "fonticon": "bi bi-image",
             "method": "Microsoft.Images.UpdateImagesResults",
-            "filter": "(document_embedded eq false)"
+            "filter": "(document/embedded eq false)"
           }
         ],
         "Tags": "organizations,countries,key_phrases,celebrities,landmarks"

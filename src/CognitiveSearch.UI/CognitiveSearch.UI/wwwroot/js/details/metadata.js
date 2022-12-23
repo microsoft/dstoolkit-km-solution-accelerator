@@ -37,6 +37,7 @@ Microsoft.Search.Results.Metadata = {
                             }
                             else {
                                 if (Object.keys(value).length > 0) {
+                                    metadataContainerHTML += '<tr><td class="key text-start">' + key + '</td><td class="wrapword text-break"></td></tr>';
                                     for (var subkey in value) {
                                         if (!excluding_fields.includes(subkey)) {
                                             if (value[subkey]) {
@@ -44,7 +45,7 @@ Microsoft.Search.Results.Metadata = {
                                                 if (subkey.indexOf("parentfilename") > -1 || subkey.indexOf("parenturl") > -1) {
                                                     displayValue = Base64.decode(displayValue);
                                                 }
-                                                metadataContainerHTML += '<tr><td class="key">' + key + '/' + subkey + '</td><td class="wrapword text-break">' + displayValue + '</td></tr>';
+                                                metadataContainerHTML += '<tr><td class="key ps-5">' + subkey + '</td><td class="wrapword text-break">' + displayValue + '</td></tr>';
                                             }
                                         }
                                     }
@@ -59,7 +60,7 @@ Microsoft.Search.Results.Metadata = {
         metadataContainerHTML += '</tbody>';
         metadataContainerHTML += '</table></div><br/>';
 
-        if (! result.document_converted) {
+        if (! result.document.converted) {
             $.postAPIJSON('/api/document/getmetadata',
                 {
                     path: result.metadata_storage_path

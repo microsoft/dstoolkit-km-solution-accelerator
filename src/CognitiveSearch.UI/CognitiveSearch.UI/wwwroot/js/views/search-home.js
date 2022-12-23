@@ -40,11 +40,10 @@ Microsoft.Home = {
     
     PopulateHome: function() {
     
-        Microsoft.Search.setQueryInProgress();
-    
-        Microsoft.Home.RenderPageHighlights();
-    
-        Microsoft.Search.setQueryCompleted();
+        if (Microsoft.Search.setQueryInProgress()) {    
+            Microsoft.Home.RenderPageHighlights();        
+            Microsoft.Search.setQueryCompleted();
+        }
     },
     
     RenderPageHighlights:function() {
@@ -117,7 +116,7 @@ Microsoft.Home = {
     
                     var displayName = name;
     
-                    if (docresult.document_embedded) {
+                    if (docresult.document.embedded) {
                         if (Microsoft.Utils.IsImageExtension(pathExtension)) {
                             displayName = Microsoft.Utils.GetImageFileTitle(docresult);
                         }
@@ -125,7 +124,7 @@ Microsoft.Home = {
     
                     resultsHtml += '<a id="' + id + '" target="_blank" href="' + Microsoft.Search.GetSASTokenFromPath(path) + '">';
     
-                    if (docresult.image.thumbnail_medium) {
+                    if (docresult.image && docresult.image.thumbnail_medium) {
                         resultsHtml += '<img class="image-carousel"  title=\'' + path + '\'  src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '"/>';
                     }
                     else {
@@ -225,7 +224,7 @@ Microsoft.Home = {
     
                     var displayName = name;
     
-                    if (docresult.document_embedded) {
+                    if (docresult.document.embedded) {
                         if (Microsoft.Utils.IsImageExtension(pathExtension)) {
                             displayName = Microsoft.Utils.GetImageFileTitle(docresult);
                         }

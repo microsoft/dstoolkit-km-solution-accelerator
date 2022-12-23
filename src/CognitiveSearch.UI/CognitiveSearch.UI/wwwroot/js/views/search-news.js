@@ -201,13 +201,14 @@ Microsoft.News = {
     // LIVE NEWS REGION
     LiveNewsSearch: function () {
 
-        Microsoft.Search.setQueryInProgress(); 
-        
-        if (this.selected_feeds.length > 0) {
-            $.postAPIXML('/api/news/getliveaggregatedfeed', this.selected_feeds, Microsoft.News.LiveNewsUpdate);
-        }
-        else {
-            $.postAPIXML('/api/news/getliveaggregatedfeed', this.GetAllNewsFeeds(), Microsoft.News.LiveNewsUpdate);
+        if (Microsoft.Search.setQueryInProgress()) {
+            
+            if (this.selected_feeds.length > 0) {
+                $.postAPIXML('/api/news/getliveaggregatedfeed', this.selected_feeds, Microsoft.News.LiveNewsUpdate);
+            }
+            else {
+                $.postAPIXML('/api/news/getliveaggregatedfeed', this.GetAllNewsFeeds(), Microsoft.News.LiveNewsUpdate);
+            }
         }
     },
 

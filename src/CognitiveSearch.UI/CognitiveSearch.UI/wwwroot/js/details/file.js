@@ -7,7 +7,12 @@ Microsoft.Search.Results.File = Microsoft.Search.Results.File || {};
 Microsoft.Search.Results.File = {
 
     RenderSearchResultPreview: function (result) {
-        return this.render_file_container(result.document_embedded, result.metadata_storage_path, result.image ? result.image.image_data : null, result.page_number, result.parent);
+        var fileContainerHTML = '';
+        if (result.document.translated) {
+            fileContainerHTML += '<div class="border border-warning rounded bg-warning text-dark p-1">This content is the result of an automatic Document Translation.</div>'
+        }
+        fileContainerHTML += this.render_file_container(result.document.embedded, result.metadata_storage_path, result.image ? result.image.image_data : null, result.page_number, result.parent);
+        return fileContainerHTML;
     },
     render_file_container: function (document_embedded, path, image_data, pagenumber, parent) {
         var fileContainerHTML = '';
@@ -40,7 +45,7 @@ Microsoft.Search.Results.File = {
                 fileContainerHTML += '<div id="extendable-image-after-container">';
 
                 //Next Page Support for PDF embedded page
-                if (document_embedded && Microsoft.Utils.IsPDF(parent.filename)) {
+                if (document.embedded && Microsoft.Utils.IsPDF(parent.filename)) {
                     fileContainerHTML += '<button type="button" class="btn btn-light" onclick="Microsoft.Search.Results.get_next_page(\'' + parent.id + '\',' + pagenumber + ');" >Next Page</button>'
                 }
 

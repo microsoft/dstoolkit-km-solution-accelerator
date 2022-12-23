@@ -23,19 +23,22 @@ Microsoft.Images = {
         var path = docresult.metadata_storage_path;
 
         if (path !== null) {
-            if (docresult.document_embedded) {
+            if (docresult.document.embedded) {
                 var containerPath = Microsoft.Utils.GetParentPathFromImage(docresult);
 
                 resultsHtml += '<div class="image-result-div pt-2 pb-2 pr-2 pl-2 d-inline-flex flex-column justify-content-center">';
                 resultsHtml += '        <div class="image-result-img" onclick="Microsoft.Results.Details.ShowDocument(\'' + id + '\',' + docresult.idx + ');">';
-
-                resultsHtml += '<img class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.parent.filename) + '" />';
+                if (docresult.image) {
+                    resultsHtml += '<img class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.parent.filename) + '" />';
+                }
                 resultsHtml += '        </div>';
 
                 resultsHtml += '    <div class="image-result-path" >';
                 resultsHtml += '        <a target="_blank" href="' + Microsoft.Search.GetSASTokenFromPath(containerPath) + '">';
                 resultsHtml += '            <span class="text-break">' + Microsoft.Utils.GetImageFileTitle(docresult) + '</span>';
                 resultsHtml += '        </a>';
+                // Badges
+                resultsHtml += Microsoft.Search.Results.RenderDocumentBadges(docresult);
                 resultsHtml += '    </div>';
 
                 resultsHtml += '</div>';
@@ -43,8 +46,9 @@ Microsoft.Images = {
             else {
                 resultsHtml += '<div class="image-result-div pt-2 pb-2 pr-2 pl-2 d-inline-flex flex-column justify-content-center">';
                 resultsHtml += '        <div class="image-result-img" onclick="Microsoft.Results.Details.ShowDocument(\'' + id + '\',' + docresult.idx + ');">';
-
-                resultsHtml += '<img class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + docresult.metadata_storage_name + '" />';
+                if (docresult.image) {
+                    resultsHtml += '<img class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + docresult.metadata_storage_name + '" />';
+                }
                 resultsHtml += '        </div>';
 
                 resultsHtml += '    <div class="image-result-path" >';
@@ -61,44 +65,45 @@ Microsoft.Images = {
 
     ImagesSearch: function(query) {
 
-        Microsoft.Search.setQueryInProgress();
-    
-        if (query !== undefined && query !== null) {
-            $("#q").val(query)
-        }
-    
-        if (Microsoft.Search.currentPage > 0) {
-            if (Microsoft.View.currentQuery !== $("#q").val()) {
-                //currentPage = 0;
-                Microsoft.Search.ResetSearch();
+        if (Microsoft.Search.setQueryInProgress()) {
+                
+            if (query !== undefined && query !== null) {
+                $("#q").val(query)
             }
-        }
-        Microsoft.View.currentQuery = $("#q").val();
-
-        var rendering_filter = Microsoft.View.config.filter ? Microsoft.View.config.filter : '';
-
-        if (Microsoft.Search.results_rendering > -1) {
-            if (Microsoft.View.config.resultsRenderings[Microsoft.Search.results_rendering].filter) {
-                if (rendering_filter.length > 0) {
-                    rendering_filter += ' and ';
+        
+            if (Microsoft.Search.currentPage > 0) {
+                if (Microsoft.View.currentQuery !== $("#q").val()) {
+                    //currentPage = 0;
+                    Microsoft.Search.ResetSearch();
                 }
-                rendering_filter += Microsoft.View.config.resultsRenderings[Microsoft.Search.results_rendering].filter;
             }
+            Microsoft.View.currentQuery = $("#q").val();
+
+            var rendering_filter = Microsoft.View.config.filter ? Microsoft.View.config.filter : '';
+
+            if (Microsoft.Search.results_rendering > -1) {
+                if (Microsoft.View.config.resultsRenderings[Microsoft.Search.results_rendering].filter) {
+                    if (rendering_filter.length > 0) {
+                        rendering_filter += ' and ';
+                    }
+                    rendering_filter += Microsoft.View.config.resultsRenderings[Microsoft.Search.results_rendering].filter;
+                }
+            }
+        
+            // Get center of map to use to score the search results
+            $.postAPIJSON('/api/search/getimages',
+                {
+                    queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
+                    searchFacets: Microsoft.Facets.selectedFacets,
+                    currentPage: ++Microsoft.Search.currentPage,
+                    incomingFilter: rendering_filter,
+                    parameters: Microsoft.Search.Parameters,
+                    options: Microsoft.Search.Options
+                },
+                function (data) {
+                    Microsoft.Images.ImagesUpdate(data, Microsoft.Search.currentPage);
+                });
         }
-    
-        // Get center of map to use to score the search results
-        $.postAPIJSON('/api/search/getimages',
-            {
-                queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
-                searchFacets: Microsoft.Facets.selectedFacets,
-                currentPage: ++Microsoft.Search.currentPage,
-                incomingFilter: rendering_filter,
-                parameters: Microsoft.Search.Parameters,
-                options: Microsoft.Search.Options
-            },
-            function (data) {
-                Microsoft.Images.ImagesUpdate(data, Microsoft.Search.currentPage);
-            });
     },
 
     ImagesUpdate: function(data, currentPage) {

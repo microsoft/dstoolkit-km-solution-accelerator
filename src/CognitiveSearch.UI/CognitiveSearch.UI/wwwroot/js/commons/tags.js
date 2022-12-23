@@ -55,7 +55,7 @@ Microsoft.Tags = {
     renderCoreTags: function (result, limitTagsToDisplay, highlights, selectTags = [], startTagGroup, endTagGroup, htmlTagElt) {
 
         var tagsHTML = '';
-        var isDocument = ! result.document_embedded;
+        var isDocument = ! result.document.embedded;
 
         if (Microsoft.View.config.tags) {
 

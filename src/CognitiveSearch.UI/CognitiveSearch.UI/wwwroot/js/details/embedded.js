@@ -7,12 +7,13 @@ Microsoft.Search = Microsoft.Search || {};
 Microsoft.Search.Results = Microsoft.Search.Results || {};
 Microsoft.Search.Results.Embedded = Microsoft.Search.Results.Embedded || {};
 Microsoft.Search.Results.Embedded = {
+
     render_tab: function (result) {
         // Embedded Images Tab content
         var embeddedContainerHTML = '';
         var pathExtension = result.metadata_storage_path.toLowerCase().split('.').pop();
 
-        if (!result.document_converted) {
+        if (!result.document.converted) {
             // Show the Embedded Images if relevant
             if (!Microsoft.Utils.IsImageExtension(pathExtension)) {
                 embeddedContainerHTML = this.render_embedded_results(result);

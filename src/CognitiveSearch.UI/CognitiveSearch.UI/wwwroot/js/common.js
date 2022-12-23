@@ -5,11 +5,18 @@ Microsoft.Search = Microsoft.Search || {};
 Microsoft.Search = {
     isQueryInProgress: false,
     setQueryInProgress: function () {
-        this.isQueryInProgress = true;
-        $(".tt-menu").hide();
-        $('#doc-count').addClass("d-none");
-        $('#loading-indicator').removeClass('d-none');
-        $('#loading-indicator').addClass('d-flex');
+        if (this.isQueryInProgress) {
+            return false;
+        }
+        else {
+            this.isQueryInProgress = true;
+            $(".tt-menu").hide();
+            $('#doc-count').addClass("d-none");
+            $('#loading-indicator').removeClass('d-none');
+            $('#loading-indicator').addClass('d-flex');
+    
+            return this.isQueryInProgress;
+        }
     },
     setQueryCompleted: function () {
         this.isQueryInProgress = false;
@@ -17,7 +24,6 @@ Microsoft.Search = {
         $('#doc-count').removeClass('d-none');
         $('#loading-indicator').removeClass('d-flex');
         $('#loading-indicator').addClass("d-none");
-
     },
     disableSearchBox: function () {
 
@@ -398,7 +404,7 @@ Microsoft.Search = {
     },
 
     SupportHTMLPreview: function(docresult) {
-        return (docresult.content_group == "Email" && !docresult.document_converted) ;
+        return (docresult.content_group == "Email" && !docresult.document.converted) ;
     }
 }
 
@@ -582,48 +588,48 @@ Microsoft.Search.Utils.Excel = {
         return !isNaN(d.valueOf());
     },
     getExportToExcelResults: function (url, query, ReportTitle) {
-        Microsoft.Search.setQueryInProgress();
 
-        $.postAPIJSON(url, query,
-            function (data) {
-                try {
-                    if (data && data.results) {
-                        if (data.results.length > 0) {
-                            for (var i = 0; i < data.results.length; i++) {
-                                var obj = data.results[i].Document ? data.results[i].Document : data.results[i];
-                                for (var prop in obj) {
-                                    if (Microsoft.Search.Utils.Excel.columnsExclusionList.indexOf(prop) > -1) {
-                                        delete obj[prop];
+        if (Microsoft.Search.setQueryInProgress()) {
+
+            $.postAPIJSON(url, query,
+                function (data) {
+                    try {
+                        if (data && data.results) {
+                            if (data.results.length > 0) {
+                                for (var i = 0; i < data.results.length; i++) {
+                                    var obj = data.results[i].Document ? data.results[i].Document : data.results[i];
+                                    for (var prop in obj) {
+                                        if (Microsoft.Search.Utils.Excel.columnsExclusionList.indexOf(prop) > -1) {
+                                            delete obj[prop];
+                                        }
                                     }
+                                    Microsoft.Search.Utils.Excel.dataToExport.push(obj);
                                 }
-                                Microsoft.Search.Utils.Excel.dataToExport.push(obj);
+                                //Microsoft.Search.Utils.Excel.dataToExport = $.merge(Microsoft.Search.Utils.Excel.dataToExport, data.results);
+                                //if (Microsoft.Search.Utils.Excel.dataToExport.length === data.count || Microsoft.Search.Utils.Excel.dataToExport.length >= Microsoft.Search.Utils.Excel.maxNumberOfItems) {
+                                if (Microsoft.Search.Utils.Excel.dataToExport.length === data.count || Microsoft.Search.Utils.Excel.dataToExport.length >= Microsoft.Search.Utils.Excel.maxNumberOfItems) {
+                                    Microsoft.Search.Utils.Excel.jsonToCSVConvertor(Microsoft.Search.Utils.Excel.dataToExport, ReportTitle, true);
+                                    Microsoft.Search.Utils.Excel.dataToExport = [];
+    
+                                } else {
+                                    query.currentPage += 1;
+                                    Microsoft.Search.Utils.Excel.getExportToExcelResults(url, query, ReportTitle);
+                                }
                             }
-                            //Microsoft.Search.Utils.Excel.dataToExport = $.merge(Microsoft.Search.Utils.Excel.dataToExport, data.results);
-                            //if (Microsoft.Search.Utils.Excel.dataToExport.length === data.count || Microsoft.Search.Utils.Excel.dataToExport.length >= Microsoft.Search.Utils.Excel.maxNumberOfItems) {
-                            if (Microsoft.Search.Utils.Excel.dataToExport.length === data.count || Microsoft.Search.Utils.Excel.dataToExport.length >= Microsoft.Search.Utils.Excel.maxNumberOfItems) {
-                                Microsoft.Search.Utils.Excel.jsonToCSVConvertor(Microsoft.Search.Utils.Excel.dataToExport, ReportTitle, true);
-                                Microsoft.Search.setQueryCompleted();
-                                Microsoft.Search.Utils.Excel.dataToExport = [];
-
-                            } else {
-                                query.currentPage += 1;
-                                Microsoft.Search.Utils.Excel.getExportToExcelResults(url, query, ReportTitle);
+                            else {
+                                if (Microsoft.Search.Utils.Excel.dataToExport.length > 0) {
+                                    Microsoft.Search.Utils.Excel.jsonToCSVConvertor(Microsoft.Search.Utils.Excel.dataToExport, ReportTitle, true);
+                                }
                             }
                         }
-                        else {
-                            if (Microsoft.Search.Utils.Excel.dataToExport.length > 0) {
-                                Microsoft.Search.Utils.Excel.jsonToCSVConvertor(Microsoft.Search.Utils.Excel.dataToExport, ReportTitle, true);
-                            }
-
-                            Microsoft.Search.setQueryCompleted();
-                        }
+                    } catch (e) {
+                        console.error(e);
+                    } finally {
+                        Microsoft.Search.setQueryCompleted();
                     }
-                } catch (e) {
-                    console.error(e);
-                    Microsoft.Search.setQueryCompleted();
                 }
-            }
-        );
+            );    
+        }
     }
 }
 
@@ -672,7 +678,7 @@ Microsoft.Search.Results = {
                 fileContainerHTML += '  </div>';
 
                 // Next Page
-                if (docresult.document_embedded) {
+                if (docresult.document.embedded) {
                     fileContainerHTML += '<button id="next_page_button" type="button" class="btn btn-success" onclick="Microsoft.Search.Results.get_next_page(\'' + docresult.parent.id + '\',' + docresult.page_number + ');" >Next Page</button>'
                 }
             }
@@ -680,6 +686,37 @@ Microsoft.Search.Results = {
 
             $('#extendable-image-after-container').append(fileContainerHTML);
         }
+    },
+
+    RenderDocumentBadges: function(docresult) {
+        var documentHtml = '';
+        // Language
+        documentHtml += '<span class="badge rounded-pill bg-dark text-uppercase me-1" title="Detected language is '+docresult.language+'">'+docresult.language+'</span>';
+        
+        if (Microsoft.Search.SupportPageCount(docresult)) {
+            var pagetitle = 'Document has '+docresult.page_count+' slides or pages.';
+            if (docresult.page_count > 0) {
+                documentHtml += '<span class="badge rounded-pill bg-success me-1" title="'+pagetitle+'">'+docresult.page_count+'</span>';
+            }
+            else { 
+                documentHtml += '<span class="badge rounded-pill bg-danger me-1" title="'+pagetitle+'">0</span>';
+            }
+        }
+        if (docresult.document){
+            if (docresult.document.translated) {
+                documentHtml += '<span class="badge rounded-pill bg-warning text-dark me-1 bi bi-translate" title="This document is a translated document"> </span>';
+            }
+            if (docresult.document.translatable) {
+                documentHtml += '<span class="badge rounded-pill bg-info text-dark me-1 bi bi-translate" title="This document has a potential translated document"> </span>';
+            }
+        }        
+        if (docresult.tables_count > 0) {
+            documentHtml += '<span class="badge rounded-pill text-dark me-1 border border-outline-secondary bi bi-table" title="This document has '+docresult.tables_count+' extracted tables."> </span>';
+        }
+        if (docresult.kvs_count > 0) {
+            documentHtml += '<span class="badge rounded-pill text-dark me-1 border border-outline-secondary bi bi-database" title="This document has '+docresult.kvs_count+' extracted Key/Value pairs."> </span>';
+        }
+        return documentHtml;
     },
 
     // Search Results as list item 
@@ -718,7 +755,7 @@ Microsoft.Search.Results = {
             documentHtml += '<a href="javascript:void(0)" onclick="' + showMethod + '(\'' + docresult.document_id + '\');" >';
 
             if (Microsoft.Utils.IsImageExtension(pathExtension)) {
-                if (docresult.document_embedded) {
+                if (docresult.document.embedded && docresult.image) {
                     name = Microsoft.Utils.GetImageFileTitle(docresult);
                     documentHtml += '<img alt="' + name + '" class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.parent.filename) + '" />';
                 }
@@ -741,19 +778,8 @@ Microsoft.Search.Results = {
             documentHtml += Microsoft.Utils.GetDocumentTitle(docresult);
             documentHtml += '</div>';
 
-            // Language
             documentHtml += '<div class="col-md-1">'
-            documentHtml += '<span class="badge rounded-pill bg-dark text-uppercase me-1" title="Detected language is '+docresult.language+'">'+docresult.language+'</span>';
-            
-            if (Microsoft.Search.SupportPageCount(docresult)) {
-                var pagetitle = 'Document has '+docresult.page_count+' slides or pages.';
-                if (docresult.page_count > 0) {
-                    documentHtml += '<span class="badge rounded-pill bg-success" title="'+pagetitle+'">'+docresult.page_count+'</span>';
-                }
-                else { 
-                    documentHtml += '<span class="badge rounded-pill bg-danger" title="'+pagetitle+'">0</span>';
-                }
-            }
+            documentHtml += Microsoft.Search.Results.RenderDocumentBadges(docresult);
             documentHtml += '</div>';
 
 
