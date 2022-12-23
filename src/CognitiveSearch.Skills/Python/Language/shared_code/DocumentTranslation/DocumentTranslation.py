@@ -3,6 +3,7 @@
 
 import logging
 import os
+import base64
 
 from datetime import datetime, timedelta
 from azure.core.credentials import AzureKeyCredential
@@ -71,7 +72,7 @@ def get_container_sas(container_name):
     return '?'+sas_token
 
 ## Perform an operation on a record
-def transform_value(record, poll=False, simulation=False):
+def transform_value(record, poll=True, simulation=False):
     try:
         recordId = record['recordId']
     except AssertionError  as error:
@@ -118,22 +119,22 @@ def transform_value(record, poll=False, simulation=False):
                 fileExtension = data["fileExtension"]
 
             if fileExtension is not None:
-                if "source_blob_url" in data:
-                    source_blob_url=data['source_blob_url']
+                if "document_url" in data:
+                    document_url=data['document_url']
 
-                    blob_client = BlobClient.from_blob_url(blob_url=source_blob_url)
+                    blob_client = BlobClient.from_blob_url(blob_url=document_url)
 
                     if blob_client.container_name != TRANSLATION_CONTAINER:
                         if fromLanguageCode != target_language:
                             if not simulation:
                                 # Translation require
-                                source_blob_url_with_sas_token = source_blob_url + get_blob_sas_source(blob_client.container_name,blob_client.blob_name)
+                                document_url_with_sas_token = document_url + get_blob_sas_source(blob_client.container_name,blob_client.blob_name)
 
                                 target_url = blob_client.scheme +'://'+blob_client.primary_hostname+'/'+TRANSLATION_CONTAINER+'/'+blob_client.container_name+"/"+blob_client.blob_name
                                 # target_url_with_sas_token=target_url+get_blob_sas_target(TRANSLATION_CONTAINER,blob_client.container_name+"/"+blob_client.blob_name)
                                 target_url_with_sas_token=target_url+get_container_sas(TRANSLATION_CONTAINER)
 
-                                poller = document_translation_client.begin_translation(source_blob_url_with_sas_token, target_url_with_sas_token, target_language, storage_type="File")
+                                poller = document_translation_client.begin_translation(document_url_with_sas_token, target_url_with_sas_token, target_language, storage_type="File")
                                 document['data']['translation_opid'] = poller.id
 
                                 if poll:
@@ -155,6 +156,17 @@ def transform_value(record, poll=False, simulation=False):
                                                 cnt_settings.content_type = data['contentType']
                                                 cnt_settings.content_language = target_language
                                                 blob_target.set_http_headers(cnt_settings)
+                                                # Parenting Metadata
+                                                metadata = blobprops.metadata
+                                                if 'document_index_key' in data:
+                                                    metadata['parentkey']=data['document_index_key']
+                                                if 'document_id' in data:
+                                                    metadata['parentid']=data['document_id']
+                                                # Base64 metadata
+                                                if 'document_filename' in data:
+                                                    metadata['parentfilename']=base64.b64encode(bytes(data['document_filename'],'utf-8'))
+                                                metadata['parenturl']=base64.b64encode(bytes(document_url,'utf-8'))
+                                                blob_target.set_blob_metadata(metadata)
                                         else:
                                             warning_message=f"Error Code: {docresult.error.code}, Message: {docresult.error.message}"
                                             document['warnings'] = [ { "message": warning_message } ]

@@ -4,11 +4,6 @@
 import logging
 import azure.functions as func
 import json
-import os
-from datetime import datetime, timedelta
-from azure.core.credentials import AzureKeyCredential
-from azure.ai.translation.document import DocumentTranslationClient
-from azure.storage.blob import BlobClient,generate_blob_sas, generate_container_sas,BlobSasPermissions,ContainerSasPermissions
 
 from . import DocumentTranslation
 
@@ -51,7 +46,7 @@ def compose_response(headers, json_data):
     results["values"] = []
 
     for value in values:
-        output_record = DocumentTranslation.transform_value(value, poll=False)
+        output_record = DocumentTranslation.transform_value(value)
         if output_record != None:
             results["values"].append(output_record)
 

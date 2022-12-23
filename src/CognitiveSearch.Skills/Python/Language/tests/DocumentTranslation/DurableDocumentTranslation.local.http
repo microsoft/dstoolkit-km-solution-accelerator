@@ -10,7 +10,7 @@ content-type: application/json;charset=utf-8
                 "fromLanguageCode" : "ja",
                 "fileExtension": ".pdf",
                 "contentType": "application/pdf",
-                "source_blob_url": "https://dstkkmdata.blob.core.windows.net/documents/Energy/2020eco.pdf"
+                "document_url": "https://dstkkmdata.blob.core.windows.net/documents/Energy/2020eco.pdf"
             }
         }
     ]
@@ -28,7 +28,7 @@ content-type: application/json;charset=utf-8
                 "fromLanguageCode" : "en",
                 "fileExtension": ".pdf",
                 "contentType": "application/pdf",
-                "source_blob_url": "https://dstkkmdata.blob.core.windows.net/translation/documents/Energy/2020eco.pdf"
+                "document_url": "https://dstkkmdata.blob.core.windows.net/translation/documents/Energy/2020eco.pdf"
             }
         }
     ]

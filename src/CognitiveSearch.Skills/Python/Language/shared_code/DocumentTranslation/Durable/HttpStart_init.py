@@ -28,7 +28,7 @@ async def main(req: func.HttpRequest, starter: str) -> func.HttpResponse:
 
         for value in values:
 
-            output_record = DocumentTranslation.transform_value(value,simulation=True)
+            output_record = DocumentTranslation.transform_value(value)
 
             # Based on the simulation, if the document is candidate, we trigger an orchestration...
             if output_record['data']['document_translatable']:

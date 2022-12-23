@@ -9,6 +9,6 @@ from .. import DocumentTranslation
 def main(record: str) -> str:
     
     # Call Document Translation and wait...
-    output_record = DocumentTranslation.transform_value(record, poll=True)
+    output_record = DocumentTranslation.transform_value(record)
 
     return output_record
