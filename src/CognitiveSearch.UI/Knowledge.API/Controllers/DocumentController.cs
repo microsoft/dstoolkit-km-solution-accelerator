@@ -76,7 +76,7 @@ namespace Knowledge.API.Controllers
                 }
             }
 
-            return new BadRequestResult();
+            return new NotFoundResult();
         }
 
         [HttpPost("getcoverimagebyindexkey")]
@@ -106,7 +106,7 @@ namespace Knowledge.API.Controllers
                 }
             }
 
-            return new BadRequestResult();
+            return new NotFoundResult();
         }
 
         [HttpPost("getmetadata")]
