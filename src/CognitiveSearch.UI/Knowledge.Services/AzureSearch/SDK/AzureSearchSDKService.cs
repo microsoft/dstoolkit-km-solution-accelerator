@@ -491,7 +491,7 @@ namespace Knowledge.Services.AzureSearch.SDK
 
         public async Task<SearchResponse> GetDocumentEmbedded(IngressSearchRequest request)
         {
-            var embeddedfilter = $"parent/id eq '{request.document_id}'";
+            var embeddedfilter = $"(parent/id eq '{request.document_id}') and (document/embedded eq true)";
 
             QueryParameters queryParameters = request.parameters ?? (new());
             queryParameters.RowCount = 100;
