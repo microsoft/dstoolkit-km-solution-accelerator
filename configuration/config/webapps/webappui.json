@@ -1,5 +1,10 @@
 [
   {
+    "name": "AllowedHosts",
+    "value": "*",
+    "slotSetting": false
+  },
+  {
     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
     "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey)",
     "slotSetting": true
@@ -417,6 +422,11 @@
   {
     "name": "SemanticSearchConfig:top",
     "value": 50,
+    "slotSetting": false
+  },
+  {
+    "name": "AzureEasyAuthIntegration",
+    "value": "true",
     "slotSetting": false
   },
   {
