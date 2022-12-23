@@ -906,9 +906,15 @@ function Update-SearchIndex {
     
 function Remove-SearchIndex {
     param (
-        [string]$name
+        [string]$name,
+        [switch]$DeleteAliases
     )
     if ( $name ) {
+
+        if ( $DeleteAliases) {
+            Update-SearchAliases -method DELETE
+        }
+
         $headers = @{
             'api-key'      = $params.searchServiceKey
             'Content-Type' = 'application/json'
@@ -917,8 +923,8 @@ function Remove-SearchIndex {
         $url = ("/indexes/" + $name + "?api-version=" + $searchservicecfg.Parameters.searchVersion)
         $baseSearchUrl = "https://" + $params.searchServiceName + ".search.windows.net"
         $fullUrl = $baseSearchUrl + $url
-        
-        Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method Delete    
+
+        Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method Delete
     }
 }
     
