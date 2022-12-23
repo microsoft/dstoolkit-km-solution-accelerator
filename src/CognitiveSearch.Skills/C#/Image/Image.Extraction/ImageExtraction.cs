@@ -171,10 +171,22 @@ namespace Image.Commons.Extraction
                                         tikarequest.Headers.Add("X-TIKA-AZURE-META-parentcontentgroup", (string)docitem.Metadata["content_group"]);
                                     }
 
+                                    // Convey the embedded flag
                                     if (docitem.Metadata.ContainsKey("document_embedded"))
                                     {
                                         tikarequest.Headers.Add("X-TIKA-AZURE-META-parentdocumentembedded", (string)docitem.Metadata["document_embedded"]);
                                     }
+
+                                    // Convey the translation flag
+                                    if (docitem.Metadata.ContainsKey("document_translated"))
+                                    {
+                                        tikarequest.Headers.Add("X-TIKA-AZURE-META-documenttranslated", (string)docitem.Metadata["document_translated"]);
+                                    }
+                                    if (docitem.Metadata.ContainsKey("document_translatable"))
+                                    {
+                                        tikarequest.Headers.Add("X-TIKA-AZURE-META-documenttranslatable", (string)docitem.Metadata["document_translatable"]);
+                                    }
+
                                     //if (docitem.Metadata.ContainsKey("title"))
                                     //{
                                     //    tikarequest.Headers.Add("X-TIKA-AZURE-META-imageparenttitle", IHelpers.Base64Encode(docitem.Metadata["title"]));
@@ -184,7 +196,7 @@ namespace Image.Commons.Extraction
                                     tikarequest.Headers.Add("X-TIKA-AZURE-META-documentconverted", isConvertible.ToString());
 
                                     // Document Embedded flag
-                                    tikarequest.Headers.Add("X-TIKA-AZURE-META-documentembedded", "true");
+                                    tikarequest.Headers.Add("X-TIKA-AZURE-META-documentembedded", "True");
 
                                     tikarequest.Content = new ByteArrayContent(mstream.ToArray());
                                     tikarequest.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");

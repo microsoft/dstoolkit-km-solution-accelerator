@@ -89,9 +89,9 @@ content-type: application/json;charset=utf-8
         {
             "recordId": "1",
             "data": {
-                "document_id": "aHR0cHM6Ly9kc3RrMmRhdGEuYmxvYi5jb3JlLndpbmRvd3MubmV0L2RvY3VtZW50cy9JTEctMDkxLTIwJUUzJTgwJTgwJUU2JTlDJUFDJUU3JTk0JUIwJUU3JThFJUIyJUU1JUE1JTg4JUUzJTgwJTgwODhMTVMwMzAxKyVFNSVBNCU5NiVFNiVCMyVBOCVFNyVCNSU5MCVFNiU5RSU5QzIwLTU0MDYtNTQwOSUyMCgxKS5wZGY",
-                "document_filename":"2020+eco.pdf",
-                "document_url":"https://kmsolacdata.blob.core.windows.net/documents/2020+eco.pdf"
+                "document_id": "aHR0cHM6Ly9kc3Rra21kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC90cmFuc2xhdGlvbi9kb2N1bWVudHMvRW5lcmd5LzIwMjBlY28ucGRm0",
+                "document_filename":"2020eco.pdf",
+                "document_url":"https://dstkkmdata.blob.core.windows.net/translation/documents/Energy/2020eco.pdf"
             }
         }
     ]
