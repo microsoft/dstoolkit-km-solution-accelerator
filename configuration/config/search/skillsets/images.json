@@ -935,6 +935,14 @@
                     "source": "/document/documentconverted"
                 },
                 {
+                    "name": "document_translated",
+                    "source": "/document/documenttranslated"
+                },
+                {
+                    "name": "document_translatable",
+                    "source": "/document/documenttranslatable"
+                },
+                {
                     "name": "topics",
                     "source": "/document/topics"
                 },
@@ -966,6 +974,35 @@
                 }
             ],
             "httpHeaders": {}
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
+            "name": "DocumentShaper",
+            "context": "/document",
+            "inputs": [
+                {
+                    "name": "embedded",
+                    "source": "/document/skill_metadata/document_embedded"
+                },
+                {
+                    "name": "converted",
+                    "source": "/document/skill_metadata/document_converted"
+                },
+                {
+                    "name": "translated",
+                    "source": "/document/skill_metadata/document_translated"
+                },
+                {
+                    "name": "translatable",
+                    "source": "/document/skill_metadata/document_translatable"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "output",
+                    "targetName": "document_shape"
+                }
+            ]
         },
         {
             "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",

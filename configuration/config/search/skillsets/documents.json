@@ -172,7 +172,19 @@
             "degreeOfParallelism": 2,
             "inputs": [
                 {
-                    "name": "source_blob_url",
+                    "name": "document_index_key",
+                    "source": "/document/index_key"
+                },
+                {
+                    "name": "document_id",
+                    "source": "/document/document_id"
+                },
+                {
+                    "name": "document_filename",
+                    "source": "/document/document_filename"
+                },
+                {
+                    "name": "document_url",
                     "source": "/document/document_url"
                 },
                 {
@@ -203,11 +215,11 @@
                 },
                 {
                     "name": "document_translated",
-                    "targetName": "document_translated"
+                    "targetName": "skilldocumenttranslated"
                 },
                 {
                     "name": "document_translatable",
-                    "targetName": "document_translatable"
+                    "targetName": "skilldocumenttranslatable"
                 }
             ],
             "httpHeaders": {}
@@ -667,6 +679,14 @@
                 {
                     "name": "document_converted",
                     "source": "/document/documentconverted"
+                },
+                {
+                    "name": "document_translated",
+                    "source": "/document/skilldocumenttranslated"
+                },
+                {
+                    "name": "document_translatable",
+                    "source": "/document/skilldocumenttranslatable"
                 }
             ],
             "outputs": [
@@ -769,11 +789,11 @@
                 },
                 {
                     "name": "translated",
-                    "source": "/document/document_translated"
+                    "source": "/document/skill_metadata/document_translated"
                 },
                 {
                     "name": "translatable",
-                    "source": "/document/document_translatable"
+                    "source": "/document/skill_metadata/document_translatable"
                 }
             ],
             "outputs": [
@@ -819,7 +839,7 @@
                 },
                 {
                     "name": "translated",
-                    "source": "/document/document_translated"
+                    "source": "/document/skilldocumenttranslated"
                 }
             ],
             "outputs": [
