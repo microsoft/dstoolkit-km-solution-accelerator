@@ -920,34 +920,6 @@
       "fields": []
     },
     {
-      "name": "document_embedded",
-      "type": "Edm.Boolean",
-      "facetable": false,
-      "filterable": true,
-      "key": false,
-      "retrievable": true,
-      "searchable": false,
-      "sortable": false,
-      "analyzer": null,
-      "indexAnalyzer": null,
-      "searchAnalyzer": null,
-      "synonymMaps": [],
-      "fields": []
-    },
-    {
-      "name": "document_converted",
-      "type": "Edm.Boolean",
-      "facetable": false,
-      "filterable": true,
-      "key": false,
-      "retrievable": true,
-      "searchable": false,
-      "sortable": false,
-      "analyzer": null,
-      "synonymMaps": [],
-      "fields": []
-    },
-    {
       "name": "document",
       "type": "Edm.ComplexType",
       "fields": [
