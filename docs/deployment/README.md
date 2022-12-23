@@ -65,6 +65,14 @@ az keyvault recover --subscription $config.subscriptionId -n $params.keyvault
 az cognitiveservices account recover -l $config.location -g $config.resourceGroupName -n $params.cogSvcXXXX
 ```
 
+You can also purge instead of recover. 
+
+```ps
+az keyvault purge --subscription $config.subscriptionId -n $params.keyvault
+
+az cognitiveservices account purge -l $config.location -g $config.resourceGroupName -n $params.cogSvcXXXX
+```
+
 # Others considerations
 
 Re-Configuring services post-deployment that are set under a VNET is challenging because the Azure Portal wouldn't allow you to do so much nor you could deploy against your customer environment from a public origin.

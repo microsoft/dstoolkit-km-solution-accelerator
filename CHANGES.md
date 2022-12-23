@@ -4,12 +4,12 @@
 
 - UI & API improvements
 - Simple Document Translation support
-- Form Recognizer 
+- Form Recognizer
     - Not relying on direct content url anymore
-    - Projection of the outputs to metadata storage for later use (UI) 
+    - Projection of the outputs to metadata storage for later use (UI)
 - VNET enhancements
 - Auto-creation of storage file-shares
-- Bugs fixing 
+- Bugs fixing
 
 ## October 2022 
 
