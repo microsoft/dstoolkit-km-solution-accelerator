@@ -36,6 +36,7 @@ using Knowledge.Services.AzureSearch;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebOptimizer;
 
 namespace CognitiveSearch.UI
 {
@@ -55,20 +56,25 @@ namespace CognitiveSearch.UI
         {
             if (!env.IsDevelopment())
             {
-                services.AddMicrosoftIdentityWebAppAuthentication(this.Configuration).EnableTokenAcquisitionToCallDownstreamApi(new string[] { "user.read" }).AddDistributedTokenCaches();
+                if (Configuration.GetValue("AzureEasyAuthIntegration", true)) {
+                    services.AddMicrosoftIdentityWebAppAuthentication(Configuration);
+                }
+                else { 
+                    services.AddMicrosoftIdentityWebAppAuthentication(this.Configuration).EnableTokenAcquisitionToCallDownstreamApi(new string[] { "user.read" }).AddDistributedTokenCaches();
 
-                services.AddCors();
-                services.AddMvc(options =>
-                {
-                    var policy = new AuthorizationPolicyBuilder()
-                        .RequireAuthenticatedUser()
-                        .Build();
-                    options.Filters.Add(new AuthorizeFilter(policy));
-                    options.EnableEndpointRouting = false;
-                }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-
+                    services.AddCors();
+                    services.AddMvc(options =>
+                    {
+                        var policy = new AuthorizationPolicyBuilder()
+                            .RequireAuthenticatedUser()
+                            .Build();
+                        options.Filters.Add(new AuthorizeFilter(policy));
+                        options.EnableEndpointRouting = false;
+                    //}).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                    });
 
                 services.AddHttpClient();
+                }
             }
 
             //
@@ -78,7 +84,6 @@ namespace CognitiveSearch.UI
 
             // The following line enables Application Insights telemetry collection.
             services.AddApplicationInsightsTelemetry();
-
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -170,7 +175,9 @@ namespace CognitiveSearch.UI
             services.AddWebOptimizer(pipeline =>
             {
                 pipeline.AddCssBundle("/css/bundle.css", "css/site.css", "css/colors.css");
-                pipeline.AddJavaScriptBundle("/js/bundle.js", "js/config.js", "js/site.js", "js/utils.js", "js/common.js", "js/commons/*.js", "js/graph/*.js", "js/details/*.js", "js/details.js", "js/views/*.js", "js/export.js");
+
+                IAsset jsBundle = pipeline.AddJavaScriptBundle("/js/bundle.js", "js/config.js", "js/site.js", "js/utils.js", "js/common.js", "js/commons/*.js", "js/graph/*.js", "js/details/*.js", "js/details.js", "js/views/*.js", "js/export.js");
+                //AssetExtensions.ExcludeFiles(jsBundle, "js/commons/actions.js");
             });
         }
 
@@ -240,12 +247,8 @@ namespace CognitiveSearch.UI
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            //app.UseRouting();
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseCookiePolicy();
 
-            app.UseAuthentication();
+            app.UseHttpsRedirection();
 
             //// Make sure you call this before calling app.UseMvc()
             app.UseCors(x => x
@@ -253,14 +256,11 @@ namespace CognitiveSearch.UI
                 .AllowAnyHeader()
                 .SetIsOriginAllowed(origin => true) // allow any origin
                 .AllowCredentials()); // allow credentials
+
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseHttpsRedirection();
-
             app.UseWebOptimizer();
-
-            // app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = context =>
