@@ -6,8 +6,8 @@
 
 <!-- Search Filter Partial -->
 <div class="container mt-1 mb-1" id="filter-navbar">
-    <div class="row align-items-center rounded border border-secondary">
-        <div class="col-md-8">
+    <div class="row rounded border border-secondary">
+        <div class="col-md-10">
             <div id="filter-button-toolbar" class="btn-toolbar align-items-center" role="toolbar" aria-label="Toolbar with button groups">
 
                 <div class="btn-group btn-group-sm me-2 mt-1" role="group" aria-label="Navigation">
@@ -37,10 +37,7 @@
                 </div>
             </div>
         </div>
-        <div class="col">
-            <div id="filterReset" class="wrapper text-left mt-1"></div>
-        </div>
-        <div class="col">
+        <div class="col-md-2">
             <div id="options-button-toolbar" class="btn-toolbar justify-content-end mt-1" role="toolbar" aria-label="Search Options">
                 <button id="export-excel-btn" class="btn btn-sm d-none" title="Export Search results to Excel" onclick="Microsoft.Search.Utils.Excel.exportToExcel();">
                     <img alt="Export Search results to Excel" class="export-excel" src="/icons/icxlsx.svg" />
@@ -50,5 +47,8 @@
                 </button>
             </div>
         </div>
+    </div>
+    <div class="row">
+        <div id="filterReset" class="wrapper text-left mt-1 d-flex justify-content-center"></div>
     </div>
 </div>
