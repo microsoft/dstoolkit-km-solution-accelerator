@@ -1,0 +1,78 @@
+###
+POST http://localhost:7071/language/PIIDetection
+content-type: application/json;charset=utf-8
+minimumPrecision: 0.2
+defaultLanguageCode: en
+type: small
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "languageCode": "en",
+                "text": "On the date of August 17th, 2019, as an employee of Contoso Restaurant, I, Mateo Gomez, residing in 1234 Hollywood Boulevard Los Angeles CA, with social security number: 123-45-6789, hereby declare to fully support and promote the top priorities delegated to me at Contoso Restaurant, and vow to never disclose any information including but not limited to trade secrets, finances, delivery schedules, and recipes.If I, Mateo Gomez, accidentally or with intent breach the conditions set forth in this contract, understand fully that I shall receive a written termination to the following email address mateo@contosorestaurant.com as well as a fine of up to $10,000."
+            }
+        },
+        {
+            "recordId": "2",
+            "data": {
+                "languageCode": "en",
+                "text": "Mateo Gomez, 28-year-old man, suffered a car accident driving near his home on Hollywood Boulevard on August 17th, 2022, and was admitted to Contoso General Hospital in Los Angeles California at 7:45 PM. The patient showed signs of chest trauma indicating possible rib fracture and had difficulty breathing. A chest CT scan and AP X-ray were performed to determine the damage to ribs and lungs. Results showed a pseudoaneurysm of the thoracic aorta with minor fracture to the first and third right ribs. Patient was kept in the ICU where treatment was initiated. A Stent was surgically placed to stabilize the hemorrhage until the blood oxygen level reached 95 percent. The patient was discharged on September 1st, 2022, under the supervision of his caretaker Nickolaus Schulz, passport number: B12345678."
+            }
+        }
+    ]
+}
+
+###
+POST http://localhost:7071/language/PIIDetection
+content-type: application/json;charset=utf-8
+minimumPrecision: 0.1
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "text": "Hello, my name is Mateo Gomez. I lost my Credit card on August 17th, and I would like to request its cancellation. The last purchase I made was of a Chicken parmigiana dish at Contoso Restaurant, located near the Hollywood Museum, for $40. Below is my personal information for validation: Profession: Accountant         Social Security number is 123-45-6789  Date of birth: 9-9-1989      Phone number: 949-555-0110         Personal address: 1234 Hollywood Boulevard Los Angeles CA Linked email account: mateo@contosorestaurant.com  Swift code: CHASUS33XXX"
+            }
+        }
+    ]
+}
+
+###
+POST http://localhost:7071/language/PIIDetection
+content-type: application/json;charset=utf-8
+minimumPrecision: 0.2
+defaultLanguageCode: en
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "languageCode": "en",
+                "text": "Dear Sir/Madam, My name is Mateo Gomez and I visited Contoso Restaurant with my spouse for our anniversary on Thursday of last week. Prior to my visit, I had heard great things about your food and service from my neighbors, as I actually live right down the street from you at 1234 Hollywood Boulevard. After a lovely stroll along the Santa Monica Pier, we decided to go for dinner at a place we heard so many good things about. When we got to the restaurant last Thursday, we had to wait for 15 minutes just to get on the waiting list. After an hour of waiting to be seated, we ordered two Surf and turf platters. To our absolute surprise, the food was very cold and dry. The whole experience was just quite awful, and I feel like we are owed a refund and an apology for that day. I would appreciate it if you could call me on my number 949-555-0110."
+            }
+        }
+    ]
+}
+
+
+### Req 4
+POST http://localhost:7071/language/PIIDetection
+content-type: application/json;charset=utf-8
+minimumPrecision: 0.5
+defaultLanguageCode: en
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "language":"ja",
+                "text": "My ip was 192.168.72.0 2021年12月\r\n日本経済新聞社\r\n2022年度\r\nNIKKEI脱炭素プロジェクト 企画書\r\n企画趣旨\r\n気候変動の問題を身近に感じる出来事も多く、脱炭素社会への動きが加速した2021年。 日本経済新聞社も2050年のカーボンニュートラルを目指すため「NIKKEI脱炭素プロジェク ト」を立ち上げました。\r\n定期的に開催している「NIKKEI脱炭素委員会」では2022年3月に「宣言」という かたちで理想の脱炭素社会の在り方について発表する予定です。\r\nシンポジウムや英国グラスゴーで開かれた第26回気候変動枠組条約締約国会議（COP26） 会場内でのイベントでは、企業のトップや責任者が脱炭素社会に向けた取り組みや決意を 発表しました。\r\n編集紙面では「第4の革命」と題する連載を始め、日本経済新聞や日経電子版で、 脱炭素化に向けた国内外の取り組みを幅広い視点から伝えています。\r\n2022年度は21年度のプロジェクトで議論した脱炭素社会に向けた「宣言」を実装するために 必要なことは何なのか、議論をさらに深堀し、広く社会に向けて発信していきます。\r\n一人ひとりが幸せを実感できる公平、公正でサステナブルな脱炭素社会を、 皆様と一緒に目指していきたいと思っております。\r\nぜひNIKKEI脱炭素プロジェクトへのご参画をご検討ください。\r\nNIKKEI脱炭素プロジェクト 〈活動内容〉\r\n発信・世論喚起 社会の巻き込み\r\nプロジェクトの活動・紹介は、編集特 集として日本経済新聞朝刊・日経電子 版で取り上げます。 参画企業の取り組みは、広告特集とし て「日経ＥＳＧ」、日経電子版で紹介し ます。秋にはFinancial Times内で の発信も予定しています。\r\nNIKKEI脱炭素委員会で話し合われ たことや、参画企業の取り組みを伝 えます。国内向けのイベントに加え、 COP27会場でもセミナーを予定。 COP27のイベント会場では、プロ ジェクトや参画企業の紹介が掲載さ れたFinancial Timesを配布しま す。\r\n脱炭素社会を実現す るための技術や研究、 アイディアに対して 表彰します。\r\n消費者への意識調 査や自治体の浸透 度、投資家への調査 と発表を通じて脱 炭素への意識を高 めます。\r\n日経グループ メディアでの発信\r\nイベント＋海外発信 NIKKEI脱炭素 アワード\r\n脱炭素に関する 調査発表\r\n情報交換・議論\r\n脱炭素を目指す上での最新情報の交換やネットワーク、またテーマごとに分かれて脱炭素社会を目 指すために実施していくべきことを議論、議論した内容は委員会からの提案として3月に紙面やシ ンポジウムで発表する予定です。\r\nNIKKEI脱炭素委員会 →P5\r\n→P8\r\n→P13\r\n→P11\r\n3\r\nNIKKEI脱炭素プロジェクト 2022年度 スケジュール（案）\r\n4月 5月 6月 7月 8月 9月 10月 11月 12月 1月 2月 3月\r\nNIKKEI 脱炭素 委員会\r\n全体会議 第1回キッ クオフ\r\n第2回 勉強会、分 科会報告\r\n第3回 分科会報 告、年間総 括\r\n分科会\r\n日経グ ループ メディ アでの 発信\r\n編集特集 （採録中心）\r\n5月の全体 会議の採 録\r\n9月の全体 会議の採 録\r\nCOP27で のイベント の採録\r\nシンポジウ ムの採録、 総括\r\n編集特集 トップインタ ビュー\r\n参画企業 「日経ESG」 ＋「日経電 子版」TU\r\nイベント ＋海外 発信\r\nイベント NIKKEI脱 炭素プロ ジェクトシ ンポジウム\r\n海外発信 FT掲載\r\nアワード 募集開始 審査 審査 発表\r\n調査 調査設計 調査 発表\r\n掲載時期は、各参画企業と相談のうえ、調整します\r\nCOP27で のサイドイ ベント\r\n4\r\n希望の多いテーマ２～３程度×各２～3回を想定\r\n●全体会議 参画企業のトップクラスが参加。専門家を講師に迎えた勉強会や最新情報や課題の共有を行います。 都内で朝食会形式で開催（7時～9時半：予定） 。 会議の模様は、日本経済新聞および日経電子版で編集特集として取り上げます。\r\nプログラム（案）： 1回目：各社自己紹介、プロジェクト概要の確認、分科会で取り上げるテーマの方向性、情報共有など 2回目：分科会からの報告、専門家を迎えての勉強会など 3回目：分科会からの最終報告、機関投資家との対話、年間総括など\r\n●分科会 脱炭素社会を目指すうえでの課題や戦略を、テーマごとに深堀します。現場担当者の参加を想定しており、ご希望の分科会に任意でご参加可能です。 取り上げるテーマ案： 「ディスクロージャー・ガバナンス」「生物多様性・自然資本」「サプライチェーン」「エネルギー」「金融」など\r\n→ 参画企業の意向を踏まえて３つ程度取り上げ、数回ずつオンライン形式での議論を予定しております。\r\n●ユース（将来世代）との対話 脱炭素問題に関心が高いユース（将来世代）を招き、対話を行う予定です。2050年に社会をリードする世代の考えや思いを企業の方向性や戦略のご参考にし ていただけるほか、ユースにも企業の実際の取り組みや思いを伝える機会になります。\r\nNIKKEI脱炭素委員会\r\nNIKKEI脱炭素委員会は、NIKKEI脱炭素プロジェクトの重要事項を話し合ったり、情報共有をする場です。 参画企業と有識者で構成されます。\r\n全体会議イメージ→\r\n4月 5月 6月 7月 8月 9月 10月 11月 12月 1月 2月 3月\r\n全体会議 第1回キック オフ\r\n第2回 分科会報告\r\n第3回 分科会報告、 年間総括\r\n分科会\r\nユースとの対話 対話会（予 定）\r\nユースから の発表（予 定） 5\r\n概要\r\n種別\r\nスケジュール案\r\n希望の多いテーマ２～３程度×各２～3回を想定\r\n6\r\n国連環境計画金融イニシアティブ・特別顧問 末吉 竹二郎氏 自然エネルギー財団代表理事、グリー ンファイナンス推進機構代表理事。Ｗ ＷＦジャパン会長。気候変動イニシア ティブ（JCI）代表。1967年4月、三 菱銀行(現・三菱ＵＦＪ 銀行)入行。 96年、東京三菱銀行信託会社（NY） 頭取。98年には日興アセットマネジメ ント副社長に就任。 退任後、国連環境 計画・金融イニシア ティブ特別顧問に就任、現在に至る。\r\nCDP Worldwide-Japan ディレクター 森澤 充世氏 PRI事務局ジャパンヘッド、CDP事務局ジャパンディレクター兼務 シティバンク等で金融機関間決済リスク削減業務に従事した後、環境学の研究を開始する。CDPの2006年の世界的な対象企業拡大に伴い、日本 担当としてCDPに参加する。2010年PRI事務局の日本ネットワーク創設にあたり、日本でのPRI責任者として参加する。 東京大学大学院新領域創成科学研究科博士課程修了 環境学博士\r\n【委員長】東京大学 未来ビジョン研究センター教授 高村ゆかり氏 島根県生まれ。専門は国際法学・環境法学。京都大学法学部卒業。一橋大学大学院法学研究科博士課程単位修得退学。静岡大学助教授、龍谷大学教授、 名古屋大学大学院教授、東京大学サステイナビリティ学連携研究機構（IR3S）教授などを経て、現職。\r\n日本経済新聞社 論説委員兼編集委員 安藤淳 科学技術や企業報道部門、海外支局を経て現在、生命科学や先端医療、環境、気象・防災などを取材。思い出に残るのは昭和天皇のご病状担当とし て侍医を取材した日々、ワシントンにいた頃のスペースシャトル打ち上げや米同時テロ、パリ時代のゴーンCEO率いるルノーの取材やワイナリー巡り など。気象予報士の資格をもち、日経電子版に「天気のなぞ」のコラムを執筆。豪雨などの際は紙面にも解説記事を載せている。\r\n自然エネルギー財団 常務理事 大野 輝之氏 2013年より現職。カーボンプライシングなど国の気候変動対策の策定に関わる検討会委員を務める。1979年 東京都入庁。都市計画局、政策報道 室などを経て、1998年より環境行政に関わる。「ディーゼル車NO作戦」の企画立案、「温室効果ガスの総量削減と排出量取引制度」の導入など、国 に先駆ける東京都の環境政策を牽引した。省エネルギーの推進と自然エネルギーの導入を図る数々の施策を産業界の合意を形成して実現、都のエネ ルギー政策の根幹を作る。2010年から3年間、環境局長を務める。東京大学非常勤講師。イクレイ日本顧問。公益財団法人 世界自然保護基金ジャパ ン 理事。東京大学経済学部。2014年、カリフォルニア州からハーゲンシュミット・クリーンエア賞を受賞\r\nNIKKEI脱炭素委員 有識者メンバー（案） ※2021年度のメンバーの皆様です\r\n6\r\nNIKKEI脱炭素委員 有識者メンバー（案） ※2021年度のメンバーの皆様です\r\n三菱UFJリサーチ＆コンサルティング 経営企画部副部長／ プリンシパル・サステナビリティ・ストラテジスト 吉高 まり氏\r\nIT企業、米国投資銀行等に勤務。ミシガン大学環境・サステナビリティ大学院（現）科学修士。博士（学術）。2000年三菱UFJモルガン・スタンレー証券 （MUMSS）にてクリーン・エネルギー・ファイナンス部を立ち上げ。環境金融コンサルティング業務に長年従事。ESG投資及びSDGsビジネスの領域で多様 なセクターに対しアドバイス・講演・調査等を実施。三菱UFJ銀行戦略調査部、MUMSS経営企画部兼務。2008年日経ウーマン・オブ・ザ・イヤー入賞。UN Women－WE EMPOWER Japanアドバイザリー・グループメンバー、環境省中央環境審議会地球環境部会臨時委員等の政府委員も務める。2020年5 月より現職。\r\n高崎経済大学 学長 水口 剛氏 1984 年筑波大学卒業。博⼠（経営学：明治大学）。商社、監査法人等の勤務を経て、97 年高崎経済大学経済学部講師。08 年より現職。専門は責任投資、 非財務情報開⽰。環境省・グリーンボンドに関する検討会座⻑、ESG ⾦融懇談会委員等を歴任。環境監査研究会監事、日本サステナブル投資フォーラム共 同代表理事、パブリックリソース財団理事、環境パートナーシップ会議理事などを務める。主な著書に『ESG 投資－新しい資本主義のかたち』（日本経済新 聞出版社）、『責任ある投資－資⾦の流れで未来を変える』(岩波書店)、『サステナブルファイナンスの時代－ESG/SDGs と債券市場』（編著、きんざい）な ど\r\n東京大学大学院工学系研究科 准教授 田中 謙司 氏 マッキンゼー・アンド・カンパニー、投資ファンドの日本産業パートナーズを経て、07年東京大学大学院工学系研究科助教、12年特任准教授、19年准教授。 日本電気学会D部門SMF技術委員、人工知能学会、日本経営システム学会会員。国土交通省政策参与、資源エネルギー庁電力のデジタル化委員、経済産業 省物流のデジタル化委員を歴任。\r\n産業技術総合研究所 エネルギー環境領域ゼロエミッション研究戦略部 総括企画主幹 田中 加奈子氏 東京都出身。東京大学工学部化学システム工学科卒業。同大大学院博士課程修了。博士（工学）。英国ティンダル気候変動研究センター、国際エネルギー機 関（IEA）、科学技術振興気候低炭素社会戦略センターなどを経て2020年より現職。第４,５,６次IPCC評価報告書主著者、内閣府CSTI重要課題専門調査 会構成員、産業構造審議会・地球環境小委員会委員、中央環境審議会委員など歴任。3児の母。山田興一氏との共著に「電力危機」がある。\r\n7\r\n8\r\nメディア掲載 -1 （概要）\r\n概要\r\n種別\r\n全体会議やイベントの内容は、編集特集として、日本経済新聞（朝刊・全国版）および、日経電子版に掲載予定です。 参画企業のトップインタビューも編集特集として、日本経済新聞（朝刊・全国版）および、日経電子版に掲載されます。 参画企業の取り組みは、広告特集として「日経ＥＳＧ」、日経電子版で紹介します。 秋にはFinancial Times内での発信も予定しています。\r\n●日本経済新聞（朝刊・全国版）、電子版における全体会議やイベントの編集特集掲載イメージ\r\nhttps://www.nikkei. com/special/zerocarbon\r\n2面うしろ\r\n当該企業 の純広告 15段カ ラー\r\nトップイン タビュー （編集特 集）15段 カラー\r\n通常の 記事面\r\n通常の 記事面\r\n前ページ後ページ\r\nメディア掲載 -2   （ZERO面）\r\n●参画企業トップインタビュー（編集特集） ※通称：ZERO面\r\n参画企業のトップを取材し、トップインタビュー記事（通称：ZERO面）を編集特集として掲載します。 その内容は、再レイアウトのうえ、同日より日経電子版内でも掲載します。 また、トップインタビューの２ｐ後ろには、参画企業の純広告を掲載いただきます。\r\n9\r\nトップインタビュー紙面イメージ純広告15段カラーイメージ\r\nトップインタビューは 日経電子版内にも掲載\r\nメディア掲載 -3 （広告タイアップ / スケジュール）\r\n10\r\nスケジュール案\r\n4月 5月 6月 7月 8月 9月 10月 11月 12月 1月 2月 3月\r\n編集特集（採録 中心）\r\n5月の全体会 議の採録\r\n9月の全体会 議の採録\r\nCOP27採録 シンポジウ ムの採録、総 括\r\n編集特集トップ インタビュー\r\n日経ESG＋電 子版広告TU\r\n掲載時期は、各参画企業と相談のうえ、調整します\r\n（内容は日経ESGに掲載 したものと同じ。\r\n再レイアウト費＋誘導枠 ＝300万円相当）\r\n誘導枠（例） 電子版 タイアップ\r\n月刊誌 「日経ESG」 2pカラー タイアップ広告\r\n●参画企業の広告タイアップ掲載\r\n日経BP発行の、環境・社会・ガバナンスに関する企業の取り組みや投資家動向をお届けする月刊誌「日経ESG」のスタッフが、 参画企業の現場リーダーや最新の取り組み（製品、サービス、事業所や工場など）を取材し、タイアップ広告を制作します。\r\nその内容は、日経電子版にもタイアップページとして掲載。タイアップページのビューを増やすための誘導枠もご用意します。\r\nイベント・海外発信 -1 （COP27 、FT）\r\nNIKKEI脱炭素プロジェクトメンバーたちが自らの言葉で、脱炭素社会実現に向けた決意を語る機会としてイベントを開催し ます。国内向け、全世界向けのイベントを予定しております。またFinancial Timesでの情報発信も予定しております。\r\nFinancial Times Special Report ”Managing Climate Change”内 （2021.11.1付）\r\n11\r\n概要\r\n種別 ●COP27会場でのサイドイベントの実施 11月に開催される第27回気候変動枠組条約締約国会議（COP27 於：エジプト：シャルム・エル・シェイク）会場でセミナーを開催。 オンラインで世界に向けてに発信し日本経済新聞朝刊と日経電子版に採録を掲載（編集特集）。 参画企業の代表は、日本からのオンライン登壇も可能です。\r\n●Financial Times内での情報発信 Financial TimesのSpecial Report内にNIKKEI脱炭素プロジェクトとして 1ページの広告を掲載します。このなかで参画各社の「脱炭素社会に向けた取り組み・ 決意」を掲載し、COP27で配布する予定です。\r\nCOP26での様子 （2021.11.9 グラスゴーにて）\r\nイベント・海外発信 -2 （NIKKEI脱炭素プロジェクトシンポジウム）\r\n2021年度シンポジウムの様子 （2021.10.19 日経ホールにて）\r\n12\r\n4月 5月 6月 7月 8月 9月 10月 11月 12月 1月 2月 3月\r\nイベント NIKKEI脱炭 素プロジェ クトシンポジ ウム\r\n海外発信\r\nCOP27で のサイドイベ\r\nント\r\nスケジュール案\r\n●NIKKEI脱炭素プロジェクトシンポジウム\r\n3月には、東京（日経ホール予定）で、NIKKEI脱炭素プロジェクトシンポジウムを開催します。2022年度のプロジェクトの締めくくりとして、委員会 の活動報告や分科会でまとめた内容を発表したいと思います。また、参画各社のご登壇や有識者を招いたパネルディスカッションなどを通し、1 年間の取り組みを発信します。日本経済新聞朝刊と日経電子版に編集特集として採録を掲載します。\r\nNIKKEI脱炭素アワードと脱炭素に関する調査\r\nNIKKEI脱炭素アワード\r\nカーボンゼロに取り組む企業、自治体、NPO/NGO、団体、個 人を「カーボンニュートラル」な世界の実現に向けた技術開発、 研究、アイデア、政策提言などを総合判断し、表彰、活動を支 援します。\r\n部門 ❊予定。変更になる場合がございます。\r\n・プロジェクト部門（団体・5件）実施されているプロジェクトが対象 ・アイデア・政策提言部門（個人またはグループ・5件） 現在検討中のアイデアや政 策の提言。副賞50万円 ・研究部門（団体、個人またはグループ・5件）現在行っている研究が対象・副賞 200万円\r\n審査員はNIKKEI脱炭素委員会の有識者の先生方を予定。\r\nなお、本プロジェクトの企画参画費総額の一部を本アワードの賞金にあてさせて いただきます。\r\n脱炭素に関する調査\r\n一般消費者の脱炭素に対する意識調査や自治体の取り組み 状況のほか、機関投資家による企業評価（脱炭素に向けた取 り組みの評価）を調査し、発表。脱炭素社会実現に向けた機運 を高めます。\r\n調査内容 ❊案。変更になる場合がございます。\r\n・一般消費者 脱炭素への意識の高さ、取り組み状況、企業にもとめることなどを 意識調査。分科会での議論をもとに質問事項を加えることも検討。\r\n・自治体の脱炭素取り組み状況、期待する企業などを調査\r\n・投資家調査 ESGアナリストに聞く企業に期待するポイントなどを調査\r\n4月 5月 6月 7月 8月 9月 10月 11月 12月 1月 2月 3月\r\nアワード 募集開始 審査 審査 発表\r\n調査 調査設計 調査 発表\r\n13\r\nスケジュール案\r\nNIKKEI脱炭素委員会への参加 〈全体会議〉 年3回開催予定。社長または役員クラスのご参加を想定。 〈分科会〉 希望するテーマの分科会へご参加ください。\r\nユース対話会も実施予定。現場担当者のご参加を想定。\r\n日本経済新聞 朝刊 全国版 編集特集 トップイ ンタビュー 15段カラー （通称：ZERO面）\r\n広報担当者との事前打ち合わせを経て、インタビューをさせていただきます。 編集特集として掲載し、日経電子版へも掲載します。 ※一部モノクロで掲載するエリアがございます。\r\nトップインタビュー連動 新聞広告 日本経済新聞 朝刊 全国版 15段カラー\r\n脱炭素に関する新聞広告（純広告）15段カラーを掲載いただけます。（制作費別） ※一部モノクロで掲載するエリアがございます。\r\n日経ESG 2pカラー タイアップ広告\r\n日経電子版 タイアップ広告\r\n日経BP発行の専門誌「日経ESG」内に、2pカラーのタイアップ記事を掲載いただけます。 （制作費込み）その内容を、日経電子版タイアップとしても掲載します。\r\nFinancial Times内に小枠掲載 COP27直前のFinancial TimesのSpecial Report内に、NIKKEI脱炭素プロジェクトとして1 ページの広告を掲載します。このなかで貴社の脱炭素に向けた取り組みや決意を掲載して いただけます。\r\n第27回気候変動枠組条約締約国会議（COP27） 内のイベント登壇\r\n・単独登壇またはパネルディスカッションへの登壇と採録（日本経済新聞および日経電子 版）※社長または担当役員クラス、いずれか1回、希望社のみ、オンライン登壇可\r\nNIKKEI脱炭素プロジェクト シンポジウムでの 登壇\r\n・単独登壇またはパネルディスカッションへの登壇と採録（日本経済新聞および日経電子 版）※社長または担当役員クラス、いずれか1回、希望社のみ\r\n＊なお、企画参画費総額の一部をNIKKEI脱炭素アワードの賞金に充てさせていただきます。\r\nご参画料金： 30,000,000円 ※税・新聞広告（純広告）の制作費別\r\nNIKKEI脱炭素プロジェクト 参画特典および参画料金\r\n14\r\n参考： 2021年度NIKKEI脱炭素プロジェクト 参画企業\r\n15\r\nNIKKEI脱炭素 プロジェクト\r\n政府・自治体の 地域脱炭素ロードマップ\r\n【今後5年間の集中期間】 ・既存技術でできる重点対策を示し、全国で実施 ・既存技術の導入で、モデルケースを創出\r\n＜地域の取り組み分野例＞ ・エネルギーの地産地消 ・住まい・地域交通 ・共通基盤の整備 など8分野\r\n【さらなる拡大】 ・モデルケースを拡大し、「脱炭素 ドミノ」を実現 ・イノベーション技術、システムの 実装\r\n・企業の脱炭素コミットメントをわかりやすく 社会に対して伝える\r\n・企業間連携と新たなビジネスモデルの創出\r\n・国内外モデルケースの共有と課題の整理\r\n・サステナブルファイナンスの動向と課題の整理\r\n2021～2025年 2026～2030年\r\n・システム実装に向けた課題整理と提言\r\n・投資家・NGOに向けた日本の情報発信\r\n・若年層の意識向上と参画推進\r\n2021年は脱炭素プロジェクトとして カーボンニュートラル社会を目指すため\r\nの宣言を取りまとめ、発信。 2022年は宣言を実装していくために\r\n必要なことを議論し、発信します。\r\n参考： NIKKEI脱炭素プロジェクトのロードマップイメージ\r\n16\r\nスライド番号 1 企画趣旨 スライド番号 3 スライド番号 4 スライド番号 5 スライド番号 6 スライド番号 7 スライド番号 8 スライド番号 9 スライド番号 10 スライド番号 11 スライド番号 12 スライド番号 13 スライド番号 14 スライド番号 15 スライド番号 16"
+            }
+        }
+    ]
+}

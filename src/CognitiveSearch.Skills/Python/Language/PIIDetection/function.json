@@ -1,5 +1,5 @@
 {
-  "scriptFile": "../shared_code/NamedEntityRecognition_init.py",
+  "scriptFile": "../shared_code/PIIDetection_init.py",
   "bindings": [
     {
       "authLevel": "function",

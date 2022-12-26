@@ -272,36 +272,98 @@
             ],
             "outputs": [
                 {
-                    "name": "persons",
+                    "name": "Person",
                     "targetName": "raw_persons"
                 },
                 {
-                    "name": "locations",
+                    "name": "Location",
                     "targetName": "raw_locations"
                 },
                 {
-                    "name": "organizations",
+                    "name": "Organization",
                     "targetName": "raw_organizations"
                 },
                 {
-                    "name": "quantities",
+                    "name": "Quantity",
                     "targetName": "quantities"
                 },
                 {
-                    "name": "dateTimes",
+                    "name": "DateTime",
                     "targetName": "dateTimes"
                 },
                 {
-                    "name": "urls",
+                    "name": "URL",
                     "targetName": "links"
                 },
                 {
-                    "name": "emails",
+                    "name": "Email",
                     "targetName": "emails"
+                },
+                {
+                    "name": "PersonType",
+                    "targetName": "persontypes"
+                },
+                {
+                    "name": "Event",
+                    "targetName": "events"
+                },
+                {
+                    "name": "Product",
+                    "targetName": "products"
+                },
+                {
+                    "name": "Skill",
+                    "targetName": "skills"
+                },
+                {
+                    "name": "Address",
+                    "targetName": "addresses"
+                },
+                {
+                    "name": "PhoneNumber",
+                    "targetName": "phoneNumbers"
+                },
+                {
+                    "name": "IPAddress",
+                    "targetName": "ipAddresses"
                 },
                 {
                     "name": "namedEntities",
                     "targetName": "named_entities"
+                }
+            ],
+            "httpHeaders": {
+                "defaultLanguageCode": "en",
+                "minimumPrecision": "0.75"
+            }
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "PIIDetection",
+            "context": "/document/pages/*",
+            "uri": "{{param.language.PIIDetection}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 1,
+            "degreeOfParallelism": 2,
+            "inputs": [
+                {
+                    "name": "text",
+                    "source": "/document/pages/*"
+                },
+                {
+                    "name": "languageCode",
+                    "source": "/document/language"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "namedEntities",
+                    "targetName": "pii_named_entities"
+                },
+                {
+                    "name": "redacted_text",
+                    "targetName": "pii_redacted_text"
                 }
             ],
             "httpHeaders": {

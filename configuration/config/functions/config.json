@@ -198,6 +198,9 @@
                             "Name": "LanguageDetection"
                         },
                         {
+                            "Name": "PIIDetection"
+                        },
+                        {
                             "Name": "Summarization"
                         },
                         {
