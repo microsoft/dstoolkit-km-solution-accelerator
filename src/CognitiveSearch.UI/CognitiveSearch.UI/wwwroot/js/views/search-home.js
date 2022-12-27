@@ -47,6 +47,7 @@ Microsoft.Home = {
     },
     
     RenderPageHighlights:function() {
+
         for (var j = 0; j < Microsoft.Landing.highlights.length; j++) {
             var item = Microsoft.Landing.highlights[j];
             var items = Microsoft.Landing.highlights[j].insights;
@@ -55,7 +56,7 @@ Microsoft.Home = {
                 for (var i = 0; i < items.length; i++) {
                     var insight = items[i];
                     if (insight.method) {
-                        Microsoft.Utils.executeFunctionByName(insight.method, window, insight.parameters);
+                        Microsoft.Utils.executeFunctionByNameAsync(insight.method, window, insight.parameters);
                     }
                 }
             }

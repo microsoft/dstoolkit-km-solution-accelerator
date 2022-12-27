@@ -79,6 +79,25 @@ Microsoft.Utils = {
         }
     },
 
+    executeFunctionByNameAsync: function (functionName, context /*, args */) {
+        var args = Array.prototype.slice.call(arguments, 2);
+        var namespaces = functionName.split(".");
+        if (namespaces.length > 0) {
+            var func = namespaces.pop();
+            for (var i = 0; i < namespaces.length; i++) {
+                context = context[namespaces[i]];
+            }
+            return new Promise((resolve, reject) => {
+                context[func].apply(context, args);
+            });
+        }
+        else {
+            return new Promise((resolve, reject) => {
+                context[functionName](args);
+            });
+        }
+    },
+
     // https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization
     // Provider	Header names
     // Azure Active Directory	X-MS-TOKEN-AAD-ID-TOKEN
