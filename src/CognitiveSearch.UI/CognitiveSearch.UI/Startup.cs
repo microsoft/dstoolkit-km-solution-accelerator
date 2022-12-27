@@ -32,6 +32,11 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System.IO;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
+using Knowledge.Services.AzureSearch;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using WebOptimizer;
 
 namespace CognitiveSearch.UI
 {
@@ -49,9 +54,27 @@ namespace CognitiveSearch.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            if ( ! env.IsDevelopment())
+            if (!env.IsDevelopment())
             {
-                services.AddMicrosoftIdentityWebAppAuthentication(Configuration);
+                if (Configuration.GetValue("AzureEasyAuthIntegration", true)) {
+                    services.AddMicrosoftIdentityWebAppAuthentication(Configuration);
+                }
+                else { 
+                    services.AddMicrosoftIdentityWebAppAuthentication(this.Configuration).EnableTokenAcquisitionToCallDownstreamApi(new string[] { "user.read" }).AddDistributedTokenCaches();
+
+                    services.AddCors();
+                    services.AddMvc(options =>
+                    {
+                        var policy = new AuthorizationPolicyBuilder()
+                            .RequireAuthenticatedUser()
+                            .Build();
+                        options.Filters.Add(new AuthorizeFilter(policy));
+                        options.EnableEndpointRouting = false;
+                    //}).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                    });
+
+                services.AddHttpClient();
+                }
             }
 
             //
@@ -62,14 +85,13 @@ namespace CognitiveSearch.UI
             // The following line enables Application Insights telemetry collection.
             services.AddApplicationInsightsTelemetry();
 
-
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-           
+
             // Organisation Config
             var orgConfig = Configuration.GetSection("OrganizationConfig").Get<OrganizationConfig>();
             services.AddSingleton(orgConfig);
@@ -111,7 +133,7 @@ namespace CognitiveSearch.UI
 
 
             // Activate API backend services
-            if (! webapiconfigData.IsEnabled)
+            if (!webapiconfigData.IsEnabled)
             {
                 ActivateBackendServices(services);
             }
@@ -120,7 +142,7 @@ namespace CognitiveSearch.UI
                 QueryServiceConfig queryconfigData = Configuration.GetSection("QueryServiceConfig").Get<QueryServiceConfig>();
                 services.AddSingleton<QueryServiceConfig>(_ => queryconfigData);
 
-                appConfig.QueryServiceConfig = queryconfigData; 
+                appConfig.QueryServiceConfig = queryconfigData;
 
                 // Semantic 
                 SemanticSearchConfig semanticData = Configuration.GetSection("SemanticSearchConfig").Get<SemanticSearchConfig>();
@@ -152,8 +174,10 @@ namespace CognitiveSearch.UI
 
             services.AddWebOptimizer(pipeline =>
             {
-                pipeline.AddCssBundle("/css/bundle.css", "css/site.css","css/colors.css");
-                pipeline.AddJavaScriptBundle("/js/bundle.js", "js/config.js", "js/site.js","js/utils.js","js/common.js", "js/commons/*.js", "js/graph/*.js", "js/details/*.js", "js/details.js","js/views/*.js","js/export.js");
+                pipeline.AddCssBundle("/css/bundle.css", "css/site.css", "css/colors.css");
+
+                IAsset jsBundle = pipeline.AddJavaScriptBundle("/js/bundle.js", "js/config.js", "js/site.js", "js/utils.js", "js/common.js", "js/commons/*.js", "js/graph/*.js", "js/details/*.js", "js/details.js", "js/views/*.js", "js/export.js");
+                //AssetExtensions.ExcludeFiles(jsBundle, "js/commons/actions.js");
             });
         }
 
@@ -201,9 +225,11 @@ namespace CognitiveSearch.UI
             services.AddSingleton<IMetadataService, MetadataService>();
             services.AddSingleton<ISemanticSearchService, SemanticSearch>();
             services.AddSingleton<IWebSearchService, WebSearchService>();
-            services.AddSingleton<IFacetGraphService, FacetGraphService>();
-            services.AddSingleton<IAzureSearchService, AzureSearchSDKService>();
+            services.AddSingleton<IAzureSearchService, AzureSearchService>();
+
             services.AddSingleton<IAzureSearchSDKService, AzureSearchSDKService>();
+            services.AddSingleton<IFacetGraphService, FacetGraphService>();
+
             services.AddSingleton<IQueryService, QueryService>();
 
         }
@@ -221,16 +247,20 @@ namespace CognitiveSearch.UI
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            //app.UseRouting();
+
+            app.UseHttpsRedirection();
+
+            //// Make sure you call this before calling app.UseMvc()
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials()); // allow credentials
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseHttpsRedirection();
-
             app.UseWebOptimizer();
-
-            // app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = context =>

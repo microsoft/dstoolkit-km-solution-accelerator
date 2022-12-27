@@ -10,7 +10,6 @@
             <div class="modal-header">
                 <span id="prev-control" class="modal-control bi bi-chevron-left" title="Previous result if any"></span>
                 <span id="next-control" class="modal-control bi bi-chevron-right" title="Next result if any"></span>
-                <div id="document-quick-actions"></div>
                 <div class="col document-details-header" id="document-details"></div>
                 <div class="col">
                     <ul id="details-pivot-links" class="nav nav-tabs bg-light" role="tablist"></ul>
@@ -19,7 +18,8 @@
             </div>
             <div class="modal-body" id="details-modal-body">
                 <div class="row h-100">
-                    <div id="details-pivot" class="col-md-12">
+                    <div id="document-quick-actions" class="col-md-1"></div>
+                    <div id="details-pivot" class="col-md-11">
                         <div id="details-pivot-content" class="tab-content"></div>
                     </div>
                     <input id="result-id" type="hidden" />

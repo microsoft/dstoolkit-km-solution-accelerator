@@ -34,7 +34,7 @@ Publish-WebApps;
 # KV & Settings 
 Add-KeyVaultWebAppsPolicies;
 
-Sync-Parameters;
+Sync-Config
 
 Publish-WebAppsSettings;
 

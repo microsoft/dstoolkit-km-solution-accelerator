@@ -217,6 +217,24 @@ namespace Assignment
                 assignedMetadata[$"document_embedded"] = false;
             }
 
+            // Translation flags
+            if (inRecord.Data.ContainsKey("document_translated"))
+            {
+                assignedMetadata[$"document_translated"] = inRecord.Data["document_translated"];
+            }
+            else
+            {
+                assignedMetadata[$"document_translated"] = false;
+            }
+            if (inRecord.Data.ContainsKey("document_translatable"))
+            {
+                assignedMetadata[$"document_translatable"] = inRecord.Data["document_translatable"];
+            }
+            else
+            {
+                assignedMetadata[$"document_translatable"] = false;
+            }
+
             // Is this an embedded document ?
             if (inRecord.Data.ContainsKey("parentid"))
             {

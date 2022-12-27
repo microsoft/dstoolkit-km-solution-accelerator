@@ -10,6 +10,7 @@ using Knowledge.Configuration.SpellChecking;
 using Knowledge.Configuration.Translation;
 using Knowledge.Configuration.WebSearch;
 using Knowledge.Services;
+using Knowledge.Services.AzureSearch;
 using Knowledge.Services.AzureSearch.SDK;
 using Knowledge.Services.AzureStorage;
 using Knowledge.Services.Graph.Facet;
@@ -20,7 +21,6 @@ using Knowledge.Services.SpellChecking;
 using Knowledge.Services.Translation;
 using Knowledge.Services.WebSearch;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
@@ -118,9 +118,11 @@ namespace Knowledge.API
             services.AddSingleton<IMetadataService, MetadataService>();
             services.AddSingleton<ISemanticSearchService, SemanticSearch>();
             services.AddSingleton<IWebSearchService, WebSearchService>();
-            services.AddSingleton<IFacetGraphService, FacetGraphService>();
-            services.AddSingleton<IAzureSearchService, AzureSearchSDKService>();
+            services.AddSingleton<IAzureSearchService, AzureSearchService>();
+
             services.AddSingleton<IAzureSearchSDKService, AzureSearchSDKService>();
+            services.AddSingleton<IFacetGraphService, FacetGraphService>();
+
             services.AddSingleton<IQueryService, QueryService>();
 
         }

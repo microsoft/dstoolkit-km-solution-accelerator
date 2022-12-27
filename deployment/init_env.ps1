@@ -26,12 +26,15 @@ az config set extension.use_dynamic_install=yes_without_prompt
 
 Get-Config -Name $Name -WorkDir $ScriptDir -Reload:$true
 
-if ($config.vnetEnable) {
-    Import-VNETConfig
-}
-
 if ( $config.overlayPath ) {
     Write-Host "Environment overlay "$config.overlayPath -ForegroundColor DarkGreen
+}
+
+Sync-Config
+
+# VNET configuration
+if ($global:config.vnetEnable) {
+    Import-VNETConfig
 }
 
 # Set the Azure Cloud environment

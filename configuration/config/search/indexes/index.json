@@ -920,32 +920,46 @@
       "fields": []
     },
     {
-      "name": "document_embedded",
-      "type": "Edm.Boolean",
-      "facetable": false,
-      "filterable": true,
-      "key": false,
-      "retrievable": true,
-      "searchable": false,
-      "sortable": false,
-      "analyzer": null,
-      "indexAnalyzer": null,
-      "searchAnalyzer": null,
-      "synonymMaps": [],
-      "fields": []
-    },
-    {
-      "name": "document_converted",
-      "type": "Edm.Boolean",
-      "facetable": false,
-      "filterable": true,
-      "key": false,
-      "retrievable": true,
-      "searchable": false,
-      "sortable": false,
-      "analyzer": null,
-      "synonymMaps": [],
-      "fields": []
+      "name": "document",
+      "type": "Edm.ComplexType",
+      "fields": [
+        {
+          "name": "embedded",
+          "type": "Edm.Boolean",
+          "filterable": true,
+          "sortable": false,
+          "facetable": true,
+          "searchable": false,
+          "retrievable": true
+        },
+        {
+          "name": "converted",
+          "type": "Edm.Boolean",
+          "filterable": true,
+          "sortable": false,
+          "facetable": true,
+          "searchable": false,
+          "retrievable": true
+        },
+        {
+          "name": "translated",
+          "type": "Edm.Boolean",
+          "filterable": true,
+          "sortable": false,
+          "facetable": true,
+          "searchable": false,
+          "retrievable": true
+        },
+        {
+          "name": "translatable",
+          "type": "Edm.Boolean",
+          "filterable": true,
+          "sortable": false,
+          "facetable": true,
+          "searchable": false,
+          "retrievable": true
+        }
+      ]
     },
     {
       "name": "document_segments",
@@ -1081,6 +1095,35 @@
     },
     {
       "name": "tables_count",
+      "type": "Edm.Int32",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": true,
+      "facetable": false,
+      "key": false,
+      "indexAnalyzer": null,
+      "searchAnalyzer": null,
+      "analyzer": null,
+      "synonymMaps": []
+    },
+    {
+      "name": "kvs",
+      "type": "Edm.String",
+      "facetable": false,
+      "filterable": false,
+      "key": false,
+      "retrievable": true,
+      "searchable": false,
+      "sortable": false,
+      "analyzer": null,
+      "indexAnalyzer": null,
+      "searchAnalyzer": null,
+      "synonymMaps": [],
+      "fields": []
+    },
+    {
+      "name": "kvs_count",
       "type": "Edm.Int32",
       "searchable": false,
       "filterable": true,

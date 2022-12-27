@@ -1,19 +1,23 @@
 {
-    "GroupId":"WebApps",
+    "GroupId": "WebApps",
+    "Apptype": "WebApp",
+    "PrivateDNSZone": "privatelink.azurewebsites.net",
+    "Parameters" : [],
     "AppPlans": [
         {
             "Name": "{{config.name}}uiplan",
             "Sku": "{{param.pricing.premium}}",
-            "ResourceGroup":"{{config.ResourceGroupName}}",
-            "IsLinux":false,
-            "WebApps": [
+            "ResourceGroup": "{{config.ResourceGroupName}}",
+            "IsLinux": false,
+            "Services": [
                 {
-                    "Id":"webappui",
+                    "Id": "webappui",
                     "Name": "{{config.name}}ui",
                     "Path": "src\\CognitiveSearch.UI\\CognitiveSearch.UI",
-                    "AccessIPRestriction":false,
-                    "AccessSubnetRestriction":true,
-                    "slots":[
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": false,
+                    "EnablePrivateAccess": false,
+                    "slots": [
                         "staging"
                     ]
                 }
@@ -22,15 +26,16 @@
         {
             "Name": "{{config.name}}tikaplan",
             "Sku": "{{param.pricing.premium}}",
-            "ResourceGroup":"{{config.ResourceGroupName}}",
-            "IsLinux":true,
-            "WebApps": [
+            "ResourceGroup": "{{config.ResourceGroupName}}",
+            "IsLinux": true,
+            "Services": [
                 {
-                    "Id":"tikaserver",
+                    "Id": "tikaserver",
                     "Name": "{{config.name}}tikaserver",
                     "Image": "microsoft/tikaserver:latest",
-                    "AccessIPRestriction":true,
-                    "AccessSubnetRestriction":true
+                    "AccessIPRestriction": true,
+                    "AccessSubnetRestriction": true,
+                    "EnablePrivateAccess": true
                 }
             ]
         }

@@ -1,0 +1,37 @@
+###
+POST http://localhost:7071/language/DocumentTranslation
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "fromLanguageCode" : "ja",
+                "fileExtension": ".pdf",
+                "contentType": "application/pdf",
+                "document_url": "https://dstkkmdata.blob.core.windows.net/documents/Energy/2020eco.pdf"
+            }
+        }
+    ]
+}
+###
+POST http://localhost:7071/language/DocumentTranslation
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_index_key": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvU2FtcGxlRGF0YTEwLVdpbmQvV2luZCBFbmVyZ3kgMTAxLnBkZg",
+                "document_id": "aHR0cHM6Ly9rbWRlbW9kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvU2FtcGxlRGF0YTEwLVdpbmQvV2luZCBFbmVyZ3kgMTAxLnBkZg",
+                "document_filename":"2020eco.pdf",
+                "document_url":"https://dstkkmdata.blob.core.windows.net/documents/Energy/2020eco.pdf",
+                "fromLanguageCode" : "ja",
+                "fileExtension": ".pdf",
+                "contentType": "application/pdf"
+            }
+        }
+    ]
+}

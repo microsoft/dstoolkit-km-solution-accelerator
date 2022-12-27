@@ -10,7 +10,6 @@ using Knowledge.Configuration;
 using Knowledge.Configuration.AzureStorage;
 using Knowledge.Configuration.Graph;
 using Knowledge.Models;
-using Knowledge.Services.AzureStorage;
 using Knowledge.Services.Helpers;
 using System;
 using System.Collections.Generic;

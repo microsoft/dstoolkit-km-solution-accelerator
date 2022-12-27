@@ -36,13 +36,17 @@ Microsoft.Search.Actions = {
         }
     },
 
-    renderActionButton: function (docresult, action, eltClass = '', displayName = true) {
+    renderActionButton: function (n, action, eltClass = '', displayName = true) {
         var htmlDiv = '';
         if (action.enable) {
             var conditionValidated = true;
 
             if (action.condition) {
-                conditionValidated = eval(action.condition);
+                try {
+                    conditionValidated = eval(action.condition);                    
+                } catch (error) {
+                    console.warn("Action's condition error : ",action.condition);                    
+                }
             }
 
             if (conditionValidated) {
@@ -51,19 +55,38 @@ Microsoft.Search.Actions = {
 
                 // Parameter 0 - Action object
                 if (action.parameters) {
-                    var params = Object.create(action.parameters);
-                    for (let index = 0; index < params.length; index++) {
-                        const element = Object.create(params[index]);
-                        for (var key in element) {
-                            element[key] = eval(element[key]);
-                        }
-                        parameters.push(element);                    
+                    try {
+                        parameters.push(eval(action.parameters));
+                    } catch (error) {
+                        console.warn("Action's parameter error : ",action.parameters);
                     }
+                    // var params = Object.create(action.parameters);
+                    //     for (let g = 0; g < params.length; g++) {
+                    //         var evalParameter = params[g];
+                    //         // const element = Object.create(params[g]);
+                    //         // for (var key in element) {
+                    //         //     element[key] = eval(element[key]);
+                    //         // }
+                    //         // parameters.push(element);
+                    //         try {
+                    //             parameters.push(eval(evalParameter));
+                    //         } catch (error) {
+                    //             console.warn("Action's parameter error : ",evalParameter);
+                    //         }
+                    //     }
+                }
+                else {
+                    //Set the default parameters for actions
+                    parameters.push(n.document_id);
+                    // if (n.parent) {
+                    //     parameters.push(n.parent.id);
+                    // }
                 }
 
-                var paramBase64Str = Base64.encode(JSON.stringify(parameters));
+                // var paramBase64Str = Base64.encode(JSON.stringify(parameters));
+                // htmlDiv += '<button type="button" title="' + action.title + '" class="' + eltClass + ' btn btn-sm ' + action.class + '" onclick="' + action.method + '(\'' + paramBase64Str + '\');">';
 
-                htmlDiv += '<button type="button" title="' + action.title + '" class="' + eltClass + ' btn btn-sm ' + action.class + '" onclick="' + action.method + '(\'' + paramBase64Str + '\');">';
+                htmlDiv += '<button type="button" title="' + action.title + '" class="' + eltClass + ' btn btn-sm ' + action.class + '" onclick="' + action.method + '(\'' + parameters.join() + '\');">';
                 if (action.icon) {
                     if (displayName) {
                         htmlDiv += ' <span class="' + action.icon + ' me-2"></span>'
@@ -85,7 +108,7 @@ Microsoft.Search.Actions = {
         return htmlDiv;
     },
 
-    renderActions: function (docresult, staticActions = false, initialStyle = "none") {
+    renderActions: function (docresult, staticActions = false, initialStyle = "none", displayName = false) {
         var htmlDiv = ''
 
         // Actions
@@ -96,18 +119,18 @@ Microsoft.Search.Actions = {
         }
         else {
             htmlDiv += '<div class="search-result-actions" id="actions-' + docresult.index_key + '" style="display:' + initialStyle + ' !important;">';
-
         }
 
         htmlDiv += '    <div class="col-md-12" style="padding: 5px;">';
         htmlDiv += '            <div class="d-grid gap-2 d-md-flex" >';
-        if (docresult.document_embedded) {
-            htmlDiv += '<button onclick="Microsoft.Results.Details.ShowDocumentById(\'' + docresult.parent.id + '\')" class="btn btn-outline-success btn-sm" ><span class="bi bi-file-earmark" title="Show source document details"></span></button>'
-        }
+        // if (docresult.document.embedded) {
+        //     htmlDiv += '<button onclick="Microsoft.Results.Details.ShowDocumentById(\'' + docresult.parent.id + '\')" class="btn btn-outline-success btn-sm" ><span class="bi bi-file-earmark me-2" title="Show parent document details..."></span><span>Source</span></button>'
+        // }
 
         for (var i = 0; i < this.actions.length; i++) {
-            if (this.actions[i].enable) {
-                htmlDiv += this.renderActionButton(docresult, this.actions[i],'',false);
+            var action = this.actions[i];  
+            if (action.enable) {
+                htmlDiv += this.renderActionButton(docresult, action,'',displayName);
             }
         }
 
@@ -130,14 +153,14 @@ Microsoft.Search.Actions = {
 
         htmlDiv += '<ul class="dropdown-menu" aria-labelledby="dropdownMenu-' + docresult.index_key + '">';
 
-        if (docresult.document_embedded) {
-            htmlDiv += '<li>';
-            htmlDiv += '<button onclick="Microsoft.Results.Details.ShowDocumentById(\'' + docresult.parent.id + '\')" class="dropdown-item btn btn-outline-success btn-sm">';
-            htmlDiv += '<span class="bi bi-file-earmark me-2" title="Show parent ]document details"></span>';
-            htmlDiv += '<span>Open Parent</span>';
-            htmlDiv += '</button>';
-            htmlDiv += '</li>';
-        }
+        // if (docresult.document.embedded) {
+        //     htmlDiv += '<li>';
+        //     htmlDiv += '<button onclick="Microsoft.Results.Details.ShowDocumentById(\'' + docresult.parent.id + '\')" class="dropdown-item btn btn-outline-success btn-sm">';
+        //     htmlDiv += '<span class="bi bi-file-earmark me-2" title="Show parent ]document details"></span>';
+        //     htmlDiv += '<span>Open Parent</span>';
+        //     htmlDiv += '</button>';
+        //     htmlDiv += '</li>';
+        // }
 
         for (var i = 0; i < this.actions.length; i++) {
 

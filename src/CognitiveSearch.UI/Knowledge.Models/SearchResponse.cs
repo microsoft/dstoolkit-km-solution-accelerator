@@ -20,11 +20,7 @@ namespace Knowledge.Models
 
         public int StorageIndex { get; set; }
 
-        public string DecodedPath { get; set; }
-
         public IDictionary<string, IList<FacetValue>> Facets { get; set; }
-
-        public IDictionary<string, IList<FacetValue>> Tags { get; set; }
 
         public string SearchId { get; set; }
 

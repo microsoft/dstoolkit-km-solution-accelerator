@@ -2,11 +2,13 @@
     "ServiceEndPoint": "Microsoft.Storage",
     "GroupId": "Blob",
     "Apptype": "Storage",
+    "PrivateDNSZone":"privatelink.blob.core.windows.net",
     "Parameters": {
         "storageContainers": [
             "documents",
             "images",
-            "metadata"
+            "metadata",
+            "translation"
         ],
         "storageFileShares": [
             "neo4jdata",
@@ -19,16 +21,18 @@
             "Accountkind": "StorageV2",
             "ResourceGroup": "{{config.resourceGroupName}}",
             "IsDataStorage": true,
+            "EnableHierarchicalNamespace": true,
             "EnablePrivateAccess": true,
-            "AddExistingSubnets": true
+            "AccessSubnetRestriction": true
         },
         {
             "Name": "{{config.name}}tech",
             "Accountkind": "StorageV2",
             "ResourceGroup": "{{config.resourceGroupName}}",
             "IsDataStorage": false,
+            "EnableHierarchicalNamespace": true,
             "EnablePrivateAccess": true,
-            "AddExistingSubnets": true
+            "AccessSubnetRestriction": true
         }
     ]
 }

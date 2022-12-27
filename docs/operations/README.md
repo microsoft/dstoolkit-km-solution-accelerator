@@ -73,7 +73,7 @@ Get-AzureMapsSubscriptionKey      0.0     core
 Get-CognitiveServiceKey           0.0     core
 Get-Config                        0.0     core
 Get-ContainerFilesList            0.0     core
-Get-DataStorageAccountParameters  0.0     core
+Get-DataStorageAccountAccessKeys  0.0     core
 Get-DeploymentOverlayPath         0.0     core
 Get-Environment                   0.0     core
 Get-FunctionsKeys                 0.0     core
@@ -83,7 +83,7 @@ Get-SearchIndexersStatus          0.0     core
 Get-SearchIndexerStatus           0.0     core
 Get-SearchServiceDetails          0.0     core
 Get-SearchServiceKeys             0.0     core
-Get-TechStorageAccountParameters  0.0     core
+Get-TechStorageAccountAccessKeys  0.0     core
 Import-Config                     0.0     core
 Import-DockerConfig               0.0     core
 Import-Functions                  0.0     core
@@ -236,6 +236,34 @@ Publish-Functions -WindowsOnly
 
 ```ps
 Publish-FunctionsSettings
+```
+
+### **Adding a new skill** 
+
+- Initialize your environment after your configuration changes are done. 
+- Build the function(s)
+```ps
+Build-Functions -Publish
+```
+- Publish the settings to ensure your function has all env variables it requires. 
+```ps
+Publish-FunctionsSettings
+```
+- Test all your functions
+```ps
+Test-Functions
+```
+- Get all your functions keys so parameters are aligned with new functions. 
+```ps
+Get-FunctionsKeys
+```
+- Re-configure the search service with your new skill(s) 
+```ps
+Initialize-Search
+```
+If your changes are only on the skillset 
+```ps
+Update-SearchSkillSet <skillsetname i.e. documents or images>
 ```
 
 ## Azure Web App 

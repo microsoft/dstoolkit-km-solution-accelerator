@@ -81,12 +81,8 @@
       "targetFieldName": "source_processing_date"
     },
     {
-      "sourceFieldName": "/document/skill_metadata/document_embedded",
-      "targetFieldName": "document_embedded"
-    },
-    {
-      "sourceFieldName": "/document/skill_metadata/document_converted",
-      "targetFieldName": "document_converted"
+      "sourceFieldName": "/document/document_shape",
+      "targetFieldName": "document"
     },
     {
       "sourceFieldName": "/document/parent_metadata",
@@ -172,6 +168,14 @@
     {
       "sourceFieldName": "/document/tables_count",
       "targetFieldName": "tables_count"
+    },
+    {
+      "sourceFieldName": "/document/kvs",
+      "targetFieldName": "kvs"
+    },
+    {
+      "sourceFieldName": "/document/kvs_count",
+      "targetFieldName": "kvs_count"
     },
     {
       "sourceFieldName": "/document/paragraphs",

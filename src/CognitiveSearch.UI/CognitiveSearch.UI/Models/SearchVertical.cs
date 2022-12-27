@@ -20,7 +20,8 @@ namespace CognitiveSearch.UI.Models
         public List<ClientAction> ResultsRenderings { get; set; }
 
         public List<Suggestion> suggestions { get; set; }
-		
+
+        public string Tags { get; set; }
 
         public SearchVertical()
         {

@@ -8,8 +8,13 @@ from azure.core.credentials import AzureKeyCredential
 from azure.ai.textanalytics import TextAnalyticsClient
 import os
 
-endpoint = os.environ["TEXT_ANALYTICS_ENDPOINT"]
-key = os.environ["TEXT_ANALYTICS_KEY"]
+endpoint = os.environ["LANGUAGE_ENDPOINT"]
+key = os.environ["LANGUAGE_KEY"]
+
+if 'LANGUAGE_MODEL_VERSION' in os.environ:
+    model=os.environ["LANGUAGE_MODEL_VERSION"]
+else:
+    model='latest'
 
 #https://docs.microsoft.com/en-us/azure/cognitive-services/language-service/concepts/data-limits#maximum-characters-per-document
 MAX_CHARS_PER_DOC=int(os.environ["MAX_CHARS_PER_DOC"])
@@ -183,14 +188,16 @@ def transform_value_big(headers, record):
             else:
                 data['countryHint'] = 'US'
 
-        result = text_analytics_client.detect_language([text], country_hint = data['countryHint'])
+        # 15-Dec-2022
+        # https://learn.microsoft.com/en-us/azure/cognitive-services/language-service/language-detection/language-support
+        # model_version - Hack to retain Japanese language detection quality...
+        result = text_analytics_client.detect_language([text], country_hint = data['countryHint'], model_version = '2021-11-20')
 
         for doc in result:
             if not doc.is_error:
                 document['data']['languageCode'] = doc.primary_language.iso6391_name
                 document['data']['languageName'] = doc.primary_language.name
                 document['data']['score'] = doc.primary_language.confidence_score
-
             else:
                 document['data']['languageCode'] = 'en'
                 document['warnings'] = [{"message": doc.error.code + ": " + doc.error.message}]           

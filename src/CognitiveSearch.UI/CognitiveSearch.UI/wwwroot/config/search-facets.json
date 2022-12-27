@@ -23,13 +23,13 @@
     ]
   },
   {
-    "id": "keyphrases",
+    "id": "key_phrases",
     "name": "Key Phrases",
     "type": "dynamic",
     "target": "key_phrases"
   },
   {
-    "id": "folders",
+    "id": "document_segments",
     "name": "Folders",
     "type": "dynamic",
     "target": "document_segments"

@@ -1,5 +1,17 @@
 # Changes log
 
+## November 2022
+
+- UI & API improvements
+- Simple Document Translation support
+- Form Recognizer
+    - Not relying on direct content url anymore
+    - Projection of the outputs to metadata storage for later use (UI)
+- PII Detection simple integration
+- VNET enhancements
+- Auto-creation of storage file-shares
+- Bugs fixing
+
 ## October 2022 
 
 - Support for full VNET integration

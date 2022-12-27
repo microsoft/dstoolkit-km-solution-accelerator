@@ -2,6 +2,7 @@
     "ServiceEndPoint":"Microsoft.CognitiveServices",
     "GroupId":"CognitiveService",
     "Apptype":"CognitiveService",
+    "PrivateDNSZone":"privatelink.cognitiveservices.azure.com",
     "Parameters" : {
         "cogSvcLanguage": "{{config.name}}coglanguage",
         "cogSvcVision": "{{config.name}}cogvision",
@@ -17,7 +18,7 @@
             "Sku":"S1",
             "Parameter":"cogSvcVision",
             "EnablePrivateAccess":true,
-            "AddExistingSubnets":true
+            "AccessSubnetRestriction":true
         },
         {
             "Name": "{{config.name}}cogform",
@@ -27,7 +28,7 @@
             "Sku":"S0",
             "Parameter":"cogSvcForm",
             "EnablePrivateAccess":true,
-            "AddExistingSubnets":true
+            "AccessSubnetRestriction":true
         },
         {
             "Name": "{{config.name}}cogtranslate",
@@ -37,7 +38,7 @@
             "Sku":"S1",
             "Parameter":"cogSvcTranslate",
             "EnablePrivateAccess":true,
-            "AddExistingSubnets":true
+            "AccessSubnetRestriction":true
         },
         {
             "Name": "{{config.name}}coglanguage",
@@ -47,7 +48,7 @@
             "Sku":"S",
             "Parameter":"cogSvcLanguage",
             "EnablePrivateAccess":true,
-            "AddExistingSubnets":true
+            "AccessSubnetRestriction":true
         }
     ]
 }

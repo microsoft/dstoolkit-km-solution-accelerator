@@ -1,5 +1,0 @@
-###
-POST http://localhost:7071/vision/analyzedocument
-content-type: application/json;charset=utf-8
-
-< AnalyzeDocument.local.json

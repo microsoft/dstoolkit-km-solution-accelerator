@@ -47,7 +47,7 @@ This KM solution accelerator aims to provide you with a workable end-to-end Know
     - Content security model (permissions)
     - Modular User Interface 
 
-With this cloud-based accelerator you will get an end-to-end solution with the tools to deploy, extend, operate & monitor it.
+With this cloud-based accelerator you will get an end-to-end solution with the tools to deploy, extend, operate & monitor.
 
 In that respect, the solution provides 
 - Azure Web App Authentication support 
@@ -83,7 +83,13 @@ Below is a non-exhaustive list of key highlights:
     - Having an HTML representation of a document could ease some NLP work. 
     - Table of contents is a common structure which we expose in the HTML representation of a PDF. 
 
-* **Tables extraction**: tabular information are common in unstructured data. The solution will extract, index and project tables to a dedicated knowledge store.   
+* **Tables extraction**: tabular information are common in unstructured data corpus. The solution will extract, index and project tables to a dedicated knowledge store (optional).   
+
+* **Translation**": there are two translation features in this solution
+    * **Text Translation** : non-native content and title are normalized to a define language (default is english)
+    * **Document Translation** : for non-native documents, the solution will translate them. They will follow the same Document processing as any document. Translated documents will provide you with translated tables for instance.
+
+* **Text Analytics** : extract Entities (Named, Linked) from any document and OCR'ed image text.
 
 * **Export to Excel**: popular ask when exploring unstructured data. 
 
@@ -188,7 +194,7 @@ This solution is inspired from the original work of the
 Core contributors to this solution accelerator are 
 - [Nicolas Uthurriague](https://github.com/puthurr)
 - [Edoardo Quasso](https://github.com/EdoQuasso) for the Azure Cognitive Functions (Python)
-- [Timm Walz](https://github.com/nonstoptimm)
+- [Harika Nagidi](https://github.com/harikanagidi) for VNET support and deployment improvements.
 
 # Special Thanks 
 

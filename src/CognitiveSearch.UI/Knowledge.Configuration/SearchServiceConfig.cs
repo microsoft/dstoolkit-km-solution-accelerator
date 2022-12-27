@@ -47,7 +47,6 @@ namespace Knowledge.Configuration
 
         // Configure Facets, Tags (Facets) & retrievable fields
         public string FacetsAsString { get; set; }
-        public string TagsAsString { get; set; }
         public string ResultFieldsAsString { get; set; }
         public string HHFieldsAsString { get; set; }
 
@@ -106,17 +105,6 @@ namespace Knowledge.Configuration
             }
 
             return Facets;
-        }
-
-        public List<string> GetTags()
-        {
-            if (Tags == null)
-            {
-                if (!string.IsNullOrEmpty(TagsAsString.Trim()))
-                    Tags = new List<string>(TagsAsString.Split(','));
-            }
-
-            return Tags;
         }
 
         public List<string> GetResultFields()

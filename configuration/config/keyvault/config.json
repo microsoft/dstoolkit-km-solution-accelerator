@@ -2,6 +2,7 @@
     "ServiceEndPoint":"Microsoft.KeyVault",
     "GroupId":"KeyVault",
     "Apptype":"KeyVault",
+    "PrivateDNSZone":"privatelink.vaultcore.azure.net",
     "Parameters" : {
         "keyvault": "{{config.name}}kv"
     },
@@ -11,7 +12,7 @@
             "ResourceGroup": "{{config.resourceGroupName}}",
             "Sku": "Premium",
             "EnablePrivateAccess":true,
-            "AddExistingSubnets":true
+            "AccessSubnetRestriction":true
         }
     ]
 }

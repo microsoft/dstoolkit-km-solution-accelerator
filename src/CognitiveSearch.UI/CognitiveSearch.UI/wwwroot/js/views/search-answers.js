@@ -48,14 +48,14 @@ Microsoft.Answers = {
 
                     if (item.highlights) {
                         answersHtml += ' <a title="'+item.text+'" href="javascript:void(0)" onclick="Microsoft.Results.Details.ShowDocument(\'' + index_key + '\',0);" class="list-group-item list-group-item-action d-flex" style="color:inherit !important">' ;
-                        answersHtml += '   <img title="' + item.text +'" class="image-result img-thumbnail cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimagebyindexkey?index_key=' + index_key + '" " onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                        answersHtml += '   <img title="' + item.text +'" class="image-result img-thumbnail cover-image" src="' + iconPath + '" data-src="/api/document/getcoverimagebyindexkey?index_key=' + index_key + '" " onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                         answersHtml += ' <span class="ms-1">' + item.highlights + '</span>';
                         answersHtml += ' </a>';
                     }
                     else {
                         if (item.text) {
                             answersHtml += ' <a title="'+item.text+'" href="javascript:void(0)" onclick="Microsoft.Results.Details.ShowDocument(\'' + index_key + '\',0);" class="list-group-item list-group-item-action d-flex" style="color:inherit !important">' ;
-                            answersHtml += '   <img title="' + item.text +'" class="image-result img-thumbnail cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimagebyindexkey?index_key=' + index_key + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                            answersHtml += '   <img title="' + item.text +'" class="image-result img-thumbnail cover-image" src="' + iconPath + '" data-src="/api/document/getcoverimagebyindexkey?index_key=' + index_key + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
                             answersHtml += ' <span class="ms-1">' + item.text + '</span>';
                             answersHtml += ' </a>';
                         }
@@ -125,34 +125,32 @@ Microsoft.Answers = {
 
     AnswersSearch: function(query) {
     
-        Microsoft.Search.setQueryInProgress();
+        if (Microsoft.Search.setQueryInProgress()) {
     
-        if (query !== undefined && query !== null) {
-            $("#q").val(query)
-        }
-        // if (query !== undefined) {
-        //     $("#q").val(query)
-        // }
-    
-        if (Microsoft.Search.currentPage > 0) {
-            if (Microsoft.View.currentQuery !== $("#q").val()) {
-                Microsoft.Search.ResetSearch();
+            if (query !== undefined && query !== null) {
+                $("#q").val(query)
             }
+        
+            if (Microsoft.Search.currentPage > 0) {
+                if (Microsoft.View.currentQuery !== $("#q").val()) {
+                    Microsoft.Search.ResetSearch();
+                }
+            }
+            Microsoft.View.currentQuery = $("#q").val();
+        
+            // Get center of map to use to score the search results
+            $.postAPIJSON('/api/answers/getanswers',
+                {
+                    queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
+                    searchFacets: Microsoft.Facets.selectedFacets,
+                    currentPage: ++Microsoft.Search.currentPage,
+                    parameters: Microsoft.Search.Parameters,
+                    options: Microsoft.Search.Options
+                },
+                function (data) {
+                    Microsoft.Answers.AnswersUpdate(data, Microsoft.Search.currentPage);
+                });
         }
-        Microsoft.View.currentQuery = $("#q").val();
-    
-        // Get center of map to use to score the search results
-        $.postAPIJSON('/api/answers/getanswers',
-            {
-                queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
-                searchFacets: Microsoft.Facets.selectedFacets,
-                currentPage: ++Microsoft.Search.currentPage,
-                parameters: Microsoft.Search.Parameters,
-                options: Microsoft.Search.Options
-            },
-            function (data) {
-                Microsoft.Answers.AnswersUpdate(data, Microsoft.Search.currentPage);
-            });
     },
     
     AnswersUpdate: function(data, currentPage) {
@@ -243,7 +241,9 @@ Microsoft.Answers = {
     
                     if (Microsoft.Utils.images_extensions.includes(pathExtension)) {
                         answersHtml += '<a target="_blank" href="' + src + '" >';
-                        answersHtml += '<img class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.parent.filename) + '" />';
+                        if (docresult.image) {
+                            answersHtml += '<img class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.parent.filename) + '" />';
+                        }
                         answersHtml += '</a>';
                     }
                     else {

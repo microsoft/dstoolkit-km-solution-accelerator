@@ -144,21 +144,21 @@ Highlights is a sequence of sections, similar to the parallax layout.
         "title": "Only search documents",
         "fonticon": "bi bi-list",
         "method": "Microsoft.All.UpdateResultsAsList",
-        "filter": "(document_embedded eq false)"
+        "filter": "(document/embedded eq false)"
         },
         {
         "name": "pages",
         "title": "Only search document pages or slides",
         "fonticon": "bi bi-files",
         "method": "Microsoft.All.UpdateResultsAsCard",
-        "filter": "(document_embedded eq true)"
+        "filter": "(document/embedded eq true)"
         },
         {
         "name": "images",
         "title": "Only search Images",
         "fonticon": "bi bi-image",
         "method": "Microsoft.Images.UpdateImagesResults",
-        "filter": "(document_embedded eq false and content_group eq 'Image')"
+        "filter": "(document/embedded eq false and content_group eq 'Image')"
         },
         {
         "name": "tables",

@@ -15,8 +15,13 @@
         "slotSetting": false
     },
     {
+        "name": "METADATA_STORAGE_CONNECTION_STRING",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/storageConnectionString)",
+        "slotSetting": false
+    },
+    {
         "name": "FORMS_RECOGNIZER_ENDPOINT",
-        "value": "https://{{config.location}}.api.cognitive.microsoft.com",
+        "value": "https://{{param.cogSvcForm}}.cognitiveservices.azure.com",
         "slotSetting": false
     },
     {
@@ -25,8 +30,13 @@
         "slotSetting": false
     },
     {
+        "name": "FORMS_RECOGNIZER_MODEL",
+        "value": "prebuilt-document",
+        "slotSetting": false
+    },
+    {
         "name": "COMPUTER_VISION_ENDPOINT",
-        "value": "https://{{config.location}}.api.cognitive.microsoft.com",
+        "value": "https://{{param.cogSvcVision}}.cognitiveservices.azure.com",
         "slotSetting": false
     },
     {

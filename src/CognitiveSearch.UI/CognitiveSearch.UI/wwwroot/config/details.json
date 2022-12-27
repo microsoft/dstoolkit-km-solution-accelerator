@@ -2,7 +2,6 @@
   {
     "id": "file",
     "enable": true,
-    "active": true,
     "renderingMethod": "Microsoft.Search.Results.File.RenderSearchResultPreview",
     "fonticon": "bi bi-file-earmark",
     "adaptiveIcon": true,
@@ -63,6 +62,18 @@
     }
   },
   {
+    "id": "kvp",
+    "enable": true,
+    "renderingMethod": "Microsoft.Search.Results.KVP.render_tab",
+    "fonticon": "bi bi-database",
+    "localization": {
+      "en": {
+        "name": "Key/Value",
+        "title": "Extracted Key/Value pairs"
+      }
+    }
+  },
+  {
     "id": "images",
     "enable": true,
     "renderingMethod": "Microsoft.Search.Results.Embedded.render_tab",
@@ -84,6 +95,19 @@
       "en": {
         "name": "Source",
         "title": "Preview parent document"
+      }
+    }
+  },
+  {
+    "id": "translation",
+    "enable": true,
+    "renderingMethod": "Microsoft.Search.Results.Translation.render_tab",
+    "fonticon": "bi bi-translate text-info",
+    "viewerClass": "details-max-height-viewer",
+    "localization": {
+      "en": {
+        "name": "Translation",
+        "title": "Preview translation of that document"
       }
     }
   }

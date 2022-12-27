@@ -74,7 +74,7 @@ namespace Knowledge.Services.SemanticSearch
             // Create the Semantic AzureSearchServiceRequest 
             AzureSearchServiceRequest req = CreateSemanticSearchRequest(request);
 
-            AzureSearchRESTResponse response = await AzureSearchRestAPI(this.GetModel(request.indexName).IndexName, req);
+            AzureSearchRESTResponse response = await AzureSearchRestAPI(this.serviceConfig, this.GetModel(request.indexName).IndexName, req);
 
             response.tokens = this.GetContainerSasUris();
 
@@ -112,11 +112,13 @@ namespace Knowledge.Services.SemanticSearch
 
             telemetryClient.TrackTrace(Newtonsoft.Json.JsonConvert.SerializeObject(req)); 
 
-            AzureSearchRESTResponse restResponse = await AzureSearchRestAPI(this.GetModel(request.indexName).IndexName,req);
+            AzureSearchRESTResponse restResponse = await AzureSearchRestAPI(this.serviceConfig, this.GetModel(request.indexName).IndexName,req);
 
+            // Format the response to our Search Response standard
             SearchResponse response = CreateSearchResponse(restResponse,request.indexName); 
 
-            response.Tokens = this.GetContainerSasUris();
+            response.IsSemanticSearch = true;
+            response.SemanticAnswers = restResponse?.answers;
 
             return response;
         }
@@ -182,95 +184,6 @@ namespace Knowledge.Services.SemanticSearch
             return request;
         }
 
-        public SearchResponse CreateSearchResponse(AzureSearchRESTResponse response, string indexName = null)
-        {
-            Dictionary<string, string> s_tokens = GetContainerSasUris();
-
-            var facetResults = new Dictionary<string, IList<FacetValue>>();
-            var tagsResults = new Dictionary<string, IList<FacetValue>>();
-
-            if (response != null)
-            {
-                if (response.facets != null)
-                {
-                    // Populate selected facets from the Search Model
-                    foreach (var facetResult in response.facets.Where(f => this.GetModel(indexName).Facets.Where(x => x.Name == f.Key).Any()))
-                    {
-                        List<FacetValue> values = new List<FacetValue>();
-
-                        foreach (FacetEntry fr in facetResult.Value)
-                        {
-                            FacetValue fv = new FacetValue
-                            {
-                                count = fr.count
-                            };
-
-                            if (fr.value.GetType() == typeof(String))
-                            {
-                                fv.value = (string)fr.value;
-                            }
-                            if (fr.value.GetType() == typeof(DateTime))
-                            {
-                                fv.value = (DateTime.Parse(fr.value)).ToString();
-                            }
-
-                            values.Add(fv);
-                        }
-
-                        if (values.Count() > 0)
-                        {
-                            facetResults.Add(facetResult.Key, values);
-                        }
-                    }
-
-                    // Populate selected tags from the Search Model
-                    foreach (var tagResult in response.facets.Where(t => this.GetModel(indexName).Tags.Where(x => x.Name == t.Key).Any()))
-                    {
-                        List<FacetValue> values = new List<FacetValue>();
-
-                        foreach (FacetEntry fr in tagResult.Value)
-                        {
-                            FacetValue fv = new FacetValue
-                            {
-                                count = fr.count
-                            };
-
-                            if (fr.value.GetType() == typeof(String))
-                            {
-                                fv.value = (string)fr.value;
-                            }
-                            if (fr.value.GetType() == typeof(DateTime))
-                            {
-                                fv.value = (DateTime.Parse(fr.value)).ToString();
-                            }
-
-                            values.Add(fv);
-                        }
-
-                        if (values.Count() > 0)
-                        {
-                            tagsResults.Add(tagResult.Key, values);
-                        }
-                    }
-                }
-            }
-
-            var result = new SearchResponse
-            {
-                IndexName = indexName,
-                Results = (response?.documents),
-                Facets = facetResults,
-                Tags = tagsResults,
-                Count = (response == null ? 0 : Convert.ToInt32(response.count)),
-                //SearchId = searchId,
-                IdField = this.serviceConfig.KeyField,
-                Tokens = s_tokens,
-                IsPathBase64Encoded = this.serviceConfig.IsPathBase64Encoded,
-                IsSemanticSearch = true,
-                SemanticAnswers = response?.answers
-            };
-            return result;
-        }
 
     }
 }

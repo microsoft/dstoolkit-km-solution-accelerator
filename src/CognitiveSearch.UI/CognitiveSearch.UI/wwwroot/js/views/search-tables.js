@@ -28,10 +28,12 @@ Microsoft.Tables = {
             resultsHtml += '<a href="javascript:void(0)" onclick="Microsoft.Results.Details.ShowDocumentById(\'' + docresult.document_id + '\');" >';
 
             if (Microsoft.Utils.images_extensions.includes(pathExtension)) {
-                resultsHtml += '<img alt="' + name + '" class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + docresult.metadata_storage_name + '" />';
+                if (docresult.image) {
+                    resultsHtml += '<img alt="' + name + '" class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + docresult.metadata_storage_name + '" />';
+                }
             }
             else {
-                resultsHtml += '   <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+                resultsHtml += Microsoft.Search.RenderCoverImage(docresult,name,iconPath);
             }
 
             resultsHtml += '</a>';
@@ -176,33 +178,34 @@ Microsoft.Tables = {
 
     TablesSearch: function (query) {
 
-        Microsoft.Search.setQueryInProgress();
+        if (Microsoft.Search.setQueryInProgress()) {
 
-        if (query !== undefined && query !== null) {
-            $("#q").val(query)
-        }
-
-        if (Microsoft.Search.currentPage > 0) {
-            if (Microsoft.View.currentQuery !== $("#q").val()) {
-                Microsoft.Search.ResetSearch();
+            if (query !== undefined && query !== null) {
+                $("#q").val(query)
             }
+
+            if (Microsoft.Search.currentPage > 0) {
+                if (Microsoft.View.currentQuery !== $("#q").val()) {
+                    Microsoft.Search.ResetSearch();
+                }
+            }
+            Microsoft.View.currentQuery = $("#q").val();
+
+            // Get center of map to use to score the search results
+
+            $.postAPIJSON('/api/search/getdocuments',
+                {
+                    queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
+                    searchFacets: Microsoft.Facets.selectedFacets,
+                    currentPage: ++Microsoft.Search.currentPage,
+                    parameters: Microsoft.Search.Parameters,
+                    options: Microsoft.Search.Options,
+                    incomingFilter: 'tables_count ge 1'
+                },
+                function (data) {
+                    Microsoft.Tables.TablesUpdate(data, Microsoft.Search.currentPage);
+                });
         }
-        Microsoft.View.currentQuery = $("#q").val();
-
-        // Get center of map to use to score the search results
-
-        $.postAPIJSON('/api/search/getdocuments',
-            {
-                queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
-                searchFacets: Microsoft.Facets.selectedFacets,
-                currentPage: ++Microsoft.Search.currentPage,
-                parameters: Microsoft.Search.Parameters,
-                options: Microsoft.Search.Options,
-                incomingFilter: 'tables_count ge 1'
-            },
-            function (data) {
-                Microsoft.Tables.TablesUpdate(data, Microsoft.Search.currentPage);
-            });
     },
 
     TablesUpdate: function(data, currentPage) {

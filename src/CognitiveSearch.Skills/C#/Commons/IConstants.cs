@@ -27,7 +27,7 @@ namespace Microsoft.Services.Common
 
         public static readonly string ContainerConnectionString = FEnvironment.StringReader("ContainerConnectionString");
 
-        public static readonly string[] ContainerNames = FEnvironment.StringReader("ContainerName","documents").Split(',');
+        public static readonly string[] ContainerNames = FEnvironment.StringReader("ContainersList","documents").Split(',');
 
         public static readonly string MetadataContainerName = FEnvironment.StringReader("MetadataContainerName", "metadata");
         public static readonly string ImageContainerName = FEnvironment.StringReader("ImageContainerName", "images");

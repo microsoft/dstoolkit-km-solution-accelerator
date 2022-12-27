@@ -10,35 +10,36 @@ Microsoft.Web = {
 
     WebSearch: function (query) {
 
-        Microsoft.Search.setQueryInProgress();
+        if (Microsoft.Search.setQueryInProgress()) {
 
-        if (query !== undefined && query !== null) {
-            $("#q").val(query)
-        }
-
-        if (Microsoft.Search.currentPage > 0) {
-            if (Microsoft.View.currentQuery !== $("#q").val()) {
-                Microsoft.Search.ResetSearch();
+            if (query !== undefined && query !== null) {
+                $("#q").val(query)
             }
+
+            if (Microsoft.Search.currentPage > 0) {
+                if (Microsoft.View.currentQuery !== $("#q").val()) {
+                    Microsoft.Search.ResetSearch();
+                }
+            }
+            Microsoft.View.currentQuery = $("#q").val();
+
+            // Set a default web filter for your vertical if necessary
+            var filter = Microsoft.View.config.filter ? Microsoft.View.config.filter : '';
+
+            $.postAPIJSON('/api/web/webresults',
+                {
+                    queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
+                    searchFacets: Microsoft.Facets.selectedFacets,
+                    count: Microsoft.Web.MAX_NUMBER_WEB_RESULTS_PER_PAGE,
+                    incomingFilter: filter,
+                    parameters: Microsoft.Search.Parameters,
+                    currentPage: ++Microsoft.Search.currentPage
+                },
+                function (data) {
+                    Microsoft.Search.setQueryCompleted();
+                    Microsoft.Web.WebUpdate(data, Microsoft.Search.currentPage);
+                });
         }
-        Microsoft.View.currentQuery = $("#q").val();
-
-        // Set a default web filter for your vertical if necessary
-        var filter = Microsoft.View.config.filter ? Microsoft.View.config.filter : '';
-
-        $.postAPIJSON('/api/web/webresults',
-            {
-                queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
-                searchFacets: Microsoft.Facets.selectedFacets,
-                count: Microsoft.Web.MAX_NUMBER_WEB_RESULTS_PER_PAGE,
-                incomingFilter: filter,
-                parameters: Microsoft.Search.Parameters,
-                currentPage: ++Microsoft.Search.currentPage
-            },
-            function (data) {
-                Microsoft.Search.setQueryCompleted();
-                Microsoft.Web.WebUpdate(data, Microsoft.Search.currentPage);
-            });
     },
 
     WebUpdate: function (data, currentPage) {

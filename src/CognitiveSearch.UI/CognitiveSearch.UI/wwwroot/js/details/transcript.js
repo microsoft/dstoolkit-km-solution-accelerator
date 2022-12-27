@@ -43,14 +43,14 @@ Microsoft.Search.Results.Transcript = {
         }
 
         if (full_translated_text.length > 0) {
-            transcriptContainerHTML += '<div style="overflow-x:initial;"><table class="table"><thead><tr><th>Original Content</th><th>Translated (En)</th></tr></thead>';
+            transcriptContainerHTML += '<div style="overflow-x:initial;"><table class="table"><thead><tr><th>Original Content ('+result.language+')</th><th>Translated ('+result.translated_language+')</th></tr></thead>';
             transcriptContainerHTML += '<tbody>';
             transcriptContainerHTML += '<tr><td class="wrapword text-break" style="width:50%"><div id="transcript-viewer-pre">' + full_content + '</div></td><td class="wrapword text-break"><div id="translated-transcript-viewer-pre">' + full_translated_text + '</div></td></tr>';
             transcriptContainerHTML += '</tbody>';
             transcriptContainerHTML += '</table></div>';
         }
         else {
-            transcriptContainerHTML += '<div style="overflow-x:initial;"><table class="table"><thead><tr><th>Original Content</th></tr></thead>';
+            transcriptContainerHTML += '<div style="overflow-x:initial;"><table class="table"><thead><tr><th>Original Content ('+result.language+')</th></tr></thead>';
             transcriptContainerHTML += '<tbody>';
             transcriptContainerHTML += '<tr><td class="wrapword text-break"><div id="transcript-viewer-pre">' + full_content + '</div></td></tr>';
             transcriptContainerHTML += '</tbody>';

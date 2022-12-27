@@ -15,5 +15,6 @@ _Table of Contents_
 | Monitoring | How to monitor the solution |[README](monitoring/README.md)| 
 | Search | How search is configured and managed |[README](search/README.md)| 
 | Search & Explore (UI) | User Interface to Search & Explore |[README](ui/README.md)| 
+| Virtual Network | Virtual Network configuration |[README](vnet/README.md)| 
 ||||
 

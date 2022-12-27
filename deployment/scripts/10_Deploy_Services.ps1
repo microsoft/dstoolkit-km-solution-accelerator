@@ -59,7 +59,7 @@ Write-Host "=============================================================="
 New-BingSearchService
 
 # Save and Apply the Parameters we got
-Sync-Parameters
+Sync-Config
 
 # Add all keys and connection strings to the KV 
 Initialize-KeyVault

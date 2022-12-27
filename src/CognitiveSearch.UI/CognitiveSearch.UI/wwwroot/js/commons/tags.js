@@ -6,7 +6,6 @@
 //
 Microsoft.Tags = Microsoft.Tags || {};
 Microsoft.Tags = {
-    tags: [],
     MaxTagsToDisplay: 5,
     MaxTagValueLengthToDisplay: 50,
     load: function (data) {
@@ -56,11 +55,12 @@ Microsoft.Tags = {
     renderCoreTags: function (result, limitTagsToDisplay, highlights, selectTags = [], startTagGroup, endTagGroup, htmlTagElt) {
 
         var tagsHTML = '';
-        var isDocument = ! result.document_embedded;
+        var isDocument = ! result.document.embedded;
 
-        if (this.tags) {
+        if (Microsoft.View.config.tags) {
 
-            var targeted_tags = Array.from(Object.keys(this.tags));
+            // var targeted_tags = Array.from(Object.keys(Microsoft.Facets.Facets));
+            var targeted_tags = Microsoft.View.config.tags.split(',');
 
             if (selectTags.length > 0) {
                 targeted_tags = selectTags;

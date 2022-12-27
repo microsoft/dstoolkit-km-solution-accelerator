@@ -50,7 +50,8 @@ Microsoft.Results.Details = {
         this.adjust_active_tab();
 
         // Modal Header
-        $('#document-quick-actions').html(Microsoft.Search.Actions.renderActions(result, true));
+        $('#document-quick-actions').html(Microsoft.Search.Actions.renderActions(result, true, null, true));
+        
         $('#document-details').html(Microsoft.Results.Details.GetDocumentHeader(result, idx));
 
         $('#details-modal').modal('show');
@@ -94,7 +95,7 @@ Microsoft.Results.Details = {
         var override_icon = tabular.fonticon;
 
         // Embedded objects
-        if (result.document_embedded) {
+        if (result.document.embedded) {
             if (Microsoft.Utils.IsImageExtension(pathExtension)) {
                 fileName = Microsoft.Utils.GetImageFileTitle(result);
                 override_icon = 'bi bi-file-image';
@@ -174,12 +175,7 @@ Microsoft.Results.Details = {
 
         var tab_pane = '';
 
-        if (tabular.active) {
-            tab_pane += '<div id="' + tabular.id + '-pivot" class="tab-pane active" role="tabpanel" aria-labelledby="' + tabular.id + '-pivot-link"> ';
-        }
-        else {
-            tab_pane += '<div id="' + tabular.id + '-pivot" class="tab-pane" role="tabpanel" aria-labelledby="' + tabular.id + '-pivot-link"> ';
-        }
+        tab_pane += '<div id="' + tabular.id + '-pivot" class="tab-pane" role="tabpanel" aria-labelledby="' + tabular.id + '-pivot-link"> ';
 
         if (tabular.viewerClass) {
             tab_pane += '<div id="' + tabular.id + '-viewer" class="details-default-viewer ' + tabular.viewerClass + '"></div>';
@@ -255,13 +251,30 @@ Microsoft.Results.Details = {
             });
     },
     
+    ShowRelatedDocumentById: function(id, idx = -1) {
+
+        $.postAPIJSON('/api/document/getsiblings',
+        {
+            document_id: id,
+            incomingFilter: "(parent/id eq '" + id + "') and (document/embedded eq false)",
+            parameters: {
+                RowCount: 1
+            }
+        },
+        function (data) {
+            if (data.results && data.count == 1) {
+                Microsoft.Results.Details.render_document_details(data.results[0], idx);
+            }
+        });
+    },
+    
     GetDocumentHeader: function(docresult, idx) {
     
         var headerContainerHTML = '';
     
         var pathExtension = docresult.metadata_storage_path.toLowerCase().split('.').pop();
         var iconPath = Microsoft.Utils.GetIconPathFromExtension(pathExtension);
-        if (docresult.document_embedded) {
+        if (docresult.document.embedded) {
         } else {
             // If embedded images tab is not relevant then skip
             if (!Microsoft.Utils.IsImageExtension(pathExtension)) {

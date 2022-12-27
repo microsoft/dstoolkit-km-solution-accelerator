@@ -20,42 +20,57 @@
         "slotSetting": false
     },
     {
-        "name": "TEXT_ANALYTICS_ENDPOINT",
-        "value": "https://{{config.location}}.api.cognitive.microsoft.com",
+        "name": "LANGUAGE_ENDPOINT",
+        "value": "https://{{param.cogSvcLanguage}}.cognitiveservices.azure.com",
         "slotSetting": false
     },
     {
-        "name": "TEXT_ANALYTICS_KEY",
+        "name": "LANGUAGE_KEY",
         "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcLanguageKey)",
         "slotSetting": false
     },
     {
-        "name": "TRANSLATOR_ENDPOINT",
-        "value": "https://api.cognitive.microsofttranslator.com",
+        "name": "DOCUMENT_TRANSLATION_ENDPOINT",
+        "value": "https://{{param.cogSvcTranslate}}.cognitiveservices.azure.com",
         "slotSetting": false
     },
     {
-        "name": "TRANSLATOR_KEY",
+        "name": "DOCUMENT_TRANSLATION_KEY",
         "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcTranslateKey)",
         "slotSetting": false
     },
     {
-        "name": "TRANSLATOR_LOCATION",
+        "name": "DOCUMENT_TRANSLATION_LANGUAGE",
+        "value": "{{param.searchDefaultToLanguageCode}}",
+        "slotSetting": false
+    },
+    {
+        "name": "TEXT_TRANSLATION_ENDPOINT",
+        "value": "https://api.cognitive.microsofttranslator.com",
+        "slotSetting": false
+    },
+    {
+        "name": "TEXT_TRANSLATION_KEY",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcTranslateKey)",
+        "slotSetting": false
+    },
+    {
+        "name": "TEXT_TRANSLATION_LOCATION",
         "value": "{{config.location}}",
         "slotSetting": false
     },
     {
-        "name": "TRANSLATOR_VERSION",
+        "name": "TEXT_TRANSLATION_VERSION",
         "value": "3.0",
         "slotSetting": false
     },
     {
-        "name": "TRANSLATOR_MAX_CHARS_PER_DOC",
+        "name": "TEXT_TRANSLATION_MAX_CHARS_PER_DOC",
         "value": "10000",
         "slotSetting": false
     },
     {
-        "name": "TRANSLATOR_MAX_DOC_PER_REQUEST",
+        "name": "TEXT_TRANSLATION_MAX_DOC_PER_REQUEST",
         "value": "5",
         "slotSetting": false
     },

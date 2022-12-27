@@ -5,3 +5,5 @@ azure-cognitiveservices-vision-computervision
 azure-ai-formrecognizer>=3.2.0
 Pillow
 ocrlayout==0.8
+azure-storage-blob
+azure-identity

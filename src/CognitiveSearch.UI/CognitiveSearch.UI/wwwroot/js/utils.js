@@ -342,14 +342,14 @@ Microsoft.Utils = {
             titleClassName += ' bi bi-lock ';
         }
         
-        if (docresult.document_embedded && !docresult.document_converted) {
+        if (docresult.document.embedded && !docresult.document.converted) {
             titleClassName += ' bi bi-paperclip ';
         }
 
         startTag += '<h5 class="'+titleClassName+'"> ';
         var endTag = '</h5></a>';
 
-        if (docresult.document_embedded && docresult.document_converted) {
+        if (docresult.document.embedded && docresult.document.converted) {
 
             var page_slide = this.GetImagePageorSlideNumber(docresult.metadata_storage_name);
 

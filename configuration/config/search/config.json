@@ -2,6 +2,7 @@
     "GroupId": "Search",
     "ServiceEndPoint": "Microsoft.Search",
     "Apptype": "Search",
+    "PrivateDNSZone":"privatelink.search.windows.net",
     "Parameters": {
         "searchServiceName": "{{config.name}}search",
         "searchDefaultFromLanguageCode": "en",
@@ -16,7 +17,6 @@
         {
             "Name": "{{config.name}}search",
             "ResourceGroup": "{{config.resourceGroupName}}",
-            "Sku": "Standard",
             "EnablePrivateAccess": true,
             "AddIPAddressRule": false,
             "AddPrivateSharedLink": true

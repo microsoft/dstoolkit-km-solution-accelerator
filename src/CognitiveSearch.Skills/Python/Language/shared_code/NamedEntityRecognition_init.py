@@ -8,8 +8,10 @@ from azure.core.credentials import AzureKeyCredential
 from azure.ai.textanalytics import TextAnalyticsClient
 import os
 
-endpoint = os.environ["TEXT_ANALYTICS_ENDPOINT"]
-key = os.environ["TEXT_ANALYTICS_KEY"]
+from . import LanguageConstants
+
+endpoint = os.environ["LANGUAGE_ENDPOINT"]
+key = os.environ["LANGUAGE_KEY"]
 
 #https://docs.microsoft.com/en-us/azure/cognitive-services/language-service/concepts/data-limits#maximum-characters-per-document
 MAX_CHARS_PER_DOC=int(os.environ["MAX_CHARS_PER_DOC"])
@@ -35,22 +37,8 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
              "Invalid body",
              status_code=400
         )
-    entity_recognition_mapping = {
-        "Person": {"name": "persons", "matched":[]}, 
-        "Location": {"name": "locations", "matched":[]}, 
-        "Organization": {"name": "organizations", "matched":[]},
-        "Quantity": {"name": "quantities", "matched":[]}, 
-        "DateTime": {"name": "dateTimes", "matched":[]}, 
-        "URL": {"name": "urls", "matched":[]}, 
-        "Email": {"name": "emails", "matched":[]}, 
-        "PersonType": {"name": "personTypes", "matched":[]}, 
-        "Event": {"name": "events", "matched":[]}, 
-        "Product": {"name": "products", "matched":[]}, 
-        "Skill": {"name": "skills", "matched":[]}, 
-        "Address": {"name": "addresses", "matched":[]}, 
-        "Phone Number": {"name": "phoneNumbers", "matched":[]}, 
-        "IP Address": {"name": "ipAddresses", "matched":[]}
-    }
+
+    entity_recognition_mapping = {}
     if body:
         result = compose_response(req.headers, body, entity_recognition_mapping)
         return func.HttpResponse(result, mimetype="application/json")
@@ -101,12 +89,14 @@ def transform_value_small(headers, records, entity_recognition_mapping):
         for lang in languageData:
 
             result = text_analytics_client.recognize_entities(languageData[lang]['chunks'], language = lang)
-            accepted_categories = ["Person", "Location", "Organization", "Quantity", "DateTime", "URL", "Email", "PersonType", "Event", "Product", "Skill", "Address", "Phone Number", "IP Address"]
+
+            categories = LanguageConstants.ENTITY_CATEGORIES
             if "categories" in headers:
-                accepted_categories = headers['categories']
-            elif "ENTITY_RECOGNITION_ACCEPPTED" in os.environ:
-                accepted_categories = os.environ['ENTITY_RECOGNITION_ACCEPPTED']
-            categories_dict = dict(filter(lambda elem: elem[0] in accepted_categories, entity_recognition_mapping.items()))
+                categories = headers['categories']
+            elif "ENTITY_RECOGNITION_CATEGORIES" in os.environ:
+                categories = os.environ['ENTITY_RECOGNITION_CATEGORIES']
+
+            categories_dict = dict(filter(lambda elem: elem[0] in categories, entity_recognition_mapping.items()))
             
             for (doc, id) in zip(result, languageData[lang]['ids']):
                 document = {}
@@ -115,6 +105,8 @@ def transform_value_small(headers, records, entity_recognition_mapping):
                 namedEntities = []
                 if not doc.is_error:
                     for entity in doc.entities:
+                        if entity.category not in categories_dict:
+                            categories_dict[entity.category]={"name": entity.category, "matched":[]}
                         if entity.category in categories_dict:
                             min_precision = 0
                             if 'minimumPrecision' in headers:
@@ -233,17 +225,20 @@ def transform_value_big(headers, record, entity_recognition_mapping):
         
         result = text_analytics_client.recognize_entities(chunks, language = data['languageCode'])
         
-        accepted_categories = ["Person", "Location", "Organization", "Quantity", "DateTime", "URL", "Email", "PersonType", "Event", "Product", "Skill", "Address", "Phone Number", "IP Address"]
+        categories = LanguageConstants.ENTITY_CATEGORIES
         if "categories" in headers:
-            accepted_categories = headers['categories']
-        elif "ENTITY_RECOGNITION_ACCEPPTED" in os.environ:
-            accepted_categories = os.environ['ENTITY_RECOGNITION_ACCEPPTED']
-        categories_dict = dict(filter(lambda elem: elem[0] in accepted_categories, entity_recognition_mapping.items()))
+            categories = headers['categories']
+        elif "ENTITY_RECOGNITION_CATEGORIES" in os.environ:
+            categories = os.environ['ENTITY_RECOGNITION_CATEGORIES']
+
+        categories_dict = dict(filter(lambda elem: elem[0] in categories, entity_recognition_mapping.items()))
         
         for doc in result:
             namedEntities = []
             if not doc.is_error:
                 for entity in doc.entities:
+                    if entity.category not in categories_dict:
+                        categories_dict[entity.category]={"name": entity.category, "matched":[]}
                     if entity.category in categories_dict:
                         min_precision = 0
                         if 'minimumPrecision' in headers:
@@ -267,7 +262,6 @@ def transform_value_big(headers, record, entity_recognition_mapping):
                     for category in  categories_dict:
                         document['data'][categories_dict[category]['name']] = categories_dict[category]['matched']
                     document['data']['namedEntities'] = namedEntities
-
 
             else:
                 document['errors'] = [{"message": doc.error.code + ": " + doc.error.message}]

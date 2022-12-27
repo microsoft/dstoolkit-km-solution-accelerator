@@ -78,23 +78,24 @@ Microsoft.Maps = {
 
     WorldMapSearch: function (query) {
 
-        Microsoft.Search.setQueryInProgress();
+        if (Microsoft.Search.setQueryInProgress()) {
 
-        if (query !== undefined && query !== null) {
-            $("#q").val(query)
+            if (query !== undefined && query !== null) {
+                $("#q").val(query)
+            }
+
+            Microsoft.View.currentQuery = $("#q").val();
+
+            if (this.map === null || typeof this.map === 'undefined') {
+                // Create the map
+                this.AuthenticateResultsMap();
+            }
+            else {
+                this.AddMapPoints();
+            }
+
+            Microsoft.Search.setQueryCompleted();
         }
-
-        Microsoft.View.currentQuery = $("#q").val();
-
-        if (this.map === null || typeof this.map === 'undefined') {
-            // Create the map
-            this.AuthenticateResultsMap();
-        }
-        else {
-            this.AddMapPoints();
-        }
-
-        Microsoft.Search.setQueryCompleted();
     },
 
     //  Authenticates the map and shows some locations.
@@ -332,16 +333,20 @@ Microsoft.Maps = {
             items.push('<h7><strong>' + Microsoft.Utils.GetImageFileTitle(image) + '</strong></h7>');
             items.push('</center>');
 
-            if (image.document_embedded) {
+            if (image.document.embedded) {
                 items.push('<span class="d-inline-block text-truncate" style="max-width: 250px;">' + Base64.decode(image.parent.filename) + '</span>');
                 items.push('<div class="image-result-img d-block w-100" onclick="Microsoft.Results.Details.ShowDocument(\'' + image.index_key + '\');">');
-                items.push('<img class="image-result-map" src="data:image/png;base64, ' + image.image.thumbnail_medium + '" title="' + Base64.decode(image.parent.filename) + '" />');
+                if (image.image) {
+                    items.push('<img class="image-result-map" src="data:image/png;base64, ' + image.image.thumbnail_medium + '" title="' + Base64.decode(image.parent.filename) + '" />');
+                }
                 items.push('</div>');
             }
             else {
                 items.push('<span class="d-inline-block text-truncate" style="max-width: 250px;">' + image.metadata_storage_name + '</span>');
                 items.push('<div class="image-result-img d-block w-100" onclick="Microsoft.Results.Details.ShowDocument(\'' + image.index_key + '\');">');
-                items.push('<img class="image-result-map" src="data:image/png;base64, ' + image.image.thumbnail_medium + '" title="' + image.metadata_storage_name + '" />');
+                if (image.image) {
+                    items.push('<img class="image-result-map" src="data:image/png;base64, ' + image.image.thumbnail_medium + '" title="' + image.metadata_storage_name + '" />');
+                }
                 items.push('</div>');
             }
 

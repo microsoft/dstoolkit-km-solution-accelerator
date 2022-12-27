@@ -10,51 +10,52 @@ Microsoft.All = {
 
     Search: function (query) {
 
-        Microsoft.Search.setQueryInProgress();
+        if (Microsoft.Search.setQueryInProgress()) {
 
-        if (query !== undefined && query !== null) {
-            $("#q").val(query)
-        }
-
-        // New query ? 
-        if (Microsoft.Search.currentPage > 0) {
-            if (Microsoft.View.currentQuery !== $("#q").val()) {
-                Microsoft.Search.ResetSearch();
+            if (query !== undefined && query !== null) {
+                $("#q").val(query)
             }
-            else {
-                // This is the pagination case although Semantic search has no pagination capability (50 results max). 
-                if (Microsoft.Search.Options.isSemanticSearch) {
-                    Microsoft.Search.setQueryCompleted();
-                    return;
+
+            // New query ? 
+            if (Microsoft.Search.currentPage > 0) {
+                if (Microsoft.View.currentQuery !== $("#q").val()) {
+                    Microsoft.Search.ResetSearch();
+                }
+                else {
+                    // This is the pagination case although Semantic search has no pagination capability (50 results max). 
+                    if (Microsoft.Search.Options.isSemanticSearch) {
+                        Microsoft.Search.setQueryCompleted();
+                        return;
+                    }
                 }
             }
-        }
 
-        Microsoft.View.currentQuery = $("#q").val();
+            Microsoft.View.currentQuery = $("#q").val();
 
-        var rendering_filter = Microsoft.View.config.filter ? Microsoft.View.config.filter : '';
+            var rendering_filter = Microsoft.View.config.filter ? Microsoft.View.config.filter : '';
 
-        if (Microsoft.Search.results_rendering > -1) {
-            if (Microsoft.View.config.resultsRenderings[Microsoft.Search.results_rendering].filter) {
-                if (rendering_filter.length > 0) {
-                    rendering_filter += ' and ';
+            if (Microsoft.Search.results_rendering > -1) {
+                if (Microsoft.View.config.resultsRenderings[Microsoft.Search.results_rendering].filter) {
+                    if (rendering_filter.length > 0) {
+                        rendering_filter += ' and ';
+                    }
+                    rendering_filter += Microsoft.View.config.resultsRenderings[Microsoft.Search.results_rendering].filter;
                 }
-                rendering_filter += Microsoft.View.config.resultsRenderings[Microsoft.Search.results_rendering].filter;
             }
-        }
 
-        $.postAPIJSON('/api/search/getdocuments',
-            {
-                queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
-                searchFacets: Microsoft.Facets.selectedFacets,
-                currentPage: ++Microsoft.Search.currentPage,
-                incomingFilter: rendering_filter,
-                parameters: Microsoft.Search.Parameters,
-                options: Microsoft.Search.Options
-            },
-            function (data) {
-                Microsoft.All.Update(data, Microsoft.Search.currentPage);
-            });
+            $.postAPIJSON('/api/search/getdocuments',
+                {
+                    queryText: Microsoft.View.currentQuery !== undefined ? Microsoft.View.currentQuery : "*",
+                    searchFacets: Microsoft.Facets.selectedFacets,
+                    currentPage: ++Microsoft.Search.currentPage,
+                    incomingFilter: rendering_filter,
+                    parameters: Microsoft.Search.Parameters,
+                    options: Microsoft.Search.Options
+                },
+                function (data) {
+                    Microsoft.All.Update(data, Microsoft.Search.currentPage);
+                });
+        }
     },
 
     Update: function (data, currentPage) {
@@ -172,7 +173,7 @@ Microsoft.All = {
                     resultsHtml += '            </div>';
                     resultsHtml += '            </div>';
 
-                    if (docresult.document_embedded) {
+                    if (docresult.document.embedded) {
 
                         var imagename = docresult.metadata_storage_name;
                         var containerPath = Microsoft.Utils.GetParentPathFromImage(docresult);
@@ -203,9 +204,9 @@ Microsoft.All = {
                     resultsHtml += '            <div class="row col-md-12 " onclick="Microsoft.Results.Details.ShowDocument(\'' + id + '\',' + docresult.idx + ');">';
                     resultsHtml += Microsoft.Utils.GetModificationLine(docresult);
 
-                    var display_title = docresult.document_embedded ? Base64.decode(docresult.parent.filename) : docresult.metadata_storage_name;
+                    var display_title = docresult.document.embedded ? Base64.decode(docresult.parent.filename) : docresult.metadata_storage_name;
 
-                    if (docresult.image.thumbnail_medium) {
+                    if (docresult.image && docresult.image.thumbnail_medium) {
                         resultsHtml += '<img alt="' + name + '" class="image-result" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + display_title + '" />';
                     }
                     else {
@@ -321,9 +322,7 @@ Microsoft.All = {
                     resultsHtml += '        <div class="row col-md-12" onclick="Microsoft.Results.Details.ShowDocument(\'' + id + '\',' + docresult.idx + ');">';
                     resultsHtml += Microsoft.Utils.GetModificationLine(docresult);
 
-                    if (Microsoft.Search.SupportCoverImage(docresult)) {
-                        resultsHtml += '            <img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
-                    }
+                    resultsHtml += Microsoft.Search.RenderCoverImage(docresult,name,iconPath);
 
                     resultsHtml += '            <div class="results-body mt-2" >' + highlights + '</div>';
 

@@ -73,7 +73,7 @@ function New-AzureKeyVault() {
                 --key-permissions get list create delete `
                 --secret-permissions get set list delete
             
-            $currentUserId = ((az ad signed-in-user show) | ConvertFrom-Json).objectId
+            $currentUserId = ((az ad signed-in-user show) | ConvertFrom-Json).id
             az keyvault set-policy --name $azureResource.Name --object-id $currentUserId `
                 --certificate-permissions get list create delete `
                 --key-permissions get list create delete `
@@ -123,37 +123,49 @@ function New-StorageAccount {
         if ( $exists ) {
             Write-Host "Storage service already exists...Skipping.";
         }
-        else {    
+        else {
             az storage account create --name $azureResource.Name `
                 --location $config.location `
                 --resource-group $azureResource.ResourceGroup `
                 --sku Standard_LRS `
                 --assign-identity `
                 --allow-blob-public-access false `
-                --enable-hierarchical-namespace true `
+                --enable-hierarchical-namespace $azureResource.EnableHierarchicalNamespace `
                 --kind $azureResource.Accountkind
 
             if ($azureResource.IsDataStorage) {
-
-                Get-DataStorageAccountParameters; 
 
                 # Iterate through the list of containers to create. 
                 foreach ($container in $params.storageContainers) {
                     az storage container create -n $container `
                         --account-name $params.dataStorageAccountName `
                         --account-key $params.storageAccountKey `
-                        --resource-group $config.resourceGroupName            
+                        --resource-group $config.resourceGroupName
                 }
-
+                    
                 # Soft blob deletion policy (7 days)
                 az storage account blob-service-properties update --account-name $params.dataStorageAccountName `
                     --resource-group $config.resourceGroupName `
                     --enable-delete-retention true `
                     --delete-retention-days 7
+
+                # storageFileShares
+                foreach ($container in $params.storageFileShares) {
+                    az storage share-rm create `
+                    --resource-group $config.resourceGroupName `
+                    --storage-account $params.dataStorageAccountName `
+                    --name $container `
+                    --quota 1024 `
+                    --enabled-protocols SMB
+                }
             }
-            else { 
-                Get-TechStorageAccountParameters;            
-            }
+        }
+
+        if ($azureResource.IsDataStorage) {
+            Get-DataStorageAccountAccessKeys; 
+        }
+        else {
+            Get-TechStorageAccountAccessKeys;            
         }
     }
 }
@@ -175,6 +187,7 @@ function New-CognitiveServices {
             --kind $azureResource.Kind `
             --sku $azureResource.Sku `
             --location $config.location `
+            --custom-domain $azureResource.Name `
             --yes
 
             az cognitiveservices account identity assign -n $azureResource.Name -g $azureResource.ResourceGroup
@@ -199,7 +212,7 @@ function New-SearchServices {
             az search service create `
                 --name  $azureResource.Name `
                 --resource-group $azureResource.ResourceGroup `
-                --sku $azureResource.Sku `
+                --sku $params.searchSku `
                 --location $config.location `
                 --partition-count 1 `
                 --replica-count 1
@@ -238,7 +251,8 @@ function New-ACRService {
 }
 
 function New-AzureMapsService() {
-    if ($config.mapSearchEnabled) {
+
+    if ($params.mapSearchEnabled) {
 
         $exists = az maps account show -g $config.resourceGroupName -n $params.maps --query id --out tsv
 
@@ -253,8 +267,8 @@ function New-AzureMapsService() {
             --accept-tos
 
             $mapsKey = az maps account keys list --name $params.maps --resource-group $config.resourceGroupName --query primaryKey --out tsv
-
             Add-Param "mapsSubscriptionKey" $mapsKey
+            Save-Parameters
         }
     }
 }
@@ -264,5 +278,6 @@ function New-BingSearchService() {
         Write-Host "Provision Bing Search service manually. When provisionned..." -ForegroundColor Red    
         $bingKey = Read-Host "Provide Bing Search Key " -MaskInput
         Add-Param "bingServicesKey" $bingKey
+        Save-Parameters
     }
 }

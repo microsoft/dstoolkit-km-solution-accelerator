@@ -15,25 +15,25 @@ The platform would be Web with the below Redirect URIs
 - "https://{{config.name}}ui.azurewebsites.net"
 - "https://{{config.name}}ui.azurewebsites.net/.auth/login/aad/callback",
 
+__Check the ID Tokens__
 
 ## API Permissions
 
 All permissions would be Delegated. Minimum permission required is  
 
-Microsoft Graph / User.Read (Sign In and read user profile)
+- Microsoft Graph / User.Read (Sign In and read user profile)
 
 You might want to add more permissions as you see fit. Microsoft Graph has extensive set of APIs for collaboration. 
 
 ## Expose an API section
 
-Application ID URI would show 
+Application ID URI would show (typically)
 
 - api://{{config.clientId}}
 
-Scopes defined by this API would list the user_impersonation scope 
+__Scopes defined by this API__ should list the user_impersonation scope 
 
 - api://{{config.clientId}}/user_impersonation
-
 
 ## Manifest section - Emit Security Groups Claims 
 
@@ -87,8 +87,8 @@ In the configuration/config/webapps/webappui.json, you will find the below entri
     "slotSetting": false
   }
 ```
-
 The client secret app settings is not deployed as part of our solution accelerator.
+
 
 # Publishing your webapp settings
 
@@ -108,3 +108,24 @@ As you consented the application to read your profile upon the first connection,
 
 To decode the security JWT token you may use [jwt.io](https://jwt.io). It will highlight among other things your security groups membership. 
 
+# Non-Azure EasyAuth Authentication (non default)
+
+In the UI webapp settings, change AzureEasyAuthIntegration to false.
+
+Add the below settings 
+```json
+  {
+    "name": "AzureAd:CallbackPath",
+    "value": "/signin-oidc",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAd:ClientSecret",
+    "value": "<YOUR AZURE APP SECRET HERE>",
+    "slotSetting": false
+  }
+```
+
+Restart the UI web app.
+
+Your UI application will now authenticate the users by itself.

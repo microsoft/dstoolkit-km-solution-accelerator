@@ -1,9 +1,42 @@
 [
   {
+    "id": "actionembedded",
+    "name": "Parent",
+    "title": "Show parent document details",
+    "class": "btn-outline-primary",
+    "method": "Microsoft.Results.Details.ShowDocumentById",
+    "icon": "bi bi-file",
+    "condition": "n.document.embedded",
+    "parameters": "n.parent.id",
+    "enable": true
+  },
+  {
+    "id": "actionoriginal",
+    "name": "Original",
+    "title": "Show original document details",
+    "class": "btn-outline-warning",
+    "method": "Microsoft.Results.Details.ShowDocumentById",
+    "icon": "bi bi-translate",
+    "condition": "(n.document.translated && !n.document.embedded)",
+    "parameters": "n.parent.id",
+    "enable": true
+  },
+  {
+    "id": "actiontranslated",
+    "name": "Translated",
+    "title": "Show translated document details",
+    "class": "btn-outline-info",
+    "method": "Microsoft.Results.Details.ShowRelatedDocumentById",
+    "icon": "bi bi-translate",
+    "condition": "n.document.translatable",
+    "parameters": "n.document_id",
+    "enable": false
+  },
+  {
     "id": "action1",
     "name": "Action1",
     "title": "Action1 description",
-    "class": "btn-outline-primary",
+    "class": "btn-outline-secondary",
     "method": "window.alert",
     "icon": "bi bi-share-fill",
     "enable": true

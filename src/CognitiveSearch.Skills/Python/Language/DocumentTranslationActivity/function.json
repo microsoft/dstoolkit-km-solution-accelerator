@@ -1,0 +1,10 @@
+{
+    "scriptFile": "../shared_code/DocumentTranslation/Durable/Activity_init.py",
+    "bindings": [
+        {
+            "name": "record",
+            "type": "activityTrigger",
+            "direction": "in"
+        }
+    ]
+}
