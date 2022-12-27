@@ -711,10 +711,10 @@ Microsoft.Search.Results = {
             }
         }        
         if (docresult.tables_count > 0) {
-            documentHtml += '<span class="badge rounded-pill text-dark me-1 border border-outline-secondary bi bi-table" title="This document has '+docresult.tables_count+' extracted tables."> </span>';
+            documentHtml += '<span class="badge rounded-pill bg-light text-dark me-1 border border-outline-secondary bi bi-table" title="This document has '+docresult.tables_count+' extracted tables."> </span>';
         }
         if (docresult.kvs_count > 0) {
-            documentHtml += '<span class="badge rounded-pill text-dark me-1 border border-outline-secondary bi bi-database" title="This document has '+docresult.kvs_count+' extracted Key/Value pairs."> </span>';
+            documentHtml += '<span class="badge rounded-pill bg-light text-dark me-1 border border-outline-secondary bi bi-database" title="This document has '+docresult.kvs_count+' extracted Key/Value pairs."> </span>';
         }
         return documentHtml;
     },
