@@ -1,8 +1,6 @@
 {
     "appInsightsService": "{{config.name}}insights",
     "logAnalyticsService": "{{config.name}}analytics",
-    "techStorageAccountName": "{{config.name}}tech",
-    "dataStorageAccountName": "{{config.name}}data",
     "adf": "{{config.name}}adf",
     "aks": "{{config.name}}aks",
     "TikaContainerUrl":"https://{{config.name}}tikaserver.azurewebsites.net",
