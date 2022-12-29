@@ -1,6 +1,12 @@
 # Changes log
 
-## November 2022
+## December 2022 - V1.2
+
+- UI & API improvements
+- Documentation
+- Bugs fixing
+
+## November 2022 - v1.1
 
 - UI & API improvements
 - Simple Document Translation support
@@ -8,11 +14,11 @@
     - Not relying on direct content url anymore
     - Projection of the outputs to metadata storage for later use (UI)
 - PII Detection simple integration
-- VNET enhancements
+- VNET integration enhancements
 - Auto-creation of storage file-shares
 - Bugs fixing
 
-## October 2022 
+## October 2022 - v1.0
 
 - Support for full VNET integration
 - Support for Emails and Attachments
