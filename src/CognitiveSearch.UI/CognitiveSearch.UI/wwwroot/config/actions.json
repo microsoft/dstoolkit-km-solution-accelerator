@@ -5,7 +5,7 @@
     "title": "Show parent document details",
     "class": "btn-outline-primary",
     "method": "Microsoft.Results.Details.ShowDocumentById",
-    "icon": "bi bi-file",
+    "icon": "bi bi-file-earmark",
     "condition": "n.document.embedded",
     "parameters": "n.parent.id",
     "enable": true
