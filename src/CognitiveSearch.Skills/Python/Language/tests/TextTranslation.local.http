@@ -36,3 +36,19 @@ suggestedFrom: de
     ]
 }
 
+###
+POST http://localhost:7071/language/translator
+content-type: application/json;charset=utf-8
+defaultToLanguageCode: en
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "text": "報告書 REF1234412 ICM123333",
+                "translated_document": "true"
+            }
+        }
+    ]
+}
