@@ -60,6 +60,8 @@ Microsoft.Results.Details = {
             Microsoft.Search.Results.Transcript.SearchTranscript(Microsoft.View.currentQuery);
         }
 
+        Microsoft.Search.ProcessCoverImage(); 
+
         //Log Click Events
         Microsoft.Telemetry.LogClickAnalytics(result.metadata_storage_name, 0);
 
@@ -147,25 +149,34 @@ Microsoft.Results.Details = {
             var tabular = this.tabulars[i];
             if (tabular.enable) {
                 if (tabular.renderingMethod) {
-                    var content = Microsoft.Utils.executeFunctionByName(tabular.renderingMethod, window, result, tabular);
-                    if (content !== undefined)
-                    {
-                        if (content.length > 0) {
-                            $('#' + tabular.id + '-viewer').html(content);
-                            if (tabular.adaptiveIcon) {
-                                this.adjust_tab_icon(result, tabular);
+                    
+                    new Promise((resolve, reject) => {
+                        var content = Microsoft.Utils.executeFunctionByName(tabular.renderingMethod, window, result, tabular);
+                        if (content !== undefined)
+                        {
+                            if (content.length > 0) {
+                                var HTMLContent = '';
+                                // Warning 
+                                if (result.document.translated) {
+                                    HTMLContent += '<div class="border border-warning rounded bg-warning text-dark p-1">This content is the result of an automatic Document Translation.</div>';
+                                }
+                                HTMLContent += content;
+                                $('#' + tabular.id + '-viewer').html(HTMLContent);
+                                if (tabular.adaptiveIcon) {
+                                    this.adjust_tab_icon(result, tabular);
+                                }
                             }
+                            else {
+                                this.hide_tab(tabular.id);
+                            }
+                            tabular.content_length = content.length;
                         }
                         else {
-                            this.hide_tab(tabular.id);
+                            // We can assume the tab is enabled and the renderer did the html append itself.
+                            // this.hide_tab(tabular.id);
+                            tabular.content_length = 1;
                         }
-                        tabular.content_length = content.length;
-                    }
-                    else {
-                        // We can assume the tab is enabled and the renderer did the html append itself.
-                        // this.hide_tab(tabular.id);
-                        tabular.content_length = 1;
-                    }
+                    });
                 }
             }
         }

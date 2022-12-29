@@ -12,7 +12,7 @@ Microsoft.Search.Results.Metadata = {
         var metadataContainerHTML = $("#metadata-viewer").html();
 
         metadataContainerHTML = '';
-        metadataContainerHTML += '<table class="table metadata-table table-hover table-striped"><thead><tr><th data-field="key" class="key">Key</th><th data-field="value">Value</th></tr></thead>';
+        metadataContainerHTML += '<table class="table table-hover table-striped"><thead><tr><th data-field="key" class="key">Key</th><th data-field="value">Value</th></tr></thead>';
         metadataContainerHTML += '<tbody>';
 
         var excluding_fields = ["content", "merged_content", "translated_text", "tables", "paragraphs", "image_data", "thumbnail_small", "thumbnail_medium", "tokens_html"];
@@ -72,7 +72,7 @@ Microsoft.Search.Results.Metadata = {
                             var extraMetadataContainerHTML = $("#metadata-viewer").html();
 
                             extraMetadataContainerHTML += '<h4 id="available_metadata">File Metadata</h4><div style="overflow-x:auto;">';
-                            extraMetadataContainerHTML += '<table class="table metadata-table table-hover table-striped">';
+                            extraMetadataContainerHTML += '<table class="table table-hover table-striped">';
                             extraMetadataContainerHTML += '<thead><tr><th data-field="key" class="key">Key</th><th data-field="key" class="key">Normalized</th><th data-field="value">Value</th></tr></thead>';
                             extraMetadataContainerHTML += '<tbody>';
 

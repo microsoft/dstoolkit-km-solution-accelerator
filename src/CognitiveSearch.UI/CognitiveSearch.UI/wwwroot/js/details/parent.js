@@ -13,11 +13,7 @@ Microsoft.Search.Results.Parent = {
     render_tab: function (result, tabular, fallback = false) {
         // Embedded Images Tab content
         var embeddedContainerHTML = '';
-
-        if (result.document.translated) {
-            embeddedContainerHTML += '<div class="border border-warning rounded bg-warning text-dark p-1">This content is the result of an automatic Document Translation.</div>'
-        }
-
+        
         // If this is an embedded resource i.e. extracted image
         if (result.document.embedded) {
             embeddedContainerHTML += Microsoft.Search.Results.File.render_file_container(result.document.embedded, Microsoft.Utils.GetParentPathFromImage(result), result.image_data, result.page_number);
