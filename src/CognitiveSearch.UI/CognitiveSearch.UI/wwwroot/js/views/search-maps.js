@@ -264,7 +264,7 @@ Microsoft.Maps = {
         html.push(' <button type="button" class="btn btn-sm btn-outline-dark mt-0 mb-2 ms-1 me-1 bi bi-arrows-expand" onclick="Microsoft.Utils.toggleDiv(\'hideable-map-layers-panel\');" data-bs-toggle="button" title="Hide/Expand the layers details"></button>');
         html.push('</div>');
 
-        html.push('<div id="hideable-map-layers-panel">');
+        html.push('<div id="hideable-map-layers-panel" class="d-none">');
 
         for (var i = 0; i < Microsoft.Maps.layers.length; i++) {
             var layer = Microsoft.Maps.layers[i];

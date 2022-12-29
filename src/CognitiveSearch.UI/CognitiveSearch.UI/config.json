@@ -101,7 +101,7 @@
           },
           {
             "name": "translated",
-            "title": "Only search against translated documents",
+            "title": "Only search against translated content",
             "svgicon": "bi-translate.svg",
             "method": "Microsoft.All.UpdateResultsAsList",
             "filter": "(document/translated eq true)",

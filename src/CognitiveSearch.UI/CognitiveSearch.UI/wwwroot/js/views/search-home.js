@@ -148,7 +148,7 @@ Microsoft.Home = {
     
         $(target_tag).html(resultsHtml);
 
-        Microsoft.Search.ProcessCoverImage(); 
+        Microsoft.Search.ProcessCoverImage();
     
         $(slick_class).not('.slick-initialized').slick({
             infinite: true,

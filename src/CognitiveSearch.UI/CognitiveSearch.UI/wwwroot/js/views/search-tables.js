@@ -74,7 +74,7 @@ Microsoft.Tables = {
                 var table_id = docresult.index_key + i;
                 extraMetadataContainerHTML += '<div class="container mt-2 border-start border-2 border-warning" style="overflow-x:auto;">';
 
-                extraMetadataContainerHTML += '<table id=' + table_id + ' class="table metadata-table table-hover table-striped">';
+                extraMetadataContainerHTML += '<table id=' + table_id + ' class="table table-hover table-striped">';
                 extraMetadataContainerHTML += '<thead>';
 
                 var table = tables[i];
@@ -155,7 +155,7 @@ Microsoft.Tables = {
                     ordering: false,
                     info: false,
                     responsive:true,
-                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+                    buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5', 'pdfHtml5', 'spacer', 'print'],
                     // buttons: [
                     // ],
                     searching: false

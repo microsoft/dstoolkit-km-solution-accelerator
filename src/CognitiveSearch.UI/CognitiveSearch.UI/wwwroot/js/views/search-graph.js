@@ -142,7 +142,7 @@ Microsoft.Graph = {
             function (data) {
                 var temp_nodes = Object.keys(data.graph.nodes).map((key) => data.graph.nodes[key]);
 
-                $("#graph-message").html(' Found ' + temp_nodes.length + ' Vertices & ' + data.graph.edges.length + ' Edges (' + Microsoft.Graph.currentModel + ')');
+                $("#graph-message").html('About ' + temp_nodes.length + ' Vertices & ' + data.graph.edges.length + ' Edges (' + Microsoft.Graph.currentModel + ')');
 
                 Microsoft.Graph.graph_data = data;
 
