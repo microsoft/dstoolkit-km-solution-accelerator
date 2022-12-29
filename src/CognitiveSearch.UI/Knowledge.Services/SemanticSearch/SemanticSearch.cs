@@ -68,7 +68,7 @@ namespace Knowledge.Services.SemanticSearch
                 request.queryText = QueryHelper.QUERY_ALL;
             }
 
-            // Automatic Translation
+            // Automatic Translation - Could be removed if Semantic language would support more than English language.
             if (request.queryText != QueryHelper.QUERY_ALL) request.queryText = translationService.TranslateSearchText(request.queryText);
 
             // Create the Semantic AzureSearchServiceRequest 
