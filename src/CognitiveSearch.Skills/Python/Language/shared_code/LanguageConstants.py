@@ -20,3 +20,6 @@ ENTITY_CATEGORIES = ["Person", "Location", "Organization", "Quantity", "DateTime
     #         "Phone Number": {"name": "phoneNumbers", "matched":[]}, 
     #         "IP Address": {"name": "ipAddresses", "matched":[]}
     # }
+
+# https://learn.microsoft.com/en-us/azure/cognitive-services/language-service/personally-identifiable-information/language-support?tabs=documents
+PII_DETECTION_SUPPORTED_LANGUAGE = ["de","en","es","fr","it","ja","ko","pt-BR","pt-PT","zh-Hans"]
