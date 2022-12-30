@@ -90,7 +90,7 @@ def transform_value_small(headers, records, entity_recognition_mapping):
         for lang in languageData:
 
             # Ensure Supported Language for PII Detection
-            if (lang in LanguageConstants.PII_DETECTION_SUPPORTED_LANGUAGE):
+            if (lang in LanguageConstants.PII_DETECTION_SUPPORTED_LANGUAGES):
 
                 result = text_analytics_client.recognize_pii_entities(languageData[lang]['chunks'], language = lang)
 
@@ -145,8 +145,8 @@ def transform_value_small(headers, records, entity_recognition_mapping):
             else:
                 for (doc, id) in zip(result, languageData[lang]['ids']):
                     document = {}
-                    document['data'] = {}
                     document['recordId'] = id
+                    document['data'] = {}
                     document["warnings"]=[ { "message": "Unsupported PII Detection language " + lang } ]
                     results['values'].append(document)
 
@@ -241,7 +241,7 @@ def transform_value_big(headers, record, entity_recognition_mapping):
                 data['languageCode'] = 'en'
         
         # Ensure Supported Language for PII Detection
-        if (data['languageCode'] in LanguageConstants.PII_DETECTION_SUPPORTED_LANGUAGE):
+        if (data['languageCode'] in LanguageConstants.PII_DETECTION_SUPPORTED_LANGUAGES):
 
             result = text_analytics_client.recognize_pii_entities(chunks, language = data['languageCode'])
 
@@ -293,6 +293,7 @@ def transform_value_big(headers, record, entity_recognition_mapping):
             return (
                 {
                 "recordId": recordId,
+                "data":{},
                 "warnings": [ { "message": "Unsupported PII Detection language " + data['languageCode'] }   ]       
                 })
 
