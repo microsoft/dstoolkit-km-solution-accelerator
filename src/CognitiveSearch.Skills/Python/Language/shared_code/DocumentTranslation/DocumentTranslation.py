@@ -10,6 +10,8 @@ from azure.core.credentials import AzureKeyCredential
 from azure.ai.translation.document import DocumentTranslationClient
 from azure.storage.blob import BlobClient,generate_blob_sas, generate_container_sas,BlobSasPermissions,ContainerSasPermissions, ContentSettings, BlobProperties
 
+from .. import LanguageConstants
+
 endpoint = os.environ["DOCUMENT_TRANSLATION_ENDPOINT"]
 subscription_key = os.environ["DOCUMENT_TRANSLATION_KEY"]
 target_language = os.environ["DOCUMENT_TRANSLATION_LANGUAGE"]
@@ -17,19 +19,6 @@ target_language = os.environ["DOCUMENT_TRANSLATION_LANGUAGE"]
 credential = AzureKeyCredential(subscription_key)
 
 document_translation_client = DocumentTranslationClient(endpoint, credential)
-
-available_language = ["af", "sq", "am", "ar", "hy", "as", "az", "bn", "ba", "bs", "bg","yue", "ca",
-"zh", "zh_chs", "zh_cht", "lzh", "zh-Hans", "zh-Hant", 
-"hr", "cs", "da", "prs", "dv", "nl", "en","et", "fj", "fil", "fi",
-"fr", "fr-ca", "ka", "de", "el", "gu", "ht", "he", "hi", "mww",
-"hu", "is", "id", "iu", "ga", "it", "ja", "kn", "kk", "km", "tlh-Latn", "tlh-Piqd", "ko",
-"ku", "kmr", "ky", "lo", "lv", "lt", "mk", "mg", "ms", "ml", "mt", "mi", "mr", "mn-Cyrl",
-"mn-Mong", "my", "ne", "nb", "or", "ps", "fa", "pl", "pt", "pt-pt", "pa", "otq", "ro", "ru",
-"sm", "sr-Cyrl", "sr-Latn", "sk", "sl", "es", "sw", "sv", "ty", "ta", "tt", "te", "th", "bo",
-"ti", "to", "tr", "tk", "uk", "ur", "ug", "uz", "vi", "cy", "yua"]
-
-supported_extension = [".pdf", ".csv", ".html",".htm", ".xlf", ".markdown",".mdown",".mkdn",".md",".mkd",".mdwn",".mdtxt",".mdtext",".rmd",
-".mthml",".mht",".xls",".xlsx",".msg",".ppt",".pptx",".doc",".docx",".odt",".odp",".ods",".rtf",".tsv",".txt"]
 
 #
 # Azure Blob Storage for Document Translated outputs
@@ -90,7 +79,7 @@ def transform_value(record, poll=True, simulation=False):
         data = record['data']
 
         fromLanguageCode = 'en'
-        if "fromLanguageCode" in data and data["fromLanguageCode"] in available_language:
+        if "fromLanguageCode" in data and data["fromLanguageCode"] in LanguageConstants.DOCUMENT_TRANSLATION_SUPPORTED_LANGUAGES:
             fromLanguageCode = data["fromLanguageCode"]
 
         #
@@ -115,7 +104,7 @@ def transform_value(record, poll=True, simulation=False):
         if blob_storage_integration:
             # Supported Extension
             fileExtension = None
-            if "fileExtension" in data and data["fileExtension"] in supported_extension:
+            if "fileExtension" in data and data["fileExtension"] in LanguageConstants.DOCUMENT_TRANSLATION_SUPPORTED_EXTENSIONS:
                 fileExtension = data["fileExtension"]
 
             if fileExtension is not None:
