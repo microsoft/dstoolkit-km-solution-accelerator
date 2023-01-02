@@ -51,33 +51,27 @@
     },
     {
       "sourceFieldName": "metadata_storage_name",
-      "targetFieldName": "metadata_storage_name",
-      "mappingFunction": null
+      "targetFieldName": "metadata_storage_name"
     },
     {
       "sourceFieldName": "metadata_storage_name",
-      "targetFieldName": "document_filename",
-      "mappingFunction": null
+      "targetFieldName": "document_filename"
     },
     {
       "sourceFieldName": "metadata_storage_last_modified",
-      "targetFieldName": "source_last_modified",
-      "mappingFunction": null
+      "targetFieldName": "source_last_modified"
     },
     {
       "sourceFieldName": "metadata_description",
-      "targetFieldName": "description",
-      "mappingFunction": null
+      "targetFieldName": "description"
     },
     {
       "sourceFieldName": "metadata_storage_content_type",
-      "targetFieldName": "content_type",
-      "mappingFunction": null
+      "targetFieldName": "content_type"
     },
     {
       "sourceFieldName": "metadata_slide_count",
-      "targetFieldName": "slide_count",
-      "mappingFunction": null
+      "targetFieldName": "slide_count"
     }
   ],
   "outputFieldMappings": [
