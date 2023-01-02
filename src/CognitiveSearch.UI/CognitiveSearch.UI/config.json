@@ -70,7 +70,7 @@
             "title": "Only search Documents",
             "svgicon": "bi-list-ul.svg",
             "method": "Microsoft.All.UpdateResultsAsList",
-            "filter": "(document/embedded eq false)"
+            "filter": "(document/embedded eq false and document/translated eq false)"
           },
           {
             "name": "blank"
@@ -101,11 +101,19 @@
           },
           {
             "name": "translated",
-            "title": "Only search against translated content",
+            "title": "Only search against translated documents",
             "svgicon": "bi-translate.svg",
             "method": "Microsoft.All.UpdateResultsAsList",
-            "filter": "(document/translated eq true)",
-            "classList": "btn-outline-warning rounded"
+            "filter": "(document/translated eq true and document/converted eq false)",
+            "classList": "btn-outline-warning"
+          },
+          {
+            "name": "translatedpages",
+            "title": "Only search against translated pages or slides",
+            "svgicon": "bi-files.svg",
+            "method": "Microsoft.All.UpdateResultsAsList",
+            "filter": "(document/translated eq true and document/converted eq true)",
+            "classList": "btn-outline-warning"
           },
           {
             "name": "blank"
