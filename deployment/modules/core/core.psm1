@@ -1219,6 +1219,20 @@ function Get-SearchFailedItems {
         [switch] $Tagging
     )
 
+    function Format-ErrorKey ($error) {
+        $id = $error.key.Split("&")[0].Replace("localId=", "");
+        $id = [System.Web.HttpUtility]::UrlDecode($id);
+        # Find the base url of the document url to remove it.
+        foreach($storageUrl in $params.StorageContainerAddressesAsString)
+        {
+            if ($id.indexOf($storageUrl) -ge 0)
+            {
+                $baseurl=$storageUrl
+            }
+        }
+        return [System.Web.HttpUtility]::UrlDecode($id.Replace($baseurl+"/",""));
+    }
+
     $now = Get-Date -Format "yyyyMMddHHmmss"
 
     if ($Indexer) {
@@ -1241,7 +1255,7 @@ function Get-SearchFailedItems {
 
         # Latest Errors
         foreach ($error in $errors) {
-            $filestotag += $error
+            $filestotag += Format-ErrorKey $error
         }
 
         # Executions History
@@ -1249,23 +1263,23 @@ function Get-SearchFailedItems {
         {
             $executions = $status.executionHistory
 
-            $executions | format-table -AutoSize
+            # $executions | format-table -AutoSize
 
             foreach ($exec in $executions) {
             
                 if ( $exec.itemsFailed -gt 0) {
                     Write-Host ("failed "+$exec.startTime+" "+$exec.endTime+" "+$exec.itemsProcessed+" "+$exec.itemsFailed) -ForegroundColor DarkMagenta
                 }
-                # else {
-                #     Write-Host ($exec.status+" "+$exec.startTime+" "+$exec.endTime+" "+$exec.itemsProcessed+" "+$exec.itemsFailed) -ForegroundColor DarkGreen
-                # }
+                else {
+                    Write-Host ($exec.status+" "+$exec.startTime+" "+$exec.endTime+" "+$exec.itemsProcessed+" "+$exec.itemsFailed) -ForegroundColor DarkGreen
+                }
         
                 if ( $exec.status -eq "reset" ) {
                     break
                 }
                 else {
                     foreach ($error in $exec.errors) {
-                        $filestotag += $error
+                        $filestotag += Format-ErrorKey $error
                     }
                 }
             }
@@ -1279,15 +1293,7 @@ function Get-SearchFailedItems {
 
         if ($Tagging) {
             foreach ($file in $filestotag) {
-                $id = $error.key.Split("&")[0].Replace("localId=", "");
-                $id = [System.Web.HttpUtility]::UrlDecode($id);
-
-                Write-Host "Tagging "$id -ForegroundColor DarkYellow
-
-                # 
-                $baseurl= "https://"+$params.dataStorageAccountName+".blob.core.windows.net/"+$Container+"/"
-                $filestotag += [System.Web.HttpUtility]::UrlDecode($id.Replace($baseurl));
-
+                Write-Host "Tagging "$file -ForegroundColor DarkYellow
                 Add-BlobRetryTag -container $container -path $file
             }
         }
