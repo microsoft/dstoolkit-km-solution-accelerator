@@ -497,6 +497,7 @@ function Initialize-Config() {
 #endregion 
     
 #region DATA
+
 function Push-Data() {
     param (
         [Parameter(Mandatory = $true)]
@@ -777,16 +778,19 @@ function Initialize-SearchParameters {
     
     # Get the list of Indexers
     $indexersList = @()
+    $indexersStemList=@()
+
     $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "indexers")
     foreach ($file in $files) {
         $item = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
         $value = ($config.name + "-" + $item)
         Add-Param $item"Indexer" $value
-    
         $indexersList += $value
+        $indexersStemList += $item
     }
     Add-Param "searchIndexers" ($indexersList | Join-String -Property $_ -Separator ",")
     Add-Param "searchIndexersList" $indexersList
+    Add-Param "searchIndexersStemList" $indexersStemList
     Write-Debug -Message "Parameters Indexers created"
 }
     
@@ -1206,6 +1210,88 @@ function Resume-Search {
     Sync-Config
     Sync-Parameters
     Initialize-Search
+}
+
+function Get-SearchFailedItems {
+    param(
+        [string] $Indexer,
+        [switch] $SkipHistory,
+        [switch] $Tagging
+    )
+
+    $now = Get-Date -Format "yyyyMMddHHmmss"
+
+    if ($Indexer) {
+        $indexersTargetList = @($Indexer)
+    }
+    else {
+        $indexersTargetList = $params.searchIndexersStemList
+    }
+
+    foreach ($container in $indexersTargetList) {
+
+        Write-Host "-------------------"
+        Write-Host "Indexer "$container -ForegroundColor DarkCyan
+
+        $status = Get-SearchIndexerStatus $container
+        
+        $filestotag = @() 
+
+        $errors = $status.lastResult.errors
+
+        # Latest Errors
+        foreach ($error in $errors) {
+            $filestotag += $error
+        }
+
+        # Executions History
+        if (-not $SkipHistory)
+        {
+            $executions = $status.executionHistory
+
+            $executions | format-table -AutoSize
+
+            foreach ($exec in $executions) {
+            
+                if ( $exec.itemsFailed -gt 0) {
+                    Write-Host ("failed "+$exec.startTime+" "+$exec.endTime+" "+$exec.itemsProcessed+" "+$exec.itemsFailed) -ForegroundColor DarkMagenta
+                }
+                # else {
+                #     Write-Host ($exec.status+" "+$exec.startTime+" "+$exec.endTime+" "+$exec.itemsProcessed+" "+$exec.itemsFailed) -ForegroundColor DarkGreen
+                # }
+        
+                if ( $exec.status -eq "reset" ) {
+                    break
+                }
+                else {
+                    foreach ($error in $exec.errors) {
+                        $filestotag += $error
+                    }
+                }
+            }
+        }
+
+        $filestotag = $filestotag | Sort-Object -Unique 
+
+        Write-Host "Found "$filestotag.Length" documents in errors." -ForegroundColor DarkCyan
+
+        $filestotag | Format-Table -AutoSize
+
+        if ($Tagging) {
+            foreach ($file in $filestotag) {
+                $id = $error.key.Split("&")[0].Replace("localId=", "");
+                $id = [System.Web.HttpUtility]::UrlDecode($id);
+
+                Write-Host "Tagging "$id -ForegroundColor DarkYellow
+
+                # 
+                $baseurl= "https://"+$params.dataStorageAccountName+".blob.core.windows.net/"+$Container+"/"
+                $filestotag += [System.Web.HttpUtility]::UrlDecode($id.Replace($baseurl));
+
+                Add-BlobRetryTag -container $container -path $file
+            }
+        }
+    }
 }
 
 #endregion
@@ -2425,5 +2511,5 @@ function Resume-Solution {
 
 }
 #endregion
-    
+
 Export-ModuleMember -Function *
