@@ -399,6 +399,7 @@ function Sync-Parameters {
         $url = "https://" + $global:params.dataStorageAccountName + ".blob.core.windows.net/" + $container
         $StorageContainerAddresses += $url
     }
+    Add-Param "StorageContainerAddresses" $StorageContainerAddresses
     Add-Param "StorageContainerAddressesAsString" $([String]::Join(',', $StorageContainerAddresses))
 
     Import-CognitiveServicesConfig
@@ -1223,7 +1224,7 @@ function Get-SearchFailedItems {
         $id = $error.key.Split("&")[0].Replace("localId=", "");
         $id = [System.Web.HttpUtility]::UrlDecode($id);
         # Find the base url of the document url to remove it.
-        foreach($storageUrl in $params.StorageContainerAddressesAsString)
+        foreach($storageUrl in $params.StorageContainerAddresses)
         {
             if ($id.indexOf($storageUrl) -ge 0)
             {
@@ -2276,10 +2277,11 @@ function Set-WebAppAuthentication {
     # [--yes]
     
 }
-    
+
 #endregion
     
 #region Docker 
+
 function Build-DockerImages {
     param (
         [Int64] $ImageId = 0,
