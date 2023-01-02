@@ -364,6 +364,15 @@ function Set-WebAppServicesAccessRestriction {
     foreach ($plan in $webappscfg.AppPlans) {
         foreach ($appService in $plan.Services) {
             if ( $appService.AccessIPRestriction) {
+
+                # https://learn.microsoft.com/en-us/azure/app-service/app-service-ip-restrictions?tabs=azurecli
+                
+                az resource update `
+                --resource-group $config.resourceGroupName `
+                --name $appService.Name `
+                --resource-type "Microsoft.Web/sites" `
+                --set properties.siteConfig.ipSecurityRestrictionsDefaultAction=Deny
+
                 $inboundRulePriority = 500
                 $subnetRuleNameCounter = 1
                 foreach ($AllowedIP in $ipAddressToAllow) {
@@ -376,7 +385,6 @@ function Set-WebAppServicesAccessRestriction {
     }
     Write-Host ("Access Restriction completed for web apps ") -ForegroundColor Green
     Write-Host "========================================"
-
 }
 
 #endregion
