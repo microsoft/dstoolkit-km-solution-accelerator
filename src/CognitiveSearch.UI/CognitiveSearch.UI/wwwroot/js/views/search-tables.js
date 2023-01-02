@@ -128,15 +128,30 @@ Microsoft.Tables = {
                     if (!headers_row_indexes.includes(k)) {
                         var row = table_matrix[k];
                         extraMetadataContainerHTML += '<tr>';
+
                         for (var j = 0; j < table.column_count; j++) {
                             cell = row[j];
+                            var colSpan = 1;
                             if (cell && cell.text) {
-                                extraMetadataContainerHTML += '<td>' + cell.text + '</td>';
+                                // if (cell.colSpan) {
+                                //     colSpan=cell.colSpan
+                                // }
+                                extraMetadataContainerHTML += '<td colspan="'+colSpan+'">' + cell.text + '</th>';
                             }
                             else {
-                                extraMetadataContainerHTML += '<td></td>';
+                                extraMetadataContainerHTML += '<td colspan="'+colSpan+'"></td>';
                             }
                         }
+
+                        // for (var j = 0; j < table.column_count; j++) {
+                        //     cell = row[j];
+                        //     if (cell && cell.text) {
+                        //         extraMetadataContainerHTML += '<td>' + cell.text + '</td>';
+                        //     }
+                        //     else {
+                        //         extraMetadataContainerHTML += '<td></td>';
+                        //     }
+                        // }
                         extraMetadataContainerHTML += '</tr>';
                     }
                 }
