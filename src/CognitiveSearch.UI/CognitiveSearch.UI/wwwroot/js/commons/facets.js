@@ -384,7 +384,7 @@ Microsoft.Facets = {
                 var facetButton = Microsoft.Facets.GetFacetAccordionHeaderButtonId(nameid);
                 $('#'+facetButton).removeClass('text-danger');
                 // Hide it                
-                var facet_id_tag = nameid + "-accordion-item";
+                var facet_id_tag = Microsoft.Facets.GetFacetAccordionItemId(nameid);
                 $('#' + facet_id_tag).addClass("d-none");
             }
         }
