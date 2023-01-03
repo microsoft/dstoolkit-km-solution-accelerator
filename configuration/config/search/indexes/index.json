@@ -44,6 +44,34 @@
       "synonymMaps": []
     },
     {
+      "name": "metadata_storage_size",
+      "type": "Edm.Int64",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": true,
+      "facetable": false,
+      "key": false,
+      "indexAnalyzer": null,
+      "searchAnalyzer": null,
+      "analyzer": null,
+      "synonymMaps": []
+    },
+    {
+      "name": "metadata_storage_content_md5",
+      "type": "Edm.String",
+      "searchable": false,
+      "filterable": false,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": false,
+      "key": false,
+      "indexAnalyzer": null,
+      "searchAnalyzer": null,
+      "analyzer": null,
+      "synonymMaps": []
+    },
+    {
       "name": "content_source",
       "type": "Edm.String",
       "searchable": true,
