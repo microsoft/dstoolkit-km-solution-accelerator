@@ -344,7 +344,7 @@ Microsoft.Search = {
         if (path != "undefined") {
             var keys = Object.keys(Microsoft.Search.tokens);
             for (var i = 0; i < keys.length; i++) {
-                if (path.indexOf(keys[i]) > -1) {
+                if (path.startsWith(keys[i])) {
                     return path + Microsoft.Search.tokens[keys[i]];
                 }
             }
