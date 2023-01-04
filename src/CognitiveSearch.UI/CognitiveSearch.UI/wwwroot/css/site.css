@@ -789,10 +789,9 @@ body {
 } */
 
 .image-result {
-    margin-left: 12px !important;
-    padding-right: 0px !important;
-    padding: 0px 0px 0px 0px !important;
-    margin: 10px 10px 10px 10px !important;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+    margin-right: 10px !important;
     display: block;
     max-width: 100%;
     max-height: 400px;

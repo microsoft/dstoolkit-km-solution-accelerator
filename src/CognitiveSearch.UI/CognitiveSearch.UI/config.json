@@ -80,7 +80,7 @@
             "title": "Only search document pages or slides",
             "svgicon": "bi-files.svg",
             "method": "Microsoft.All.UpdateResultsAsList",
-            "filter": "(document/converted eq true)"
+            "filter": "(document/converted eq true and document/translated eq false)"
           },
           {
             "name": "images",

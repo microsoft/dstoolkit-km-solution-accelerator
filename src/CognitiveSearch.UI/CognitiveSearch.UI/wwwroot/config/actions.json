@@ -34,11 +34,12 @@
   },
   {
     "id": "action1",
-    "name": "Action1",
-    "title": "Action1 description",
+    "name": "ReIndex",
+    "title": "Tag a blob for re-processing",
     "class": "btn-outline-secondary",
-    "method": "window.alert",
-    "icon": "bi bi-share-fill",
+    "method": "Microsoft.Utils.TagBlog",
+    "icon": "bi bi-tag",
+    "parameters": "n.metadata_storage_path",
     "enable": true
   },
   {
@@ -48,7 +49,7 @@
     "class": "btn-outline-success",
     "method": "window.alert",
     "icon": "bi bi-broadcast",
-    "enable": true
+    "enable": false
   },
   {
     "id": "action3",
@@ -57,6 +58,6 @@
     "class": "btn-outline-warning",
     "method": "window.alert",
     "icon": "bi bi-box",
-    "enable": true
+    "enable": false
   }
 ]

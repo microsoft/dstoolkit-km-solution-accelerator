@@ -498,6 +498,14 @@ Microsoft.Utils = {
     ScrollTopFunction: function () {
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    },
+
+    TagBlog: function(path) {
+        $.postAPIJSON('/api/storage/tagblob',{path: path},
+            function (data) {
+                window.alert('Document tagged for re-processing !');
+                //TODO send notification
+        });
     }
 
 }

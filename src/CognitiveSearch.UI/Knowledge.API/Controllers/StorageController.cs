@@ -124,7 +124,7 @@ namespace Knowledge.API.Controllers.api
         }
 
         [HttpPost("webupload")]
-        public async Task<IActionResult> WebUpload(UploadRequest request)
+        public async Task<IActionResult> WebUpload(StorageRequest request)
         {
             try
             {
@@ -181,7 +181,7 @@ namespace Knowledge.API.Controllers.api
         }
 
         [HttpPost("urlupload")]
-        public async Task<IActionResult> UrlUpload(UploadRequest request)
+        public async Task<IActionResult> UrlUpload(StorageRequest request)
         {
             try
             {
@@ -249,11 +249,61 @@ namespace Knowledge.API.Controllers.api
             var container = new BlobContainerClient(new Uri(_storageConfig.GetStorageContainerAddresses()[storageIndex]), new StorageSharedKeyCredential(accountName, accountKey));
             return container;
         }
+        private BlobContainerClient GetStorageContainer(string containerName)
+        {
+            return new BlobContainerClient(_storageConfig.StorageConnectionString, containerName);
+        }
+
+        [HttpPost("tagblob")]
+        public async Task<IActionResult> TagBlob(StorageRequest request)
+        {
+            if (! String.IsNullOrEmpty(request.path))
+            {
+                try
+                {
+                    BlobUriBuilder bloburi = new(new Uri(request.path));
+
+                    var container = GetStorageContainer(bloburi.BlobContainerName);
+
+                    BlobClient blockBlob = container.GetBlobClient(bloburi.BlobName);
+
+                    BlobProperties blobprops = await blockBlob.GetPropertiesAsync();
+
+                    IDictionary<string, string> metadata = new Dictionary<string, string>();
+
+                    // Ensure we get the existing metadata
+                    foreach (var metadataItem in blobprops.Metadata)
+                    {
+                        metadata.Add(metadataItem.Key, metadataItem.Value);
+                    }
+                    // Add our retry metadata
+                    metadata.Add("AzureSearch_RetryTag", DateTime.UtcNow.ToString("yyyyMMddHHmmss"));
+
+                    await blockBlob.SetMetadataAsync(metadata);
+
+                    QueryService.RunIndexers();
+                }
+                catch (Exception ex)
+                {
+                    telemetryClient.TrackException(ex);
+
+                    return new EmptyResult();
+                }
+
+                return new OkResult();
+
+            }
+            else
+            {
+                return new BadRequestResult();
+            }
+        }
     }
 
-    public class UploadRequest
+    public class StorageRequest
     {
-        public string base64obj { get; set; }
+        public string? base64obj { get; set; }
+        public string? path { get; set; }
     }
 
     public class WebResult

@@ -23,6 +23,7 @@ Microsoft.Tables = {
             resultsHtml += '<div class="row results-cluster-row">';
             resultsHtml += '<div class="col-md-2">';
 
+            resultsHtml += '<div class="row">';
             var iconPath = Microsoft.Utils.GetIconPathFromExtension(pathExtension);
 
             resultsHtml += '<a href="javascript:void(0)" onclick="Microsoft.Results.Details.ShowDocumentById(\'' + docresult.document_id + '\');" >';
@@ -37,7 +38,9 @@ Microsoft.Tables = {
             }
 
             resultsHtml += '</a>';
-            resultsHtml += Microsoft.Search.Actions.renderActions(docresult, false, "unset");
+            resultsHtml += '</div>';
+
+            resultsHtml += Microsoft.Search.Actions.renderActions(docresult, true, null, true);
             resultsHtml += '</div>';
 
             // Tables list 
