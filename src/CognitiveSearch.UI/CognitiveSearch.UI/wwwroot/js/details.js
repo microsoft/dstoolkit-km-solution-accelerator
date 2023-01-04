@@ -284,15 +284,22 @@ Microsoft.Results.Details = {
         var headerContainerHTML = '';
     
         var pathExtension = docresult.metadata_storage_path.toLowerCase().split('.').pop();
+        
         var iconPath = Microsoft.Utils.GetIconPathFromExtension(pathExtension);
-        if (docresult.document.embedded) {
-        } else {
-            // If embedded images tab is not relevant then skip
-            if (!Microsoft.Utils.IsImageExtension(pathExtension)) {
-                headerContainerHTML += '<img class="ms-1 me-2" style="width: 32px;height: 32px;margin-left: 15px;" title="'+docresult.title+'" src="' + iconPath + '" />';
+
+        if (Microsoft.Utils.IsImageExtension(pathExtension)) {
+            var alttitle = Microsoft.Utils.GetImageFileTitle(docresult);
+            if (docresult.document.embedded && docresult.image) {
+                headerContainerHTML += '<img alt="' + alttitle + '" class="image-result img-thumbnail" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.parent.filename) + '" />';
+            }
+            else {
+                headerContainerHTML += '<img alt="' + alttitle + '" class="image-result img-thumbnail" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + docresult.metadata_storage_name + '" />';
             }
         }
-    
+        else { 
+            headerContainerHTML += '<img class="ms-1 me-2" style="width: 32px;height: 32px;margin-left: 15px;" title="'+docresult.title+'" src="' + iconPath + '" />';            
+        }
+
         headerContainerHTML += '<div class="document-header-title"> ';
         headerContainerHTML += Microsoft.Utils.GetDocumentTitle(docresult);
         headerContainerHTML += Microsoft.Utils.GetModificationLine(docresult);

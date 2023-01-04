@@ -368,22 +368,26 @@ Microsoft.Utils = {
         startTag += '<h5 class="'+titleClassName+'"> ';
         var endTag = '</h5></a>';
 
-        if (docresult.document.embedded && docresult.document.converted) {
+        if (docresult.document.embedded) {
+            if (docresult.document.converted) {
+                var page_slide = this.GetImagePageorSlideNumber(docresult.metadata_storage_name);
 
-            var page_slide = this.GetImagePageorSlideNumber(docresult.metadata_storage_name);
+                var parentExtension = this.GetImageParentDocumentExtension(docresult);
 
-            var parentExtension = this.GetImageParentDocumentExtension(docresult);
-
-            if (only_parent) {
-                return startTag + Base64.decode(docresult.parent.filename) + endTag;
-            }
-            else {
-                if (parentExtension === "ppt" || parentExtension === "pptx") {
-                    return startTag + 'Slide ' + page_slide + ' - ' + Base64.decode(docresult.parent.filename) + endTag;
+                if (only_parent) {
+                    return startTag + Base64.decode(docresult.parent.filename) + endTag;
                 }
                 else {
-                    return startTag + 'Page ' + page_slide + ' - ' + Base64.decode(docresult.parent.filename) + endTag;
+                    if (parentExtension === "ppt" || parentExtension === "pptx") {
+                        return startTag + 'Slide ' + page_slide + ' - ' + Base64.decode(docresult.parent.filename) + endTag;
+                    }
+                    else {
+                        return startTag + 'Page ' + page_slide + ' - ' + Base64.decode(docresult.parent.filename) + endTag;
+                    }
                 }
+            }
+            else {
+                // Pure embedded/attached resource
             }
         }
 
