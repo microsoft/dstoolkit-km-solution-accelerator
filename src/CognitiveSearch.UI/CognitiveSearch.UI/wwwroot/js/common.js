@@ -794,9 +794,13 @@ Microsoft.Search.Results = {
             documentHtml += Microsoft.Utils.GetModificationLine(docresult);
 
             documentHtml += '   <div class="results-body mt-2">';
+
             if (highlights.length > 0) {
+                documentHtml += '<div class="results-body-highlights">';
                 documentHtml += highlights;
+                documentHtml += '</div>';
             }
+            
             // TODO Take the tags list from backend.
             documentHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['organizations', 'key_phrases']);
             documentHtml += '</div>';
