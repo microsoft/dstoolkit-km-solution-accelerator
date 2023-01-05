@@ -6,9 +6,9 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Knowledge.Configuration.AzureStorage;
 using Knowledge.Services;
-using Knowledge.Services.AzureStorage;
 using Knowledge.Services.Helpers;
 using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
@@ -17,6 +17,7 @@ namespace Knowledge.API.Controllers.api
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StorageController : AbstractApiController
     {
         private StorageConfig _storageConfig;

@@ -1,15 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Knowledge.Services;
 using Knowledge.Configuration;
+using Knowledge.Services;
 using Knowledge.Services.News;
 using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Xml;
 
@@ -17,7 +14,7 @@ namespace Knowledge.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class NewsController : AbstractApiController
     {
         public NewsController(TelemetryClient telemetry, IQueryService client, SearchServiceConfig svcconfig)

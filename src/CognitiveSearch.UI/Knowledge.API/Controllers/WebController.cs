@@ -4,13 +4,14 @@
 using Knowledge.API.Models;
 using Knowledge.Configuration;
 using Knowledge.Services.WebSearch;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Knowledge.API.Controllers.api
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class WebController : AbstractApiController
     {
         public IWebSearchService webSearchService;

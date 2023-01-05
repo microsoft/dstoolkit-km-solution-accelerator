@@ -21,6 +21,7 @@ using Knowledge.Services.SpellChecking;
 using Knowledge.Services.Translation;
 using Knowledge.Services.WebSearch;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
@@ -48,6 +49,16 @@ namespace Knowledge.API
 
                 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
+
+                services.AddAuthorization();
+            }
+            else {
+                services.AddAuthorization(x =>
+                {
+                    x.DefaultPolicy = new AuthorizationPolicyBuilder()
+                        .RequireAssertion(_ => true)
+                        .Build();
+                });
             }
 
             services.AddControllers().AddNewtonsoftJson(jsonOptions =>

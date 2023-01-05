@@ -73,8 +73,19 @@ namespace CognitiveSearch.UI
                     //}).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
                     });
 
-                services.AddHttpClient();
+                    services.AddHttpClient();
                 }
+
+                services.AddAuthorization();
+            }
+            else
+            {
+                services.AddAuthorization(x =>
+                {
+                    x.DefaultPolicy = new AuthorizationPolicyBuilder()
+                        .RequireAssertion(_ => true)
+                        .Build();
+                });
             }
 
             //
