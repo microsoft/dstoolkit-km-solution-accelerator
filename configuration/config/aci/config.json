@@ -1,6 +1,6 @@
 {
     "Parameters" : {
-        "Neo4jBrowser": "http://{{config.name}}neo4j.westeurope.azurecontainer.io:7474/",
+        "Neo4jBrowser": "http://{{config.name}}neo4j.westeurope.azurecontainer.io:7474/browser",
         "Neo4jConnectionString": "bolt://{{config.name}}neo4j.westeurope.azurecontainer.io:7687",
         "Neo4jUsername": "neo4j",
         "Neo4jPassword": "Password123!"
