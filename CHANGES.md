@@ -3,6 +3,7 @@
 ## December 2022 - V1.2
 
 - UI & API improvements
+- Graph support preparation
 - Documentation
 - Bugs fixing
 
