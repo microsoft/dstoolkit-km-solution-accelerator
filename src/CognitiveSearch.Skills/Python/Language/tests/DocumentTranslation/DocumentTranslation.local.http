@@ -15,6 +15,7 @@ content-type: application/json;charset=utf-8
         }
     ]
 }
+
 ###
 POST http://localhost:7071/language/DocumentTranslation
 content-type: application/json;charset=utf-8
@@ -31,6 +32,24 @@ content-type: application/json;charset=utf-8
                 "fromLanguageCode" : "ja",
                 "fileExtension": ".pdf",
                 "contentType": "application/pdf"
+            }
+        }
+    ]
+}
+
+###
+POST http://localhost:7071/language/DocumentTranslation
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "fromLanguageCode" : "nl",
+                "fileExtension": ".msg",
+                "contentType": "application/pdf",
+                "document_url": "https://dstkkmdata.blob.core.windows.net/documents/Energy/2020eco.pdf"
             }
         }
     ]

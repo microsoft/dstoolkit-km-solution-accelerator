@@ -900,7 +900,7 @@
                     "source": "/document/language"
                 },
                 {
-                    "name": "translated",
+                    "name": "translated_document",
                     "source": "/document/skilldocumenttranslated"
                 }
             ],

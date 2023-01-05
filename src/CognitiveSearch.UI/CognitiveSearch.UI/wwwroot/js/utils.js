@@ -79,6 +79,25 @@ Microsoft.Utils = {
         }
     },
 
+    executeFunctionByNameAsync: function (functionName, context /*, args */) {
+        var args = Array.prototype.slice.call(arguments, 2);
+        var namespaces = functionName.split(".");
+        if (namespaces.length > 0) {
+            var func = namespaces.pop();
+            for (var i = 0; i < namespaces.length; i++) {
+                context = context[namespaces[i]];
+            }
+            return new Promise((resolve, reject) => {
+                context[func].apply(context, args);
+            });
+        }
+        else {
+            return new Promise((resolve, reject) => {
+                context[functionName](args);
+            });
+        }
+    },
+
     // https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization
     // Provider	Header names
     // Azure Active Directory	X-MS-TOKEN-AAD-ID-TOKEN
@@ -349,22 +368,26 @@ Microsoft.Utils = {
         startTag += '<h5 class="'+titleClassName+'"> ';
         var endTag = '</h5></a>';
 
-        if (docresult.document.embedded && docresult.document.converted) {
+        if (docresult.document.embedded) {
+            if (docresult.document.converted) {
+                var page_slide = this.GetImagePageorSlideNumber(docresult.metadata_storage_name);
 
-            var page_slide = this.GetImagePageorSlideNumber(docresult.metadata_storage_name);
+                var parentExtension = this.GetImageParentDocumentExtension(docresult);
 
-            var parentExtension = this.GetImageParentDocumentExtension(docresult);
-
-            if (only_parent) {
-                return startTag + Base64.decode(docresult.parent.filename) + endTag;
-            }
-            else {
-                if (parentExtension === "ppt" || parentExtension === "pptx") {
-                    return startTag + 'Slide ' + page_slide + ' - ' + Base64.decode(docresult.parent.filename) + endTag;
+                if (only_parent) {
+                    return startTag + Base64.decode(docresult.parent.filename) + endTag;
                 }
                 else {
-                    return startTag + 'Page ' + page_slide + ' - ' + Base64.decode(docresult.parent.filename) + endTag;
+                    if (parentExtension === "ppt" || parentExtension === "pptx") {
+                        return startTag + 'Slide ' + page_slide + ' - ' + Base64.decode(docresult.parent.filename) + endTag;
+                    }
+                    else {
+                        return startTag + 'Page ' + page_slide + ' - ' + Base64.decode(docresult.parent.filename) + endTag;
+                    }
                 }
+            }
+            else {
+                // Pure embedded/attached resource
             }
         }
 
@@ -479,6 +502,14 @@ Microsoft.Utils = {
     ScrollTopFunction: function () {
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    },
+
+    TagBlog: function(path) {
+        $.postAPIJSON('/api/storage/tagblob',{path: path},
+            function (data) {
+                window.alert('Document tagged for re-processing !');
+                //TODO send notification
+        });
     }
 
 }

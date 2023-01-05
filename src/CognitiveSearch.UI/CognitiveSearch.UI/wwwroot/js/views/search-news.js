@@ -248,7 +248,7 @@ Microsoft.News = {
 
         Microsoft.News.RenderLiveNewsResults(feeds, feeds);
 
-        $("#doc-count").html(' Found ' + feeds.length.toLocaleString('en-US') + ' news articles.');
+        $("#doc-count").html('About ' + feeds.length.toLocaleString('en-US') + ' news articles.');
 
         //Filters
         Microsoft.News.UpdateFeedFilterReset();

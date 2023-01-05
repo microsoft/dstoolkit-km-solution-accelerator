@@ -21,7 +21,7 @@ Microsoft.Search.Results.KVP = {
             var kvps = JSON.parse(docresult.kvs);
             var table_id = 'kvs-'+docresult.index_key;
 
-            containerHTML += '<table id='+table_id+' class="table metadata-table table-hover table-striped">';
+            containerHTML += '<table id='+table_id+' class="table table-hover table-striped">';
             containerHTML += '<thead><tr><th data-field="key" class="key">Key</th><th data-field="value">Value</th></tr></thead>';
             containerHTML += '<tbody>';
 

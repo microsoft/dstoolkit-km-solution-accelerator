@@ -112,19 +112,26 @@ def transform_value(headers, record):
             fromLanguageCode = 'zh-Hans'
         if fromLanguageCode == 'zh_cht':
             fromLanguageCode = 'zh-Hant'
-        
-        document['data']['translatedFromLanguageCode'] = fromLanguageCode
+
+        # If the document was translated already, we
+        # enable language detection for metadata translation like Title which
+        # currently not handled by Document Translation.
+        if 'translated_document' in data and data['translated_document']:
+            fromLanguageCode=None
+        else:
+            document['data']['translatedFromLanguageCode'] = fromLanguageCode
+            
         document['data']['translatedToLanguageCode'] = toLanguageCode
 
-        # if "text" in data and 'translated' in data:
-        #     if fromLanguageCode != toLanguageCode or data['translated']:
         if "text" in data:
             if fromLanguageCode != toLanguageCode:
                 params = {
                     'api-version': version,
-                    'from': fromLanguageCode,
                     'to': toLanguageCode
                 }
+                if fromLanguageCode: # if non automatic language detection
+                    params['from'] = fromLanguageCode
+
                 headers_translator = {
                     'Ocp-Apim-Subscription-Key': subscription_key,
                     'Ocp-Apim-Subscription-Region': location,

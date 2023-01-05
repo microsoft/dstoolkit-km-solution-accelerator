@@ -99,9 +99,12 @@ namespace Knowledge.Services.Translation
                 {
                     try
                     {
-                        if (!String.IsNullOrEmpty(translation.Result.Text))
+                        if (translation.Result != null)
                         {
-                            searchText = translation.Result.Text;
+                            if (!String.IsNullOrEmpty(translation.Result.Text))
+                            {
+                                searchText = translation.Result.Text;
+                            }
                         }
                     }
                     catch (Exception)

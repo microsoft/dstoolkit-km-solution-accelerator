@@ -104,17 +104,6 @@ function Get-PrivateIPAddress {
     return (az network private-endpoint show --name $privateEndPointName --resource-group $vnetResourceGroup --query 'customDnsConfigs[0].{IPAddress:ipAddresses[0]}' --output tsv)
 }
  
-# Get the public outbound ip address of webapp/function app.
-function Get-PublicOutboundIPAddress {
-    param(
-        $appResourceGroupName,
-        $appName
-    )
- 
-    $outboundIpAddresses = az webapp show -n $appName -g $appResourceGroupName  --query "possibleOutboundIpAddresses"
-    return $outboundIpAddresses.Trim("\""").split(",")
-}
-
 function Add-VNET {
 
     az network vnet create --name $vnetcfg.vnetName --resource-group $vnetcfg.vnetResourceGroup `
@@ -301,6 +290,7 @@ function Add-VNETBastionVM() {
 
 
 #region VNET Integration for App Services
+
 function Add-VNetIntegration {
     param (
         $vnetName,
@@ -315,53 +305,7 @@ function Add-VNetIntegration {
     Write-Host "Added subnet: $subnetName as outbound rule to App Service: $appName" -ForegroundColor "Green"
     Write-Host "========================================"
 }
- 
-function Add-WebAppAccessRestrictionRule {
-    param (
-        [Parameter(Mandatory = $true, Position = 0)]
-        $appResourceGroupName, 
-        [Parameter(Mandatory = $true, Position = 1)]
-        $appName,
-        [Parameter(Mandatory = $false, Position = 2)]
-        $ipaddress,
-        [Parameter(Mandatory = $false, Position = 3)]
-        $ruleName,
-        [Parameter(Mandatory = $false, Position = 4)]
-        $vnetName,
-        [Parameter(Mandatory = $false, Position = 5)]
-        $subnetName,
-        [Parameter(Mandatory = $true, Position = 6)]
-        $priority
-    )
- 
-    Write-Host "========================================"
-    if ($ipaddress) {
-        Write-Host "Adding Inbound rule with IPAddress $ipaddress $appResourceGroupName $ruleName $ipaddress)  $priority to Resource: $appName" -ForegroundColor "Yellow"
-        az webapp config access-restriction add `
-            --resource-group $appResourceGroupName `
-            --name $appName `
-            --rule-name $ruleName `
-            --action Allow `
-            --ip-address $ipaddress `
-            --priority $priority
-        Write-Host "Added Inbound rule with IPAddress $ipaddress to Resource: $appName" -ForegroundColor "Green"
-    }
-    elseif (($subnetName)) {
-        Write-Host "Adding Inbound rule with subnet  $subnetName to Resource: $appName" -ForegroundColor "Yellow"
-        az webapp config access-restriction add `
-            -g $appResourceGroupName `
-            -n $appName `
-            --rule-name $ruleName `
-            --action Allow `
-            --vnet-name $vnetName `
-            --subnet $subnetName `
-            --priority $priority `
-            --vnet-resource-group $vnetcfg.vnetResourceGroup
-        Write-Host "Added Inbound rule with subnet  $subnetName to Resource: $appName" -ForegroundColor "Green"
-    }
-    Write-Host "========================================"
 
-}
 #endregion
 
 #region keyvault network rules

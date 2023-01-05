@@ -38,4 +38,7 @@ Sync-Config
 
 Publish-WebAppsSettings;
 
+# Ensure the Web Apps when set are access restricted
+Set-WebAppServicesAccessRestriction
+
 Stop-Transcript

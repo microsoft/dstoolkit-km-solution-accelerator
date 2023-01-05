@@ -4,6 +4,8 @@
     "Apptype": "Storage",
     "PrivateDNSZone":"privatelink.blob.core.windows.net",
     "Parameters": {
+        "dataStorageAccountName": "{{config.name}}data",
+        "techStorageAccountName": "{{config.name}}tech",
         "storageContainers": [
             "documents",
             "images",

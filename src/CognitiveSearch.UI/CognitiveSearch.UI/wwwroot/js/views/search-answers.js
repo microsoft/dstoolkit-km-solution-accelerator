@@ -36,7 +36,7 @@ Microsoft.Answers = {
 
                 answersHtml += '<h6 class="mt-2 text-success"><span class="bi bi-chat"></span> Semantic Answers</h6>';
 
-                answersHtml += '<div class="">';
+                answersHtml += '<div class="col">';
                 answersHtml += '<div class="list-group list-group-horizontal mb-3">'
 
                 var iconPath = Microsoft.Utils.GetIconPathFromExtension();

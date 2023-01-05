@@ -89,55 +89,67 @@ def transform_value_small(headers, records, entity_recognition_mapping):
 
         for lang in languageData:
 
-            result = text_analytics_client.recognize_pii_entities(languageData[lang]['chunks'], language = lang)
+            # Ensure Supported Language for PII Detection
+            if (lang in LanguageConstants.PII_DETECTION_SUPPORTED_LANGUAGES):
 
-            categories = LanguageConstants.ENTITY_CATEGORIES
-            if "categories" in headers:
-                categories = headers['categories']
-            elif "ENTITY_RECOGNITION_CATEGORIES" in os.environ:
-                categories = os.environ['ENTITY_RECOGNITION_CATEGORIES']
+                result = text_analytics_client.recognize_pii_entities(languageData[lang]['chunks'], language = lang)
 
-            categories_dict = dict(filter(lambda elem: elem[0] in categories, entity_recognition_mapping.items()))
-            
-            for (doc, id) in zip(result, languageData[lang]['ids']):
-                document = {}
-                document['data'] = {}
-                document['recordId'] = id
-                namedEntities = []
-                if not doc.is_error:
-                    for entity in doc.entities:
-                        if entity.category not in categories_dict:
-                            categories_dict[entity.category]={"name": entity.category, "matched":[]}
-                        if entity.category in categories_dict:
-                            min_precision = 0
-                            if 'minimumPrecision' in headers:
-                                min_precision = float(headers['minimumPrecision'])
-                            elif "MIN_PRECISION_ENTITY_RECOGNITION" in os.environ:
-                                min_precision = float(os.environ["MIN_PRECISION_ENTITY_RECOGNITION"])
-                            if entity.confidence_score < min_precision:
-                                continue
-                        
-                            entity_extracted = {}
-                            entity_extracted['category'] = entity.category
-                            categories_dict[entity.category]['matched'].append(entity.text)
-                            entity_extracted['subcategory'] = entity.subcategory
-                            entity_extracted['length'] = entity.length
-                            entity_extracted['offset'] = entity.offset
-                            entity_extracted['confidenceScore'] = entity.confidence_score
-                            entity_extracted['text'] = entity.text
-                            namedEntities.append(entity_extracted)
+                categories = LanguageConstants.ENTITY_CATEGORIES
+                if "categories" in headers:
+                    categories = headers['categories']
+                elif "ENTITY_RECOGNITION_CATEGORIES" in os.environ:
+                    categories = os.environ['ENTITY_RECOGNITION_CATEGORIES']
 
-                    if len(namedEntities) > 0:
-                        for category in  categories_dict:
-                            document['data'][categories_dict[category]['name']] = categories_dict[category]['matched']
-                            categories_dict[category]['matched'] = []
-                        document['data']['namedEntities'] = namedEntities
+                categories_dict = dict(filter(lambda elem: elem[0] in categories, entity_recognition_mapping.items()))
+                
+                for (doc, id) in zip(result, languageData[lang]['ids']):
+                    document = {}
+                    document['data'] = {}
+                    document['recordId'] = id
+                    namedEntities = []
+                    if not doc.is_error:
+                        for entity in doc.entities:
+                            if entity.category not in categories_dict:
+                                categories_dict[entity.category]={"name": entity.category, "matched":[]}
+                            if entity.category in categories_dict:
+                                min_precision = 0
+                                if 'minimumPrecision' in headers:
+                                    min_precision = float(headers['minimumPrecision'])
+                                elif "MIN_PRECISION_ENTITY_RECOGNITION" in os.environ:
+                                    min_precision = float(os.environ["MIN_PRECISION_ENTITY_RECOGNITION"])
+                                if entity.confidence_score < min_precision:
+                                    continue
+                            
+                                entity_extracted = {}
+                                entity_extracted['category'] = entity.category
+                                categories_dict[entity.category]['matched'].append(entity.text)
+                                entity_extracted['subcategory'] = entity.subcategory
+                                entity_extracted['length'] = entity.length
+                                entity_extracted['offset'] = entity.offset
+                                entity_extracted['confidenceScore'] = entity.confidence_score
+                                entity_extracted['text'] = entity.text
+                                namedEntities.append(entity_extracted)
 
-                    if len(doc.redacted_text) > 0:
-                        document['data']['redacted_text'] = doc.redacted_text
-                else:
-                    document['errors'] = [{"message": doc.error.code + ": " + doc.error.message}]
-                results['values'].append(document)
+                        if len(namedEntities) > 0:
+                            for category in  categories_dict:
+                                document['data'][categories_dict[category]['name']] = categories_dict[category]['matched']
+                                categories_dict[category]['matched'] = []
+                            document['data']['namedEntities'] = namedEntities
+
+                        if len(doc.redacted_text) > 0:
+                            document['data']['redacted_text'] = doc.redacted_text
+                    else:
+                        document['errors'] = [{"message": doc.error.code + ": " + doc.error.message}]
+                    results['values'].append(document)
+
+            else:
+                for (doc, id) in zip(result, languageData[lang]['ids']):
+                    document = {}
+                    document['recordId'] = id
+                    document['data'] = {}
+                    document["warnings"]=[ { "message": "Unsupported PII Detection language " + lang } ]
+                    results['values'].append(document)
+
     except KeyError as error:
         ids = []
         for value in records:
@@ -228,52 +240,62 @@ def transform_value_big(headers, record, entity_recognition_mapping):
             else:
                 data['languageCode'] = 'en'
         
-        result = text_analytics_client.recognize_pii_entities(chunks, language = data['languageCode'])
+        # Ensure Supported Language for PII Detection
+        if (data['languageCode'] in LanguageConstants.PII_DETECTION_SUPPORTED_LANGUAGES):
 
-        categories = LanguageConstants.ENTITY_CATEGORIES
-        if "categories" in headers:
-            categories = headers['categories']
-        elif "ENTITY_RECOGNITION_CATEGORIES" in os.environ:
-            categories = os.environ['ENTITY_RECOGNITION_CATEGORIES']
+            result = text_analytics_client.recognize_pii_entities(chunks, language = data['languageCode'])
 
-        categories_dict = dict(filter(lambda elem: elem[0] in categories, entity_recognition_mapping.items()))
-        
-        for doc in result:
-            namedEntities = []
-            if not doc.is_error:
-                for entity in doc.entities:
-                    if entity.category not in categories_dict:
-                        categories_dict[entity.category]={"name": entity.category, "matched":[]}
-                    if entity.category in categories_dict:
-                        min_precision = 0
-                        if 'minimumPrecision' in headers:
-                            min_precision = float(headers['minimumPrecision'])
-                        elif "MIN_PRECISION_ENTITY_RECOGNITION" in os.environ:
-                            min_precision = float(os.environ["MIN_PRECISION_ENTITY_RECOGNITION"])
-                        if entity.confidence_score < min_precision:
-                            continue
+            categories = LanguageConstants.ENTITY_CATEGORIES
+            if "categories" in headers:
+                categories = headers['categories']
+            elif "ENTITY_RECOGNITION_CATEGORIES" in os.environ:
+                categories = os.environ['ENTITY_RECOGNITION_CATEGORIES']
+
+            categories_dict = dict(filter(lambda elem: elem[0] in categories, entity_recognition_mapping.items()))
+            
+            for doc in result:
+                namedEntities = []
+                if not doc.is_error:
+                    for entity in doc.entities:
+                        if entity.category not in categories_dict:
+                            categories_dict[entity.category]={"name": entity.category, "matched":[]}
+                        if entity.category in categories_dict:
+                            min_precision = 0
+                            if 'minimumPrecision' in headers:
+                                min_precision = float(headers['minimumPrecision'])
+                            elif "MIN_PRECISION_ENTITY_RECOGNITION" in os.environ:
+                                min_precision = float(os.environ["MIN_PRECISION_ENTITY_RECOGNITION"])
+                            if entity.confidence_score < min_precision:
+                                continue
+                        
+                            entity_extracted = {}
+                            entity_extracted['category'] = entity.category
+                            categories_dict[entity.category]['matched'].append(entity.text)
+                            entity_extracted['subcategory'] = entity.subcategory
+                            entity_extracted['length'] = entity.length
+                            entity_extracted['offset'] = entity.offset
+                            entity_extracted['confidenceScore'] = entity.confidence_score
+                            entity_extracted['text'] = entity.text
+                            namedEntities.append(entity_extracted)
                     
-                        entity_extracted = {}
-                        entity_extracted['category'] = entity.category
-                        categories_dict[entity.category]['matched'].append(entity.text)
-                        entity_extracted['subcategory'] = entity.subcategory
-                        entity_extracted['length'] = entity.length
-                        entity_extracted['offset'] = entity.offset
-                        entity_extracted['confidenceScore'] = entity.confidence_score
-                        entity_extracted['text'] = entity.text
-                        namedEntities.append(entity_extracted)
-                
-                if len(namedEntities) > 0:
-                    for category in  categories_dict:
-                        document['data'][categories_dict[category]['name']] = categories_dict[category]['matched']
-                    document['data']['namedEntities'] = namedEntities
+                    if len(namedEntities) > 0:
+                        for category in  categories_dict:
+                            document['data'][categories_dict[category]['name']] = categories_dict[category]['matched']
+                        document['data']['namedEntities'] = namedEntities
 
-                if len(doc.redacted_text) > 0:
-                    document['data']['redacted_text'] = doc.redacted_text
+                    if len(doc.redacted_text) > 0:
+                        document['data']['redacted_text'] = doc.redacted_text
 
-            else:
-                document['errors'] = [{"message": doc.error.code + ": " + doc.error.message}]
+                else:
+                    document['errors'] = [{"message": doc.error.code + ": " + doc.error.message}]
 
+        else:
+            return (
+                {
+                "recordId": recordId,
+                "data":{},
+                "warnings": [ { "message": "Unsupported PII Detection language " + data['languageCode'] }   ]       
+                })
 
     except KeyError as error:
         return (

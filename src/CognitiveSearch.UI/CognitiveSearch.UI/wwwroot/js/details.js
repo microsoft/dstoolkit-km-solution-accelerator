@@ -60,6 +60,8 @@ Microsoft.Results.Details = {
             Microsoft.Search.Results.Transcript.SearchTranscript(Microsoft.View.currentQuery);
         }
 
+        Microsoft.Search.ProcessCoverImage(); 
+
         //Log Click Events
         Microsoft.Telemetry.LogClickAnalytics(result.metadata_storage_name, 0);
 
@@ -147,25 +149,34 @@ Microsoft.Results.Details = {
             var tabular = this.tabulars[i];
             if (tabular.enable) {
                 if (tabular.renderingMethod) {
-                    var content = Microsoft.Utils.executeFunctionByName(tabular.renderingMethod, window, result, tabular);
-                    if (content !== undefined)
-                    {
-                        if (content.length > 0) {
-                            $('#' + tabular.id + '-viewer').html(content);
-                            if (tabular.adaptiveIcon) {
-                                this.adjust_tab_icon(result, tabular);
+                    
+                    new Promise((resolve, reject) => {
+                        var content = Microsoft.Utils.executeFunctionByName(tabular.renderingMethod, window, result, tabular);
+                        if (content !== undefined)
+                        {
+                            if (content.length > 0) {
+                                var HTMLContent = '';
+                                // Warning 
+                                if (result.document.translated) {
+                                    HTMLContent += '<div class="border border-warning rounded bg-warning text-dark p-1">This content is the result of an automatic Document Translation.</div>';
+                                }
+                                HTMLContent += content;
+                                $('#' + tabular.id + '-viewer').html(HTMLContent);
+                                if (tabular.adaptiveIcon) {
+                                    this.adjust_tab_icon(result, tabular);
+                                }
                             }
+                            else {
+                                this.hide_tab(tabular.id);
+                            }
+                            tabular.content_length = content.length;
                         }
                         else {
-                            this.hide_tab(tabular.id);
+                            // We can assume the tab is enabled and the renderer did the html append itself.
+                            // this.hide_tab(tabular.id);
+                            tabular.content_length = 1;
                         }
-                        tabular.content_length = content.length;
-                    }
-                    else {
-                        // We can assume the tab is enabled and the renderer did the html append itself.
-                        // this.hide_tab(tabular.id);
-                        tabular.content_length = 1;
-                    }
+                    });
                 }
             }
         }
@@ -273,15 +284,22 @@ Microsoft.Results.Details = {
         var headerContainerHTML = '';
     
         var pathExtension = docresult.metadata_storage_path.toLowerCase().split('.').pop();
+        
         var iconPath = Microsoft.Utils.GetIconPathFromExtension(pathExtension);
-        if (docresult.document.embedded) {
-        } else {
-            // If embedded images tab is not relevant then skip
-            if (!Microsoft.Utils.IsImageExtension(pathExtension)) {
-                headerContainerHTML += '<img class="ms-1 me-2" style="width: 32px;height: 32px;margin-left: 15px;" title="'+docresult.title+'" src="' + iconPath + '" />';
+
+        if (Microsoft.Utils.IsImageExtension(pathExtension)) {
+            var alttitle = Microsoft.Utils.GetImageFileTitle(docresult);
+            if (docresult.document.embedded && docresult.image) {
+                headerContainerHTML += '<img alt="' + alttitle + '" class="image-result img-thumbnail" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + Base64.decode(docresult.parent.filename) + '" />';
+            }
+            else {
+                headerContainerHTML += '<img alt="' + alttitle + '" class="image-result img-thumbnail" src="data:image/png;base64, ' + docresult.image.thumbnail_medium + '" title="' + docresult.metadata_storage_name + '" />';
             }
         }
-    
+        else { 
+            headerContainerHTML += '<img class="ms-1 me-2" style="width: 32px;height: 32px;margin-left: 15px;" title="'+docresult.title+'" src="' + iconPath + '" />';            
+        }
+
         headerContainerHTML += '<div class="document-header-title"> ';
         headerContainerHTML += Microsoft.Utils.GetDocumentTitle(docresult);
         headerContainerHTML += Microsoft.Utils.GetModificationLine(docresult);

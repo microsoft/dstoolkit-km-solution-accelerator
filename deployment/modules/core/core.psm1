@@ -1,11 +1,3 @@
-#region Modules
-# function Update-Modules {
-#     Import-Module (join-path $modulePath "infra") -Global -DisableNameChecking -Force
-#     Import-Module (join-path $modulePath "core") -Global -DisableNameChecking -Force
-#     Import-Module (join-path $modulePath "vnet") -Global -DisableNameChecking -Force    
-# }
-#endregion 
-
 #region ENVIRONMENT 
 function Resolve-Environment {
     param (
@@ -70,6 +62,13 @@ function Import-ContainerRegistryConfig() {
     $global:conregistrycfg = ConvertFrom-Json $global:conregistrycfg
 
     Import-ConfigParameters $global:conregistrycfg
+}
+function Import-ContainerInstanceConfig() {
+    # Import Other configurations like functions
+    $global:acicfg = [string] (Get-Content -Path (join-path $global:envpath "config" "aci" "config.json"))
+    $global:acicfg = ConvertFrom-Json $global:acicfg
+
+    Import-ConfigParameters $global:acicfg
 }
 function Import-keyvaultConfig() {
     # Import Other configurations like functions
@@ -407,10 +406,12 @@ function Sync-Parameters {
         $url = "https://" + $global:params.dataStorageAccountName + ".blob.core.windows.net/" + $container
         $StorageContainerAddresses += $url
     }
+    Add-Param "StorageContainerAddresses" $StorageContainerAddresses
     Add-Param "StorageContainerAddressesAsString" $([String]::Join(',', $StorageContainerAddresses))
 
     Import-CognitiveServicesConfig
     Import-ContainerRegistryConfig
+    Import-ContainerInstanceConfig
     Import-keyvaultConfig
 
     Import-searchserviceConfig    
@@ -505,6 +506,7 @@ function Initialize-Config() {
 #endregion 
     
 #region DATA
+
 function Push-Data() {
     param (
         [Parameter(Mandatory = $true)]
@@ -568,7 +570,8 @@ function Add-BlobRetryTag () {
     
 }
 #endregion
-    
+
+#region Service Keys 
 function Get-AllServicesKeys() {
     param (
         [switch] $AddToKeyVault
@@ -675,8 +678,9 @@ function Get-AzureMapsSubscriptionKey {
         Save-Parameters
     }
 }
-    
-#region SEARCH
+#endregion
+
+#region Azure Cognitive Search 
     
 function Initialize-SearchConfig {
 
@@ -783,16 +787,19 @@ function Initialize-SearchParameters {
     
     # Get the list of Indexers
     $indexersList = @()
+    $indexersStemList=@()
+
     $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "indexers")
     foreach ($file in $files) {
         $item = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
         $value = ($config.name + "-" + $item)
         Add-Param $item"Indexer" $value
-    
         $indexersList += $value
+        $indexersStemList += $item
     }
     Add-Param "searchIndexers" ($indexersList | Join-String -Property $_ -Separator ",")
     Add-Param "searchIndexersList" $indexersList
+    Add-Param "searchIndexersStemList" $indexersStemList
     Write-Debug -Message "Parameters Indexers created"
 }
     
@@ -853,6 +860,7 @@ function Initialize-Search {
     
     Update-SearchAliases
 }
+
 function Update-SearchAliases {
     param (
         [ValidateSet("PUT", "DELETE")]
@@ -867,6 +875,7 @@ function Update-SearchAliases {
         Invoke-SearchAPI -url ("/aliases/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody -method $method
     }
 }
+
 function Update-SearchSynonyms {
     param (
         [ValidateSet("PUT", "DELETE")]
@@ -881,6 +890,7 @@ function Update-SearchSynonyms {
         Invoke-SearchAPI -url ("/synonymmaps/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody -method $method
     }
 }
+
 function Update-SearchIndex {
     param (
         [string]$name,
@@ -1094,18 +1104,6 @@ function Get-SearchIndexersStatus {
     }
     
     $indexersStatus | format-table -AutoSize
-    # if ($item) {
-    #     $indexerBody = [string] (Get-Content -Path (join-path $global:envpath $("\config\search\indexers\"+$item+".json")))
-    #     $jsonobj = ConvertFrom-Json $indexerBody
-    #     $baseSearchUrl = "https://"+$params.searchServiceName+".search.windows.net"
-    #     $fullUrl = $baseSearchUrl + "/indexers/"+$jsonobj.name+"/status?api-version="+$searchservicecfg.Parameters.searchVersion
-        
-    #     Write-Host "CallingGet  api: '"$fullUrl"'";
-    #     Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method Get    
-    # }
-    # else {
-    #     Write-Host "Please provide an indexer name.";
-    # }
 }
     
 function Get-SearchIndexer {
@@ -1201,9 +1199,118 @@ function Disable-SemanticSearch ($searchServiceName) {
     az rest --method PUT --url $mgturl --body '@disable.json'
     Pop-Location
 }
+
+function Suspend-Search {
+    # Suspend the indexers default scheduling.
+    # https://learn.microsoft.com/en-us/azure/search/search-howto-schedule-indexers?tabs=rest#configure-a-schedule
+    Write-Host "Suspend Indexers' Scheduling..."
+
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "indexers")
+    foreach ($file in $files) {
+        $configBody = [string] (Get-Content -Path $file.FullName)
+        $jsonobj = ConvertFrom-Json $configBody
+        $jsonobj.schedule=$null
+        $updatedCfg=(Convertto-json $jsonobj -Depth 100)
+        Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -method "PUT" -body $updatedCfg
+    }
+}
+
+function Resume-Search {
+    Sync-Config
+    Sync-Parameters
+    Initialize-Search
+}
+
+function Get-SearchFailedItems {
+    param(
+        [string] $Indexer,
+        [switch] $SkipHistory,
+        [switch] $Tagging
+    )
+
+    function Format-ErrorKey ($error) {
+        $id = $error.key.Split("&")[0].Replace("localId=", "");
+        $id = [System.Web.HttpUtility]::UrlDecode($id);
+        # Find the base url of the document url to remove it.
+        foreach($storageUrl in $params.StorageContainerAddresses)
+        {
+            if ($id.indexOf($storageUrl) -ge 0)
+            {
+                $baseurl=$storageUrl
+            }
+        }
+        return [System.Web.HttpUtility]::UrlDecode($id.Replace($baseurl+"/",""));
+    }
+
+    $now = Get-Date -Format "yyyyMMddHHmmss"
+
+    if ($Indexer) {
+        $indexersTargetList = @($Indexer)
+    }
+    else {
+        $indexersTargetList = $params.searchIndexersStemList
+    }
+
+    foreach ($container in $indexersTargetList) {
+
+        Write-Host "-------------------"
+        Write-Host "Indexer "$container -ForegroundColor DarkCyan
+
+        $status = Get-SearchIndexerStatus $container
+        
+        $filestotag = @() 
+
+        $errors = $status.lastResult.errors
+
+        # Latest Errors
+        foreach ($error in $errors) {
+            $filestotag += Format-ErrorKey $error
+        }
+
+        # Executions History
+        if (-not $SkipHistory)
+        {
+            $executions = $status.executionHistory
+
+            # $executions | format-table -AutoSize
+
+            foreach ($exec in $executions) {
+            
+                if ( $exec.itemsFailed -gt 0) {
+                    Write-Host ("failed "+$exec.startTime+" "+$exec.endTime+" "+$exec.itemsProcessed+" "+$exec.itemsFailed) -ForegroundColor DarkMagenta
+                }
+                else {
+                    Write-Host ($exec.status+" "+$exec.startTime+" "+$exec.endTime+" "+$exec.itemsProcessed+" "+$exec.itemsFailed) -ForegroundColor DarkGreen
+                }
+        
+                if ( $exec.status -eq "reset" ) {
+                    break
+                }
+                else {
+                    foreach ($error in $exec.errors) {
+                        $filestotag += Format-ErrorKey $error
+                    }
+                }
+            }
+        }
+
+        $filestotag = $filestotag | Sort-Object -Unique 
+
+        Write-Host "Found "$filestotag.Length" documents in errors." -ForegroundColor DarkCyan
+
+        $filestotag | Format-Table -AutoSize
+
+        if ($Tagging) {
+            foreach ($file in $filestotag) {
+                Write-Host "Tagging "$file -ForegroundColor DarkYellow
+                Add-BlobRetryTag -container $container -path $file
+            }
+        }
+    }
+}
+
 #endregion
-    
-    
+ 
 #region App Service Plan
 function Test-AppPlanExistence {
     param (
@@ -1215,7 +1322,7 @@ function Test-AppPlanExistence {
 }
 #endregion
     
-#region Build functions
+#region Helpers 
 function Test-FileExistence { 
     param (
         [string]$path
@@ -1423,11 +1530,38 @@ function New-Functions {
     }
 }
 
+function Restore-Functions {
+    New-Functions
+    Build-Functions -Publish
+    Add-KeyVaultFunctionsPolicies
+    Get-FunctionsKeys
+    Sync-Config
+    Publish-FunctionsSettings
+}
+
+function Remove-Functions {
+    foreach ($plan in $functionscfg.AppPlans) {
+        foreach ($functionApp in $plan.Services) {
+            az functionapp delete `
+                --name $functionApp.Name `
+                --resource-group $plan.ResourceGroup `
+                --subscription $config.subscriptionId
+        }
+        
+        az functionapp plan delete `
+            --name $plan.Name `
+            --resource-group $plan.ResourceGroup `
+            --subscription $config.subscriptionId `
+            --yes
+    }
+}
+
 function Build-Functions () {
     param (
-        [switch] $Publish,
         [switch] $LinuxOnly,
-        [switch] $WindowsOnly
+        [switch] $WindowsOnly,
+        [switch] $Publish,
+        [switch] $Settings
     )
     
     $deploymentdir = Test-DirectoryExistence (join-Path $global:envpath "build")
@@ -1453,7 +1587,7 @@ function Build-Functions () {
             else {
                 if ( -not $WindowsOnly) {
                     if ($functionApp.Path) {
-                        Write-Host ("Building Linux-Python Function App" + $functionApp.Name) -ForegroundColor DarkCyan
+                        Write-Host ("Building Linux-Python Function App " + $functionApp.Name) -ForegroundColor DarkCyan
                         # Linux - Python 
                         # $respath = $deploymentdir+"\linux\"+$functionApp.Name+".publish."+$now
                         $respath = join-path $deploymentdir "linux" ($functionApp.Name + ".publish." + $now)
@@ -1489,6 +1623,10 @@ function Build-Functions () {
 
     if ($Publish) {
         Publish-Functions -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly
+    }
+
+    if ($Settings) {
+        Publish-FunctionsSettings -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly
     }
 }
     
@@ -1556,25 +1694,48 @@ function Restart-Functions() {
     }
     Pop-Location
 }
+
+function Publish-FunctionSettings() {
+    param (
+        $plan,
+        $functionApp
+    )
+
+    $settingspath = "config/functions/" + $functionApp.Id + ".json" 
     
+    if (Test-Path $settingspath) {
+        az webapp config appsettings set -g $plan.ResourceGroup -n $functionApp.Name --settings @$settingspath
+    }
+
+    $settingspath = "config/functions/" + $functionApp.Id + "." + $config.id + ".json"
+
+    if (Test-Path $settingspath) {
+        az webapp config appsettings set -g $plan.ResourceGroup -n $functionApp.Name --settings @$settingspath
+    }
+}
+
 function Publish-FunctionsSettings() {
+    param (
+        [switch] $LinuxOnly,
+        [switch] $WindowsOnly
+    )
 
     # Make sure we have the latest configuration & parameters in
     Sync-Config
     
     Push-Location $global:envpath
+
     foreach ($plan in $functionscfg.AppPlans) {                    
         foreach ($functionApp in $plan.Services) {
-            $settingspath = "config/functions/" + $functionApp.Id + ".json" 
-    
-            if (Test-Path $settingspath) {
-                az webapp config appsettings set -g $plan.ResourceGroup -n $functionApp.Name --settings @$settingspath
+            if (-not $plan.IsLinux) {
+                if ( -not $LinuxOnly ) {
+                    Publish-FunctionSettings $plan $functionApp
+                }
             }
-    
-            $settingspath = "config/functions/" + $functionApp.Id + "." + $config.id + ".json"
-    
-            if (Test-Path $settingspath) {
-                az webapp config appsettings set -g $plan.ResourceGroup -n $functionApp.Name --settings @$settingspath
+            else {
+                if (-not $WindowsOnly) {
+                    Publish-FunctionSettings $plan $functionApp
+                }
             }
         }
     }
@@ -1675,10 +1836,11 @@ function Test-Functions() {
         }
     }
 }
-    
+
 #endregion
     
 #region Azure Web App
+
 function Test-WebAppExistence {
     param (
         [string]$aspName
@@ -1795,11 +1957,13 @@ function New-WebApps {
         }
     }
 }
+
 function Build-WebApps {
     param (
-        [switch] $Publish,
         [switch] $LinuxOnly,
-        [switch] $WindowsOnly
+        [switch] $WindowsOnly,
+        [switch] $Publish,
+        [switch] $Settings
     )
     
     $deploymentdir = Test-DirectoryExistence (join-Path $global:envpath "build")
@@ -1863,7 +2027,13 @@ function Build-WebApps {
     
     Sync-Config
     
-    if ( $Publish ) { Publish-WebApps -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly } 
+    if ( $Publish ) {
+        Publish-WebApps -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly 
+    }
+
+    if ( $Settings ) {
+        Publish-WebAppsSettings -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly
+    }
 }
     
 function Restart-WebApps {
@@ -1906,6 +2076,83 @@ function Restart-WebApps {
     }
     Pop-Location
 }
+    
+function Stop-WebApps {
+    param (
+        [switch] $Production,
+        [switch] $LinuxOnly,
+        [switch] $WindowsOnly,
+        [string] $Slot = "staging"
+    )
+    
+    if (-not $config.stagingUIEnabled) {
+        $Production = $true
+    }
+    
+    Push-Location $global:envpath
+    foreach ($plan in $webappscfg.AppPlans) {
+        foreach ($webApp in $plan.Services) {
+            if ($plan.IsLinux) {
+                if (-not $WindowsOnly) {
+                    az webapp stop --resource-group $plan.ResourceGroup --name $webApp.Name
+                }
+            }
+            else {
+                if (-not $LinuxOnly) {
+                    if ($production) {
+                        az webapp stop --resource-group $plan.ResourceGroup `
+                            --name $webApp.Name
+                    }
+                    else {
+                        az webapp stop --resource-group $plan.ResourceGroup `
+                            --name $webApp.Name `
+                            --slot $Slot
+                    }    
+                }
+            }            
+        }
+    }
+    Pop-Location
+}
+    
+function Start-WebApps {
+    param (
+        [switch] $Production,
+        [switch] $LinuxOnly,
+        [switch] $WindowsOnly,
+        [string] $Slot = "staging"
+    )
+    
+    if (-not $config.stagingUIEnabled) {
+        $Production = $true
+    }
+    
+    Push-Location $global:envpath
+    foreach ($plan in $webappscfg.AppPlans) {
+        foreach ($webApp in $plan.Services) {
+            if ($plan.IsLinux) {
+                if (-not $WindowsOnly) {
+                    az webapp start --resource-group $plan.ResourceGroup --name $webApp.Name
+                }
+            }
+            else {
+                if (-not $LinuxOnly) {
+                    if ($production) {
+                        az webapp start --resource-group $plan.ResourceGroup `
+                            --name $webApp.Name
+                    }
+                    else {
+                        az webapp start --resource-group $plan.ResourceGroup `
+                            --name $webApp.Name `
+                            --slot $Slot
+                    }    
+                }
+            }            
+        }
+    }
+    Pop-Location
+}
+
 function Publish-WebApps {
     param (
         [switch] $Production,
@@ -2038,10 +2285,11 @@ function Set-WebAppAuthentication {
     # [--yes]
     
 }
-    
+
 #endregion
     
 #region Docker 
+
 function Build-DockerImages {
     param (
         [Int64] $ImageId = 0,
@@ -2087,7 +2335,7 @@ function Build-DockerImages {
     
 #endregion
     
-#region Key Vault Methods
+#region Key Vault
 function Initialize-KeyVault {
     Add-KeyVaultSecrets
 }
@@ -2144,7 +2392,7 @@ function Add-KeyVaultWebAppsPolicies {
     
 #endregion
     
-#region Solution methods
+#region Solution 
 
 function Build-Solution {
     param (
@@ -2258,6 +2506,26 @@ function Get-Environment {
 function Test-Solution {
     Test-Functions
 }
+
+function Suspend-Solution {
+
+    # De-Allocate Functions which are costly to leave running.
+    Remove-Functions
+
+    # Start Linux WebApp (e.g. Tika)
+    Stop-WebApps -LinuxOnly
+
+}
+
+function Resume-Solution {
+
+    # Re-deploy the functions
+    Restore-Functions
+
+    # Start Linux WebApp
+    Start-WebApps -LinuxOnly
+
+}
 #endregion
-    
+
 Export-ModuleMember -Function *

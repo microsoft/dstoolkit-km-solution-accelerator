@@ -23,6 +23,7 @@ Microsoft.Tables = {
             resultsHtml += '<div class="row results-cluster-row">';
             resultsHtml += '<div class="col-md-2">';
 
+            resultsHtml += '<div class="row">';
             var iconPath = Microsoft.Utils.GetIconPathFromExtension(pathExtension);
 
             resultsHtml += '<a href="javascript:void(0)" onclick="Microsoft.Results.Details.ShowDocumentById(\'' + docresult.document_id + '\');" >';
@@ -37,7 +38,9 @@ Microsoft.Tables = {
             }
 
             resultsHtml += '</a>';
-            resultsHtml += Microsoft.Search.Actions.renderActions(docresult, false, "unset");
+            resultsHtml += '</div>';
+
+            resultsHtml += Microsoft.Search.Actions.renderActions(docresult, true, null, true);
             resultsHtml += '</div>';
 
             // Tables list 
@@ -74,7 +77,7 @@ Microsoft.Tables = {
                 var table_id = docresult.index_key + i;
                 extraMetadataContainerHTML += '<div class="container mt-2 border-start border-2 border-warning" style="overflow-x:auto;">';
 
-                extraMetadataContainerHTML += '<table id=' + table_id + ' class="table metadata-table table-hover table-striped">';
+                extraMetadataContainerHTML += '<table id=' + table_id + ' class="table table-hover table-striped">';
                 extraMetadataContainerHTML += '<thead>';
 
                 var table = tables[i];
@@ -128,15 +131,30 @@ Microsoft.Tables = {
                     if (!headers_row_indexes.includes(k)) {
                         var row = table_matrix[k];
                         extraMetadataContainerHTML += '<tr>';
+
                         for (var j = 0; j < table.column_count; j++) {
                             cell = row[j];
+                            var colSpan = 1;
                             if (cell && cell.text) {
-                                extraMetadataContainerHTML += '<td>' + cell.text + '</td>';
+                                // if (cell.colSpan) {
+                                //     colSpan=cell.colSpan
+                                // }
+                                extraMetadataContainerHTML += '<td colspan="'+colSpan+'">' + cell.text + '</th>';
                             }
                             else {
-                                extraMetadataContainerHTML += '<td></td>';
+                                extraMetadataContainerHTML += '<td colspan="'+colSpan+'"></td>';
                             }
                         }
+
+                        // for (var j = 0; j < table.column_count; j++) {
+                        //     cell = row[j];
+                        //     if (cell && cell.text) {
+                        //         extraMetadataContainerHTML += '<td>' + cell.text + '</td>';
+                        //     }
+                        //     else {
+                        //         extraMetadataContainerHTML += '<td></td>';
+                        //     }
+                        // }
                         extraMetadataContainerHTML += '</tr>';
                     }
                 }
@@ -155,7 +173,7 @@ Microsoft.Tables = {
                     ordering: false,
                     info: false,
                     responsive:true,
-                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+                    buttons: ['copyHtml5', 'csvHtml5', 'excelHtml5', 'pdfHtml5', 'spacer', 'print'],
                     // buttons: [
                     // ],
                     searching: false

@@ -8,9 +8,6 @@ Microsoft.Search.Results.File = {
 
     RenderSearchResultPreview: function (result) {
         var fileContainerHTML = '';
-        if (result.document.translated) {
-            fileContainerHTML += '<div class="border border-warning rounded bg-warning text-dark p-1">This content is the result of an automatic Document Translation.</div>'
-        }
         fileContainerHTML += this.render_file_container(result.document.embedded, result.metadata_storage_path, result.image ? result.image.image_data : null, result.page_number, result.parent);
         return fileContainerHTML;
     },

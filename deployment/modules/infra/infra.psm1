@@ -250,6 +250,30 @@ function New-ACRService {
     }
 }
 
+
+function New-ContainerInstances {
+
+    foreach ($azureResource in $acicfg.Items) {
+
+        Write-Host "Provisionning Container Instances service(s) "$azureResource.Name;
+
+        $exists = az container show -g $azureResource.ResourceGroup -n $azureResource.Name --query id --out tsv
+
+        if ( $exists ) {
+            Write-Host "ACI service already exists...Skipping.";
+        }
+        else {
+            if ( $azureResource.YAMLPath ) {
+                az container create --resource-group $azureResource.ResourceGroup `
+                --file (join-path $global:envpath $azureResource.YAMLPath) `
+                --cpu 4 `
+                --memory 8 `
+                --assign-identity
+            }
+        }
+    }
+}
+
 function New-AzureMapsService() {
 
     if ($params.mapSearchEnabled) {
@@ -281,3 +305,110 @@ function New-BingSearchService() {
         Save-Parameters
     }
 }
+
+#region Access Restriction for App Services
+
+function Add-WebAppAccessRestrictionRule {
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        $appResourceGroupName, 
+        [Parameter(Mandatory = $true, Position = 1)]
+        $appName,
+        [Parameter(Mandatory = $false, Position = 2)]
+        $ipaddress,
+        [Parameter(Mandatory = $false, Position = 3)]
+        $ruleName,
+        [Parameter(Mandatory = $false, Position = 4)]
+        $vnetName,
+        [Parameter(Mandatory = $false, Position = 5)]
+        $subnetName,
+        [Parameter(Mandatory = $true, Position = 6)]
+        $priority
+    )
+ 
+    Write-Host "========================================"
+    if ($ipaddress) {
+        Write-Host "Adding Inbound rule with IPAddress $ipaddress $appResourceGroupName $ruleName $ipaddress)  $priority to Resource: $appName" -ForegroundColor "Yellow"
+        az webapp config access-restriction add `
+            --resource-group $appResourceGroupName `
+            --name $appName `
+            --rule-name $ruleName `
+            --action Allow `
+            --ip-address $ipaddress `
+            --priority $priority
+        Write-Host "Added Inbound rule with IPAddress $ipaddress to Resource: $appName" -ForegroundColor "Green"
+    }
+    elseif (($subnetName)) {
+        Write-Host "Adding Inbound rule with subnet  $subnetName to Resource: $appName" -ForegroundColor "Yellow"
+        az webapp config access-restriction add `
+            -g $appResourceGroupName `
+            -n $appName `
+            --rule-name $ruleName `
+            --action Allow `
+            --vnet-name $vnetName `
+            --subnet $subnetName `
+            --priority $priority `
+            --vnet-resource-group $vnetcfg.vnetResourceGroup
+        Write-Host "Added Inbound rule with subnet  $subnetName to Resource: $appName" -ForegroundColor "Green"
+    }
+    Write-Host "========================================"
+
+}
+
+function Get-WebAppPublicOutboundIPAddress {
+    param(
+        $appResourceGroupName,
+        $appName
+    )
+    $outboundIpAddresses = az webapp show -n $appName -g $appResourceGroupName  --query "possibleOutboundIpAddresses"
+    return $outboundIpAddresses.Trim("\""").split(",")
+}
+
+function Get-WebAppOutboundIPs() {
+    param (
+        $appServicesCfg
+    )
+    $ipAddressToAllow=@()
+
+    foreach ($plan in $appServicesCfg.AppPlans) {
+        foreach ($appService in $plan.Services) {
+            $ipAddressToAllow+=$(Get-WebAppPublicOutboundIPAddress -appResourceGroupName $config.resourceGroupName -appName $appService.Name)
+        }
+    }
+    return $ipAddressToAllow | Sort-Object -Unique
+}
+
+function Set-WebAppServicesAccessRestriction {
+
+    Write-Host "========================================"
+    Write-Host ("Set Access Restriction for web apps ") -ForegroundColor Yellow
+
+    $ipAddressToAllow=Get-WebAppOutboundIPs $functionscfg
+
+    foreach ($plan in $webappscfg.AppPlans) {
+        foreach ($appService in $plan.Services) {
+            if ( $appService.AccessIPRestriction) {
+
+                # https://learn.microsoft.com/en-us/azure/app-service/app-service-ip-restrictions?tabs=azurecli
+                
+                az resource update `
+                --resource-group $config.resourceGroupName `
+                --name $appService.Name `
+                --resource-type "Microsoft.Web/sites" `
+                --set properties.siteConfig.ipSecurityRestrictionsDefaultAction=Deny
+
+                $inboundRulePriority = 500
+                $subnetRuleNameCounter = 1
+                foreach ($AllowedIP in $ipAddressToAllow) {
+                    Add-WebAppAccessRestrictionRule $config.resourceGroupName $appService.Name $AllowedIP ("Allow Function Ip " + $AllowedIP) $null $null $inboundRulePriority
+                    $inboundRulePriority++
+                    $subnetRuleNameCounter++
+                }
+            }
+        }
+    }
+    Write-Host ("Access Restriction completed for web apps ") -ForegroundColor Green
+    Write-Host "========================================"
+}
+
+#endregion

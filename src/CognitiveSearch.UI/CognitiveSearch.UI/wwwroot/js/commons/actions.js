@@ -115,14 +115,14 @@ Microsoft.Search.Actions = {
         htmlDiv += '<div class="row">';
 
         if (staticActions) {
-            htmlDiv += '<div class="search-result-actions">';
+            htmlDiv += '<div class="search-result-actions w-75">';
         }
         else {
-            htmlDiv += '<div class="search-result-actions" id="actions-' + docresult.index_key + '" style="display:' + initialStyle + ' !important;">';
+            htmlDiv += '<div class="search-result-actions w-75" id="actions-' + docresult.index_key + '" style="display:' + initialStyle + ' !important;">';
         }
 
         htmlDiv += '    <div class="col-md-12" style="padding: 5px;">';
-        htmlDiv += '            <div class="d-grid gap-2 d-md-flex" >';
+        htmlDiv += '            <div class="d-grid gap-2" >';
         // if (docresult.document.embedded) {
         //     htmlDiv += '<button onclick="Microsoft.Results.Details.ShowDocumentById(\'' + docresult.parent.id + '\')" class="btn btn-outline-success btn-sm" ><span class="bi bi-file-earmark me-2" title="Show parent document details..."></span><span>Source</span></button>'
         // }

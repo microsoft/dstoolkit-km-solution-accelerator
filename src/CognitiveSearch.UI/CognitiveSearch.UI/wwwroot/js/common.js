@@ -55,6 +55,9 @@ Microsoft.Search = {
 
     MAX_NUMBER_ITEMS_PER_PAGE: 10,
 
+    EMAIL_CONTENT_GROUP : "Email",
+    IMAGE_CONTENT_GROUP : "Image",
+
     mrcAnswers: [],
     qnaAnswers: [],
     semantic_answers: [],
@@ -341,7 +344,7 @@ Microsoft.Search = {
         if (path != "undefined") {
             var keys = Object.keys(Microsoft.Search.tokens);
             for (var i = 0; i < keys.length; i++) {
-                if (path.indexOf(keys[i]) > -1) {
+                if (path.startsWith(keys[i])) {
                     return path + Microsoft.Search.tokens[keys[i]];
                 }
             }
@@ -351,17 +354,16 @@ Microsoft.Search = {
 
     // Cover Image
     SupportCoverImage: function(docresult) {
-        return (docresult.content_group != "Email") ;
+        return (docresult.content_group != this.EMAIL_CONTENT_GROUP) ;
     },
 
     RenderCoverImage: function (docresult, name, iconPath) {
         var documentHtml = '';
         if (this.SupportCoverImage(docresult)) {
-            // documentHtml += '<img alt="' + name + '" class="image-result cover-image" src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
-            documentHtml += '<img alt="' + name + '" class="image-result cover-image" src="' + iconPath + '" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
+            documentHtml += '<img title="' + name + '" alt="' + name + '" class="image-result cover-image" src="' + iconPath + '" data-src="/api/document/getcoverimage?document_id=' + docresult.document_id + '" title="' + docresult.metadata_storage_name + '"onError="this.onerror=null;this.src=\'' + iconPath + '\';"/>';
         }
         else {
-            documentHtml += '<img alt="' + name + '" class="image-result cover-image" src="' + iconPath + '" title="' + docresult.title + '"/>';
+            documentHtml += '<img title="' + name + '" alt="' + name + '" class="image-result cover-image" src="' + iconPath + '" title="' + docresult.title + '"/>';
         }
         return documentHtml;
     },
@@ -400,11 +402,11 @@ Microsoft.Search = {
 
     // Page Count
     SupportPageCount: function(docresult) {
-        return (docresult.content_group != "Email") && (docresult.page_count);
+        return (docresult.content_group != this.EMAIL_CONTENT_GROUP) && (docresult.page_count);
     },
 
     SupportHTMLPreview: function(docresult) {
-        return (docresult.content_group == "Email" && !docresult.document.converted) ;
+        return (docresult.content_group == this.EMAIL_CONTENT_GROUP && !docresult.document.converted) ;
     }
 }
 
@@ -711,10 +713,10 @@ Microsoft.Search.Results = {
             }
         }        
         if (docresult.tables_count > 0) {
-            documentHtml += '<span class="badge rounded-pill text-dark me-1 border border-outline-secondary bi bi-table" title="This document has '+docresult.tables_count+' extracted tables."> </span>';
+            documentHtml += '<span class="badge rounded-pill bg-light text-dark me-1 border border-outline-secondary bi bi-table" title="This document has '+docresult.tables_count+' extracted tables."> </span>';
         }
         if (docresult.kvs_count > 0) {
-            documentHtml += '<span class="badge rounded-pill text-dark me-1 border border-outline-secondary bi bi-database" title="This document has '+docresult.kvs_count+' extracted Key/Value pairs."> </span>';
+            documentHtml += '<span class="badge rounded-pill bg-light text-dark me-1 border border-outline-secondary bi bi-database" title="This document has '+docresult.kvs_count+' extracted Key/Value pairs."> </span>';
         }
         return documentHtml;
     },
@@ -792,9 +794,13 @@ Microsoft.Search.Results = {
             documentHtml += Microsoft.Utils.GetModificationLine(docresult);
 
             documentHtml += '   <div class="results-body mt-2">';
+
             if (highlights.length > 0) {
+                documentHtml += '<div class="results-body-highlights">';
                 documentHtml += highlights;
+                documentHtml += '</div>';
             }
+            
             // TODO Take the tags list from backend.
             documentHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['organizations', 'key_phrases']);
             documentHtml += '</div>';

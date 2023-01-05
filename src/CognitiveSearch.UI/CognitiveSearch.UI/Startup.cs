@@ -113,9 +113,11 @@ namespace CognitiveSearch.UI
             GraphConfig gconfigData = Configuration.GetSection("GraphConfig").Get<GraphConfig>();
             services.AddSingleton<GraphConfig>(_ => gconfigData);
 
+            Neo4jConfig neo4jonfigData = Configuration.GetSection("Neo4jConfig").Get<Neo4jConfig>();
+            services.AddSingleton<Neo4jConfig>(_ => neo4jonfigData);
+
             WebAPIBackend webapiconfigData = Configuration.GetSection("WebAPIBackend").Get<WebAPIBackend>();
             services.AddSingleton<WebAPIBackend>(_ => webapiconfigData);
-
 
             // Global Configuration singleton 
             var appConfig = new AppConfig

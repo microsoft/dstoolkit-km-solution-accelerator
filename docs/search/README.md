@@ -17,6 +17,7 @@ This accelerator is configured to ingest data from an Azure Storage Data Lake. B
 |**documents**|where you would push your data|Yes|
 |**images**|Where converted pages/slides & attachments are extracted|Yes|
 |**metadata**|Where we stored all documents full metadata output and an HTML representation of a document.|No|
+|**translation**|Where we stored all translated documents.|Yes|
 ||||
 
 # Search Configuration
@@ -29,12 +30,14 @@ Adding a new search index or datasource is as simple as dropping a new JSON file
 
 A quick table to understand the relationships between all Search components. 
 
-| Storage Container | Datasource(s) | Indexer(s) | Skillset(s) | Description |
-|--|--|--|--|--|
-| documents | documents | documents | documents | Index all types of documents except images files (extension exclusion configuration)
-| documents | documents | docimg | images | Index all images files from the documents container (extension inclusion configuration)|
-| images | images | images | images | Index all images files located in the images container.|
-|||||
+| Storage Container | Datasource(s) | Indexer(s) | Skillset(s) | Description | Since Version |
+|--|--|--|--|--|--|
+| documents | documents | documents | documents | Index all types of documents except images files (extension exclusion configuration) | v1.0|
+| documents | documents | docimg | images | Index all images files from the documents container (extension inclusion configuration)| v1.0|
+| images | images | images | images | Index all images files located in the images container.| v1.0|
+| translation | translation | translation | documents | Index all translated documents files located in the translation container.| v1.1|
+| images | images | attachments | documents | Index all attached documents files located in the images container. This case allows Emails' attachments indexing for instance.| v1.1|
+||||||
 
 All search components in the Azure portal are prefixed with the configuration name parameter used as a prefix for all deployed services. 
 
@@ -42,6 +45,8 @@ __Example of indexers prefixing__
 - {{config.name}}-documents
 - {{config.name}}-docimg
 - {{config.name}}-images
+- {{config.name}}-translation
+- {{config.name}}-attachments
 
 To connect and operate your ACS instance, you would initialize your environment. 
 
@@ -90,25 +95,38 @@ While Tika can extract embedded images from any Office or PDF documents, in prac
 
 Also annotations overlapping images in documents or any graphical element are lost. This is mostly seen & common in PDF. 
 
-For this solution, by default, we chose to extract 
+For this solution, by default, we chose to extract as follows
 - each PowerPoint slide into an image
 - each PDF page into an image
 
-Each image is then indexed as an individual item allowing end-users to target & retrieve specific slide or page. You don't have to scroll any big PDF to find where your search query was matched.  
+Each page/slide image is then indexed as an individual item allowing end-users to target & retrieve specific slide or page. You don't have to scroll any big PDF to find where your search query was matched.  
 
-This choice too provides more user experience capabilities like document cover, thumbnails or tables extraction.  
+This choice provides more user experience capabilities like document cover, thumbnails or tables extraction to name a few.
 
 There is another aspect of doing your own images extraction is cost. In Azure Cognitive Search, Images extraction is [a paid feature.](https://azure.microsoft.com/en-us/pricing/details/search/)
 
+## Email's Attachments 
+
+Emails processing falls under the documents processing to the exception that extracted "images" here known as attached documents will need specific indexer.
+
+Starting with V1.1, we do now support attachments indexing.
 
 ## Translation
 
-Each textual content whether it is coming from the text extraction of a full document or the OCR outcome of an image is translated to English. 
+The entire solution is configured to normalize content to a parametrable language option named **searchDefaultToLanguageCode** defined in the search/config.json. By default it set to English. 
+
+### Text Translation
+Each textual content whether it is coming from the text extraction of a full document or the OCR outcome of an image is translated to English (default but configurable). 
 
 On non-native English documents, the Transcript tab  will show a side-by-side translation. 
 
 ![Translation](../ui/media/details/Transcript2.png)
 
+### Document Translation
+
+We added support for Document Translation in our solution. A translation container is created automatically to receive translated documents. Document Translation
+
+![Translation](../ui/media/DocumentTranslation.png)
 
 ## Document Processing 
 
