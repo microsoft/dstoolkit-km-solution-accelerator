@@ -91,6 +91,9 @@ namespace Knowledge.API
             GraphConfig gconfigData = Configuration.GetSection("GraphConfig").Get<GraphConfig>();
             services.AddSingleton<GraphConfig>(_ => gconfigData);
 
+            Neo4jConfig neo4jonfigData = Configuration.GetSection("Neo4jConfig").Get<Neo4jConfig>();
+            services.AddSingleton<Neo4jConfig>(_ => neo4jonfigData);
+
             WebSearchConfig wsconfigData = Configuration.GetSection("WebSearchConfig").Get<WebSearchConfig>();
             services.AddSingleton<WebSearchConfig>(_ => wsconfigData);
 

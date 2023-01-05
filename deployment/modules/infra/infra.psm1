@@ -250,6 +250,30 @@ function New-ACRService {
     }
 }
 
+
+function New-ContainerInstances {
+
+    foreach ($azureResource in $acicfg.Items) {
+
+        Write-Host "Provisionning Container Instances service(s) "$azureResource.Name;
+
+        $exists = az container show -g $azureResource.ResourceGroup -n $azureResource.Name --query id --out tsv
+
+        if ( $exists ) {
+            Write-Host "ACI service already exists...Skipping.";
+        }
+        else {
+            if ( $azureResource.YAMLPath ) {
+                az container create --resource-group $azureResource.ResourceGroup `
+                --file (join-path $global:envpath $azureResource.YAMLPath) `
+                --cpu 4 `
+                --memory 8 `
+                --assign-identity
+            }
+        }
+    }
+}
+
 function New-AzureMapsService() {
 
     if ($params.mapSearchEnabled) {

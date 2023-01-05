@@ -448,5 +448,20 @@
     "name": "AzureAd:ClientId",
     "value": "{{config.clientId}}",
     "slotSetting": false
+  },
+  {
+    "name": "Neo4jConfig:ConnectionString",
+    "value": "{{param.Neo4jConnectionString}}",
+    "slotSetting": false
+  },
+  {
+    "name": "Neo4jConfig:Username",
+    "value": "{{param.Neo4jUsername}}",
+    "slotSetting": false
+  },
+  {
+    "name": "Neo4jConfig:Password",
+    "value": "{{param.Neo4jPassword}}",
+    "slotSetting": false
   }
 ]

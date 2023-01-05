@@ -63,6 +63,13 @@ function Import-ContainerRegistryConfig() {
 
     Import-ConfigParameters $global:conregistrycfg
 }
+function Import-ContainerInstanceConfig() {
+    # Import Other configurations like functions
+    $global:acicfg = [string] (Get-Content -Path (join-path $global:envpath "config" "aci" "config.json"))
+    $global:acicfg = ConvertFrom-Json $global:acicfg
+
+    Import-ConfigParameters $global:acicfg
+}
 function Import-keyvaultConfig() {
     # Import Other configurations like functions
     $global:keyvaultcfg = [string] (Get-Content -Path (join-path $global:envpath "config" "keyvault" "config.json"))
@@ -404,6 +411,7 @@ function Sync-Parameters {
 
     Import-CognitiveServicesConfig
     Import-ContainerRegistryConfig
+    Import-ContainerInstanceConfig
     Import-keyvaultConfig
 
     Import-searchserviceConfig    
