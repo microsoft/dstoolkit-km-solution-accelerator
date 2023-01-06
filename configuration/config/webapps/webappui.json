@@ -450,6 +450,11 @@
     "slotSetting": false
   },
   {
+    "name": "Neo4jConfig:IsEnabled",
+    "value": "{{param.Neo4jEnabled}}",
+    "slotSetting": false
+  },
+  {
     "name": "Neo4jConfig:ConnectionString",
     "value": "{{param.Neo4jConnectionString}}",
     "slotSetting": false

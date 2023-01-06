@@ -1,0 +1,9 @@
+{
+    "Parameters": {
+        "pricing.consumption": "Y1",
+        "pricing.standard": "S1",
+        "pricing.premium": "P1V2",
+        "pricing.elastic": "EP1"
+    },
+    "Items": []
+}

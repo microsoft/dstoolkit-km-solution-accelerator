@@ -20,83 +20,24 @@ function Resolve-Environment {
     }
 }
 
-function Import-Functions() {
-    # Import Other configurations like functions
-    $global:functionscfg = [string] (Get-Content -Path (join-path $global:envpath "config" "functions" "config.json"))
-    $global:functionscfg = ConvertFrom-Json $global:functionscfg
+function Import-ServicesConfig() {
 
-    Import-ConfigParameters $global:functionscfg
-}
-function Import-WebAppsConfig() {
-    # Import Other configurations like functions
-    $global:webappscfg = [string] (Get-Content -Path (join-path $global:envpath "config" "webapps" "config.json"))
-    $global:webappscfg = ConvertFrom-Json $global:webappscfg
+    $folders = Get-ChildItem -Directory -Path (join-path $global:envpath "config")
 
-    Import-ConfigParameters $global:webappscfg
-}
-function Import-DockerConfig() {
-    # Import Other configurations like functions
-    $global:dockercfg = [string] (Get-Content -Path (join-path $global:envpath "config" "docker" "config.json"))
-    $global:dockercfg = ConvertFrom-Json $global:dockercfg
+    foreach ($folder in $folders) {
+        if (Test-Path $(join-Path $folder.FullName "config.json")) 
+        {
+            Write-Host ("Discovered service "+$folder.Name) -ForegroundColor DarkBlue
 
-    Import-ConfigParameters $global:dockercfg
-}
-function Import-StorageConfig() {
-    # Import Other configurations like functions
-    $global:storagecfg = [string] (Get-Content -Path (join-path $global:envpath "config" "storage" "config.json"))
-    $global:storagecfg = ConvertFrom-Json $global:storagecfg
+            $varValue = [string] (Get-Content -Path $(join-path $folder.FullName "config.json"))
+            $varValue = ConvertFrom-Json $varValue
+            $varName = $folder.Name + "cfg"
 
-    Import-ConfigParameters $global:storagecfg
-}
-
-function Import-CognitiveServicesConfig() {
-    # Import Other configurations like functions
-    $global:cogservicescfg  = [string] (Get-Content -Path (join-path $global:envpath "config" "cogservices" "config.json"))
-    $global:cogservicescfg  = ConvertFrom-Json $global:cogservicescfg
-
-    Import-ConfigParameters $global:cogservicescfg
-}
-function Import-ContainerRegistryConfig() {
-    # Import Other configurations like functions
-    $global:conregistrycfg = [string] (Get-Content -Path (join-path $global:envpath "config" "containerregistry" "config.json"))
-    $global:conregistrycfg = ConvertFrom-Json $global:conregistrycfg
-
-    Import-ConfigParameters $global:conregistrycfg
-}
-function Import-ContainerInstanceConfig() {
-    # Import Other configurations like functions
-    $global:acicfg = [string] (Get-Content -Path (join-path $global:envpath "config" "aci" "config.json"))
-    $global:acicfg = ConvertFrom-Json $global:acicfg
-
-    Import-ConfigParameters $global:acicfg
-}
-function Import-keyvaultConfig() {
-    # Import Other configurations like functions
-    $global:keyvaultcfg = [string] (Get-Content -Path (join-path $global:envpath "config" "keyvault" "config.json"))
-    $global:keyvaultcfg = ConvertFrom-Json $global:keyvaultcfg
-
-    Import-ConfigParameters $global:keyvaultcfg
-}
-function Import-searchserviceConfig() {
-    # Import Other configurations like functions
-    $global:searchservicecfg = [string] (Get-Content -Path (join-path $global:envpath "config" "search" "config.json"))
-    $global:searchservicecfg = ConvertFrom-Json $global:searchservicecfg
-
-    Import-ConfigParameters $global:searchservicecfg
-}
-function Import-bingConfig() {
-    # Import Other configurations like functions
-    $global:bingcfg = [string] (Get-Content -Path (join-path $global:envpath "config" "bing" "config.json"))
-    $global:bingcfg = ConvertFrom-Json $global:bingcfg
-
-    Import-ConfigParameters $global:bingcfg
-}
-function Import-mapsConfig() {
-    # Import Other configurations like functions
-    $global:mapscfg = [string] (Get-Content -Path (join-path $global:envpath "config" "maps" "config.json"))
-    $global:mapscfg = ConvertFrom-Json $global:mapscfg
-
-    Import-ConfigParameters $global:mapscfg
+            Set-Variable -Name $varName -Value $varValue -Visibility Public -Option AllScope -Force -Scope Global
+    
+            Import-ConfigParameters $varValue    
+        }
+    }
 }
 
 function Import-ConfigParameters ($inputcfg) {
@@ -251,23 +192,6 @@ function Get-Parameters {
     return $values
 }
 
-function Add-ServicesParameters {
-
-    if ( Test-FileExistence (Join-path $global:envpath ("pricing." + $config.id + ".json"))) {
-        Add-ExtendedParameters ("pricing." + $config.id + ".json")
-    }
-    else {
-        Add-ExtendedParameters "pricing.json"
-    }
-
-    if ( Test-FileExistence (Join-path $global:envpath ("services." + $config.id + ".json"))) {
-        Add-ExtendedParameters ("services." + $config.id + ".json")
-    }
-    else {
-        Add-ExtendedParameters "services.json"
-    }
-}
-
 function Add-Param($name, $value) {
     if ( $global:params.PSobject.Properties.name -eq $name) {
         $global:params.$name = $value
@@ -386,14 +310,15 @@ function Sync-Parameters {
         Write-Debug -Message "Parameters synched"
     }
 
-    Add-ServicesParameters
+    Import-ServicesConfig
 
-    # Once we have the latest configurations set, we can load them into variables.
-    Import-Functions
-    Import-DockerConfig
-    Import-WebAppsConfig
+    Initialize-StorageConfig
 
-    Import-StorageConfig
+    Initialize-SearchConfig
+
+}
+
+function Initialize-StorageConfig {
     # Container
     $dataStorageContainerName = $params.storageContainers[0];
     Add-Param "dataStorageContainerName" $dataStorageContainerName
@@ -408,18 +333,6 @@ function Sync-Parameters {
     }
     Add-Param "StorageContainerAddresses" $StorageContainerAddresses
     Add-Param "StorageContainerAddressesAsString" $([String]::Join(',', $StorageContainerAddresses))
-
-    Import-CognitiveServicesConfig
-    Import-ContainerRegistryConfig
-    Import-ContainerInstanceConfig
-    Import-keyvaultConfig
-
-    Import-searchserviceConfig    
-    Initialize-SearchConfig
-
-    Import-bingConfig
-    Import-mapsConfig
-
 }
 
 function Sync-Modules {
@@ -684,10 +597,10 @@ function Get-AzureMapsSubscriptionKey {
     
 function Initialize-SearchConfig {
 
-    if ($searchservicecfg.searchBlobPartitions) {
+    if ($searchcfg.searchBlobPartitions) {
         Write-Host "Blob partitionning enabled ..."
-        for ($i = 0; $i -lt $searchservicecfg.searchBlobPartitions.Count; $i++) {
-            $partitionName = $searchservicecfg.searchBlobPartitions[$i]
+        for ($i = 0; $i -lt $searchcfg.searchBlobPartitions.Count; $i++) {
+            $partitionName = $searchcfg.searchBlobPartitions[$i]
     
             $indexerPath = join-path $global:envpath "config" "search" "indexers" "documents.json"
             if ( test-path $indexerPath) {
@@ -841,7 +754,7 @@ function Invoke-SearchAPI {
 
 function Get-SearchMgtUrl () {
     $mgturl = "https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName
-    $mgturl += "?api-version="+$searchservicecfg.Parameters.searchManagementVersion
+    $mgturl += "?api-version="+$searchcfg.Parameters.searchManagementVersion
     return $mgturl
 }
 
@@ -872,7 +785,7 @@ function Update-SearchAliases {
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        Invoke-SearchAPI -url ("/aliases/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody -method $method
+        Invoke-SearchAPI -url ("/aliases/" + $jsonobj.name + "?api-version=" + $searchcfg.Parameters.searchVersion) -body $configBody -method $method
     }
 }
 
@@ -887,7 +800,7 @@ function Update-SearchSynonyms {
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        Invoke-SearchAPI -url ("/synonymmaps/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody -method $method
+        Invoke-SearchAPI -url ("/synonymmaps/" + $jsonobj.name + "?api-version=" + $searchcfg.Parameters.searchVersion) -body $configBody -method $method
     }
 }
 
@@ -905,11 +818,11 @@ function Update-SearchIndex {
 
         if ( $name ) {
             if ($jsonobj.name.indexOf($name) -ge 0) {
-                Invoke-SearchAPI -url ("/indexes/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion + "&allowIndexDowntime=" + $AllowIndexDowntime) -body $configBody
+                Invoke-SearchAPI -url ("/indexes/" + $jsonobj.name + "?api-version=" + $searchcfg.Parameters.searchVersion + "&allowIndexDowntime=" + $AllowIndexDowntime) -body $configBody
             }    
         }
         else {
-            Invoke-SearchAPI -url ("/indexes/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion + "&allowIndexDowntime=" + $AllowIndexDowntime) -body $configBody
+            Invoke-SearchAPI -url ("/indexes/" + $jsonobj.name + "?api-version=" + $searchcfg.Parameters.searchVersion + "&allowIndexDowntime=" + $AllowIndexDowntime) -body $configBody
         }
     }
 }
@@ -930,7 +843,7 @@ function Remove-SearchIndex {
             'Content-Type' = 'application/json'
             'Accept'       = 'application/json'
         }
-        $url = ("/indexes/" + $name + "?api-version=" + $searchservicecfg.Parameters.searchVersion)
+        $url = ("/indexes/" + $name + "?api-version=" + $searchcfg.Parameters.searchVersion)
         $baseSearchUrl = "https://" + $params.searchServiceName + ".search.windows.net"
         $fullUrl = $baseSearchUrl + $url
 
@@ -951,11 +864,11 @@ function Update-SearchDataSource {
 
         if ( $name ) {
             if ($jsonobj.name.indexOf($name) -ge 0) {
-                Invoke-SearchAPI -url ("/datasources/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
+                Invoke-SearchAPI -url ("/datasources/" + $jsonobj.name + "?api-version=" + $searchcfg.Parameters.searchVersion) -body $configBody
             }    
         }
         else {
-            Invoke-SearchAPI -url ("/datasources/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
+            Invoke-SearchAPI -url ("/datasources/" + $jsonobj.name + "?api-version=" + $searchcfg.Parameters.searchVersion) -body $configBody
         }
     }
 }
@@ -973,11 +886,11 @@ function Update-SearchSkillSet {
 
         if ( $name ) {
             if ($jsonobj.name.indexOf($name) -ge 0) {
-                Invoke-SearchAPI -url ("/skillsets/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
+                Invoke-SearchAPI -url ("/skillsets/" + $jsonobj.name + "?api-version=" + $searchcfg.Parameters.searchVersion) -body $configBody
             }    
         }
         else {
-            Invoke-SearchAPI -url ("/skillsets/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
+            Invoke-SearchAPI -url ("/skillsets/" + $jsonobj.name + "?api-version=" + $searchcfg.Parameters.searchVersion) -body $configBody
         }
     }
 }
@@ -997,7 +910,7 @@ function Update-SearchIndexer {
     
         if ( $name ) {
             if ($jsonobj.name.indexOf($name) -ge 0) {
-                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
+                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "?api-version=" + $searchcfg.Parameters.searchVersion) -body $configBody
             }    
         }
         else {
@@ -1005,7 +918,7 @@ function Update-SearchIndexer {
                 Write-Host "Skipping SharePoint Indexer re-configuration." -ForegroundColor DarkRed
             }
             else {
-                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -body $configBody
+                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "?api-version=" + $searchcfg.Parameters.searchVersion) -body $configBody
             }    
         }
     }
@@ -1021,7 +934,7 @@ function Search-Query {
         'Accept'       = 'application/json'
     }
     $baseSearchUrl = "https://" + $params.searchServiceName + ".search.windows.net"
-    $fullUrl = $baseSearchUrl + "/indexes/" + $params.indexName + "/docs?search=" + $query + "&api-version=" + $searchservicecfg.Parameters.searchVersion
+    $fullUrl = $baseSearchUrl + "/indexes/" + $params.indexName + "/docs?search=" + $query + "&api-version=" + $searchcfg.Parameters.searchVersion
     
     Write-Debug -Message ("CallingGet  api: '" + $fullUrl + "'")
     Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method Get
@@ -1047,11 +960,11 @@ function Reset-SearchIndexer {
     
         if ( $name ) {
             if ( $jsonobj.name.indexOf($name) -ge 0) {
-                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/reset?api-version=" + $searchservicecfg.Parameters.searchVersion) -method "POST"
+                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/reset?api-version=" + $searchcfg.Parameters.searchVersion) -method "POST"
             }    
         }
         else {
-            Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/reset?api-version=" + $searchservicecfg.Parameters.searchVersion) -method "POST"
+            Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/reset?api-version=" + $searchcfg.Parameters.searchVersion) -method "POST"
         }
     }
 };
@@ -1075,11 +988,11 @@ function Start-SearchIndexer {
     
         if ( $name ) {
             if ( $jsonobj.name.indexOf($name) -ge 0) {
-                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/run?api-version=" + $searchservicecfg.Parameters.searchManagementVersion) -method "POST" 
+                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/run?api-version=" + $searchcfg.Parameters.searchManagementVersion) -method "POST" 
             }
         }
         else {
-            Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/run?api-version=" + $searchservicecfg.Parameters.searchManagementVersion) -method "POST" 
+            Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/run?api-version=" + $searchcfg.Parameters.searchManagementVersion) -method "POST" 
         }
     }
 };
@@ -1090,7 +1003,7 @@ function Get-SearchIndexersStatus {
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        $status = Invoke-SearchAPI -Method GET -url ("/indexers/" + $jsonobj.name + "/status?api-version=" + $searchservicecfg.Parameters.searchVersion)
+        $status = Invoke-SearchAPI -Method GET -url ("/indexers/" + $jsonobj.name + "/status?api-version=" + $searchcfg.Parameters.searchVersion)
         $status = ConvertFrom-Json $status
         $properties = @{ name = $status.name
             status            = $status.status
@@ -1117,7 +1030,7 @@ function Get-SearchIndexer {
         if (Test-Path -Path $indexercfg) {
             $indexerBody = [string] (Get-Content -Path $indexercfg)
             $jsonobj = ConvertFrom-Json $indexerBody
-            $status = Invoke-SearchAPI -Method GET -url ("/indexers/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion)    
+            $status = Invoke-SearchAPI -Method GET -url ("/indexers/" + $jsonobj.name + "?api-version=" + $searchcfg.Parameters.searchVersion)    
             return $(ConvertFrom-Json $status)    
         }
         else {
@@ -1137,7 +1050,7 @@ function Get-SearchIndexerStatus {
     if ($item) {
         $indexerBody = [string] (Get-Content -Path (join-path $global:envpath $("\config\search\indexers\" + $item + ".json")))
         $jsonobj = ConvertFrom-Json $indexerBody
-        $status = Invoke-SearchAPI -Method GET -url ("/indexers/" + $jsonobj.name + "/status?api-version=" + $searchservicecfg.Parameters.searchVersion)    
+        $status = Invoke-SearchAPI -Method GET -url ("/indexers/" + $jsonobj.name + "/status?api-version=" + $searchcfg.Parameters.searchVersion)    
         return $(ConvertFrom-Json $status)
     }
     else {
@@ -1164,7 +1077,7 @@ function Reset-SearchDocument {
     $body = @{
         'documentKeys' = @($key)
     }
-    Invoke-SearchAPI -url ("/indexers/documents/resetdocs?api-version=" + $searchservicecfg.Parameters.searchVersion) -method "POST" -body $body
+    Invoke-SearchAPI -url ("/indexers/documents/resetdocs?api-version=" + $searchcfg.Parameters.searchVersion) -method "POST" -body $body
 }
 
 # https://learn.microsoft.com/en-us/azure/search/semantic-search-overview
@@ -1211,7 +1124,7 @@ function Suspend-Search {
         $jsonobj = ConvertFrom-Json $configBody
         $jsonobj.schedule=$null
         $updatedCfg=(Convertto-json $jsonobj -Depth 100)
-        Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "?api-version=" + $searchservicecfg.Parameters.searchVersion) -method "PUT" -body $updatedCfg
+        Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "?api-version=" + $searchcfg.Parameters.searchVersion) -method "PUT" -body $updatedCfg
     }
 }
 

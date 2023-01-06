@@ -199,7 +199,7 @@ function New-CognitiveServices {
 
 function New-SearchServices {
 
-    foreach ($azureResource in $searchservicecfg.Items) {
+    foreach ($azureResource in $searchcfg.Items) {
 
         Write-Host "Provisionning Search Service "$azureResource.Name;
 
@@ -220,7 +220,7 @@ function New-SearchServices {
 
         az search service update --name $azureResource.Name --resource-group $azureResource.ResourceGroup --identity-type "SystemAssigned"
 
-        if ($searchservicecfg.Parameters.semanticSearchEnabled)
+        if ($searchcfg.Parameters.semanticSearchEnabled)
         {
             Enable-SemanticSearch $azureResource.Name
         }
