@@ -51,7 +51,9 @@ namespace Assignment
 
                 // Load all Transformations
                 transformations = new ConcurrentDictionary<string, Func<string, List<string>>>();
+                transformations.TryAdd("DoNothing", DoNothing);
                 transformations.TryAdd("SplitSemiColumn", SplitSemiColumn);
+                transformations.TryAdd("SplitComma", SplitComma);
                 transformations.TryAdd("SplitSPTaxonomy", SplitSPTaxonomy);
             }
 
@@ -355,25 +357,23 @@ namespace Assignment
                             {
                                 List<string> transformed_value = new List<string>();
 
+                                var transformation_method = transformations["DoNothing"];
+
                                 if (transformations.ContainsKey(mentry.transform))
                                 {
-                                    //transformed_value = transformations[mentry.transform]((string) filemetadata[mentry.source]);
+                                    transformation_method = transformations[mentry.transform];
+                                }
 
-                                    if (filemetadata[mentry.source].GetType() == typeof(JArray))
+                                if (filemetadata[mentry.source].GetType() == typeof(JArray))
+                                {
+                                    foreach (JValue item in ((JArray)filemetadata[mentry.source]).Cast<JValue>())
                                     {
-                                        foreach (JValue item in (JArray)filemetadata[mentry.source])
-                                        {
-                                            transformed_value.AddRange(transformations[mentry.transform](item.ToString()));
-                                        }
-                                    }
-                                    else if (filemetadata[mentry.source].GetType() == typeof(JValue))
-                                    {
-                                        transformed_value = transformations[mentry.transform]((string)filemetadata[mentry.source]);
+                                        transformed_value.AddRange(transformation_method(item.ToString()));
                                     }
                                 }
-                                else
+                                else if (filemetadata[mentry.source].GetType() == typeof(JValue))
                                 {
-                                    transformed_value = new List<string>() { (string)filemetadata[mentry.source] };
+                                    transformed_value = transformation_method((string)filemetadata[mentry.source]);
                                 }
 
                                 transformed_value = transformed_value.Distinct().ToList();
@@ -539,7 +539,10 @@ namespace Assignment
 
             return results;
         }
-
+        public static List<string> DoNothing(string input)
+        {
+            return new List<string>() { input };
+        }
         public static List<string> SplitSemiColumn(string input)
         {
             return SplitGeneric(input, ';');
