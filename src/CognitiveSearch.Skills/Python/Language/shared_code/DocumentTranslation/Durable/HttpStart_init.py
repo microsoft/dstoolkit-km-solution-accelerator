@@ -28,9 +28,9 @@ async def main(req: func.HttpRequest, starter: str) -> func.HttpResponse:
 
         for value in values:
 
-            output_record = DocumentTranslation.transform_value(value)
+            output_record = DocumentTranslation.transform_value(value, simulation=True)
 
-            # Based on the simulation, if the document is candidate, we trigger an orchestration...
+            # Based on the simulation run, if the document is candidate, we trigger an orchestration...
             if output_record['data']['document_translatable']:
                 instance_id = await client.start_new("DocumentTranslationOrchestrator", None, value)
                 logging.info(f"Started orchestration with ID = '{instance_id}'.")
