@@ -661,19 +661,15 @@
                 },
                 {
                     "name": "named_entities",
-                    "source": "/document/pages/*/named_entities"
+                    "source": "/document/pages/*/named_entities/*"
                 },
                 {
                     "name": "linked_entities",
-                    "source": "/document/pages/*/linked_entities"
-                },
-                {
-                    "name": "tokens_entities",
-                    "source": "/document/pages/*/tokens_entities"
+                    "source": "/document/pages/*/linked_entities/*"
                 },
                 {
                     "name": "custom_entities",
-                    "source": "/document/pages/*/custom_entities"
+                    "source": "/document/pages/*/custom_entities/*"
                 }
             ],
             "outputs": [
@@ -1102,6 +1098,42 @@
                     "targetName": "parent_metadata"
                 }
             ]
+        },
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "DocumentGrapher",
+            "description": "Extract nodes and edges from document",
+            "context": "/document",
+            "uri": "{{param.graph.DocumentGrapherHttpStart}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 1,
+            "degreeOfParallelism": 5,
+            "inputs": [
+                {
+                    "name": "document_index_key",
+                    "source": "/document/index_key"
+                },
+                {
+                    "name": "document_metadata",
+                    "source": "/document/skill_metadata"
+                },
+                {
+                    "name": "document_entities",
+                    "source": "/document/entities"
+                },
+                {
+                    "name": "document_parent",
+                    "source": "/document/parent_metadata"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "message",
+                    "targetName": "graph_message"
+                }
+            ],
+            "httpHeaders": {}
         },
         {
             "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",

@@ -1,0 +1,10 @@
+{
+    "scriptFile": "../shared_code/DocumentGrapher/Durable/Orchestrator_init.py",
+    "bindings": [
+        {
+            "name": "context",
+            "type": "orchestrationTrigger",
+            "direction": "in"
+        }
+    ]
+}
