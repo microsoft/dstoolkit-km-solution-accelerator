@@ -27,8 +27,6 @@ function Import-ServicesConfig() {
     foreach ($folder in $folders) {
         if (Test-Path $(join-Path $folder.FullName "config.json")) 
         {
-            Write-Host ("Discovered service "+$folder.Name) -ForegroundColor DarkBlue
-
             $varValue = [string] (Get-Content -Path $(join-path $folder.FullName "config.json"))
             $varValue = ConvertFrom-Json $varValue
             $varName = $folder.Name + "cfg"
@@ -143,7 +141,7 @@ function Import-Params() {
         $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
 
         foreach ($prop in $parameterslist) {
-            if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
+            if ( Test-KeyVaultCandidate $prop.Name ) {
                 $propValue = Get-ParamValue $prop.Name -AsSecureString
                 if ($propValue) {
                     Add-Param $prop.Name (ConvertTo-String -secureString $propValue)
@@ -230,7 +228,7 @@ function Save-Parameters {
             $propValue = Get-ParamValue $prop.Name
             
             if ($PSVersionTable.Platform -eq "Win32NT") {
-                if ( $prop.Name.endswith("Key") -or $prop.Name.endswith("ConnectionString") ) {
+                if ( Test-KeyVaultCandidate $prop.Name ) {
                     if ($propValue) {
                         $propValue = ConvertTo-SecureString -String $propValue -AsPlainText -Force | ConvertFrom-SecureString
                     }
@@ -2253,6 +2251,19 @@ function Initialize-KeyVault {
     Add-KeyVaultSecrets
 }
 
+function Test-KeyVaultCandidate {
+    param (
+        $name
+    )
+    if ( $name.endswith("Key") -or $name.endswith("ConnectionString") -or $name.endswith("Password") -or $name.endswith("Username")) {
+        return $true
+    }
+    else {
+        return $false
+    } 
+
+
+}
 function Add-KeyVaultSecrets {
     param (
         [switch] $AddNew
@@ -2261,7 +2272,7 @@ function Add-KeyVaultSecrets {
     $secretExpiryDate = ((get-date).ToUniversalTime().AddYears(2)).ToString("yyyy-MM-ddTHH:mm:ssZ")
     
     $params.PSObject.Properties | ForEach-Object {
-        if ( $_.Name.endswith("Key") -or $_.Name.endswith("ConnectionString") ) {
+        if ( Test-KeyVaultCandidate -name $_.Name ) {
             if ($_.Value) {
                 $exists = az keyvault secret show --name $_.Name --vault-name $params.keyvault --query name --out tsv
                 if ($exists -and $AddNew) {
