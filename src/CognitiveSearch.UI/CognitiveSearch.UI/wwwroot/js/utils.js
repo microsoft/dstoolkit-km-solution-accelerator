@@ -178,13 +178,19 @@ Microsoft.Utils = {
 
     GetImageFileTitle: function (result) {
         var filename;
-        var pathExtension = Base64.decode(result.parent.filename).toLowerCase().split('.').pop();
 
-        if (pathExtension === "ppt" || pathExtension === "pptx") {
-            filename = "Slide " + this.GetImagePageorSlideNumber(result.metadata_storage_name);
+        if (result.document.embedded) {
+            var pathExtension = Base64.decode(result.parent.filename).toLowerCase().split('.').pop();
+
+            if (pathExtension === "ppt" || pathExtension === "pptx") {
+                filename = "Slide " + this.GetImagePageorSlideNumber(result.metadata_storage_name);
+            }
+            else {
+                filename = "Page " + this.GetImagePageorSlideNumber(result.metadata_storage_name);
+            }
         }
         else {
-            filename = "Page " + this.GetImagePageorSlideNumber(result.metadata_storage_name);
+            filename = result.metadata_storage_name;
         }
         return filename;
     },
