@@ -22,4 +22,5 @@ ASP.NET Core enables developers to configure and manage security. The following 
 ## Authorization
 
 [.NET Core Authorization](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/introduction?view=aspnetcore-6.0)
+
 [.NET Core Authorization policies](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-6.0)

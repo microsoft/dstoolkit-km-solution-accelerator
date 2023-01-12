@@ -1,13 +1,12 @@
-# Knowledge Mining
+# Knowledge Mining & Graph
 
 Mining value out of unstructured data without extracting relatioships or content connections would not be the same...
 
 Our solution includes an example of integration with Neo4j Community edition to create a knowledge graph based on Named and Linked Entities Extraction.
 
-
-The concept and pipeline is as follows
-- Extract Named Entities and Linked Entities. 
-- Easy to include your custom entities as well. 
+The concept and pipeline is as follows:
+- Extract Named Entities and Linked Entities.
+- Easy to include your custom entities as well.
 - Deduplicate and create basic references relationships
 - Push to the Neo4j backend.
 
