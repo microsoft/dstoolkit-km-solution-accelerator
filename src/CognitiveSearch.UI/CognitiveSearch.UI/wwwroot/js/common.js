@@ -152,7 +152,7 @@ Microsoft.Search = {
         }
 
         // Tags
-        Microsoft.Tags.tags = Microsoft.View.tags;
+        Microsoft.Tags.tags = Microsoft.View.config.tags;
 
         window.document.title = vertical.pageTitle;
 
@@ -803,6 +803,7 @@ Microsoft.Search.Results = {
             
             // TODO Take the tags list from backend.
             documentHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['organizations', 'key_phrases']);
+            documentHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['document_segments']);
             documentHtml += '</div>';
 
             documentHtml += '</div>';
