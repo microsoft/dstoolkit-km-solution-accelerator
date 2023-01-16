@@ -59,8 +59,12 @@ namespace CognitiveSearch.UI
                 if (Configuration.GetValue("AzureEasyAuthIntegration", true)) {
                     services.AddMicrosoftIdentityWebAppAuthentication(Configuration);
                 }
-                else { 
-                    services.AddMicrosoftIdentityWebAppAuthentication(this.Configuration).EnableTokenAcquisitionToCallDownstreamApi(new string[] { "user.read" }).AddDistributedTokenCaches();
+                else {
+                    string client_secret = Configuration.GetValue("AzureAD:ClientSecret", string.Empty);
+                    if (! string.IsNullOrEmpty(client_secret)) 
+                    {
+                        services.AddMicrosoftIdentityWebAppAuthentication(this.Configuration).EnableTokenAcquisitionToCallDownstreamApi(new string[] { "user.read" }).AddDistributedTokenCaches();
+                    }
 
                     services.AddCors();
                     services.AddMvc(options =>
@@ -189,7 +193,7 @@ namespace CognitiveSearch.UI
             {
                 pipeline.AddCssBundle("/css/bundle.css", "css/site.css", "css/colors.css");
 
-                IAsset jsBundle = pipeline.AddJavaScriptBundle("/js/bundle.js", "js/config.js", "js/site.js", "js/utils.js", "js/common.js", "js/commons/*.js", "js/graph/*.js", "js/details/*.js", "js/details.js", "js/views/*.js", "js/export.js");
+                IAsset jsBundle = pipeline.AddJavaScriptBundle("/js/bundle.js", "js/config.js", "js/site.js", "js/utils.js", "js/common.js", "js/commons/*.js", "js/graph/*.js", "js/details/*.js", "js/details.js", "js/views/*.js");
                 //AssetExtensions.ExcludeFiles(jsBundle, "js/commons/actions.js");
             });
         }
