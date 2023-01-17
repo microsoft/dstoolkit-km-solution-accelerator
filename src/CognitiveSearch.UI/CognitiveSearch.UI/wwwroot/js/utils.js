@@ -10,13 +10,13 @@ Microsoft.Utils = {
     },
 
     toggleDiv: function (tag) {
-        var displayStatus = document.getElementById(tag);
-        if (displayStatus.style.display == 'none') {
+        var displayStatus = $("#" + tag);
+        if (displayStatus.hasClass('d-none')) {
             //If the div is hidden, show it
-            displayStatus.style.display = 'block';
+            displayStatus.removeClass('d-none');
         } else {
             //If the div is shown, hide it
-            displayStatus.style.display = 'none';
+            displayStatus.addClass('d-none');
         }
     },
 
