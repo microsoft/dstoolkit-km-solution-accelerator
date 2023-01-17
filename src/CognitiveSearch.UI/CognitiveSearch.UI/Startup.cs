@@ -57,33 +57,45 @@ namespace CognitiveSearch.UI
             if (!env.IsDevelopment())
             {
                 if (Configuration.GetValue("AzureEasyAuthIntegration", true)) {
+                    // Easy Auth Integration
                     services.AddMicrosoftIdentityWebAppAuthentication(Configuration);
+                    services.AddAuthorization();
                 }
                 else {
                     string client_secret = Configuration.GetValue("AzureAD:ClientSecret", string.Empty);
-                    if (! string.IsNullOrEmpty(client_secret)) 
-                    {
+
+                    if (! string.IsNullOrEmpty(client_secret)) {
+                        // Azure AD Authentication - Token Acquisition
                         services.AddMicrosoftIdentityWebAppAuthentication(this.Configuration).EnableTokenAcquisitionToCallDownstreamApi(new string[] { "user.read" }).AddDistributedTokenCaches();
+
+                        services.AddCors();
+                        services.AddMvc(options =>
+                        {
+                            var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build();
+                            options.Filters.Add(new AuthorizeFilter(policy));
+                            options.EnableEndpointRouting = false;
+                        //}).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                        });
+
+                        services.AddHttpClient();
+                        services.AddAuthorization();
                     }
-
-                    services.AddCors();
-                    services.AddMvc(options =>
-                    {
-                        var policy = new AuthorizationPolicyBuilder()
-                            .RequireAuthenticatedUser()
-                            .Build();
-                        options.Filters.Add(new AuthorizeFilter(policy));
-                        options.EnableEndpointRouting = false;
-                    //}).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-                    });
-
-                    services.AddHttpClient();
+                    else {
+                        // Anonymous Access for PROD
+                        services.AddAuthorization(x =>
+                        {
+                            x.DefaultPolicy = new AuthorizationPolicyBuilder()
+                                .RequireAssertion(_ => true)
+                                .Build();
+                        });
+                    }
                 }
-
-                services.AddAuthorization();
             }
             else
             {
+                // Anonymous Access for DEV
                 services.AddAuthorization(x =>
                 {
                     x.DefaultPolicy = new AuthorizationPolicyBuilder()
