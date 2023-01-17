@@ -41,14 +41,10 @@ Microsoft.Search = {
     indexName: '',
     results: [],
     results_keys_index: [],
-
     results_rendering: -1,
-
     selected_results_filter: {},
-
     // Azure Storage SAS token
     tokens: [],
-
     TotalCount: 0,
     currentPage: 0,
     MaxPageCount: 0,
@@ -104,6 +100,21 @@ Microsoft.Search = {
         return Microsoft.Search.currentPage < Microsoft.Search.MaxPageCount;
     },
     
+    // GetResultByKey: function (key) {
+    //     for (var i = 0; i < Microsoft.Search.results.length; i++) {
+    //         var result = Microsoft.Search.results[i];
+    //         if (result.index_key === key) {
+    //             return result;
+    //         }
+    //         if (result.Document) {
+    //             if (result.Document.index_key === key) {
+    //                 return result.Document;
+    //             }
+    //         }
+    //     }
+    //     return null
+    // },
+
     UpdateDocCount: function (resultsCount) {
         if (resultsCount === 0) {
             $("#doc-count").addClass('bg-danger');
@@ -796,7 +807,7 @@ Microsoft.Search.Results = {
             documentHtml += '   <div class="results-body mt-2">';
 
             if (highlights.length > 0) {
-                documentHtml += '<div class="results-body-highlights">';
+                documentHtml += '<div class="results-body-highlights border-top border-bottom border-2">';
                 documentHtml += highlights;
                 documentHtml += '</div>';
             }

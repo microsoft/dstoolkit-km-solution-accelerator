@@ -53,27 +53,17 @@ Microsoft.Search.Actions = {
                 // Do something with the parameters
                 var parameters = [];
 
-                // Parameter 0 - Action object
+                // Parameter(s) of the Action object
                 if (action.parameters) {
                     try {
-                        parameters.push(eval(action.parameters));
+                        var params = Object.create(action.parameters);
+                        var g = 0;
+                        for (g = 0; g < params.length; g++) {
+                            parameters.push(eval(params[g]));
+                        }
                     } catch (error) {
-                        console.warn("Action's parameter error : ",action.parameters);
+                        console.warn("Action's parameter error on action id ",action.id);
                     }
-                    // var params = Object.create(action.parameters);
-                    //     for (let g = 0; g < params.length; g++) {
-                    //         var evalParameter = params[g];
-                    //         // const element = Object.create(params[g]);
-                    //         // for (var key in element) {
-                    //         //     element[key] = eval(element[key]);
-                    //         // }
-                    //         // parameters.push(element);
-                    //         try {
-                    //             parameters.push(eval(evalParameter));
-                    //         } catch (error) {
-                    //             console.warn("Action's parameter error : ",evalParameter);
-                    //         }
-                    //     }
                 }
                 else {
                     //Set the default parameters for actions
@@ -86,7 +76,7 @@ Microsoft.Search.Actions = {
                 // var paramBase64Str = Base64.encode(JSON.stringify(parameters));
                 // htmlDiv += '<button type="button" title="' + action.title + '" class="' + eltClass + ' btn btn-sm ' + action.class + '" onclick="' + action.method + '(\'' + paramBase64Str + '\');">';
 
-                htmlDiv += '<button type="button" title="' + action.title + '" class="' + eltClass + ' btn btn-sm ' + action.class + '" onclick="' + action.method + '(\'' + parameters.join() + '\');">';
+                htmlDiv += '<button type="button" title="' + action.title + '" class="' + eltClass + ' btn btn-sm ' + action.class + '" onclick="' + action.method + '(\'' + parameters.join('\',\'') + '\');">';
                 if (action.icon) {
                     if (displayName) {
                         htmlDiv += ' <span class="' + action.icon + ' me-2"></span>'

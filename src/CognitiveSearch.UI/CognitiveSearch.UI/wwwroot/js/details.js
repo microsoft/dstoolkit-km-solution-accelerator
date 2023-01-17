@@ -45,12 +45,12 @@ Microsoft.Results.Details = {
         this.init_tab_links();
 
         // for each tab ask to render the content
-        this.render_tab_content(result);
+        this.render_all_tabs(result);
 
         this.adjust_active_tab();
 
         // Modal Header
-        $('#document-quick-actions').html(Microsoft.Search.Actions.renderActions(result, true, null, true));
+        $('#document-quick-actions').html(Microsoft.Search.Actions.renderActions(result, true, null, false));
         
         $('#document-details').html(Microsoft.Results.Details.GetDocumentHeader(result, idx));
 
@@ -67,10 +67,36 @@ Microsoft.Results.Details = {
 
     },
 
-    render_single_tab_details: function (header, tab_content) {
-        $('#single-tab-details-label').html(header);
-        $('#single-tab-details-body').html(tab_content);
-        $('#single-tab-details').modal('show');
+
+    render_quick_details: function (index_key, details_key) {
+
+        $('#quickview-content').empty();
+
+        var tabular = Microsoft.Results.Details.get_tab_by_id(details_key);
+
+        if (! this.select_tab(tabular.id)) 
+        {
+            $.postAPIJSON('/api/document/getbyindexkey',
+            {
+                index_key: index_key
+            },
+            function (data) {
+                if (data.result) {
+                    var result = data.result;
+                    if (tabular) {
+                        $('#quickview-title').html("<h2>"+tabular.localization.en.title+"</h2>");
+                        var tabular_viewer_tag=('#' + tabular.id + '-quick-viewer');
+                        $('#quickview-content').html('<div id="'+(tabular.id + '-quick-viewer')+'"></div>');
+                        Microsoft.Results.Details.render_tab_content(result, tabular,tabular_viewer_tag);
+                
+                        // Modal Header
+                        $('#quickview-modal').modal('show');
+                
+                        Microsoft.Search.ProcessCoverImage();    
+                    }    
+                }
+            });    
+        }
     },
 
     adjust_active_tab: function () {
@@ -87,8 +113,18 @@ Microsoft.Results.Details = {
         }
     },
 
+    select_tab: function (tabularid) {
+        var triggerEl = $('#details-pivot-links a[href="#' + tabularid + '-pivot"]');
+        if (triggerEl.length) {
+            var firstTab = new bootstrap.Tab(triggerEl);
+            firstTab.show();
+            return true;    
+        }
+        return false;
+    },
+
     hide_tab: function (name) {
-        $('#' + name + '-pivot-link').hide()
+        $('#' + name + '-pivot-link').hide();
     },
 
     adjust_tab_icon: function (result, tabular) {
@@ -103,7 +139,7 @@ Microsoft.Results.Details = {
                 override_icon = 'bi bi-file-image';
             }
             else {
-                override_icon = 'bi bi-paperclip text-warning';
+                override_icon = 'bi bi-paperclip';
             }
         }
         else {
@@ -144,40 +180,53 @@ Microsoft.Results.Details = {
         $('#details-pivot-links').html(pivotLinksHTML);
     },
 
-    render_tab_content: function (result) {
+    get_tab_by_id: function(id) {
         for (var i = 0; i < this.tabulars.length; i++) {
             var tabular = this.tabulars[i];
-            if (tabular.enable) {
-                if (tabular.renderingMethod) {
-                    
-                    new Promise((resolve, reject) => {
-                        var content = Microsoft.Utils.executeFunctionByName(tabular.renderingMethod, window, result, tabular);
-                        if (content !== undefined)
-                        {
-                            if (content.length > 0) {
-                                var HTMLContent = '';
-                                // Warning 
-                                if (result.document.translated) {
-                                    HTMLContent += '<div class="border border-warning rounded bg-warning text-dark p-1">This content is the result of an automatic Document Translation.</div>';
-                                }
-                                HTMLContent += content;
-                                $('#' + tabular.id + '-viewer').html(HTMLContent);
-                                if (tabular.adaptiveIcon) {
-                                    this.adjust_tab_icon(result, tabular);
-                                }
+            if (tabular.id === id) {
+                return tabular
+            }
+        }
+    },
+
+    render_all_tabs: function (result) {
+        for (var i = 0; i < this.tabulars.length; i++) {
+            var tabular = this.tabulars[i];
+            this.render_tab_content(result, tabular,('#' + tabular.id + '-viewer'));
+        }
+    },
+    
+    render_tab_content: function (result , tabular, targetid) {
+        if (tabular.enable) {
+            if (tabular.renderingMethod) {                
+                new Promise((resolve, reject) => {
+                    var content = Microsoft.Utils.executeFunctionByName(tabular.renderingMethod, window, result, tabular, targetid);
+                    if (content !== undefined)
+                    {
+                        if (content.length > 0) {
+                            var HTMLContent = '';
+                            // Warning 
+                            if (result.document.translated) {
+                                HTMLContent += '<div class="border border-warning rounded bg-warning text-dark p-1">This content is the result of an automatic Document Translation.</div>';
                             }
-                            else {
-                                this.hide_tab(tabular.id);
+                            HTMLContent += content;
+                            $(targetid).html(HTMLContent);
+                            // $('#' + tabular.id + '-viewer').html(HTMLContent);
+                            if (tabular.adaptiveIcon) {
+                                this.adjust_tab_icon(result, tabular);
                             }
-                            tabular.content_length = content.length;
                         }
                         else {
-                            // We can assume the tab is enabled and the renderer did the html append itself.
-                            // this.hide_tab(tabular.id);
-                            tabular.content_length = 1;
+                            this.hide_tab(tabular.id);
                         }
-                    });
-                }
+                        tabular.content_length = content.length;
+                    }
+                    else {
+                        // We can assume the tab is enabled and the renderer did the html append itself.
+                        // this.hide_tab(tabular.id);
+                        tabular.content_length = 1;
+                    }
+                });
             }
         }
     },
@@ -236,19 +285,19 @@ Microsoft.Results.Details = {
             });
     },
 
-    ShowDocumentAction: function(parameters) {
-        parameters = JSON.parse(Base64.decode(parameters));
-        var bkobj = parameters[0]; 
-        $.postAPIJSON('/api/document/getbyindexkey',
-            {
-                index_key: bkobj.index_key
-            },
-            function (data) {
-                if (data.result) {
-                    Microsoft.Results.Details.render_document_details(data.result, bkobj.idx);
-                }
-            });
-    },
+    // ShowDocumentAction: function(parameters) {
+    //     parameters = JSON.parse(Base64.decode(parameters));
+    //     var bkobj = parameters[0]; 
+    //     $.postAPIJSON('/api/document/getbyindexkey',
+    //         {
+    //             index_key: bkobj.index_key
+    //         },
+    //         function (data) {
+    //             if (data.result) {
+    //                 Microsoft.Results.Details.render_document_details(data.result, bkobj.idx);
+    //             }
+    //         });
+    // },
     
     ShowDocumentById: function(id, idx = -1) {
         $.postAPIJSON('/api/document/getbyid',
@@ -333,6 +382,17 @@ $('#prev-control').click(function () {
     if (idx > 0) {
         Microsoft.Results.Details.ShowDocumentByIndex(idx - 1);
     }
+});
+
+// Clean the quickview modal content when hidden
+$('#details-modal').on('hidden.bs.modal', function () {
+    $('#quickview-content').empty();
+});
+
+// Clean the modal content when hidden
+$('#details-modal').on('hidden.bs.modal', function () {
+    $('#details-pivot-links').empty();
+    $('#details-pivot-content').empty();
 });
 
 // export default Microsoft.Results;

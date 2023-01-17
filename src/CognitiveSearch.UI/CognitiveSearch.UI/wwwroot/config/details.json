@@ -81,7 +81,7 @@
     "localization": {
       "en": {
         "name": "Pages/Slides",
-        "title": "Show extracted images from the document"
+        "title": "Show extracted Pages/Slides/Images/Attachments"
       }
     }
   },

@@ -8,18 +8,18 @@ Microsoft.Search.Results = Microsoft.Search.Results || {};
 Microsoft.Search.Results.Siblings = Microsoft.Search.Results.Siblings || {};
 Microsoft.Search.Results.Siblings = {
     
-    render_tab: function (result, tabular) {
+    render_tab: function (result, tabular, targetid="#siblings-viewer") {
         var containerHTML = '';
         var pathExtension = result.metadata_storage_path.toLowerCase().split('.').pop();
 
         if (result.document.embedded) {
             if (Microsoft.Utils.IsImageExtension(pathExtension)) {
-                containerHTML = this.render_siblings_results(result, tabular);
+                containerHTML = this.render_siblings_results(result, tabular, targetid);
             }
         }
         return containerHTML;
     },
-    render_siblings_results: function (result, tabular) {
+    render_siblings_results: function (result, tabular, targetid) {
 
         var containerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role = "progressbar" style = "width: 100%" aria - valuenow="100" aria - valuemin="0" aria - valuemax="100"></div></div>';
 
@@ -34,16 +34,16 @@ Microsoft.Search.Results.Siblings = {
                 }
             },
             function (data) {
-                Microsoft.Search.Results.Siblings.append_siblings(data.results);
+                Microsoft.Search.Results.Siblings.append_siblings(data.results,targetid);
             });
         }
 
         return containerHTML;
     },
-    append_siblings: function (results) {
+    append_siblings: function (results,targetid) {
 
         var fileContainerHTML = '';
-        $('#siblings-viewer').html(fileContainerHTML);
+        $(targetid).html(fileContainerHTML);
 
         if (results && results.length > 0) {
 
@@ -68,7 +68,7 @@ Microsoft.Search.Results.Siblings = {
             }
         }
 
-        $('#siblings-viewer').append(fileContainerHTML);
+        $(targetid).append(fileContainerHTML);
     }
 }
 

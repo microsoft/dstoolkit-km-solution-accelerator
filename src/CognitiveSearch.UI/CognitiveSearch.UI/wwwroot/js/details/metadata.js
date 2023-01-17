@@ -7,15 +7,15 @@ Microsoft.Search = Microsoft.Search || {};
 Microsoft.Search.Results = Microsoft.Search.Results || {};
 Microsoft.Search.Results.Metadata = Microsoft.Search.Results.Metadata || {};
 Microsoft.Search.Results.Metadata = {
-    render_tab: function (result) {
+    render_tab: function (result, tabular, targetid="#metadata-viewer") {
 
-        var metadataContainerHTML = $("#metadata-viewer").html();
+        var metadataContainerHTML = $(targetid).html();
 
         metadataContainerHTML = '';
         metadataContainerHTML += '<table class="table table-hover table-striped"><thead><tr><th data-field="key" class="key">Key</th><th data-field="value">Value</th></tr></thead>';
         metadataContainerHTML += '<tbody>';
 
-        var excluding_fields = ["content", "merged_content", "translated_text", "tables", "paragraphs", "image_data", "thumbnail_small", "thumbnail_medium", "tokens_html"];
+        var excluding_fields = ["content", "merged_content", "translated_text", "tables", "kvs", "paragraphs", "image_data", "thumbnail_small", "thumbnail_medium", "tokens_html"];
 
         var keys = Object.keys(result).sort();
 
@@ -69,7 +69,7 @@ Microsoft.Search.Results.Metadata = {
                     if (data && data.length > 0) {
                         try {
                             result = JSON.parse(data)
-                            var extraMetadataContainerHTML = $("#metadata-viewer").html();
+                            var extraMetadataContainerHTML = $(targetid).html();
 
                             extraMetadataContainerHTML += '<h4 id="available_metadata">File Metadata</h4><div style="overflow-x:auto;">';
                             extraMetadataContainerHTML += '<table class="table table-hover table-striped">';
@@ -90,7 +90,7 @@ Microsoft.Search.Results.Metadata = {
                             extraMetadataContainerHTML += '</tbody>';
                             extraMetadataContainerHTML += '</table></div><br/>';
 
-                            $("#metadata-viewer").html(extraMetadataContainerHTML);
+                            $(targetid).html(extraMetadataContainerHTML);
                         }
                         catch (exception) {
                         }

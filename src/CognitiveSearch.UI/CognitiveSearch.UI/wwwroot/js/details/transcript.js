@@ -10,7 +10,7 @@ Microsoft.Search.Results.Transcript = {
 
     // All functions about Transcript 
 
-    RenderTranscriptHTML: function (result) {
+    RenderTranscriptHTML: function (result, tabular, targetid="#transcript-viewer") {
 
         var transcriptContainerHTML = '';
 

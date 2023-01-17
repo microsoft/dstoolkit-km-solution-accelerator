@@ -8,7 +8,7 @@ Microsoft.Search.Results = Microsoft.Search.Results || {};
 Microsoft.Search.Results.Embedded = Microsoft.Search.Results.Embedded || {};
 Microsoft.Search.Results.Embedded = {
 
-    render_tab: function (result) {
+    render_tab: function (result, tabular, targetid="#images-viewer") {
         // Embedded Images Tab content
         var embeddedContainerHTML = '';
         var pathExtension = result.metadata_storage_path.toLowerCase().split('.').pop();
@@ -16,13 +16,13 @@ Microsoft.Search.Results.Embedded = {
         if (!result.document.converted) {
             // Show the Embedded Images if relevant
             if (!Microsoft.Utils.IsImageExtension(pathExtension)) {
-                embeddedContainerHTML = this.render_embedded_results(result);
+                embeddedContainerHTML = this.render_embedded_results(result,targetid);
             }
         }
         return embeddedContainerHTML;
     },
 
-    render_embedded_results: function (result) {
+    render_embedded_results: function (result, targetid) {
 
         var containerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role = "progressbar" style = "width: 100%" aria - valuenow="100" aria - valuemin="0" aria - valuemax="100"></div></div>';
 
@@ -65,7 +65,7 @@ Microsoft.Search.Results.Embedded = {
                     $('#images-pivot-link').hide();
                 }
 
-                $('#images-viewer').html(containerHTML);
+                $(targetid).html(containerHTML);
             });
 
         return containerHTML;

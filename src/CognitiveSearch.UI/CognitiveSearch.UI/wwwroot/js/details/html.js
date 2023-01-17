@@ -8,15 +8,15 @@ Microsoft.Search.Results = Microsoft.Search.Results || {};
 Microsoft.Search.Results.HTML = Microsoft.Search.Results.HTML || {};
 Microsoft.Search.Results.HTML = {
 
-    render_tab: function (result) {
-        $("#html-viewer").empty();
+    render_tab: function (result, tabular, targetid="#html-viewer") {
+        $(targetid).empty();
         var containerHTML = '';
 
         if (Microsoft.Search.SupportHTMLPreview(result)) {
 
             containerHTML += '<iframe id="htmlViewerIFrame" title="HTML Preview of a document" class="w-100 h-100">';
             containerHTML += '</iframe>';
-            $("#html-viewer").html(containerHTML);
+            $(targetid).html(containerHTML);
 
             $.postAPIText('/api/document/gethtml',
                 {
