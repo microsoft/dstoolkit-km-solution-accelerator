@@ -135,6 +135,8 @@ function New-StorageAccount {
 
             if ($azureResource.IsDataStorage) {
 
+                Get-DataStorageAccountAccessKeys
+                
                 # Iterate through the list of containers to create. 
                 foreach ($container in $params.storageContainers) {
                     az storage container create -n $container `
@@ -162,10 +164,10 @@ function New-StorageAccount {
         }
 
         if ($azureResource.IsDataStorage) {
-            Get-DataStorageAccountAccessKeys; 
+            Get-DataStorageAccountAccessKeys
         }
         else {
-            Get-TechStorageAccountAccessKeys;            
+            Get-TechStorageAccountAccessKeys
         }
     }
 }
