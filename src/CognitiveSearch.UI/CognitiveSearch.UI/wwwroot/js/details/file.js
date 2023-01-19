@@ -8,7 +8,18 @@ Microsoft.Search.Results.File = {
 
     RenderSearchResultPreview: function (result) {
         var fileContainerHTML = '';
-        fileContainerHTML += this.render_file_container(result.document.embedded, result.metadata_storage_path, result.image ? result.image.image_data : null, result.page_number, result.parent);
+
+        var contentFileHTML = this.render_file_container(result.document.embedded, result.metadata_storage_path, result.image ? result.image.image_data : null, result.page_number, result.parent);        
+
+        if (contentFileHTML.length > 0) {
+            fileContainerHTML+='<div class="col-md-10 h-100">'
+            fileContainerHTML+=contentFileHTML;
+            fileContainerHTML+='</div>'
+
+            fileContainerHTML+='<div class="col-md-2">';
+            fileContainerHTML+=Microsoft.Search.Results.Metadata.render_metadata_side_pane(result);
+            fileContainerHTML+='</div>';
+        }
         return fileContainerHTML;
     },
     render_file_container: function (document_embedded, path, image_data, pagenumber, parent) {
@@ -86,11 +97,6 @@ Microsoft.Search.Results.File = {
                 //        '<div>This file cannot be previewed. Download it here to view: <a href="' + Microsoft.Search.GetSASTokenFromPath(path) + '">Download</a></div>';
             }
         }
-        else {
-            //    fileContainerHTML =
-            //        '<div>This file cannot be previewed or downloaded.';
-        }
-
         return fileContainerHTML;
     }
 }

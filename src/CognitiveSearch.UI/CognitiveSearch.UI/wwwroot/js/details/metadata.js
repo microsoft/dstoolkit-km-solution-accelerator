@@ -7,6 +7,7 @@ Microsoft.Search = Microsoft.Search || {};
 Microsoft.Search.Results = Microsoft.Search.Results || {};
 Microsoft.Search.Results.Metadata = Microsoft.Search.Results.Metadata || {};
 Microsoft.Search.Results.Metadata = {
+
     render_tab: function (result, tabular, targetid="#metadata-viewer") {
 
         var metadataContainerHTML = $(targetid).html();
@@ -99,5 +100,33 @@ Microsoft.Search.Results.Metadata = {
         }
 
         return metadataContainerHTML;
+    },
+
+    render_metadata_side_pane: function(result) {
+        var fileContainerHTML = '';
+        // Highlighted metadata
+        fileContainerHTML+='<ul class="list-group">';
+        if (result.title) {
+            fileContainerHTML+='  <li class="list-group-item fw-bold">Title</li>';
+            fileContainerHTML+='  <li class="list-group-item text-break">'+result.title+'</li>';    
+        }
+        if (result.email && result.email.message_from) {
+            fileContainerHTML+='  <li class="list-group-item fw-bold">From</li>';
+            fileContainerHTML+='  <li class="list-group-item text-break">'+result.email.message_from+'</li>';    
+        }
+        if (result.email && result.email.message_to) {
+            fileContainerHTML+='  <li class="list-group-item fw-bold">To</li>';
+            fileContainerHTML+='  <li class="list-group-item text-break">'+result.email.message_to+'</li>';    
+        }
+        if (result.email && result.email.subject) {
+            fileContainerHTML+='  <li class="list-group-item fw-bold">Subject</li>';
+            fileContainerHTML+='  <li class="list-group-item text-break">'+result.email.subject+'</li>';    
+        }
+        if (result.summary && result.summary.length > 0) {
+            fileContainerHTML+='  <li class="list-group-item fw-bold">Summary</li>';
+            fileContainerHTML+='  <li class="list-group-item">'+result.summary.join('...\r\n')+'</li>';    
+        }
+        fileContainerHTML+='</ul>';
+        return fileContainerHTML;
     }
 }
