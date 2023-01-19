@@ -439,7 +439,13 @@ function Push-Data() {
         -s $sourcepath
 }
     
-function Get-ContainerFilesList ($container, $path) {
+function Get-ContainerFilesList () {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string] $container,
+        [Parameter(Mandatory = $false)]
+        [string] $path
+    )
     
     $files = @()
     
@@ -477,7 +483,12 @@ function Add-BlobRetryTag () {
     
     $now = Get-Date -Format "yyyyMMddHHmmss"
     
-    az storage fs file metadata update --file-system $container --path $path --account-name $params.dataStorageAccountName --account-key $params.storageAccountKey  --metadata AzureSearch_RetryTag=$now
+    az storage fs file metadata update `
+        --file-system $container `
+        --path $path `
+        --account-name $params.dataStorageAccountName `
+        --account-key $params.storageAccountKey  `
+        --metadata AzureSearch_RetryTag=$now
     
 }
 #endregion
