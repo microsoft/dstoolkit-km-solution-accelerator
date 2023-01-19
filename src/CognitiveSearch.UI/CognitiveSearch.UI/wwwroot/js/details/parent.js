@@ -14,14 +14,9 @@ Microsoft.Search.Results.Parent = {
         // Embedded Images Tab content
         var embeddedContainerHTML = '';
         
-        // If this is an embedded resource i.e. extracted image
-        if (result.document.embedded) {
+        // If this is an embedded resource i.e. extracted image or attachments
+        if (Microsoft.Utils.HasParent(result)) {
             embeddedContainerHTML += Microsoft.Search.Results.File.render_file_container(result.document.embedded, Microsoft.Utils.GetParentPathFromImage(result), result.image_data, result.page_number);
-        }
-        else {
-            if (fallback && Microsoft.Utils.IsPDF(result.metadata_storage_path)) {
-                embeddedContainerHTML += Microsoft.Search.Results.File.RenderSearchResultPreview(result)
-            }
         }
 
         return embeddedContainerHTML;

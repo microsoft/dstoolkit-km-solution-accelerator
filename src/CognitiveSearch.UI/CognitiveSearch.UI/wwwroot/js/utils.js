@@ -195,7 +195,10 @@ Microsoft.Utils = {
         return filename;
     },
 
-
+    HasParent: function(result) {
+        return result.parent && result.parent.id
+    },
+    
     GetImageParentDocumentExtension: function (result) {
         var pathLower = this.GetParentPathFromImage(result).toLowerCase();
         return pathLower.split('.').pop();
