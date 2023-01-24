@@ -56,10 +56,15 @@ namespace CognitiveSearch.UI
         {
             if (!env.IsDevelopment())
             {
-                if (Configuration.GetValue("AzureEasyAuthIntegration", true)) {
+                if (Configuration.GetValue("Authentication:AzureEasyAuthIntegration", true)) {
                     // Easy Auth Integration
                     services.AddMicrosoftIdentityWebAppAuthentication(Configuration);
-                    services.AddAuthorization();
+                    services.AddAuthorization(x =>
+                    {
+                        x.DefaultPolicy = new AuthorizationPolicyBuilder()
+                            .RequireAuthenticatedUser()
+                            .Build();
+                    });
                 }
                 else {
                     string client_secret = Configuration.GetValue("AzureAD:ClientSecret", string.Empty);
@@ -69,33 +74,31 @@ namespace CognitiveSearch.UI
                         services.AddMicrosoftIdentityWebAppAuthentication(this.Configuration).EnableTokenAcquisitionToCallDownstreamApi(new string[] { "user.read" }).AddDistributedTokenCaches();
 
                         services.AddCors();
-                        services.AddMvc(options =>
-                        {
-                            var policy = new AuthorizationPolicyBuilder()
-                                .RequireAuthenticatedUser()
-                                .Build();
-                            options.Filters.Add(new AuthorizeFilter(policy));
-                            options.EnableEndpointRouting = false;
-                        //}).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-                        });
-
                         services.AddHttpClient();
-                        services.AddAuthorization();
-                    }
-                    else {
-                        // Anonymous Access for PROD
                         services.AddAuthorization(x =>
                         {
                             x.DefaultPolicy = new AuthorizationPolicyBuilder()
-                                .RequireAssertion(_ => true)
+                                .RequireAuthenticatedUser()
                                 .Build();
                         });
+                    }
+                    else {
+                        if (Configuration.GetValue("Authentication:AllowAnonymous", false))
+                        {
+                            // Anonymous Access for PROD
+                            services.AddAuthorization(x =>
+                            {
+                                x.DefaultPolicy = new AuthorizationPolicyBuilder()
+                                    .RequireAssertion(_ => true)
+                                    .Build();
+                            });
+                        }
                     }
                 }
             }
             else
             {
-                // Anonymous Access for DEV
+                // Anonymous Access for DEV - No Auth and always true Authorize
                 services.AddAuthorization(x =>
                 {
                     x.DefaultPolicy = new AuthorizationPolicyBuilder()

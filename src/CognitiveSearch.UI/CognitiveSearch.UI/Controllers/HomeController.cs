@@ -8,9 +8,11 @@ using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CognitiveSearch.UI.Controllers
 {
+    [Authorize]
     public class HomeController : AbstractSearchViewController
     {
         public HomeController (UIConfig uiConfig, TelemetryClient telemetry)

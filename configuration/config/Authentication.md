@@ -15,7 +15,7 @@ The platform would be Web with the below Redirect URIs
 - "https://{{config.name}}ui.azurewebsites.net"
 - "https://{{config.name}}ui.azurewebsites.net/.auth/login/aad/callback",
 
-__Check the ID Tokens__
+__Under Implicit grant and hybrid flows, select ID tokens.__
 
 ## API Permissions
 
@@ -110,13 +110,20 @@ To decode the security JWT token you may use [jwt.io](https://jwt.io). It will h
 
 # Non-Azure EasyAuth Authentication (non default)
 
-In the UI webapp settings, change AzureEasyAuthIntegration to false.
+[Set the Web-App to sign users in](https://learn.microsoft.com/en-us/azure/active-directory/develop/scenario-web-app-sign-user-overview?tabs=aspnetcore)
+
+In the UI webapp settings, change Authentication:AzureEasyAuthIntegration to false.
 
 Add the below settings 
 ```json
   {
     "name": "AzureAd:CallbackPath",
     "value": "/signin-oidc",
+    "slotSetting": false
+  },
+  {
+    "name": "AzureAd:SignedOutCallbackPath",
+    "value": "/signout-oidc",
     "slotSetting": false
   },
   {
@@ -129,3 +136,7 @@ Add the below settings
 Restart the UI web app.
 
 Your UI application will now authenticate the users by itself.
+
+# Anonymous Access
+
+In the UI webapp settings, change Authentication:AzureEasyAuthIntegration to false and Authentication:AllowAnonymous to true. 

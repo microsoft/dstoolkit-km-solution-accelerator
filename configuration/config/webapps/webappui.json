@@ -425,8 +425,13 @@
     "slotSetting": false
   },
   {
-    "name": "AzureEasyAuthIntegration",
+    "name": "Authentication:AzureEasyAuthIntegration",
     "value": "true",
+    "slotSetting": false
+  },
+  {
+    "name": "Authentication:AllowAnonymous",
+    "value": "false",
     "slotSetting": false
   },
   {

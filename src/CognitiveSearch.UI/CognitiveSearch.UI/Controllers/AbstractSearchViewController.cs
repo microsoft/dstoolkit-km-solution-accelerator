@@ -3,9 +3,11 @@
 
 using CognitiveSearch.UI.Models;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CognitiveSearch.UI.Controllers
 {
+    [Authorize]
     public class AbstractSearchViewController : AbstractViewController
     {
         protected override SearchViewModel GetViewModel(string query = null)

@@ -50,7 +50,12 @@ namespace Knowledge.API
                 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
 
-                services.AddAuthorization();
+                services.AddAuthorization(x =>
+                {
+                    x.DefaultPolicy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
+                });
             }
             else {
                 services.AddAuthorization(x =>

@@ -4,9 +4,11 @@
 using CognitiveSearch.UI.Configuration;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CognitiveSearch.UI.Controllers
 {
+    [Authorize]
     public class NewsController : AbstractViewController
     {
         public NewsController(UIConfig uiConfig, TelemetryClient telemetry)
