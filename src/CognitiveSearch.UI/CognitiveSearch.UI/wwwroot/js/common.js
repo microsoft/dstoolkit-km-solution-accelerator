@@ -162,6 +162,12 @@ Microsoft.Search = {
             Microsoft.Facets.UpdateFilterReset();
         }
 
+        $(window).on('keypress', function(event) {
+            if (event.code === 'KeyX') {
+                Microsoft.Facets.ClearAllFilters();
+            }
+        });
+
         // Tags
         Microsoft.Tags.tags = Microsoft.View.config.tags;
 
