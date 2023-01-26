@@ -4,7 +4,7 @@ Licensed under the MIT License. */
 .tag-highlighted {
     background-color: white;
     border-color: #C00000;
-    border-bottom-width: initial;
+    border-top-width: initial;
 }
 
 /* Key Phrases */
