@@ -168,7 +168,7 @@
             "uri": "{{param.language.DocumentTranslationHttpStart}}",
             "httpMethod": "POST",
             "timeout": "PT3M",
-            "batchSize": 5,
+            "batchSize": 1,
             "degreeOfParallelism": 2,
             "inputs": [
                 {
