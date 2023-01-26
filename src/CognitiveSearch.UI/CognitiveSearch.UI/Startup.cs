@@ -206,7 +206,7 @@ namespace CognitiveSearch.UI
 
             services.AddWebOptimizer(pipeline =>
             {
-                pipeline.AddCssBundle("/css/bundle.css", "css/site.css", "css/colors.css");
+                pipeline.AddCssBundle("/css/bundle.css", "css/site.css", "css/colors.css", "css/tags.css");
 
                 IAsset jsBundle = pipeline.AddJavaScriptBundle("/js/bundle.js", "js/config.js", "js/site.js", "js/utils.js", "js/common.js", "js/commons/*.js", "js/graph/*.js", "js/details/*.js", "js/details.js", "js/views/*.js");
                 //AssetExtensions.ExcludeFiles(jsBundle, "js/commons/actions.js");

@@ -1,0 +1,198 @@
+﻿/* Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the MIT License. */
+
+.tag-highlighted {
+    background-color: white;
+    border-color: #C00000;
+    border-bottom-width: initial;
+}
+
+/* Key Phrases */
+.tag-key_phrases {
+    background-color: white;
+    border-color: #727272;
+    border-bottom-width: initial;
+}
+.accordion-item-key_phrases {
+    border-left: 2pt solid #63666A;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.tdcolumn-key_phrases {
+    border-left: 2pt solid #63666A;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+/* LOCATIONS */
+.tag-locations {
+    background-color: white;
+    border-color: #4F6228;
+    border-bottom-width: initial;
+}
+
+.accordion-item-locations {
+    border-left: 2pt solid #4F6228;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.tdcolumn-locations {
+    border-left: 2pt solid #4F6228;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.tag-countries {
+    background-color: white;
+    border-color: black;
+    border-bottom-width: initial;
+}
+.accordion-item-countries {
+    border-left: 2pt solid black;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.tdcolumn-countries {
+    border-left: 2pt solid black;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+/* Capitals */ 
+.tag-capitals {
+    background-color: white;
+    border-color: #009688;
+    border-bottom-width: initial;
+}
+
+.accordion-item-capitals {
+    border-left: 2pt solid #009688;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.tdcolumn-capitals {
+    border-left: 2pt solid #009688;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+/* Cities */
+.tag-cities {
+    background-color: white;
+    border-color: #607d8b;
+    border-bottom-width: initial;
+}
+
+.accordion-item-cities {
+    border-left: 2pt solid #607d8b;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.tdcolumn-cities {
+    border-left: 2pt solid #607d8b;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+/* ORGANIZATIONS */
+
+.tag-organizations {
+    background-color: white;
+    border-color: #215867;
+    border-bottom-width: initial;
+}
+.accordion-item-organizations {
+    border-left: 2pt solid #215867;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.tdcolumn-organizations {
+    border-left: 2pt solid #215867;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+/* PERSONS */
+.tag-persons {
+    background-color: white;
+    border-color: #3F3151;
+    border-bottom-width: initial;
+}
+.accordion-item-persons {
+    border-left: 2pt solid #3F3151;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.tdcolumn-persons {
+    border-left: 2pt solid #3F3151;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+
+/* CELEBRITIES */
+.tag-celebrities {
+    background-color: white;
+    border-color: #254061;
+    border-bottom-width: initial;
+}
+.accordion-item-celebrities {
+    border-left: 2pt solid #254061;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.tdcolumn-celebrities {
+    border-left: 2pt solid #254061;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+
+/* IMAGE */
+.tag-image_tags {
+    background-color: white;
+    border-color: #974807;
+    border-bottom-width: initial;
+}
+.accordion-item-image_tags {
+    border-left: 2pt solid #974807;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.tdcolumn-image_tags {
+    border-left: 2pt solid #974807;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+/* Document Segments */
+.tag-document_segments {
+    background-color: white;
+    border-color: #974807;
+    border-bottom-width: initial;
+}
+.accordion-item-document_segments {
+    border-left: 2pt solid #974807;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+/* .tdcolumn-document_segments {
+    border-left: 2pt solid #974807;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+} */
+
+/* Authors */
+.tag-authors {
+    background-color: white;
+    border-color: #0a58ca;
+    border-left-width: initial;
+}
+.accordion-item-authors {
+    border-left: 2pt solid #0a58ca;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}

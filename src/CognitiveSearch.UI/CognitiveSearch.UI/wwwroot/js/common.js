@@ -735,7 +735,7 @@ Microsoft.Search.Results = {
     // Search Results as list item 
     RenderResultAsListItem: function (result, showMethod = "Microsoft.Results.Details.ShowDocumentById") {
         var documentHtml = '';
-        var classList = "row results-list-item pb-1";
+        var classList = "row results-list-item pb-1 border-top border-2 border-primary";
         var docresult = result.Document !== undefined ? result.Document : result;
 
         Microsoft.Search.results_keys_index.push(docresult.index_key);
@@ -813,7 +813,11 @@ Microsoft.Search.Results = {
             }
             
             // TODO Take the tags list from backend.
-            documentHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['organizations', 'key_phrases']);
+            var tagsHtml = Microsoft.Tags.renderTagsAsList(docresult, true, false, ['organizations']);
+            if (tagsHtml.length === 0) {
+                documentHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['key_phrases']);
+            }
+            documentHtml += tagsHtml;
             documentHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['document_segments']);
             documentHtml += '</div>';
 

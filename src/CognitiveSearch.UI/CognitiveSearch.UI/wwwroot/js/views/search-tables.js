@@ -20,7 +20,7 @@ Microsoft.Tables = {
 
         if (path !== null) {
 
-            resultsHtml += '<div class="row results-cluster-row">';
+            resultsHtml += '<div class="row results-cluster-row border-top border-3 border-warning">';
             resultsHtml += '<div class="col-md-2">';
 
             resultsHtml += '<div class="row">';
