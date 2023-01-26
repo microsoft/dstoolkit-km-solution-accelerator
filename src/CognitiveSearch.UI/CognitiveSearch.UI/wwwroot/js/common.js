@@ -807,7 +807,7 @@ Microsoft.Search.Results = {
             documentHtml += '   <div class="results-body mt-2">';
 
             if (highlights.length > 0) {
-                documentHtml += '<div class="results-body-highlights border-top border-bottom border-2">';
+                documentHtml += '<div class="results-body-highlights border-top border-bottom border-2 p-2">';
                 documentHtml += highlights;
                 documentHtml += '</div>';
             }
