@@ -59,8 +59,8 @@ Microsoft.Tables = {
         }   
     },
     
-    render_document_tables: function (docresult) {
-        this.render_document_datatables(docresult);
+    render_document_tables: function (docresult, tabular, target_tag_id) {
+        this.render_document_datatables(docresult, target_tag_id);
     },
     
     render_document_datatables: function (docresult, target_tag_id='#tables-viewer') {
