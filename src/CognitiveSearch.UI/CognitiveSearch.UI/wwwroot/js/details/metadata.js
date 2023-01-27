@@ -16,6 +16,7 @@ Microsoft.Search.Results.Metadata = {
         metadataContainerHTML += '<table class="table table-hover table-striped"><thead><tr><th data-field="key" class="key">Key</th><th data-field="value">Value</th></tr></thead>';
         metadataContainerHTML += '<tbody>';
 
+        // TODO - Make it configurable
         var excluding_fields = ["content", "merged_content", "translated_text", "tables", "kvs", "paragraphs", "image_data", "thumbnail_small", "thumbnail_medium", "tokens_html"];
 
         var keys = Object.keys(result).sort();

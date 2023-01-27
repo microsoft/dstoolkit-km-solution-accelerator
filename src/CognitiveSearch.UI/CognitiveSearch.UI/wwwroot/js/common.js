@@ -249,6 +249,7 @@ Microsoft.Search = {
         var highlightsCounter = 0;
         var max_total_chars_size = 250;
 
+        // TODO - make it configurable
         var fields = ["content", "translated_text"];
         // Hit Hightlighting
         if (result.Highlights && result.Highlights !== undefined) {

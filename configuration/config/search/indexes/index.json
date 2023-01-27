@@ -344,7 +344,7 @@
       "key": false,
       "indexAnalyzer": null,
       "searchAnalyzer": null,
-      "analyzer": "en.lucene",
+      "analyzer": null,
       "synonymMaps": []
     },
     {
@@ -358,7 +358,7 @@
       "key": false,
       "indexAnalyzer": null,
       "searchAnalyzer": null,
-      "analyzer": "en.lucene",
+      "analyzer": null,
       "synonymMaps": []
     },
     {
@@ -748,6 +748,15 @@
           "facetable": true,
           "searchable": true,
           "retrievable": true
+        },
+        {
+          "name": "has_attachments",
+          "type": "Edm.Boolean",
+          "filterable": true,
+          "sortable": false,
+          "facetable": true,
+          "searchable": false,
+          "retrievable": true
         }
       ]
     },
@@ -1108,18 +1117,17 @@
     },
     {
       "name": "tables",
-      "type": "Edm.String",
-      "facetable": false,
-      "filterable": false,
-      "key": false,
+      "type": "Collection(Edm.String)",
+      "searchable": true,
+      "filterable": true,
       "retrievable": true,
-      "searchable": false,
       "sortable": false,
-      "analyzer": null,
+      "facetable": false,
+      "key": false,
       "indexAnalyzer": null,
       "searchAnalyzer": null,
-      "synonymMaps": [],
-      "fields": []
+      "analyzer": null,
+      "synonymMaps": []
     },
     {
       "name": "tables_count",
@@ -1301,7 +1309,9 @@
         "organizations",
         "countries",
         "capitals",
-        "document_segments"
+        "document_segments",
+        "email/message_to",
+        "email/message_from"
       ]
     }
   ],
