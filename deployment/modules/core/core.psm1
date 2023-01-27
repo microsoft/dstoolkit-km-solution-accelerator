@@ -1484,6 +1484,7 @@ function Build-Functions () {
     param (
         [switch] $LinuxOnly,
         [switch] $WindowsOnly,
+        [switch] $KeyVaultPolicies,
         [switch] $Publish,
         [switch] $Settings
     )
@@ -1545,11 +1546,13 @@ function Build-Functions () {
         
     Sync-Config
 
-    if ($Publish) {
+    if ( $Publish ) {
         Publish-Functions -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly
     }
-
-    if ($Settings) {
+    if ( $KeyVaultPolicies ) {
+        Add-KeyVaultFunctionsPolicies        
+    }
+    if ( $Settings ) {
         Publish-FunctionsSettings -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly
     }
 }
@@ -1887,6 +1890,7 @@ function Build-WebApps {
         [switch] $LinuxOnly,
         [switch] $WindowsOnly,
         [switch] $Publish,
+        [switch] $KeyVaultPolicies,
         [switch] $Settings
     )
     
@@ -1954,7 +1958,9 @@ function Build-WebApps {
     if ( $Publish ) {
         Publish-WebApps -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly 
     }
-
+    if ( $KeyVaultPolicies ) {
+        Add-KeyVaultWebAppsPolicies 
+    }
     if ( $Settings ) {
         Publish-WebAppsSettings -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly
     }

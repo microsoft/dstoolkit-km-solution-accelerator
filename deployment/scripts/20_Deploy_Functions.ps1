@@ -32,22 +32,15 @@ else {
     New-Functions;
 }
 
-if ($Upgrade) {
-    Upgrade-Functions;
-}
+# if ($Upgrade) {
+#     Upgrade-Functions;
+# }
 
 # Build & Publish
-Build-Functions;
+Build-Functions -Publish -KeyVaultPolicies -Settings
 
-Publish-Functions;
-
-# KV & Settings 
-Add-KeyVaultFunctionsPolicies;
-
-Get-FunctionsKeys;
+Get-FunctionsKeys
 
 Sync-Config
-
-Publish-FunctionsSettings;
 
 Stop-Transcript

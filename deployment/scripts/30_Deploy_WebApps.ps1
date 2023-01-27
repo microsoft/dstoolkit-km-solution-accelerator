@@ -27,16 +27,9 @@ else {
 Build-DockerImages -WebApp
 
 # Build & Publish
-Build-WebApps;
-
-Publish-WebApps;
-
-# KV & Settings 
-Add-KeyVaultWebAppsPolicies;
+Build-WebApps -Publish -KeyVaultPolicies -Settings
 
 Sync-Config
-
-Publish-WebAppsSettings;
 
 # Ensure the Web Apps when set are access restricted
 Set-WebAppServicesAccessRestriction
