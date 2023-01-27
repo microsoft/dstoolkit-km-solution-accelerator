@@ -1,4 +1,5 @@
 {
+    "enable": true,
     "Parameters": {
         "appInsightsService": "{{config.name}}insights",
         "logAnalyticsService": "{{config.name}}analytics"

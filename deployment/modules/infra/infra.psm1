@@ -44,7 +44,7 @@ function New-ResourceGroups {
     
     FindOrCreateResourceGroup $config.resourceGroupName 
 
-    if ($config.vnetEnable) {
+    if ($vnetcfg.enable) {
         FindOrCreateResourceGroup $vnetcfg.vnetResourceGroup
     }
 }

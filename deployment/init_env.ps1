@@ -33,7 +33,7 @@ if ( $config.overlayPath ) {
 Sync-Config
 
 # VNET configuration
-if ($global:config.vnetEnable) {
+if ($global:vnetcfg.enable) {
     Import-VNETConfig
 }
 

@@ -1,4 +1,5 @@
 {
+    "enable": true,
     "Parameters": {
         "maps":"{{config.name}}maps",
         "mapSearchEnabled": false

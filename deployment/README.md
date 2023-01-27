@@ -67,8 +67,7 @@ The below **contoso.json** environment configuration file you can easily adjust 
     "resourceGroupName": "kmcontoso-rg",
     "spellCheckEnabled":false,
     "spellCheckProvider":"Bing",
-    "location": "YOUR AZURE LOCATION",
-    "vnetEnable":false
+    "location": "YOUR AZURE LOCATION"
 }
 
 ```
@@ -93,7 +92,6 @@ Below the list of most common entries your configuration file should contains:
 |spellCheckEnabled|Boolean indicating if your solution supports a spellChecking service.|
 |spellCheckProvider|String indicating which SpellChecking service you will use. By deafult we support "Bing". You may add your own.|
 |location|Azure location to deploy the services to.|
-|vnetEnable|Flag to indicate if the solution requires VNET integration.|
 
 ## 3 Initialize your environment
 
@@ -157,7 +155,6 @@ adminUser                     : admin@contoso.com
 resourceGroupName             : kmcontoso-rg
 spellCheckEnabled             : False
 location                      : YOUR AZURE LOCATION
-vnetEnable                    : False
 
 ```
 

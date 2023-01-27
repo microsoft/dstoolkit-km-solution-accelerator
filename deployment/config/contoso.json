@@ -16,6 +16,5 @@
     "spellCheckEnabled": false,
     "spellCheckProvider": "Bing",
     "location": "YOUR AZURE LOCATION",
-    "clarityProjectId": "",
-    "vnetEnable": false
+    "clarityProjectId": ""
 }

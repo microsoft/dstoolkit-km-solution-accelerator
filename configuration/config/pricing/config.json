@@ -1,4 +1,5 @@
 {
+    "enable": true,
     "Parameters": {
         "pricing.consumption": "Y1",
         "pricing.standard": "S1",

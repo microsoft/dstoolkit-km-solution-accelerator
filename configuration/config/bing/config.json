@@ -1,4 +1,5 @@
 {
+    "enable": true,
     "Parameters": {
         "webSearchEnabled": false,
         "webMarket": "en-uk"

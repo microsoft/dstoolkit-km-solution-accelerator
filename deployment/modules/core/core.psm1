@@ -33,7 +33,9 @@ function Import-ServicesConfig() {
 
             Set-Variable -Name $varName -Value $varValue -Visibility Public -Option AllScope -Force -Scope Global
     
-            Import-ConfigParameters $varValue    
+            if ($varValue.enable) {
+                Import-ConfigParameters $varValue
+            }
         }
     }
 }

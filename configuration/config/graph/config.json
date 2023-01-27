@@ -1,4 +1,5 @@
 {
+    "enable": true,
     "Parameters": {
         "Neo4jName": "{{config.name}}neo4j",
         "Neo4jBrowser": "http://{{config.name}}neo4j.westeurope.azurecontainer.io:7474/browser",
