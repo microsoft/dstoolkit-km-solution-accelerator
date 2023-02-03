@@ -1,0 +1,8 @@
+{
+    "enable": true,
+    "Parameters": {
+        "TikaContainerUrl":"https://{{config.name}}tikaserver.azurewebsites.net",
+        "X_Tika_PDFAllPagesAsImages": true
+    },
+    "Items": []
+}

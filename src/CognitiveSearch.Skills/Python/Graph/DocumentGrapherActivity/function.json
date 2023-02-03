@@ -1,0 +1,10 @@
+{
+    "scriptFile": "../shared_code/DocumentGrapher/Durable/Activity_init.py",
+    "bindings": [
+        {
+            "name": "record",
+            "type": "activityTrigger",
+            "direction": "in"
+        }
+    ]
+}

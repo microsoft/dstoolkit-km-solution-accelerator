@@ -44,7 +44,7 @@ function New-ResourceGroups {
     
     FindOrCreateResourceGroup $config.resourceGroupName 
 
-    if ($config.vnetEnable) {
+    if ($vnetcfg.enable) {
         FindOrCreateResourceGroup $vnetcfg.vnetResourceGroup
     }
 }
@@ -135,6 +135,8 @@ function New-StorageAccount {
 
             if ($azureResource.IsDataStorage) {
 
+                Get-DataStorageAccountAccessKeys
+                
                 # Iterate through the list of containers to create. 
                 foreach ($container in $params.storageContainers) {
                     az storage container create -n $container `
@@ -162,10 +164,10 @@ function New-StorageAccount {
         }
 
         if ($azureResource.IsDataStorage) {
-            Get-DataStorageAccountAccessKeys; 
+            Get-DataStorageAccountAccessKeys
         }
         else {
-            Get-TechStorageAccountAccessKeys;            
+            Get-TechStorageAccountAccessKeys
         }
     }
 }
@@ -199,7 +201,7 @@ function New-CognitiveServices {
 
 function New-SearchServices {
 
-    foreach ($azureResource in $searchservicecfg.Items) {
+    foreach ($azureResource in $searchcfg.Items) {
 
         Write-Host "Provisionning Search Service "$azureResource.Name;
 
@@ -220,7 +222,7 @@ function New-SearchServices {
 
         az search service update --name $azureResource.Name --resource-group $azureResource.ResourceGroup --identity-type "SystemAssigned"
 
-        if ($searchservicecfg.Parameters.semanticSearchEnabled)
+        if ($searchcfg.Parameters.semanticSearchEnabled)
         {
             Enable-SemanticSearch $azureResource.Name
         }

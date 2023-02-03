@@ -2,13 +2,14 @@
 // Licensed under the MIT License.
 
 using Knowledge.Configuration.Maps;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Knowledge.API.Controllers.api
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class MapController : AbstractApiController
     {
         public MapConfig mapService;

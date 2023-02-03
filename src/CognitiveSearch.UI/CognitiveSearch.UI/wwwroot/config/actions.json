@@ -7,7 +7,7 @@
     "method": "Microsoft.Results.Details.ShowDocumentById",
     "icon": "bi bi-file-earmark",
     "condition": "n.document.embedded",
-    "parameters": "n.parent.id",
+    "parameters": ["n.parent.id"],
     "enable": true
   },
   {
@@ -18,7 +18,7 @@
     "method": "Microsoft.Results.Details.ShowDocumentById",
     "icon": "bi bi-translate",
     "condition": "(n.document.translated && !n.document.embedded)",
-    "parameters": "n.parent.id",
+    "parameters": ["n.parent.id"],
     "enable": true
   },
   {
@@ -29,8 +29,51 @@
     "method": "Microsoft.Results.Details.ShowRelatedDocumentById",
     "icon": "bi bi-translate",
     "condition": "n.document.translatable",
-    "parameters": "n.document_id",
+    "parameters": ["n.document_id"],
     "enable": false
+  },
+  {
+    "id": "actionmetadata",
+    "name": "Metadata",
+    "title": "Show document metadata details",
+    "class": "btn-outline-secondary",
+    "method": "Microsoft.Results.Details.render_quick_details",
+    "icon": "bi bi-list",
+    "parameters": ["n.index_key","'metadata'"],
+    "enable": true
+  },
+  {
+    "id": "actiontables",
+    "name": "Tables",
+    "title": "Show document Tables",
+    "class": "btn-outline-secondary",
+    "method": "Microsoft.Results.Details.render_quick_details",
+    "icon": "bi bi-table",
+    "condition": "n.tables_count > 0",
+    "parameters": ["n.index_key","'tables'"],
+    "enable": true
+  },
+  {
+    "id": "actionkvp",
+    "name": "Key/Value Pairs",
+    "title": "Show document Key/Value Pairs",
+    "class": "btn-outline-secondary",
+    "method": "Microsoft.Results.Details.render_quick_details",
+    "icon": "bi bi-database",
+    "condition": "n.kvs_count > 0",
+    "parameters": ["n.index_key","'kvp'"],
+    "enable": true
+  },
+  {
+    "id": "actionimages",
+    "name": "Pages or Slides",
+    "title": "Show extracted Pages or Slides",
+    "class": "btn-outline-secondary",
+    "method": "Microsoft.Results.Details.render_quick_details",
+    "icon": "bi bi-image",
+    "condition": "!n.document.embedded && !n.image",
+    "parameters": ["n.index_key","'images'"],
+    "enable": true
   },
   {
     "id": "action1",
@@ -39,7 +82,7 @@
     "class": "btn-outline-secondary",
     "method": "Microsoft.Utils.TagBlog",
     "icon": "bi bi-tag",
-    "parameters": "n.metadata_storage_path",
+    "parameters": ["n.metadata_storage_path"],
     "enable": true
   },
   {
@@ -49,15 +92,6 @@
     "class": "btn-outline-success",
     "method": "window.alert",
     "icon": "bi bi-broadcast",
-    "enable": false
-  },
-  {
-    "id": "action3",
-    "name": "Action3",
-    "title": "Action3 description",
-    "class": "btn-outline-warning",
-    "method": "window.alert",
-    "icon": "bi bi-box",
     "enable": false
   }
 ]

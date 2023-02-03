@@ -7,15 +7,17 @@ Microsoft.Search = Microsoft.Search || {};
 Microsoft.Search.Results = Microsoft.Search.Results || {};
 Microsoft.Search.Results.Metadata = Microsoft.Search.Results.Metadata || {};
 Microsoft.Search.Results.Metadata = {
-    render_tab: function (result) {
 
-        var metadataContainerHTML = $("#metadata-viewer").html();
+    render_tab: function (result, tabular, targetid="#metadata-viewer") {
+
+        var metadataContainerHTML = $(targetid).html();
 
         metadataContainerHTML = '';
         metadataContainerHTML += '<table class="table table-hover table-striped"><thead><tr><th data-field="key" class="key">Key</th><th data-field="value">Value</th></tr></thead>';
         metadataContainerHTML += '<tbody>';
 
-        var excluding_fields = ["content", "merged_content", "translated_text", "tables", "paragraphs", "image_data", "thumbnail_small", "thumbnail_medium", "tokens_html"];
+        // TODO - Make it configurable
+        var excluding_fields = ["content", "merged_content", "translated_text", "tables", "kvs", "paragraphs", "image_data", "thumbnail_small", "thumbnail_medium", "tokens_html"];
 
         var keys = Object.keys(result).sort();
 
@@ -69,7 +71,7 @@ Microsoft.Search.Results.Metadata = {
                     if (data && data.length > 0) {
                         try {
                             result = JSON.parse(data)
-                            var extraMetadataContainerHTML = $("#metadata-viewer").html();
+                            var extraMetadataContainerHTML = $(targetid).html();
 
                             extraMetadataContainerHTML += '<h4 id="available_metadata">File Metadata</h4><div style="overflow-x:auto;">';
                             extraMetadataContainerHTML += '<table class="table table-hover table-striped">';
@@ -90,7 +92,7 @@ Microsoft.Search.Results.Metadata = {
                             extraMetadataContainerHTML += '</tbody>';
                             extraMetadataContainerHTML += '</table></div><br/>';
 
-                            $("#metadata-viewer").html(extraMetadataContainerHTML);
+                            $(targetid).html(extraMetadataContainerHTML);
                         }
                         catch (exception) {
                         }
@@ -99,5 +101,33 @@ Microsoft.Search.Results.Metadata = {
         }
 
         return metadataContainerHTML;
+    },
+
+    render_metadata_side_pane: function(result) {
+        var fileContainerHTML = '';
+        // Highlighted metadata
+        fileContainerHTML+='<ul class="list-group">';
+        if (result.title) {
+            fileContainerHTML+='  <li class="list-group-item fw-bold">Title</li>';
+            fileContainerHTML+='  <li class="list-group-item text-break">'+result.title+'</li>';    
+        }
+        if (result.email && result.email.message_from) {
+            fileContainerHTML+='  <li class="list-group-item fw-bold">From</li>';
+            fileContainerHTML+='  <li class="list-group-item text-break">'+result.email.message_from+'</li>';    
+        }
+        if (result.email && result.email.message_to) {
+            fileContainerHTML+='  <li class="list-group-item fw-bold">To</li>';
+            fileContainerHTML+='  <li class="list-group-item text-break">'+result.email.message_to+'</li>';    
+        }
+        if (result.email && result.email.subject) {
+            fileContainerHTML+='  <li class="list-group-item fw-bold">Subject</li>';
+            fileContainerHTML+='  <li class="list-group-item text-break">'+result.email.subject+'</li>';    
+        }
+        if (result.summary && result.summary.length > 0) {
+            fileContainerHTML+='  <li class="list-group-item fw-bold">Summary</li>';
+            fileContainerHTML+='  <li class="list-group-item">'+result.summary.join('...\r\n')+'</li>';    
+        }
+        fileContainerHTML+='</ul>';
+        return fileContainerHTML;
     }
 }

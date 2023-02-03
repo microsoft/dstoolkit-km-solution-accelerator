@@ -41,14 +41,10 @@ Microsoft.Search = {
     indexName: '',
     results: [],
     results_keys_index: [],
-
     results_rendering: -1,
-
     selected_results_filter: {},
-
     // Azure Storage SAS token
     tokens: [],
-
     TotalCount: 0,
     currentPage: 0,
     MaxPageCount: 0,
@@ -104,6 +100,21 @@ Microsoft.Search = {
         return Microsoft.Search.currentPage < Microsoft.Search.MaxPageCount;
     },
     
+    // GetResultByKey: function (key) {
+    //     for (var i = 0; i < Microsoft.Search.results.length; i++) {
+    //         var result = Microsoft.Search.results[i];
+    //         if (result.index_key === key) {
+    //             return result;
+    //         }
+    //         if (result.Document) {
+    //             if (result.Document.index_key === key) {
+    //                 return result.Document;
+    //             }
+    //         }
+    //     }
+    //     return null
+    // },
+
     UpdateDocCount: function (resultsCount) {
         if (resultsCount === 0) {
             $("#doc-count").addClass('bg-danger');
@@ -151,8 +162,14 @@ Microsoft.Search = {
             Microsoft.Facets.UpdateFilterReset();
         }
 
+        $(window).on('keypress', function(event) {
+            if (event.code === 'KeyX') {
+                Microsoft.Facets.ClearAllFilters();
+            }
+        });
+
         // Tags
-        Microsoft.Tags.tags = Microsoft.View.tags;
+        Microsoft.Tags.tags = Microsoft.View.config.tags;
 
         window.document.title = vertical.pageTitle;
 
@@ -232,6 +249,7 @@ Microsoft.Search = {
         var highlightsCounter = 0;
         var max_total_chars_size = 250;
 
+        // TODO - make it configurable
         var fields = ["content", "translated_text"];
         // Hit Hightlighting
         if (result.Highlights && result.Highlights !== undefined) {
@@ -724,7 +742,7 @@ Microsoft.Search.Results = {
     // Search Results as list item 
     RenderResultAsListItem: function (result, showMethod = "Microsoft.Results.Details.ShowDocumentById") {
         var documentHtml = '';
-        var classList = "row results-list-item pb-1";
+        var classList = "row results-list-item pb-1 border-top border-2 border-primary";
         var docresult = result.Document !== undefined ? result.Document : result;
 
         Microsoft.Search.results_keys_index.push(docresult.index_key);
@@ -796,13 +814,18 @@ Microsoft.Search.Results = {
             documentHtml += '   <div class="results-body mt-2">';
 
             if (highlights.length > 0) {
-                documentHtml += '<div class="results-body-highlights">';
+                documentHtml += '<div class="results-body-highlights border-top border-bottom border-2 p-2">';
                 documentHtml += highlights;
                 documentHtml += '</div>';
             }
             
             // TODO Take the tags list from backend.
-            documentHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['organizations', 'key_phrases']);
+            var tagsHtml = Microsoft.Tags.renderTagsAsList(docresult, true, false, ['organizations']);
+            if (tagsHtml.length === 0) {
+                documentHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['key_phrases']);
+            }
+            documentHtml += tagsHtml;
+            documentHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['document_segments']);
             documentHtml += '</div>';
 
             documentHtml += '</div>';

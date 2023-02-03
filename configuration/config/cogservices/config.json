@@ -1,4 +1,5 @@
 {
+    "enable": true,
     "ServiceEndPoint":"Microsoft.CognitiveServices",
     "GroupId":"CognitiveService",
     "Apptype":"CognitiveService",

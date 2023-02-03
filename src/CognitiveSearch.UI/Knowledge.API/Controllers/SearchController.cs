@@ -5,13 +5,14 @@ using Knowledge.API.Models;
 using Knowledge.Configuration;
 using Knowledge.Models;
 using Knowledge.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Knowledge.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class SearchController : AbstractApiController
     {
         private const string DEFAULT_INDEX_NAME = "index";

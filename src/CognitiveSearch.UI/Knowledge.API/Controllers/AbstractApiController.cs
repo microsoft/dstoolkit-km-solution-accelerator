@@ -7,9 +7,11 @@ using Knowledge.Services;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Knowledge.API.Controllers
 {
+    [Authorize]
     public class AbstractApiController : ControllerBase
     {
         // Client logs all searches in Application Insights

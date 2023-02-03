@@ -1,9 +1,0 @@
-{
-    "appInsightsService": "{{config.name}}insights",
-    "logAnalyticsService": "{{config.name}}analytics",
-    "adf": "{{config.name}}adf",
-    "aks": "{{config.name}}aks",
-    "TikaContainerUrl":"https://{{config.name}}tikaserver.azurewebsites.net",
-    "X_Tika_PDFAllPagesAsImages": true,
-    "kubernetesHost":"https://{{config.name}}aks.intra.contoso.com"
-}

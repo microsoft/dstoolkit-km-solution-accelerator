@@ -8,11 +8,11 @@ Microsoft.Search.Results = Microsoft.Search.Results || {};
 Microsoft.Search.Results.KVP = Microsoft.Search.Results.KVP || {};
 Microsoft.Search.Results.KVP = {
 
-    render_tab: function (docresult) {
-        return this.render_KVP_results(docresult);;
+    render_tab: function (docresult, tabular, targetid="#kvp-viewer") {
+        return this.render_KVP_results(docresult, targetid);
     },
 
-    render_KVP_results: function (docresult) {
+    render_KVP_results: function (docresult, targetid) {
 
         var containerHTML = '';
 
@@ -35,7 +35,7 @@ Microsoft.Search.Results.KVP = {
 
             $('#kvp-pivot-link').append(' (' + docresult.kvs_count + ')');
 
-            $('#kvp-viewer').html(containerHTML);
+            $(targetid).html(containerHTML);
 
             var table = $('#' + table_id).DataTable({
                 dom: 'Bfrtip',

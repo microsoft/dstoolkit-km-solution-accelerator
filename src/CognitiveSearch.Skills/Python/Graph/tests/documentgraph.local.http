@@ -1,0 +1,144 @@
+###
+POST http://localhost:7071/graph/documentgrapher
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_index_key" : 1,
+                "document_metadata":{
+                    "title" : "test document local 1"
+                },
+                "document_entities" : {
+                    "linked_entities": [
+                        {
+                            "name": "Microsoft",
+                            "id": "Microsoft",
+                            "language": "en",
+                            "url": "https://en.wikipedia.org/wiki/Microsoft",
+                            "bingId": "a093e9b9-90f5-a3d5-c4b8-5855e1b01f85",
+                            "dataSource": "Wikipedia",
+                            "matches": [
+                                {
+                                    "text": "Microsoft",
+                                    "offset": 0,
+                                    "length": 9,
+                                    "confidenceScore": 0.25
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Tesla, Inc.",
+                            "id": "Tesla, Inc.",
+                            "language": "en",
+                            "url": "https://en.wikipedia.org/wiki/Tesla,_Inc.",
+                            "bingId": "732e1de9-8d5c-15ed-7f0d-7e2169dc9859",
+                            "dataSource": "Wikipedia",
+                            "matches": [
+                                {
+                                    "text": "Tesla",
+                                    "offset": 28,
+                                    "length": 5,
+                                    "confidenceScore": 0.2
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Microsoft",
+                            "id": "Microsoft",
+                            "language": "en",
+                            "url": "https://en.wikipedia.org/wiki/Microsoft",
+                            "bingId": "a093e9b9-90f5-a3d5-c4b8-5855e1b01f85",
+                            "dataSource": "Wikipedia",
+                            "matches": [
+                                {
+                                    "text": "Microsoft",
+                                    "offset": 0,
+                                    "length": 9,
+                                    "confidenceScore": 0.25
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Tesla, Inc.",
+                            "id": "Tesla, Inc.",
+                            "language": "en",
+                            "url": "https://en.wikipedia.org/wiki/Tesla,_Inc.",
+                            "bingId": "732e1de9-8d5c-15ed-7f0d-7e2169dc9859",
+                            "dataSource": "Wikipedia",
+                            "matches": [
+                                {
+                                    "text": "Tesla",
+                                    "offset": 28,
+                                    "length": 5,
+                                    "confidenceScore": 0.2
+                                }
+                            ]
+                        }
+                    ],
+                    "named_entities": [
+                        {
+                            "category": "Organization",
+                            "subcategory": null,
+                            "length": 19,
+                            "offset": 0,
+                            "confidenceScore": 1.0,
+                            "text": "Contoso Corporation"
+                        },
+                        {
+                            "category": "Person",
+                            "subcategory": null,
+                            "length": 11,
+                            "offset": 35,
+                            "confidenceScore": 1.0,
+                            "text": "Jean Martin"
+                        },
+                        {
+                            "category": "Person",
+                            "subcategory": null,
+                            "length": 5,
+                            "offset": 48,
+                            "confidenceScore": 0.99,
+                            "text": "Paolo"
+                        },
+                        {
+                            "category": "Email",
+                            "subcategory": null,
+                            "length": 19,
+                            "offset": 77,
+                            "confidenceScore": 0.8,
+                            "text": "contact@contoso.com"
+                        },
+                        {
+                            "category": "IPAddress",
+                            "subcategory": null,
+                            "length": 12,
+                            "offset": 108,
+                            "confidenceScore": 0.8,
+                            "text": "192.168.72.0"
+                        },
+                        {
+                            "category": "Email",
+                            "subcategory": null,
+                            "length": 19,
+                            "offset": 77,
+                            "confidenceScore": 0.8,
+                            "text": "contact@contoso.com"
+                        },
+                        {
+                            "category": "IPAddress",
+                            "subcategory": null,
+                            "length": 12,
+                            "offset": 108,
+                            "confidenceScore": 0.8,
+                            "text": "192.168.72.0"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
+

@@ -3,10 +3,10 @@
 
 import azure.functions as func
 import azure.durable_functions as df
-import json
+
 from .. import DocumentTranslation
 
-def main(record: str) -> str:
+def main(record) -> str:
     
     # Call Document Translation and wait...
     output_record = DocumentTranslation.transform_value(record)

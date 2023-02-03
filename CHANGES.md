@@ -1,5 +1,13 @@
 # Changes log
 
+## January 2023 - V1.3 (in progress)
+
+- API Authorization 
+- Neo4j Graph support for query & indexing
+- UI & API improvements
+- Documentation
+- Bugs fixing
+
 ## December 2022 - V1.2
 
 - UI & API improvements

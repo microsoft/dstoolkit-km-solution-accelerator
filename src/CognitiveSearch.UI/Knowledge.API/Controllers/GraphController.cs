@@ -2,21 +2,18 @@
 // Licensed under the MIT License.
 
 using Knowledge.API.Models;
-using Knowledge.Services;
 using Knowledge.Configuration;
+using Knowledge.Services;
 using Knowledge.Services.Graph.Facet;
 using Knowledge.Services.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Knowledge.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class GraphController : AbstractApiController
     {
         private IFacetGraphService _facetGraphService;

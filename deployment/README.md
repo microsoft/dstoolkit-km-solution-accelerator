@@ -67,8 +67,7 @@ The below **contoso.json** environment configuration file you can easily adjust 
     "resourceGroupName": "kmcontoso-rg",
     "spellCheckEnabled":false,
     "spellCheckProvider":"Bing",
-    "location": "YOUR AZURE LOCATION",
-    "vnetEnable":false
+    "location": "YOUR AZURE LOCATION"
 }
 
 ```
@@ -93,7 +92,6 @@ Below the list of most common entries your configuration file should contains:
 |spellCheckEnabled|Boolean indicating if your solution supports a spellChecking service.|
 |spellCheckProvider|String indicating which SpellChecking service you will use. By deafult we support "Bing". You may add your own.|
 |location|Azure location to deploy the services to.|
-|vnetEnable|Flag to indicate if the solution requires VNET integration.|
 
 ## 3 Initialize your environment
 
@@ -117,15 +115,16 @@ cd .\deployment\
 ```
 ### Initialize the environment
 ```ps
-.\init_env.ps1 -Name contoso
+.\init_env.ps1 contoso
 ```
 
-**NOTE** The command assumes there is a contoso.json configuration file under the deployment config path. 
+**NOTE** The command assumes there is a **contoso.json** configuration file under the deployment config directory. 
 
-To re-generate an environment after any configuration change, execute the same 
+To re-generate an environment after any configuration change, execute the same.
 
-At the end of this **init_env** script, your Azure cloud and account will be set according to your configuration
+At the end of this **init_env** script, your Azure cloud and account will be set according to your configuration.
 
+If you want to set them manually to be sure you can use the below commands:
 ```ps
 # Set the Azure Cloud environment
 az cloud set -n $config.cloud
@@ -134,7 +133,8 @@ az cloud set -n $config.cloud
 az account set -s $config.subscriptionId
 ```
 
-The environment configuration will be available as a PowerShell variable $config
+#### Config variable
+The environment configuration will be available as a PowerShell variable **$config**.
 
 ```ps
 PS> $config
@@ -155,11 +155,12 @@ adminUser                     : admin@contoso.com
 resourceGroupName             : kmcontoso-rg
 spellCheckEnabled             : False
 location                      : YOUR AZURE LOCATION
-vnetEnable                    : False
 
 ```
 
-A default variable $params will also be available 
+#### Parameters variable
+
+A default variable **$params** will also be available 
 
 ```ps
 PS> $params
@@ -214,16 +215,16 @@ The $params variable is persisted in the parameters.json file located in your en
 
 Service keys and connection strings are also stored in the $params in plain text to be used in deployment scripts but stored as secure string (PowerShell) in the parameters.json. 
 
-__Note__ Any parameter you set ending with the suffix **Key** or **ConnectionString** is automatically considered a secure string and added to your KeyVault during deployment. 
+__Note__ Any parameter you set ending with the suffix **Key** or **ConnectionString** or **Username** or **Password** is automatically considered a secure string and added to your KeyVault during deployment. 
 
 Secure String in PowerShell implies the encrypted keys can't be shared across platforms. This provides another level of protection than storing the keys in plain text in json file.
 
-If you are loading your environment cross-platform To load all services keys back to the $params variable (and parameters.json) you may want to execute the below commands. 
+If you are loading your environment cross-platform to load all services keys back to the $params variable (and parameters.json) you may want to execute the below commands. 
 
 ```ps
 Get-AllServicesKeys
 ```
-The above can be generalized to avoid service keys and connection strings to be even stored in the parameters.json.
+The above can be generalized to avoid service keys and connection strings to be even stored in the parameters.json. Connect to your environment, load the corresponding keys and start deploying. 
 
 ## 4 Deploy Azure core Services
 
@@ -232,12 +233,16 @@ The above can be generalized to avoid service keys and connection strings to be 
 ```
 All services keys will be added to the keyvault at that stage. All App settings will refer to the keys via a Keyvault link.
 
-**Note** Azure Cognitive Responsible AI 
+**Note** Azure Cognitive Responsible AI - first time deployment in a subscription
+
+If your targeted subscription is brand-new, creating a Cognitive Services like Computer Vision will fail with the below message
+
 ```
 Notice
 I certify that use of this service is not by or for a police department in the United States.
 (ResourceKindRequireAcceptTerms) This subscription cannot create CognitiveServices until you agree to Responsible AI terms for this resource. You can agree to Responsible AI terms by creating a resource through the Azure Portal then trying again. For more detail go to https://aka.ms/csrainotice
 ```
+Unfortunately, the only work-around today is to create that [resource manually](https://aka.ms/csrainotice) then re-run the script 10_Deploy_Services.ps1 again. 
 
 **Note** 
 

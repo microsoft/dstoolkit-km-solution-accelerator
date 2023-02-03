@@ -7,12 +7,13 @@ using Knowledge.Services.AzureSearch.REST;
 using Knowledge.Configuration;
 using Knowledge.Services.SemanticSearch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Knowledge.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class AnswersController : AbstractApiController
     {
         ISemanticSearchService semanticService;

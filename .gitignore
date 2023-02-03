@@ -276,8 +276,7 @@ profile.arm.json
 99-*
 dstoolkit*.json
 dstk*.json
-kmdev.json
-kmprod.json
+km*.json
 
 !overlay/OVERLAY.md
 overlay/*

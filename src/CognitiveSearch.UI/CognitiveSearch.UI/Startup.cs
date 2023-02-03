@@ -56,25 +56,55 @@ namespace CognitiveSearch.UI
         {
             if (!env.IsDevelopment())
             {
-                if (Configuration.GetValue("AzureEasyAuthIntegration", true)) {
+                if (Configuration.GetValue("Authentication:AzureEasyAuthIntegration", true)) {
+                    // Easy Auth Integration
                     services.AddMicrosoftIdentityWebAppAuthentication(Configuration);
-                }
-                else { 
-                    services.AddMicrosoftIdentityWebAppAuthentication(this.Configuration).EnableTokenAcquisitionToCallDownstreamApi(new string[] { "user.read" }).AddDistributedTokenCaches();
-
-                    services.AddCors();
-                    services.AddMvc(options =>
+                    services.AddAuthorization(x =>
                     {
-                        var policy = new AuthorizationPolicyBuilder()
+                        x.DefaultPolicy = new AuthorizationPolicyBuilder()
                             .RequireAuthenticatedUser()
                             .Build();
-                        options.Filters.Add(new AuthorizeFilter(policy));
-                        options.EnableEndpointRouting = false;
-                    //}).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
                     });
-
-                services.AddHttpClient();
                 }
+                else {
+                    string client_secret = Configuration.GetValue("AzureAD:ClientSecret", string.Empty);
+
+                    if (! string.IsNullOrEmpty(client_secret)) {
+                        // Azure AD Authentication - Token Acquisition
+                        services.AddMicrosoftIdentityWebAppAuthentication(this.Configuration).EnableTokenAcquisitionToCallDownstreamApi(new string[] { "user.read" }).AddDistributedTokenCaches();
+
+                        services.AddCors();
+                        services.AddHttpClient();
+                        services.AddAuthorization(x =>
+                        {
+                            x.DefaultPolicy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build();
+                        });
+                    }
+                    else {
+                        if (Configuration.GetValue("Authentication:AllowAnonymous", false))
+                        {
+                            // Anonymous Access for PROD
+                            services.AddAuthorization(x =>
+                            {
+                                x.DefaultPolicy = new AuthorizationPolicyBuilder()
+                                    .RequireAssertion(_ => true)
+                                    .Build();
+                            });
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // Anonymous Access for DEV - No Auth and always true Authorize
+                services.AddAuthorization(x =>
+                {
+                    x.DefaultPolicy = new AuthorizationPolicyBuilder()
+                        .RequireAssertion(_ => true)
+                        .Build();
+                });
             }
 
             //
@@ -176,9 +206,9 @@ namespace CognitiveSearch.UI
 
             services.AddWebOptimizer(pipeline =>
             {
-                pipeline.AddCssBundle("/css/bundle.css", "css/site.css", "css/colors.css");
+                pipeline.AddCssBundle("/css/bundle.css", "css/site.css", "css/colors.css", "css/tags.css");
 
-                IAsset jsBundle = pipeline.AddJavaScriptBundle("/js/bundle.js", "js/config.js", "js/site.js", "js/utils.js", "js/common.js", "js/commons/*.js", "js/graph/*.js", "js/details/*.js", "js/details.js", "js/views/*.js", "js/export.js");
+                IAsset jsBundle = pipeline.AddJavaScriptBundle("/js/bundle.js", "js/config.js", "js/site.js", "js/utils.js", "js/common.js", "js/commons/*.js", "js/graph/*.js", "js/details/*.js", "js/details.js", "js/views/*.js");
                 //AssetExtensions.ExcludeFiles(jsBundle, "js/commons/actions.js");
             });
         }

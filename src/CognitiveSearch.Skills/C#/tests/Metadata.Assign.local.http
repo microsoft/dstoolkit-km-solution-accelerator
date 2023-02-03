@@ -947,3 +947,107 @@ content-type: application/json;charset=utf-8
         }
     ]
 }
+
+
+### Array conversion to string error SplitComma missing 
+POST http://localhost:7071/mtda/assign
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "3",
+            "data": {
+                "document_filename":"image_00011_99999.png",
+                "document_url":"https://kmaccdata.blob.core.windows.net/documents/CadenadelPetroleo_sp.pdf",
+                "file_metadata" : {
+                    "pdf-unmappedUnicodeCharsPerPage": [
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0"
+                    ],
+                    "pdf-PDFVersion": "1.6",
+                    "dc-description": "Details on the latest measures that select European Union member states are taking to support advanced alternative fuels.",
+                    "xmp-CreatorTool": "Adobe InDesign CS6 (Macintosh)",
+                    "pdf-docinfo-title": "Advanced Biofuel policies in select EU member states: 2018 update",
+                    "pdf-hasXFA": "false",
+                    "access_permission-modify_annotations": "true",
+                    "access_permission-can_print_degraded": "true",
+                    "dc-creator": "Jacopo Giuntoli",
+                    "dcterms-created": "2018-11-29T20:30:41Z",
+                    "language": "en",
+                    "dcterms-modified": "2018-11-30T13:51:38Z",
+                    "dc-format": "application/pdf; version=1.6",
+                    "xmpMM-DocumentID": "xmp.id:42D87BC381226811822AB89E2879C5EC",
+                    "pdf-docinfo-creator_tool": "Adobe InDesign CS6 (Macintosh)",
+                    "access_permission-fill_in_form": "true",
+                    "pdf-docinfo-keywords": "biofuels; advanced fuels; greehouse gas reduction; RED II",
+                    "pdf-docinfo-modified": "2018-11-30T13:51:38Z",
+                    "pdf-hasCollection": "false",
+                    "pdf-encrypted": "false",
+                    "dc-title": "Advanced Biofuel policies in select EU member states: 2018 update",
+                    "xmp-CreateDate": "2018-11-29T15:30:41Z",
+                    "pdf-docinfo-subject": "Details on the latest measures that select European Union member states are taking to support advanced alternative fuels.",
+                    "pdf-hasMarkedContent": "false",
+                    "Content-Type": "application/pdf",
+                    "xmp-ModifyDate": "2018-11-30T08:51:38Z",
+                    "pdf-docinfo-creator": "Jacopo Giuntoli",
+                    "xmp-MetadataDate": "2018-11-30T08:51:38Z",
+                    "pdf-producer": "Adobe PDF Library 10.0.1",
+                    "dc-subject": [
+                        "biofuels; advanced fuels; greehouse gas reduction; RED II",
+                        "Details on the latest measures that select European Union member states are taking to support advanced alternative fuels."
+                    ],
+                    "access_permission-extract_for_accessibility": "true",
+                    "access_permission-assemble_document": "true",
+                    "xmpTPg-NPages": "16",
+                    "pdf-hasXMP": "true",
+                    "pdf-charsPerPage": [
+                        "2631",
+                        "3334",
+                        "3500",
+                        "2088",
+                        "2816",
+                        "4095",
+                        "3073",
+                        "2021",
+                        "4222",
+                        "981",
+                        "3974",
+                        "2357",
+                        "3206",
+                        "2346",
+                        "2969",
+                        "391"
+                    ],
+                    "access_permission-extract_content": "true",
+                    "xmpMM-DerivedFrom-DocumentID": "xmp.did:BDCF8F00F52068118083F25A6ED43F08",
+                    "access_permission-can_print": "true",
+                    "pdf-docinfo-trapped": "Unknown",
+                    "X-TIKA-Parsed-By": [
+                        "org.apache.tika.parser.DefaultParser",
+                        "org.apache.tika.parser.pdf.PDFParser"
+                    ],
+                    "meta-keyword": "biofuels; advanced fuels; greehouse gas reduction; RED II",
+                    "xmpMM-DerivedFrom-InstanceID": "xmp.iid:41D87BC381226811822AB89E2879C5EC",
+                    "access_permission-can_modify": "true",
+                    "pdf-docinfo-producer": "Adobe PDF Library 10.0.1",
+                    "pdf-docinfo-created": "2018-11-29T20:30:41Z"
+                }
+            }
+        }
+    ]
+}

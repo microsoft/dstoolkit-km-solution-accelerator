@@ -201,13 +201,20 @@ def extract_tables(blobname,result):
                     )
                 )
 
-        tables.append(
+        # tables.append(
+        #     {
+        #         "row_count": table.row_count,
+        #         "column_count": table.column_count,
+        #         "cells": cells
+        #     }
+        # )
+        tables.append(json.dumps(
             {
                 "row_count": table.row_count,
                 "column_count": table.column_count,
                 "cells": cells
             }
-        )
+        ))
 
     persist_output(blobname,".tables",result.tables)
 

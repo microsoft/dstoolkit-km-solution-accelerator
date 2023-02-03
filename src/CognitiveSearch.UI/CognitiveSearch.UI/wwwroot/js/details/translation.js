@@ -8,7 +8,7 @@ Microsoft.Search.Results = Microsoft.Search.Results || {};
 Microsoft.Search.Results.Translation = Microsoft.Search.Results.Translation || {};
 Microsoft.Search.Results.Translation = {
 
-    render_tab: function (result) {
+    render_tab: function (result, tabular, targetid="#translation-viewer") {
         // Translation Images Tab content
         var TranslationContainerHTML = '';
         var pathExtension = result.metadata_storage_path.toLowerCase().split('.').pop();
@@ -16,13 +16,13 @@ Microsoft.Search.Results.Translation = {
         if (!result.document.converted) {
             // Show the Translation Images if relevant
             if (!Microsoft.Utils.IsImageExtension(pathExtension)) {
-                TranslationContainerHTML = this.render_Translation_results(result);
+                TranslationContainerHTML = this.render_Translation_results(result,targetid);
             }
         }
         return TranslationContainerHTML;
     },
 
-    render_Translation_results: function (result) {
+    render_Translation_results: function (result,targetid) {
 
         var containerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped bg-danger" role = "progressbar" style = "width: 100%" aria - valuenow="100" aria - valuemin="0" aria - valuemax="100"></div></div>';
 
@@ -48,7 +48,7 @@ Microsoft.Search.Results.Translation = {
                     $('#translation-pivot-link').hide();
                 }
 
-                $('#translation-viewer').html(containerHTML);
+                $(targetid).html(containerHTML);
             });
 
         return containerHTML;

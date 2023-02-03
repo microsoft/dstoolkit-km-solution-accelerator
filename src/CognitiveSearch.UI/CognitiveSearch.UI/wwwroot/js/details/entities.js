@@ -7,9 +7,9 @@ Microsoft.Search = Microsoft.Search || {};
 Microsoft.Search.Results = Microsoft.Search.Results || {};
 Microsoft.Search.Results.Tokens = Microsoft.Search.Results.Tokens || {};
 Microsoft.Search.Results.Tokens = {
-    render_tab: function (result) {
+    render_tab: function (result, tabular, targetid="#tokens-viewer") {
 
-        var tokensContainerHTML = $("#tokens-viewer").html();
+        var tokensContainerHTML = $(targetid).html();
 
         if (result.tokens_html) {
             if (result.tokens_html.length > 0) {

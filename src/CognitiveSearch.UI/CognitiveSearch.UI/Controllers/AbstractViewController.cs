@@ -6,9 +6,11 @@ using CognitiveSearch.UI.Models;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CognitiveSearch.UI.Controllers
 {
+    [Authorize]
     public class AbstractViewController : Controller
     {
         protected const string QUERY_ALL = "*";

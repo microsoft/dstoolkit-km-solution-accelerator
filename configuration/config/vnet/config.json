@@ -1,4 +1,5 @@
 {
+    "enable": false,
     "vnetResourceGroup": "{{config.resourceGroupName}}-network",
     "networkSecurityGroup": "{{config.name}}-nsg",
     "disablePENetworkPolicies": false,

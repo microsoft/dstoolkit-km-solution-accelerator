@@ -14,7 +14,7 @@ $global:params = Import-Params
 Sync-Config
 
 # VNET configuration
-if ($global:config.vnetEnable) {
+if ($global:vnetcfg.enable) {
     Import-VNETConfig
 }
 

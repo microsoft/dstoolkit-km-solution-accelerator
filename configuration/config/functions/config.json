@@ -1,4 +1,5 @@
 {
+    "enable": true,
     "GroupId": "Functions",
     "Apptype": "FunctionApp",
     "PrivateDNSZone":"privatelink.azurewebsites.net",
@@ -211,6 +212,32 @@
                         },
                         {
                             "Name": "DocumentTranslationHttpStart"
+                        }
+                    ],
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": true
+                }
+            ]
+        },
+        {
+            "Id": "graphplan",
+            "Name": "{{config.name}}graphplan",
+            "Sku": "{{param.pricing.premium}}",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "IsLinux": true,
+            "Services": [
+                {
+                    "Id": "graph",
+                    "Name": "{{config.name}}graph",
+                    "Path": "src\\CognitiveSearch.Skills\\Python\\Graph",
+                    "Version": 4,
+                    "PythonVersion": 3.9,
+                    "Functions": [
+                        {
+                            "Name": "DocumentGrapher"
+                        },
+                        {
+                            "Name": "DocumentGrapherHttpStart"
                         }
                     ],
                     "AccessIPRestriction": false,

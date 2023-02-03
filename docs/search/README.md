@@ -111,6 +111,8 @@ Emails processing falls under the documents processing to the exception that ext
 
 Starting with V1.1, we do now support attachments indexing.
 
+[Internet Standard Message Formats](https://learn.microsoft.com/en-us/previous-versions/office/developer/exchange-server-2010/aa563098(v=exchg.140))
+
 ## Translation
 
 The entire solution is configured to normalize content to a parametrable language option named **searchDefaultToLanguageCode** defined in the search/config.json. By default it set to English. 

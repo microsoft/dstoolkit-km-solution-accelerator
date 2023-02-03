@@ -135,7 +135,7 @@
             "classList": "btn-outline-primary"
           }
         ],
-        "Tags": "organizations,countries,key_phrases,celebrities,landmarks,email/message_from,email/message_to"
+        "Tags": "organizations,countries,key_phrases,document_segments,email/message_from,email/message_to"
       },
       {
         "id": "web",

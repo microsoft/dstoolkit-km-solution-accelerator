@@ -1,0 +1,8 @@
+{
+    "enable": false,
+    "Parameters": {
+        "aks": "{{config.name}}aks",
+        "kubernetesHost":"https://{{config.name}}aks.intra.contoso.com"        
+    },
+    "Items": []
+}

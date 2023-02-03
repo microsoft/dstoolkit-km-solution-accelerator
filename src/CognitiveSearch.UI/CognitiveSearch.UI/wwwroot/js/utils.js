@@ -10,13 +10,13 @@ Microsoft.Utils = {
     },
 
     toggleDiv: function (tag) {
-        var displayStatus = document.getElementById(tag);
-        if (displayStatus.style.display == 'none') {
+        var displayStatus = $("#" + tag);
+        if (displayStatus.hasClass('d-none')) {
             //If the div is hidden, show it
-            displayStatus.style.display = 'block';
+            displayStatus.removeClass('d-none');
         } else {
             //If the div is shown, hide it
-            displayStatus.style.display = 'none';
+            displayStatus.addClass('d-none');
         }
     },
 
@@ -178,18 +178,27 @@ Microsoft.Utils = {
 
     GetImageFileTitle: function (result) {
         var filename;
-        var pathExtension = Base64.decode(result.parent.filename).toLowerCase().split('.').pop();
 
-        if (pathExtension === "ppt" || pathExtension === "pptx") {
-            filename = "Slide " + this.GetImagePageorSlideNumber(result.metadata_storage_name);
+        if (result.document.embedded) {
+            var pathExtension = Base64.decode(result.parent.filename).toLowerCase().split('.').pop();
+
+            if (pathExtension === "ppt" || pathExtension === "pptx") {
+                filename = "Slide " + this.GetImagePageorSlideNumber(result.metadata_storage_name);
+            }
+            else {
+                filename = "Page " + this.GetImagePageorSlideNumber(result.metadata_storage_name);
+            }
         }
         else {
-            filename = "Page " + this.GetImagePageorSlideNumber(result.metadata_storage_name);
+            filename = result.metadata_storage_name;
         }
         return filename;
     },
 
-
+    HasParent: function(result) {
+        return result.parent && result.parent.id
+    },
+    
     GetImageParentDocumentExtension: function (result) {
         var pathLower = this.GetParentPathFromImage(result).toLowerCase();
         return pathLower.split('.').pop();

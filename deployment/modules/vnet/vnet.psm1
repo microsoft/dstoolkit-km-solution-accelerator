@@ -679,11 +679,11 @@ function Set-VNETSearch {
     Write-Host "========================================"
     Write-Host ("VNet Integration starting for search service") -ForegroundColor Yellow
   
-    $searchserviceType = $searchservicecfg.Apptype
-    $searchServiceGroupId = $searchservicecfg.GroupId
+    $searchserviceType = $searchcfg.Apptype
+    $searchServiceGroupId = $searchcfg.GroupId
     $searchsrvcpGroupId = $groupidcfg.$searchServiceGroupId
     
-    foreach ($srchservice in $searchservicecfg.Items) {
+    foreach ($srchservice in $searchcfg.Items) {
 
         if (!$SkipPrivateEndpoint) {
 
@@ -691,7 +691,7 @@ function Set-VNETSearch {
                 Enable-PrivaceAccess  $srchservice.Name  $searchserviceType
             }
        
-            Add-PrivateEndPoint  $searchserviceType $srchservice.Name $searchsrvcpGroupId $vnetcfg.privateEndPointSubnet $searchservicecfg.PrivateDNSZone
+            Add-PrivateEndPoint  $searchserviceType $srchservice.Name $searchsrvcpGroupId $vnetcfg.privateEndPointSubnet $searchcfg.PrivateDNSZone
         }
 
         if ( $srchservice.AddIPAddressRule) {

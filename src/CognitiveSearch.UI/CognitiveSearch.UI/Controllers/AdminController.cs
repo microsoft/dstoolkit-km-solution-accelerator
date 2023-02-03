@@ -5,9 +5,11 @@ using CognitiveSearch.UI.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CognitiveSearch.UI.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly IFileProvider _fileProvider;

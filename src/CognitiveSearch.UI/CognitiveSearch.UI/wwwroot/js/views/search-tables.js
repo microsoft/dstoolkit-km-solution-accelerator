@@ -20,7 +20,7 @@ Microsoft.Tables = {
 
         if (path !== null) {
 
-            resultsHtml += '<div class="row results-cluster-row">';
+            resultsHtml += '<div class="row results-cluster-row border-top border-3 border-warning">';
             resultsHtml += '<div class="col-md-2">';
 
             resultsHtml += '<div class="row">';
@@ -59,18 +59,19 @@ Microsoft.Tables = {
         }   
     },
     
-    render_document_tables: function (docresult) {
-        this.render_document_datatables(docresult);
+    render_document_tables: function (docresult, tabular, target_tag_id) {
+        this.render_document_datatables(docresult, target_tag_id);
     },
     
     render_document_datatables: function (docresult, target_tag_id='#tables-viewer') {
 
         if (docresult.tables && docresult.tables.length > 0) {
 
-            var tables = JSON.parse(docresult.tables);
+            var tables = docresult.tables;
 
             // for each table 
             for (var i = 0; i < tables.length; i++) {
+                var table = JSON.parse(tables[i]);
 
                 var extraMetadataContainerHTML = '';
 
@@ -80,7 +81,6 @@ Microsoft.Tables = {
                 extraMetadataContainerHTML += '<table id=' + table_id + ' class="table table-hover table-striped">';
                 extraMetadataContainerHTML += '<thead>';
 
-                var table = tables[i];
                 var table_matrix = Array.from(Array(table.row_count), () => new Array(table.column_count));
 
                 var headers_row_indexes = [];

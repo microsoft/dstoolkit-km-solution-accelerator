@@ -1,0 +1,1236 @@
+### DOCUMENT
+POST http://localhost:7071/graph/orchestrators/DocumentGrapher
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_index_key" : 1,
+                "document_metadata":{
+                    "source_processing_date": "2023-01-07T10:53:08Z",
+                    "document_segments": [],
+                    "content_group": "PDF",
+                    "restricted": false,
+                    "permissions": [],
+                    "page_count": "13",
+                    "page_number": 0,
+                    "document_converted": false,
+                    "document_embedded": false,
+                    "document_translated": false,
+                    "document_translatable": false,
+                    "content_source": "documents",
+                    "authors": [],
+                    "creation_date": "2019-11-01T22:36:33Z",
+                    "last_modified": "2019-11-01T22:36:33Z",
+                    "last_save_date": "2019-11-01T22:36:33Z",
+                    "title": "WhitePaperDocSegmentation"
+            },
+                "document_entities" : {
+                    "linked_entities": [
+                        {
+                            "name": "Microsoft",
+                            "id": "Microsoft",
+                            "language": "en",
+                            "url": "https://en.wikipedia.org/wiki/Microsoft",
+                            "bingId": "a093e9b9-90f5-a3d5-c4b8-5855e1b01f85",
+                            "dataSource": "Wikipedia",
+                            "matches": [
+                                {
+                                    "text": "Microsoft",
+                                    "offset": 0,
+                                    "length": 9,
+                                    "confidenceScore": 0.25
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Tesla, Inc.",
+                            "id": "Tesla, Inc.",
+                            "language": "en",
+                            "url": "https://en.wikipedia.org/wiki/Tesla,_Inc.",
+                            "bingId": "732e1de9-8d5c-15ed-7f0d-7e2169dc9859",
+                            "dataSource": "Wikipedia",
+                            "matches": [
+                                {
+                                    "text": "Tesla",
+                                    "offset": 28,
+                                    "length": 5,
+                                    "confidenceScore": 0.2
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Microsoft",
+                            "id": "Microsoft",
+                            "language": "en",
+                            "url": "https://en.wikipedia.org/wiki/Microsoft",
+                            "bingId": "a093e9b9-90f5-a3d5-c4b8-5855e1b01f85",
+                            "dataSource": "Wikipedia",
+                            "matches": [
+                                {
+                                    "text": "Microsoft",
+                                    "offset": 0,
+                                    "length": 9,
+                                    "confidenceScore": 0.25
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Tesla, Inc.",
+                            "id": "Tesla, Inc.",
+                            "language": "en",
+                            "url": "https://en.wikipedia.org/wiki/Tesla,_Inc.",
+                            "bingId": "732e1de9-8d5c-15ed-7f0d-7e2169dc9859",
+                            "dataSource": "Wikipedia",
+                            "matches": [
+                                {
+                                    "text": "Tesla",
+                                    "offset": 28,
+                                    "length": 5,
+                                    "confidenceScore": 0.2
+                                }
+                            ]
+                        }
+                    ],
+                    "named_entities": [
+                        {
+                            "category": "Organization",
+                            "subcategory": null,
+                            "length": 19,
+                            "offset": 0,
+                            "confidenceScore": 1.0,
+                            "text": "Contoso Corporation"
+                        },
+                        {
+                            "category": "Person",
+                            "subcategory": null,
+                            "length": 11,
+                            "offset": 35,
+                            "confidenceScore": 1.0,
+                            "text": "Jean Martin"
+                        },
+                        {
+                            "category": "Person",
+                            "subcategory": null,
+                            "length": 5,
+                            "offset": 48,
+                            "confidenceScore": 0.99,
+                            "text": "Paolo"
+                        },
+                        {
+                            "category": "Email",
+                            "subcategory": null,
+                            "length": 19,
+                            "offset": 77,
+                            "confidenceScore": 0.8,
+                            "text": "contact@contoso.com"
+                        },
+                        {
+                            "category": "IPAddress",
+                            "subcategory": null,
+                            "length": 12,
+                            "offset": 108,
+                            "confidenceScore": 0.8,
+                            "text": "192.168.72.0"
+                        },
+                        {
+                            "category": "Email",
+                            "subcategory": null,
+                            "length": 19,
+                            "offset": 77,
+                            "confidenceScore": 0.8,
+                            "text": "contact@contoso.com"
+                        },
+                        {
+                            "category": "IPAddress",
+                            "subcategory": null,
+                            "length": 12,
+                            "offset": 108,
+                            "confidenceScore": 0.8,
+                            "text": "192.168.72.0"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
+
+### IMAGE
+POST http://localhost:7071/graph/orchestrators/DocumentGrapher
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_index_key" : 2,
+                "document_metadata":{
+	"source_processing_date": "2023-01-11T10:34:02Z",
+	"document_segments": [
+		"energy"
+	],
+	"content_group": "Image",
+	"restricted": false,
+	"permissions": [],
+	"page_count": 0,
+	"page_number": 0,
+	"document_converted": false,
+	"document_embedded": false,
+	"document_translated": false,
+	"document_translatable": false,
+	"content_source": "documents",
+	"authors": [],
+	"title": "California-Energy"
+},
+                "document_entities" : {
+	"text": [
+		"100% CALIFORNIA\r\nTransition to 100% wind, water, and solar (WWS) for all purposes (electricity, transportation, heating/cooling, industry)\r\nResidential rooftop PV 7.5%\r\nSolar PV plants 27%\r\n2050\r\nPROJECTED ENERGY MIX\r\nCommercial/govt rooftop PV 5%\r\nWave devices 0.5%\r\nCSP plants 15%\r\nGeothermal 5%\r\nOnshore wind 25%\r\nHydroelectric 1.4%\r\nOffshore wind 10%\r\nTidal turbines 0.5%\r\n40-Year Jobs Created Number of jobs where a person is employed for 40 consecutive years\r\nOperation jobs:\r\nConstruction jobs: =10,000\r\n142,153\r\n315,982\r\nUsing WWS electricity for everything, instead of burning fuel, and improving energy efficiency means you need much less energy.\r\nCurrent demand\r\nWind, Water, Solar -44.3%\r\nTransition to 100% wind, water, and solar (WWS) for all purposes (electricity, transportation, heating/cooling, industry)\r\nAvoided Mortality and Illness Costs\r\nPercentage of California Land Needed for All New WWS Generators\r\nAvoided health costs per year.\r\n$128B.\r\nS\r\n0.64% Footprint area\r\n2.61% Spacing area\r\n2.9% of State GDP\r\nAir pollution deaths avoided every year: 12,528 =1000\r\nPlan pays for itself in as little as 2.6 years from air pollution and climate cost savings alone\r\nFuture Energy Costs 2050\r\nMoney in Your Pocket = $2,000\r\nBAU (Business as usual)\r\nWWS (Wind, water, solar)\r\nAnnual energy, health, and climate cost savings per person in 2050:$7,395\r\nU.S. average fossil fuel energy costs\" 10.73 c/kWh\r\nState average WWS electricity costs 9.7 c/kWh\r\nAnnual energy cost savings per personin 2050: $161\r\nVISIT THESOLUTIONSPROJECT.ORG TO LEARN MORE AND 100.ORG TO JOIN THE MOVEMENT\r\nData from Stanford University - For more information, visit http://go100.me/50StateTargets"
+	],
+	"named_entities": [
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 4,
+			"offset": 0,
+			"confidenceScore": 0.8,
+			"text": "100%"
+		},
+		{
+			"category": "Location",
+			"subcategory": "GPE",
+			"length": 10,
+			"offset": 5,
+			"confidenceScore": 0.85,
+			"text": "CALIFORNIA"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 4,
+			"offset": 31,
+			"confidenceScore": 0.8,
+			"text": "100%"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 11,
+			"offset": 83,
+			"confidenceScore": 0.97,
+			"text": "electricity"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 14,
+			"offset": 96,
+			"confidenceScore": 0.88,
+			"text": "transportation"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 7,
+			"offset": 120,
+			"confidenceScore": 0.94,
+			"text": "cooling"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 4,
+			"offset": 163,
+			"confidenceScore": 0.8,
+			"text": "7.5%"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 3,
+			"offset": 185,
+			"confidenceScore": 0.8,
+			"text": "27%"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "DateRange",
+			"length": 4,
+			"offset": 190,
+			"confidenceScore": 0.8,
+			"text": "2050"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 2,
+			"offset": 245,
+			"confidenceScore": 0.8,
+			"text": "5%"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 4,
+			"offset": 262,
+			"confidenceScore": 0.8,
+			"text": "0.5%"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 3,
+			"offset": 279,
+			"confidenceScore": 0.8,
+			"text": "15%"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 2,
+			"offset": 295,
+			"confidenceScore": 0.8,
+			"text": "5%"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 3,
+			"offset": 312,
+			"confidenceScore": 0.8,
+			"text": "25%"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 4,
+			"offset": 331,
+			"confidenceScore": 0.8,
+			"text": "1.4%"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 3,
+			"offset": 351,
+			"confidenceScore": 0.8,
+			"text": "10%"
+		},
+		{
+			"category": "Product",
+			"subcategory": null,
+			"length": 14,
+			"offset": 356,
+			"confidenceScore": 0.77,
+			"text": "Tidal turbines"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 4,
+			"offset": 371,
+			"confidenceScore": 0.8,
+			"text": "0.5%"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "Duration",
+			"length": 7,
+			"offset": 377,
+			"confidenceScore": 0.8,
+			"text": "40-Year"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Number",
+			"length": 2,
+			"offset": 444,
+			"confidenceScore": 0.8,
+			"text": "40"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 12,
+			"offset": 483,
+			"confidenceScore": 0.92,
+			"text": "Construction"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Number",
+			"length": 6,
+			"offset": 503,
+			"confidenceScore": 0.8,
+			"text": "10,000"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Number",
+			"length": 7,
+			"offset": 511,
+			"confidenceScore": 0.8,
+			"text": "142,153"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Number",
+			"length": 7,
+			"offset": 520,
+			"confidenceScore": 0.8,
+			"text": "315,982"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 6,
+			"offset": 693,
+			"confidenceScore": 0.8,
+			"text": "-44.3%"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 4,
+			"offset": 715,
+			"confidenceScore": 0.8,
+			"text": "100%"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 11,
+			"offset": 767,
+			"confidenceScore": 0.97,
+			"text": "electricity"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 14,
+			"offset": 780,
+			"confidenceScore": 0.88,
+			"text": "transportation"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 7,
+			"offset": 804,
+			"confidenceScore": 0.94,
+			"text": "cooling"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 10,
+			"offset": 861,
+			"confidenceScore": 0.8,
+			"text": "Percentage"
+		},
+		{
+			"category": "Location",
+			"subcategory": "GPE",
+			"length": 10,
+			"offset": 875,
+			"confidenceScore": 0.99,
+			"text": "California"
+		},
+		{
+			"category": "Product",
+			"subcategory": null,
+			"length": 14,
+			"offset": 910,
+			"confidenceScore": 0.79,
+			"text": "WWS Generators"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Currency",
+			"length": 5,
+			"offset": 958,
+			"confidenceScore": 0.8,
+			"text": "$128B"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 5,
+			"offset": 969,
+			"confidenceScore": 0.8,
+			"text": "0.64%"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 5,
+			"offset": 991,
+			"confidenceScore": 0.8,
+			"text": "2.61%"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Percentage",
+			"length": 4,
+			"offset": 1011,
+			"confidenceScore": 0.8,
+			"text": "2.9%"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "Set",
+			"length": 10,
+			"offset": 1059,
+			"confidenceScore": 0.8,
+			"text": "every year"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Number",
+			"length": 6,
+			"offset": 1071,
+			"confidenceScore": 0.8,
+			"text": "12,528"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Number",
+			"length": 4,
+			"offset": 1079,
+			"confidenceScore": 0.8,
+			"text": "1000"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "Duration",
+			"length": 9,
+			"offset": 1122,
+			"confidenceScore": 0.8,
+			"text": "2.6 years"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "DateRange",
+			"length": 4,
+			"offset": 1203,
+			"confidenceScore": 0.8,
+			"text": "2050"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Currency",
+			"length": 6,
+			"offset": 1232,
+			"confidenceScore": 0.8,
+			"text": "$2,000"
+		},
+		{
+			"category": "Organization",
+			"subcategory": null,
+			"length": 3,
+			"offset": 1265,
+			"confidenceScore": 0.84,
+			"text": "WWS"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "Set",
+			"length": 6,
+			"offset": 1291,
+			"confidenceScore": 0.8,
+			"text": "Annual"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "DateRange",
+			"length": 4,
+			"offset": 1353,
+			"confidenceScore": 0.8,
+			"text": "2050"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Currency",
+			"length": 6,
+			"offset": 1358,
+			"confidenceScore": 0.8,
+			"text": "$7,395"
+		},
+		{
+			"category": "Location",
+			"subcategory": "GPE",
+			"length": 4,
+			"offset": 1366,
+			"confidenceScore": 0.98,
+			"text": "U.S."
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Temperature",
+			"length": 7,
+			"offset": 1405,
+			"confidenceScore": 0.8,
+			"text": "10.73 c"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Temperature",
+			"length": 5,
+			"offset": 1454,
+			"confidenceScore": 0.8,
+			"text": "9.7 c"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "Set",
+			"length": 6,
+			"offset": 1465,
+			"confidenceScore": 0.8,
+			"text": "Annual"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "DateRange",
+			"length": 4,
+			"offset": 1505,
+			"confidenceScore": 0.8,
+			"text": "2050"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Currency",
+			"length": 4,
+			"offset": 1511,
+			"confidenceScore": 0.8,
+			"text": "$161"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Number",
+			"length": 3,
+			"offset": 1565,
+			"confidenceScore": 0.8,
+			"text": "100"
+		},
+		{
+			"category": "Organization",
+			"subcategory": null,
+			"length": 7,
+			"offset": 1565,
+			"confidenceScore": 0.9,
+			"text": "100.ORG"
+		},
+		{
+			"category": "Organization",
+			"subcategory": "Sports",
+			"length": 19,
+			"offset": 1605,
+			"confidenceScore": 0.97,
+			"text": "Stanford University"
+		},
+		{
+			"category": "URL",
+			"subcategory": null,
+			"length": 30,
+			"offset": 1655,
+			"confidenceScore": 0.8,
+			"text": "http://go100.me/50StateTargets"
+		}
+	],
+	"linked_entities": [
+		{
+			"name": "Energy mix",
+			"id": "Energy mix",
+			"language": "en",
+			"url": "https://en.wikipedia.org/wiki/Energy_mix",
+			"bingId": "28d57086-9c22-7e16-1df9-cb1bf7185d28",
+			"dataSource": "Wikipedia",
+			"matches": [
+				{
+					"text": "ENERGY MIX",
+					"offset": 206,
+					"length": 10,
+					"confidenceScore": 0.76
+				}
+			]
+		}
+	],
+	"custom_entities": []
+}
+            }
+        }
+    ]
+}
+
+
+
+### EMBEDDED IMAGE
+POST http://localhost:7071/graph/orchestrators/DocumentGrapher
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "document_index_key" : 3,
+                "document_metadata":{
+                    "source_processing_date": "2023-01-11T11:26:31Z",
+                    "document_segments": [
+                        "documents",
+                        "whitepaperdocsegmentation.pdf"
+                    ],
+                    "content_group": "Image",
+                    "restricted": false,
+                    "permissions": [],
+                    "page_count": "13",
+                    "page_number": 1,
+                    "document_converted": "True",
+                    "document_embedded": "True",
+                    "document_translated": "False",
+                    "document_translatable": "False",
+                    "content_source": "documents",
+                    "authors": [],
+                    "creation_date": "2019-11-01T22:36:33Z",
+                    "last_modified": "2019-11-01T22:36:33Z",
+                    "last_save_date": "2019-11-01T22:36:33Z",
+                    "title": "image-00001-99999"
+                },
+                "document_entities" : {
+	"text": [
+		"Insights & Discovery Accelerator (IDA)\r\nThe Atlantic Article Segmentation\r\nIntroduction\r\nInsights & Discovery Accelerator (IDA) grew out of a need for newsrooms to analyze massive reams of data, from investigative reports examined under deadline pressure to story archives for research and republishing. An intelligent search solution, IDA employs Microsoft Azure cloud-based cognitive search, object vision and video indexing. The technology goes leagues beyond manual tagging and allows users to \"peek\" inside multiple content types-print, video or audio clips-to enable users to find exactly what they are searching for.\r\nIDA deploys artificial intelligence (Al) to track and understand the big-data overload of our own making: By 2020, human beings will create 44 zettabytes of data every day.1 In other words, thanks to traditional and digital publishing, social media conversations and Internet of Things (loT) analyses, we've far outstripped our ability to process the information we create.\r\nSolving problems in the modern age requires building custom algorithms to target specific problems. The walking, talking, calculating robots of science fiction are still very long ways away. Consider Google's AlphaGo2: The bot can beat masters at the Chinese strategy board game but not checkers nor chess champions. This same principle exists with self-driving cars, which require unique algorithms to recognize street signs, determine proximity to other vehicles and the million other variables that make up driving. The autonomous system combines these inputs but can't necessarily extrapolate a solution to a new problem.\r\nCreated through a partnership with Unify and Microsoft News Labs, IDA faced a similar challenge with analyzing the library of The Atlantic magazine, founded in 1857. Its library of literary and cultural commentaries existed largely as print. The media organization wanted to reignite works of the past for research and republication. For both archiving and republishing purposes, however, IDA had to take into account different typefaces and identify page segments as metadata. As The Atlantic underwent generational changes in print media, IDA needed to integrate separate algorithms for various layouts.\r\nFor instance, page segmentation requires understanding and identifying distinct segments on a document page, extract those segments (e.g. text, illustrations, photographs) and categorize them appropriately. In the case of The Atlantic, those segments included title/headline, author, columns, quotes and so forth.\r\n1 \"A Day in Data,\" Technology: Future of Data 2019, Raconteur 2 'AlphaGo: Mastering the ancient game of Go with Machine Learning, ' Google Al Blog, Jan. 27, 2016\r\n1\r\nIDA OCR Scoring unifyconsulting.com"
+	],
+	"named_entities": [
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 8,
+			"offset": 0,
+			"confidenceScore": 0.99,
+			"text": "Insights"
+		},
+		{
+			"category": "Organization",
+			"subcategory": null,
+			"length": 32,
+			"offset": 89,
+			"confidenceScore": 0.91,
+			"text": "Insights & Discovery Accelerator"
+		},
+		{
+			"category": "Location",
+			"subcategory": null,
+			"length": 9,
+			"offset": 151,
+			"confidenceScore": 0.85,
+			"text": "newsrooms"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 7,
+			"offset": 164,
+			"confidenceScore": 0.99,
+			"text": "analyze"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 8,
+			"offset": 277,
+			"confidenceScore": 0.96,
+			"text": "research"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 18,
+			"offset": 307,
+			"confidenceScore": 0.9,
+			"text": "intelligent search"
+		},
+		{
+			"category": "Product",
+			"subcategory": "Computing",
+			"length": 15,
+			"offset": 348,
+			"confidenceScore": 1,
+			"text": "Microsoft Azure"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 16,
+			"offset": 376,
+			"confidenceScore": 0.92,
+			"text": "cognitive search"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 13,
+			"offset": 394,
+			"confidenceScore": 1,
+			"text": "object vision"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 14,
+			"offset": 412,
+			"confidenceScore": 0.99,
+			"text": "video indexing"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 10,
+			"offset": 432,
+			"confidenceScore": 0.96,
+			"text": "technology"
+		},
+		{
+			"category": "PersonType",
+			"subcategory": null,
+			"length": 5,
+			"offset": 489,
+			"confidenceScore": 0.96,
+			"text": "users"
+		},
+		{
+			"category": "PersonType",
+			"subcategory": null,
+			"length": 5,
+			"offset": 573,
+			"confidenceScore": 0.94,
+			"text": "users"
+		},
+		{
+			"category": "Organization",
+			"subcategory": null,
+			"length": 3,
+			"offset": 625,
+			"confidenceScore": 0.97,
+			"text": "IDA"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 10,
+			"offset": 637,
+			"confidenceScore": 0.77,
+			"text": "artificial"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 8,
+			"offset": 694,
+			"confidenceScore": 0.82,
+			"text": "big-data"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "DateRange",
+			"length": 7,
+			"offset": 731,
+			"confidenceScore": 0.8,
+			"text": "By 2020"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Number",
+			"length": 2,
+			"offset": 765,
+			"confidenceScore": 0.8,
+			"text": "44"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "Set",
+			"length": 9,
+			"offset": 787,
+			"confidenceScore": 0.8,
+			"text": "every day"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Dimension",
+			"length": 4,
+			"offset": 797,
+			"confidenceScore": 0.8,
+			"text": "1 In"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 18,
+			"offset": 841,
+			"confidenceScore": 0.89,
+			"text": "digital publishing"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Age",
+			"length": 3,
+			"offset": 1031,
+			"confidenceScore": 0.8,
+			"text": "age"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 10,
+			"offset": 1060,
+			"confidenceScore": 0.99,
+			"text": "algorithms"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 7,
+			"offset": 1113,
+			"confidenceScore": 0.84,
+			"text": "talking"
+		},
+		{
+			"category": "Organization",
+			"subcategory": null,
+			"length": 6,
+			"offset": 1200,
+			"confidenceScore": 0.99,
+			"text": "Google"
+		},
+		{
+			"category": "Product",
+			"subcategory": "Computing",
+			"length": 9,
+			"offset": 1209,
+			"confidenceScore": 0.87,
+			"text": "AlphaGo2:"
+		},
+		{
+			"category": "Product",
+			"subcategory": null,
+			"length": 17,
+			"offset": 1349,
+			"confidenceScore": 0.78,
+			"text": "self-driving cars"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 10,
+			"offset": 1389,
+			"confidenceScore": 0.98,
+			"text": "algorithms"
+		},
+		{
+			"category": "Product",
+			"subcategory": null,
+			"length": 8,
+			"offset": 1456,
+			"confidenceScore": 0.89,
+			"text": "vehicles"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 17,
+			"offset": 1523,
+			"confidenceScore": 0.87,
+			"text": "autonomous system"
+		},
+		{
+			"category": "Organization",
+			"subcategory": null,
+			"length": 5,
+			"offset": 1662,
+			"confidenceScore": 0.99,
+			"text": "Unify"
+		},
+		{
+			"category": "Organization",
+			"subcategory": null,
+			"length": 19,
+			"offset": 1672,
+			"confidenceScore": 0.98,
+			"text": "Microsoft News Labs"
+		},
+		{
+			"category": "Organization",
+			"subcategory": null,
+			"length": 3,
+			"offset": 1693,
+			"confidenceScore": 0.98,
+			"text": "IDA"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "DateRange",
+			"length": 4,
+			"offset": 1787,
+			"confidenceScore": 0.8,
+			"text": "1857"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 8,
+			"offset": 1933,
+			"confidenceScore": 0.98,
+			"text": "research"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 9,
+			"offset": 1970,
+			"confidenceScore": 0.96,
+			"text": "archiving"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 12,
+			"offset": 1984,
+			"confidenceScore": 0.86,
+			"text": "republishing"
+		},
+		{
+			"category": "Organization",
+			"subcategory": null,
+			"length": 3,
+			"offset": 2016,
+			"confidenceScore": 0.99,
+			"text": "IDA"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 8,
+			"offset": 2095,
+			"confidenceScore": 0.82,
+			"text": "metadata"
+		},
+		{
+			"category": "Organization",
+			"subcategory": null,
+			"length": 3,
+			"offset": 2168,
+			"confidenceScore": 0.9,
+			"text": "IDA"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 10,
+			"offset": 2201,
+			"confidenceScore": 0.81,
+			"text": "algorithms"
+		},
+		{
+			"category": "Skill",
+			"subcategory": null,
+			"length": 17,
+			"offset": 2248,
+			"confidenceScore": 0.96,
+			"text": "page segmentation"
+		},
+		{
+			"category": "PersonType",
+			"subcategory": null,
+			"length": 6,
+			"offset": 2510,
+			"confidenceScore": 0.91,
+			"text": "author"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Dimension",
+			"length": 3,
+			"offset": 2549,
+			"confidenceScore": 0.8,
+			"text": "1 \""
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "Duration",
+			"length": 5,
+			"offset": 2552,
+			"confidenceScore": 0.8,
+			"text": "A Day"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "DateRange",
+			"length": 4,
+			"offset": 2595,
+			"confidenceScore": 0.8,
+			"text": "2019"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Number",
+			"length": 1,
+			"offset": 2611,
+			"confidenceScore": 0.8,
+			"text": "2"
+		},
+		{
+			"category": "DateTime",
+			"subcategory": "Date",
+			"length": 13,
+			"offset": 2697,
+			"confidenceScore": 0.8,
+			"text": "Jan. 27, 2016"
+		},
+		{
+			"category": "Quantity",
+			"subcategory": "Number",
+			"length": 1,
+			"offset": 2712,
+			"confidenceScore": 0.8,
+			"text": "1"
+		},
+		{
+			"category": "Organization",
+			"subcategory": null,
+			"length": 19,
+			"offset": 2731,
+			"confidenceScore": 0.9,
+			"text": "unifyconsulting.com"
+		}
+	],
+	"linked_entities": [
+		{
+			"name": "Microsoft Azure",
+			"id": "Microsoft Azure",
+			"language": "en",
+			"url": "https://en.wikipedia.org/wiki/Microsoft_Azure",
+			"bingId": "cf3abf7d-e379-2693-f765-6da6b9fa9149",
+			"dataSource": "Wikipedia",
+			"matches": [
+				{
+					"text": "Microsoft Azure",
+					"offset": 348,
+					"length": 15,
+					"confidenceScore": 0.84
+				}
+			]
+		},
+		{
+			"name": "Internet of things",
+			"id": "Internet of things",
+			"language": "en",
+			"url": "https://en.wikipedia.org/wiki/Internet_of_things",
+			"bingId": "dbff0ef4-bb1b-d849-1ea6-230e1dec06d6",
+			"dataSource": "Wikipedia",
+			"matches": [
+				{
+					"text": "Internet of Things",
+					"offset": 892,
+					"length": 18,
+					"confidenceScore": 0.87
+				}
+			]
+		},
+		{
+			"name": "Microsoft News",
+			"id": "Microsoft News",
+			"language": "en",
+			"url": "https://en.wikipedia.org/wiki/Microsoft_News",
+			"bingId": "960e70dd-df55-46a4-93b1-40c4f84cc0a8",
+			"dataSource": "Wikipedia",
+			"matches": [
+				{
+					"text": "Microsoft News",
+					"offset": 1672,
+					"length": 14,
+					"confidenceScore": 0.76
+				}
+			]
+		},
+		{
+			"name": "Futures studies",
+			"id": "Futures studies",
+			"language": "en",
+			"url": "https://en.wikipedia.org/wiki/Futures_studies",
+			"bingId": "6ba8c69a-3c35-7484-2b87-6f56ede7d653",
+			"dataSource": "Wikipedia",
+			"matches": [
+				{
+					"text": "Technology: Future",
+					"offset": 2568,
+					"length": 18,
+					"confidenceScore": 0.78
+				}
+			]
+		},
+		{
+			"name": "Storytelling",
+			"id": "Storytelling",
+			"language": "en",
+			"url": "https://en.wikipedia.org/wiki/Storytelling",
+			"bingId": "bf02bf84-4499-57d3-8d54-a5d021bca39a",
+			"dataSource": "Wikipedia",
+			"matches": [
+				{
+					"text": "Raconteur",
+					"offset": 2601,
+					"length": 9,
+					"confidenceScore": 0.77
+				}
+			]
+		},
+		{
+			"name": "AlphaGo",
+			"id": "AlphaGo",
+			"language": "en",
+			"url": "https://en.wikipedia.org/wiki/AlphaGo",
+			"bingId": "3e2d545e-c994-3016-3a9f-1c81205f1653",
+			"dataSource": "Wikipedia",
+			"matches": [
+				{
+					"text": "AlphaGo",
+					"offset": 2614,
+					"length": 7,
+					"confidenceScore": 0.84
+				}
+			]
+		},
+		{
+			"name": "Go (game)",
+			"id": "Go (game)",
+			"language": "en",
+			"url": "https://en.wikipedia.org/wiki/Go_(game)",
+			"bingId": "661a1b47-8bee-3995-9854-0f37ec3e4156",
+			"dataSource": "Wikipedia",
+			"matches": [
+				{
+					"text": "game of Go",
+					"offset": 2645,
+					"length": 10,
+					"confidenceScore": 0.84
+				}
+			]
+		}
+	],
+	"custom_entities": []
+},
+                "document_parent": {
+                    "key": "aHR0cHM6Ly9kc3Rra21kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvV2hpdGVQYXBlckRvY1NlZ21lbnRhdGlvbi5wZGY1",
+                    "id": "aHR0cHM6Ly9kc3Rra21kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvV2hpdGVQYXBlckRvY1NlZ21lbnRhdGlvbi5wZGY",
+                    "url": "aHR0cHM6Ly9kc3Rra21kYXRhLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvV2hpdGVQYXBlckRvY1NlZ21lbnRhdGlvbi5wZGY=",
+                    "filename": "V2hpdGVQYXBlckRvY1NlZ21lbnRhdGlvbi5wZGY=",
+                    "content_group": "PDF",
+                    "document_embedded": "False"
+                }
+            }
+        }
+    ]
+}
+

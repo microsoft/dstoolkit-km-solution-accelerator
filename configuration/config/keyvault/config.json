@@ -1,4 +1,5 @@
 {
+    "enable": true,
     "ServiceEndPoint":"Microsoft.KeyVault",
     "GroupId":"KeyVault",
     "Apptype":"KeyVault",

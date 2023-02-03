@@ -425,8 +425,13 @@
     "slotSetting": false
   },
   {
-    "name": "AzureEasyAuthIntegration",
+    "name": "Authentication:AzureEasyAuthIntegration",
     "value": "true",
+    "slotSetting": false
+  },
+  {
+    "name": "Authentication:AllowAnonymous",
+    "value": "false",
     "slotSetting": false
   },
   {
@@ -447,6 +452,11 @@
   {
     "name": "AzureAd:ClientId",
     "value": "{{config.clientId}}",
+    "slotSetting": false
+  },
+  {
+    "name": "Neo4jConfig:IsEnabled",
+    "value": "{{param.Neo4jEnabled}}",
     "slotSetting": false
   },
   {

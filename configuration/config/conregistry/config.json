@@ -1,4 +1,5 @@
 {
+    "enable": true,
     "GroupId":"ContainerRegistry",
     "ServiceEndPoint":"Microsoft.ContainerRegistry",
     "Apptype":"ContainerRegistry",

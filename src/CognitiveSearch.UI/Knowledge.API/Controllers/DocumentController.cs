@@ -6,6 +6,7 @@ using Knowledge.Configuration;
 using Knowledge.Models;
 using Knowledge.Services;
 using Knowledge.Services.Metadata;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Net;
@@ -14,6 +15,7 @@ namespace Knowledge.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DocumentController : AbstractApiController
     {
         private IMetadataService metadataService { get; set; }
