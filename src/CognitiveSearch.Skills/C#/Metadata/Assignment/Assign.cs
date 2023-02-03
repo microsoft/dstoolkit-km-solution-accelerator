@@ -91,6 +91,7 @@ namespace Assignment
                 {
                     string decoded_url = UrlUtility.UrlDecode(furl);
 
+                    // TBD - Is lower necessary ? 
                     pathTokens = decoded_url.ToLowerInvariant().Split('/', StringSplitOptions.RemoveEmptyEntries);
 
                    if (pathTokens.Length > 4) {
