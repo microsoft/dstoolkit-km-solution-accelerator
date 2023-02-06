@@ -2083,6 +2083,44 @@ function Start-WebApps {
     Pop-Location
 }
 
+function Remove-WebApps {
+    param (
+        [switch] $LinuxOnly,
+        [switch] $WindowsOnly
+    )
+  
+    Push-Location $global:envpath
+    foreach ($plan in $webappscfg.AppPlans) {
+        foreach ($webApp in $plan.Services) {
+            if ($plan.IsLinux) {
+                if (-not $WindowsOnly) {
+                    az webapp delete --resource-group $plan.ResourceGroup --name $webApp.Name
+                }
+            }
+            else {
+                if (-not $LinuxOnly) {
+                    az webapp delete --resource-group $plan.ResourceGroup `
+                        --name $webApp.Name
+                }
+            }            
+        }
+    }
+    Pop-Location
+}
+
+function Restore-WebApps {
+    param (
+        [switch] $LinuxOnly,
+        [switch] $WindowsOnly
+    )
+
+    New-WebApps -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly
+
+    Build-WebApps -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly -Publish -KeyVaultPolicies -Settings
+
+    Set-WebAppServicesAccessRestriction
+}
+
 function Publish-WebApps {
     param (
         [switch] $Production,
@@ -2455,8 +2493,8 @@ function Suspend-Solution {
     # De-Allocate Functions which are costly to leave running.
     Remove-Functions
 
-    # Start Linux WebApp (e.g. Tika)
-    Stop-WebApps -LinuxOnly
+    # Remove Linux WebApp (e.g. Tika)
+    Remove-WebApps -LinuxOnly
 
 }
 
@@ -2466,7 +2504,7 @@ function Resume-Solution {
     Restore-Functions
 
     # Start Linux WebApp
-    Start-WebApps -LinuxOnly
+    Restore-WebApps -LinuxOnly
 
 }
 #endregion
