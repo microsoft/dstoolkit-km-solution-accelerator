@@ -1,0 +1,15 @@
+POST http://localhost:7071/graph/documentgrapher
+content-type: application/json;charset=utf-8
+
+{}
+
+###
+POST http://localhost:7071/graph/documentgrapher
+content-type: application/json;charset=utf-8
+
+{"values":[{"recordId":"0","data":{}}]}
+
+###
+GET http://localhost:7071/graph/Status
+content-type: application/json;charset=utf-8
+

@@ -4,16 +4,18 @@ import json
 
 from neo4j import GraphDatabase
 
+neo4jdriver = None
+
 if 'NEO4J_ENABLED' in os.environ:
-    if os.environ['NEO4J_ENABLED']:
+    enabled = os.getenv("NEO4J_ENABLED", 'False').lower() in ('true', '1', 't')
+    if enabled:
         endpoint = os.environ["NEO4J_ENDPOINT"]
         user = os.environ["NEO4J_USERNAME"]
         password = os.environ["NEO4J_PASSWORD"]
-        neo4jdriver = GraphDatabase.driver(endpoint, auth=(user, password))
-    else:
-        neo4jdriver = None
-else: 
-    neo4jdriver = None
+        try:
+            neo4jdriver = GraphDatabase.driver(endpoint, auth=(user, password))
+        except:
+            neo4jdriver = None
 
 def transform_value(record):
     try:
