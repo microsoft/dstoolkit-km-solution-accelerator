@@ -430,17 +430,12 @@ Microsoft.Utils = {
             if (docresult.authors.length > 0) {
 
                 resultHtml += '<div class="d-flex align-items-center">';
-                // resultHtml += '<span class="modification-line-label me-2 text-decoration-underline" for="authors'+docresult.index_key+'">Author(s)</span>';
-                resultHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['authors']);
-                // resultHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['authors'],"Author(s)");
 
-                // var author = docresult.authors[0];
-                // if (author.length > 60) {
-                //     resultHtml += '<span class="modification-line-value me-2" title="' + author + '" >'+ author.substring(0, 50) + '</span>';
-                // }
-                // else {
-                //     resultHtml += '<span class="modification-line-value me-2" title="' + author + '" >'+ author + '</span>';
-                // }
+                if (this.IsEmailDocument(docresult))
+                {
+                    resultHtml += '<h6 class="me-1">From</h6>' ;
+                }
+                resultHtml += Microsoft.Tags.renderTagsAsList(docresult, true, false, ['authors']);
                 resultHtml += '</div>';
             }
         }
@@ -489,6 +484,14 @@ Microsoft.Utils = {
         return window.btoa(locs.join('|'));
     },
 
+    IsEmailDocument: function (docresult) {
+        if (docresult.content_group === "Email") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    },
     IsOfficeDocument: function (pathExtension) {
         if (pathExtension === "doc" || pathExtension === "ppt" || pathExtension === "xls" || pathExtension === "docx" || pathExtension === "pptx" || pathExtension === "pptm" || pathExtension === "xlsx" || pathExtension === "xlsm") {
             return true;
