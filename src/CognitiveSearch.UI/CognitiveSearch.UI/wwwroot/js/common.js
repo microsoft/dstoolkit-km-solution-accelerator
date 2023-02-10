@@ -166,6 +166,9 @@ Microsoft.Search = {
             if (event.code === 'KeyX') {
                 Microsoft.Facets.ClearAllFilters();
             }
+            if (event.code === 'KeyZ') {
+                Microsoft.Facets.ClearLastFilter();
+            }
         });
 
         // Tags

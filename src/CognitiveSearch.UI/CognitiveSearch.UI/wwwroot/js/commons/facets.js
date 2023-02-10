@@ -265,6 +265,21 @@ Microsoft.Facets = {
         }
     },
 
+    ClearLastFilter: function () {
+        if (this.selectedFacets.length > 1) {
+            var elements = $("a.filter-anchor");
+            if (elements.length > 0)
+            {
+                var facet = elements[elements.length-1];
+                // do the click on the a tag. 
+                facet.click();
+            }
+        }
+        else if (this.selectedFacets.length > 0) {
+            this.ClearAllFilters();
+        }
+    },
+
     UpdateFilterReset: function () {
         // This allows users to remove filters
         var htmlString = '';
