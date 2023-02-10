@@ -107,10 +107,10 @@ Microsoft.Search.Results.Metadata = {
         var fileContainerHTML = '';
         // Highlighted metadata
         fileContainerHTML+='<ul class="list-group">';
-        if (result.title) {
-            fileContainerHTML+='  <li class="list-group-item fw-bold">Title</li>';
-            fileContainerHTML+='  <li class="list-group-item text-break">'+result.title+'</li>';    
-        }
+        // if (result.title) {
+        //     fileContainerHTML+='  <li class="list-group-item fw-bold">Title</li>';
+        //     fileContainerHTML+='  <li class="list-group-item text-break">'+result.title+'</li>';    
+        // }
         if (result.email && result.email.message_from) {
             fileContainerHTML+='  <li class="list-group-item fw-bold">From</li>';
             fileContainerHTML+='  <li class="list-group-item text-break">'+result.email.message_from+'</li>';    
