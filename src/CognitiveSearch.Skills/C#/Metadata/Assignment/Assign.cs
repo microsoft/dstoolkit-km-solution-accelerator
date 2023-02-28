@@ -165,7 +165,11 @@ namespace Assignment
 
                 if (inRecord.Data.ContainsKey(Constants.email_to))
                 {
-                    emailMetadata[Constants.email_to_output] = inRecord.Data[Constants.email_to];
+                    string keyValue = (string)inRecord.Data[Constants.email_to];
+                    
+                    if (!String.IsNullOrEmpty(keyValue)) {
+                        emailMetadata[Constants.email_to_output] = SplitSemiColumn(keyValue);
+                    }
                 }
                 if (inRecord.Data.ContainsKey(Constants.email_from))
                 {
@@ -173,11 +177,19 @@ namespace Assignment
                 }
                 if (inRecord.Data.ContainsKey(Constants.email_cc))
                 {
-                    emailMetadata[Constants.email_cc_output] = inRecord.Data[Constants.email_cc];
+                    string keyValue = (string)inRecord.Data[Constants.email_cc];
+                    
+                    if (!String.IsNullOrEmpty(keyValue)) {
+                        emailMetadata[Constants.email_cc_output] = SplitSemiColumn(keyValue);
+                    }
                 }
                 if (inRecord.Data.ContainsKey(Constants.email_bcc))
                 {
-                    emailMetadata[Constants.email_bcc_output] = inRecord.Data[Constants.email_bcc];
+                    string keyValue = (string)inRecord.Data[Constants.email_bcc];
+
+                    if (!String.IsNullOrEmpty(keyValue)) {
+                        emailMetadata[Constants.email_bcc_output] = SplitSemiColumn(keyValue);
+                    }
                 }
                 if (inRecord.Data.ContainsKey(Constants.email_subject))
                 {
