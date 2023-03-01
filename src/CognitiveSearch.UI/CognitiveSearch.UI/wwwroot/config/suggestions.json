@@ -33,5 +33,19 @@
     "template": {
       "header": "<h5 class=\"suggestions-group-name\">Folders</h5>"
     }
+  },
+  {
+    "name": "Sender",
+    "url": "/api/search/suggest?highlights=false&fuzzy=false&targetField=email/message_from",
+    "template": {
+      "header": "<h5 class=\"suggestions-group-name\">Email Sender</h5>"
+    }
+  },
+  {
+    "name": "Recipients",
+    "url": "/api/search/suggest?highlights=false&fuzzy=false&targetField=email/message_to",
+    "template": {
+      "header": "<h5 class=\"suggestions-group-name\">Email Recipient(s)</h5>"
+    }
   }
 ]
