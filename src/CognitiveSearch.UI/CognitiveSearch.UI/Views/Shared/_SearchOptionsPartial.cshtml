@@ -39,6 +39,11 @@
         }
 
         <hr>
+        <div class="form-check form-switch search-mv-refiner-operator-switch">
+            <label class="form-check-label search-mv-refiner-operator-label" for="mv-refiner-operator-switch">MultiValued Refiner Operator (off is OR, on is AND)</label>
+            <input class="form-check-input search-mv-refiner-operator-input" type="checkbox" id="mv-refiner-operator-switch" onclick="Microsoft.Search.Options.switchMVRefinerOperator(this);">
+        </div>
+        <hr>
         <div class="form-check form-switch search-suggestions-switch">
             <label class="form-check-label search-suggestions-label" for="suggestions-switch">Suggestions As Filter</label>
             <input class="form-check-input search-suggestions-input" type="checkbox" id="suggestions-switch" onclick="Microsoft.Search.Options.switchSuggestionsAsFilter(this);">

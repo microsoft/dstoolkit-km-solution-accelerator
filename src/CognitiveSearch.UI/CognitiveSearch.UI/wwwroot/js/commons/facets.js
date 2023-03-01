@@ -96,6 +96,7 @@ Microsoft.Facets = {
                 Microsoft.Facets.selectedFacets.push({
                     key: facet_key,
                     values: [{ value: start_date }, { value: end_date }],
+                    operator: Microsoft.Search.Options.orMVRefinerOperator ? "any" : "all",
                     type: "daterange",
                     target: "last_modified",
                     label: picker.chosenLabel === "Custom Range" ? (start_date + '..' + end_date) : picker.chosenLabel
@@ -579,11 +580,13 @@ Microsoft.Facets = {
             }
             else {
 
+                var default_operator = facet_cfg?.operator ? facet_cfg.operator : null; 
+
                 Microsoft.Facets.selectedFacets.push({
                     key: facet_key,
                     values: valueIdx ? [facet_source[valueIdx]] : [{ value: value }],
                     type: facet_type,
-                    operator: facet_cfg?.operator ? facet_cfg.operator : null,
+                    operator: default_operator ? default_operator : Microsoft.Search.Options.GetMVRefinerOperator(),
                     target: target ? target : null
                 });
             }

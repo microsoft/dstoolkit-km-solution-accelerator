@@ -103,6 +103,8 @@ Microsoft.Suggestions = {
             if (Microsoft.Search.Options.suggestionsAsFilter) {
                 // Create a filter to target explicit documents and remove the full text noise
                 Microsoft.Facets.ChooseFacetWithQueryAll(suggestion_target, Base64.encode(suggestion));
+                // Clear Text box
+                
             }
             else {
                 // Do a full text search with the selection suggestion
