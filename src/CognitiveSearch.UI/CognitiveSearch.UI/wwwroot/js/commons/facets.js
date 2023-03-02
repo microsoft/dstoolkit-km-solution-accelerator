@@ -380,7 +380,7 @@ Microsoft.Facets = {
 
     RemoveFilter: function (facet, value, search = true) {
 
-        var facetid = Microsoft.Utils.jqid(facet + "_" + value.replaceAll("=", ""));
+        var facetid = Microsoft.Utils.jqid(facet) + "_" + value.replaceAll("=", "");  
 
         if ($('#' + facetid)) {
             $('#' + facetid).prop('checked', false);
