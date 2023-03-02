@@ -267,7 +267,7 @@ Microsoft.Facets = {
     },
 
     ClearLastFilter: function () {
-        if (this.selectedFacets.length > 1) {
+        if (this.selectedFacets.length > 0) {
             var elements = $("a.filter-anchor");
             if (elements.length > 0)
             {
@@ -290,15 +290,25 @@ Microsoft.Facets = {
             $('#navigation-btn').addClass('btn-danger');
             $('#navigation-clear-all').addClass('btn-danger');
 
-            htmlString += '<div class="btn-group" role="group" aria-label="Filters">';
+            // htmlString += '<div class="btn-group" role="group" aria-label="Filters">';
 
             this.selectedFacets.forEach(function (item, index, array) { // foreach facet with a selected value
 
                 var name = item.key;
 
                 if (item.type === "daterange") {
+                    htmlString += '<div class="col-md-auto">';
 
-                    htmlString += '<button id="filter-daterange-btn" type="button" class="btn btn-outline-danger btn-sm facet-button me-2">';
+                    // Header
+                    htmlString += '<div class="row">';
+                    htmlString += '<span class="border-top rounded-top border-2 border-danger text-center text-danger" style="font-size: small;">' + name;
+                    htmlString += '</span>';
+                    htmlString += '</div>';
+
+                    htmlString += '<div class="row">';
+                    
+                    htmlString += '<div class="btn-group" role="group" aria-label="'+name+'">';
+                    htmlString += '<button id="filter-daterange-btn" type="button" class="btn btn-outline-danger btn-sm facet-button me-2 rounded-5">';
                     var display_range_value = null;
                     if (item.values && item.values.length > 0) {
                         if (item.label) {
@@ -310,15 +320,32 @@ Microsoft.Facets = {
                         htmlString += display_range_value + ' <a class="filter-anchor" title="Remove ' + name + ' date range filter ' + display_range_value + '..." href="javascript:void(0)" onclick="Microsoft.Facets.RemoveFilter(\'' + name + '\', \'' + Microsoft.Facets.EncodeFacetValue(display_range_value) + '\')"><span class="bi bi-x text-danger"></span></a><br>';
                     }
                     htmlString += '</button>';
+                    htmlString += '</div>';
+                    htmlString += '</div>';
+
+                    htmlString += '</div>';
                 }
                 else {
                     if (item.values && item.values.length > 0) {
+                        htmlString += '<div class="col-md-auto">';
+
+                        var title = Microsoft.Utils.GetFacetDisplayTitle(name);
+
+                        // Header
+                        htmlString += '<div class="row">';
+                        htmlString += '<span class="border-top rounded-top border-2 border-danger text-center text-danger" style="font-size: small;">' + title;
+                        htmlString += '</span>';
+                        htmlString += '</div>';
+
+                        // Values
+                        htmlString += '<div class="row">';
+                        htmlString += '<div class="btn-group" role="group" aria-label="'+title+'">';
+
                         item.values.forEach(function (item2, index2, array) {
 
-                            var title = Microsoft.Utils.GetFacetDisplayTitle(name);
                             var facetValueId = Microsoft.Facets.GetFacetValueId(name, item2.value);
 
-                            htmlString += '<button id="' + facetValueId +'-btn" type="button" class="btn btn-outline-danger btn-sm facet-button me-2">';
+                            htmlString += '<button id="' + facetValueId +'-btn" type="button" class="btn btn-outline-danger btn-sm facet-button me-2 rounded-5">';
                             htmlString += item2.value + ' <a class="filter-anchor" title="Remove ' + title + ' filter ' + item2.value + '..." href="javascript:void(0)" onclick="Microsoft.Facets.RemoveFilter(\'' + name + '\', \'' + Microsoft.Facets.EncodeFacetValue(item2.value) + '\')"><span class="bi bi-x text-danger"></span></a><br>';
 
                             if ($('#' + facetValueId)) {
@@ -330,11 +357,15 @@ Microsoft.Facets = {
 
                             htmlString += '</button>';
                         });
+                        htmlString += '</div>';
+                        htmlString += '</div>';
+
+                        htmlString += '</div>';
                     }
                 }
             });
 
-            htmlString += '</div>';
+            // htmlString += '</div>';
         }
         else {
             $('#navigation-btn').removeClass('btn-danger');
