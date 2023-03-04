@@ -395,14 +395,31 @@ Microsoft.Facets = {
 
             var idx = this.selectedFacets.indexOf(result);
 
-            if (result.values.length <= 1 || result.type === "daterange") {
+            if (result.type === "daterange") {
                 this.selectedFacets.splice(idx, 1);
             }
             else {
                 // Check if the value is already present in that facet or not
                 var valueResult = this.selectedFacets[idx].values.filter(function (f) { return f.value === value; })[0];
-                idx = result.values.indexOf(valueResult);
-                result.values.splice(idx, 1);
+                // idx = result.values.indexOf(valueResult);
+                // result.values.splice(idx, 1);
+
+                // Unchecking event - Remove when last value
+                if (result.values.length <= 1) {
+                    Microsoft.Facets.selectedFacets.splice(idx, 1);
+
+                    if (result.type === "static") {
+                        var facetButton = Microsoft.Facets.GetFacetAccordionHeaderButtonId(Microsoft.Utils.jqid(facet));
+                        $('#'+facetButton).removeClass('text-danger');
+                    }
+                }
+                else {
+                    // Remove facet value entry
+                    var valueIdx = result.values.indexOf(valueResult);
+
+                    result.values.splice(valueIdx, 1);
+                }
+
             }
         }
 
@@ -580,7 +597,6 @@ Microsoft.Facets = {
 
                 // Check if the value is already present in that facet or not
                 var valueResult = result.values.filter(function (f) { return f.value === value; })[0];
-                //if (!result.values.includes(value)) {
                 if (!valueResult) {
                     // Checking event
                     if (valueIdx) {
