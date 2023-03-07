@@ -1,9 +1,6 @@
 # Changes log
 
-## February 2023 - v1.4 (in progress)
-
-- Table Of Contents 
-- Neo4j Graph support for Query
+## February 2023 - v1.4
 
 - UI & API improvements
 - Documentation
