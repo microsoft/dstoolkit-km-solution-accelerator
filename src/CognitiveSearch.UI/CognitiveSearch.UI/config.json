@@ -22,21 +22,21 @@
             {
               "id": "livenews",
               "enable": true,
-              "title": "Latest News",
+              "title": "News",
               "method": "Microsoft.News.FetchHomeNews",
               "icon": "bi bi-bell-fill"
             },
             {
               "id": "documents",
               "enable": true,
-              "title": "Latest Documents",
+              "title": "Documents",
               "method": "Microsoft.Home.GetLatestDocuments",
               "icon": "bi bi-file-earmark"
             },
             {
               "id": "images",
               "enable": true,
-              "title": "Latest Visuals",
+              "title": "Visuals",
               "method": "Microsoft.Home.GetLatestImages",
               "icon": "bi bi-files"
             }

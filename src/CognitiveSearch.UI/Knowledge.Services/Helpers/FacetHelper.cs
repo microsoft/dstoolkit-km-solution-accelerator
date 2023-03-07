@@ -36,7 +36,6 @@ namespace Knowledge.Services.Helpers
                         {
                             if (item.Target.Equals("fulltext"))
                             {
-                                //facetFilterStr = string.Join(" | ", item.Values.Select(valueEntry => QueryHelper.EScapeAzureSearchCharacters(valueEntry.value)).ToArray());
                                 facetFilterStr = string.Join(AZURE_SEARCH_OR_OPERATOR, IterateFacetValues(item, true));
                                 facetFilterStr = QueryHelper.ODataFilterSingleQuoteConstraint(facetFilterStr);
 
@@ -44,10 +43,20 @@ namespace Knowledge.Services.Helpers
                             }
                             else
                             {
-                                facetFilterStr = string.Join(FACET_VALUE_SEPARATOR, IterateFacetValues(item));
-                                facetFilterStr = QueryHelper.ODataFilterSingleQuoteConstraint(facetFilterStr);
+                                // Collection 
+                                if (item.GetOperator() == SearchConstants.MultiValuesRefinerOROperator) {
+                                    facetFilterStr = string.Join(FACET_VALUE_SEPARATOR, IterateFacetValues(item));
+                                    facetFilterStr = QueryHelper.ODataFilterSingleQuoteConstraint(facetFilterStr);
 
-                                newfilter = $"{item.Target}/{item.GetOperator()}(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
+                                    newfilter = $"{item.Target}/any(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
+                                }
+                                else {
+                                    List<string> strings = new();
+                                    foreach (var value in IterateFacetValues(item)) {
+                                        strings.Add($"({item.Target}/any(t: t eq '{value}'))");
+                                    }
+                                    newfilter = string.Join(" and ", strings);
+                                }
                             }
                         }
 
@@ -86,10 +95,25 @@ namespace Knowledge.Services.Helpers
                             // Construct Collection(string) facet query
                             if (facet.Type == typeof(string[]))
                             {
-                                if (string.IsNullOrEmpty(filter))
-                                    filter = $"{item.Key}/{item.GetOperator()}(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
-                                else
-                                    filter += $" and {item.Key}/{item.GetOperator()}(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
+                                string collectionfilter = String.Empty;
+
+                                if (item.GetOperator() == SearchConstants.MultiValuesRefinerOROperator) {
+                                    collectionfilter = $"{item.Key}/any(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
+                                }
+                                else {
+                                    List<string> strings = new();
+                                    foreach (var value in IterateFacetValues(item)) {
+                                        strings.Add($"({item.Key}/any(t: t eq '{value}'))");
+                                    }
+                                    collectionfilter = string.Join(" and ", strings);
+                                }
+
+                                if (string.IsNullOrEmpty(filter)) {
+                                    filter = collectionfilter;
+                                }
+                                else {
+                                    filter += $" and {collectionfilter}";
+                                }
                             }
                             // Construct string facet query
                             else if (facet.Type == typeof(string))
@@ -138,7 +162,16 @@ namespace Knowledge.Services.Helpers
                     else
                     {
                         //collection field
-                        newfilter = $"{facetValue.target}/{facet.GetOperator()}(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
+                        if (facet.GetOperator() == SearchConstants.MultiValuesRefinerOROperator) {
+                            newfilter = $"{facetValue.target}/{facet.GetOperator()}(t: search.in(t, '{facetFilterStr}', '{FACET_VALUE_SEPARATOR}'))";
+                        }
+                        else {
+                            List<string> strings = new();
+                            foreach (var value in BuildFacetValue(facetValue, phraseSearch)) {
+                                strings.Add($"({facetValue.target}/any(t: t eq '{value}'))");
+                            }
+                            newfilter = string.Join(" and ", strings); 
+                        }
                     }
                 }
 

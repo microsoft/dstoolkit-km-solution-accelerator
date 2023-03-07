@@ -39,15 +39,16 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
         )
 
 def compose_response(headers, json_data):
-    values = json.loads(json_data)['values']
-    
-    # Prepare the Output before the loop
+    request = json.loads(json_data)
+    # Prepare the response
     results = {}
-    results["values"] = []
+    results["values"] = []    
+    if 'values' in request: 
+        values = request['values']
 
-    for value in values:
-        output_record = DocumentGrapher.transform_value(value)
-        if output_record != None:
-            results["values"].append(output_record)
+        for value in values:
+            output_record = DocumentGrapher.transform_value(value)
+            if output_record != None:
+                results["values"].append(output_record)
 
     return json.dumps(results, ensure_ascii=False)

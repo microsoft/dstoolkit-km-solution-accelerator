@@ -1,9 +1,18 @@
 # Changes log
 
-## January 2023 - V1.3 (in progress)
+## February 2023 - v1.4
 
-- API Authorization 
-- Neo4j Graph support for query & indexing
+- UI & API improvements
+- Documentation
+- Bugs fixing
+
+## January 2023 - V1.3
+
+- API Authorization
+- Neo4j Graph support for indexing
+- QuickView feature to ease access a Detail tab
+- Responsible AI documentation
+
 - UI & API improvements
 - Documentation
 - Bugs fixing

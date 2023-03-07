@@ -47,7 +47,7 @@
     "target": "email/message_to"
   },
   {
-    "id": "sciencesstuff",
+    "id": "sciences",
     "name": "Sciences",
     "type": "static",
     "target": "key_phrases",

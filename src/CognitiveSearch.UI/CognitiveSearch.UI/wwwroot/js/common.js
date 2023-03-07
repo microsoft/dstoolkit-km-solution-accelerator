@@ -166,6 +166,9 @@ Microsoft.Search = {
             if (event.code === 'KeyX') {
                 Microsoft.Facets.ClearAllFilters();
             }
+            if (event.code === 'KeyZ') {
+                Microsoft.Facets.ClearLastFilter();
+            }
         });
 
         // Tags
@@ -449,6 +452,7 @@ Microsoft.Search.Options = {
     isQueryTranslation: true,
     isQuerySpellCheck: true,
     suggestionsAsFilter: true,
+    orMVRefinerOperator: false,
 
     switchSemanticSearch: function (obj) {
         if (obj !== undefined) {
@@ -478,12 +482,23 @@ Microsoft.Search.Options = {
             this.save();
         }
     },
+    switchMVRefinerOperator: function (obj) {
+        if (obj !== undefined) {
+            this.orMVRefinerOperator = obj.checked;
+            Microsoft.Search.ReSearch();
+            this.save();
+        }
+    },
+    GetMVRefinerOperator: function(obj) {
+        return (Microsoft.Search.Options.orMVRefinerOperator ? "AND" : "OR")
+    },
     init: function () {
         // this is ugly. TODO 
         $("#semanticSwitch").prop("checked", this.isSemanticSearch);
         $("#translation-switch").prop("checked", this.isQueryTranslation);
         $("#spellcheck-switch").prop("checked", this.isQuerySpellCheck);
         $("#suggestions-switch").prop("checked", this.suggestionsAsFilter);
+        $("#mv-refiner-operator-switch").prop("checked", this.orMVRefinerOperator);
     },
     save: function () {
         // Save the Search Options

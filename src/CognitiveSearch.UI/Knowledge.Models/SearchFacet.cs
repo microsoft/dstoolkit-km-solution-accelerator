@@ -17,7 +17,7 @@ namespace Knowledge.Models
         {
             Values = Array.Empty<FacetValue>();
             // Default Operator for multi-valued facet
-            Operator = "any";
+            Operator = SearchConstants.MultiValuesRefinerOROperator;
         }
 
         public string GetTarget()
@@ -32,14 +32,11 @@ namespace Knowledge.Models
             }
         }
 
-        public string GetOperator()
-        {
-            if (String.IsNullOrEmpty(Operator))
-            {
-                return "any";
+        public string GetOperator() {
+            if (String.IsNullOrEmpty(Operator)) {
+                return SearchConstants.MultiValuesRefinerOROperator;
             }
-            else
-            {
+            else {
                 return Operator;
             }
         }

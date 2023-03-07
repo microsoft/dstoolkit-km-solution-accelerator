@@ -9,7 +9,7 @@ namespace Knowledge.Models
         public bool isQueryTranslation { get; set; }
         public bool isQuerySpellCheck { get; set; }
         public bool suggestionsAsFilter { get; set; }
-
+        public bool orMVRefinerOperator {get; set;}
         public UserOptions()
         {
         }

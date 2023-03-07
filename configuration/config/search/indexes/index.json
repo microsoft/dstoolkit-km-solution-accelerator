@@ -706,9 +706,9 @@
       "fields": [
         {
           "name": "message_to",
-          "type": "Edm.String",
+          "type": "Collection(Edm.String)",
           "filterable": true,
-          "sortable": true,
+          "sortable": false,
           "facetable": true,
           "searchable": true,
           "retrievable": true
@@ -724,18 +724,18 @@
         },
         {
           "name": "message_cc",
-          "type": "Edm.String",
+          "type": "Collection(Edm.String)",
           "filterable": true,
-          "sortable": true,
+          "sortable": false,
           "facetable": true,
           "searchable": true,
           "retrievable": true
         },
         {
           "name": "message_bcc",
-          "type": "Edm.String",
+          "type": "Collection(Edm.String)",
           "filterable": true,
-          "sortable": true,
+          "sortable": false,
           "facetable": true,
           "searchable": true,
           "retrievable": true

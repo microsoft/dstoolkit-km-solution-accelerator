@@ -96,6 +96,7 @@ Microsoft.Facets = {
                 Microsoft.Facets.selectedFacets.push({
                     key: facet_key,
                     values: [{ value: start_date }, { value: end_date }],
+                    operator: Microsoft.Search.Options.orMVRefinerOperator ? "any" : "all",
                     type: "daterange",
                     target: "last_modified",
                     label: picker.chosenLabel === "Custom Range" ? (start_date + '..' + end_date) : picker.chosenLabel
@@ -265,6 +266,21 @@ Microsoft.Facets = {
         }
     },
 
+    ClearLastFilter: function () {
+        if (this.selectedFacets.length > 0) {
+            var elements = $("a.filter-anchor");
+            if (elements.length > 0)
+            {
+                var facet = elements[elements.length-1];
+                // do the click on the a tag. 
+                facet.click();
+            }
+        }
+        else if (this.selectedFacets.length > 0) {
+            this.ClearAllFilters();
+        }
+    },
+
     UpdateFilterReset: function () {
         // This allows users to remove filters
         var htmlString = '';
@@ -274,15 +290,25 @@ Microsoft.Facets = {
             $('#navigation-btn').addClass('btn-danger');
             $('#navigation-clear-all').addClass('btn-danger');
 
-            htmlString += '<div class="btn-group" role="group" aria-label="Filters">';
+            // htmlString += '<div class="btn-group" role="group" aria-label="Filters">';
 
             this.selectedFacets.forEach(function (item, index, array) { // foreach facet with a selected value
 
                 var name = item.key;
 
                 if (item.type === "daterange") {
+                    htmlString += '<div class="col-md-auto">';
 
-                    htmlString += '<button id="filter-daterange-btn" type="button" class="btn btn-outline-danger btn-sm facet-button me-2">';
+                    // Header
+                    htmlString += '<div class="row">';
+                    htmlString += '<span class="border-top rounded-top border-2 border-danger text-center text-danger" style="font-size: small;">' + name;
+                    htmlString += '</span>';
+                    htmlString += '</div>';
+
+                    htmlString += '<div class="row">';
+                    
+                    htmlString += '<div class="btn-group" role="group" aria-label="'+name+'">';
+                    htmlString += '<button id="filter-daterange-btn" type="button" class="btn btn-outline-danger btn-sm facet-button me-2 rounded-5">';
                     var display_range_value = null;
                     if (item.values && item.values.length > 0) {
                         if (item.label) {
@@ -294,15 +320,32 @@ Microsoft.Facets = {
                         htmlString += display_range_value + ' <a class="filter-anchor" title="Remove ' + name + ' date range filter ' + display_range_value + '..." href="javascript:void(0)" onclick="Microsoft.Facets.RemoveFilter(\'' + name + '\', \'' + Microsoft.Facets.EncodeFacetValue(display_range_value) + '\')"><span class="bi bi-x text-danger"></span></a><br>';
                     }
                     htmlString += '</button>';
+                    htmlString += '</div>';
+                    htmlString += '</div>';
+
+                    htmlString += '</div>';
                 }
                 else {
                     if (item.values && item.values.length > 0) {
+                        htmlString += '<div class="col-md-auto">';
+
+                        var title = Microsoft.Utils.GetFacetDisplayTitle(name);
+
+                        // Header
+                        htmlString += '<div class="row">';
+                        htmlString += '<span class="border-top rounded-top border-2 border-danger text-center text-danger" style="font-size: small;">' + title;
+                        htmlString += '</span>';
+                        htmlString += '</div>';
+
+                        // Values
+                        htmlString += '<div class="row">';
+                        htmlString += '<div class="btn-group" role="group" aria-label="'+title+'">';
+
                         item.values.forEach(function (item2, index2, array) {
 
-                            var title = Microsoft.Utils.GetFacetDisplayTitle(name);
                             var facetValueId = Microsoft.Facets.GetFacetValueId(name, item2.value);
 
-                            htmlString += '<button id="' + facetValueId +'-btn" type="button" class="btn btn-outline-danger btn-sm facet-button me-2">';
+                            htmlString += '<button id="' + facetValueId +'-btn" type="button" class="btn btn-outline-danger btn-sm facet-button me-2 rounded-5">';
                             htmlString += item2.value + ' <a class="filter-anchor" title="Remove ' + title + ' filter ' + item2.value + '..." href="javascript:void(0)" onclick="Microsoft.Facets.RemoveFilter(\'' + name + '\', \'' + Microsoft.Facets.EncodeFacetValue(item2.value) + '\')"><span class="bi bi-x text-danger"></span></a><br>';
 
                             if ($('#' + facetValueId)) {
@@ -314,11 +357,15 @@ Microsoft.Facets = {
 
                             htmlString += '</button>';
                         });
+                        htmlString += '</div>';
+                        htmlString += '</div>';
+
+                        htmlString += '</div>';
                     }
                 }
             });
 
-            htmlString += '</div>';
+            // htmlString += '</div>';
         }
         else {
             $('#navigation-btn').removeClass('btn-danger');
@@ -333,7 +380,7 @@ Microsoft.Facets = {
 
     RemoveFilter: function (facet, value, search = true) {
 
-        var facetid = Microsoft.Utils.jqid(facet + "_" + value.replaceAll("=", ""));
+        var facetid = Microsoft.Utils.jqid(facet) + "_" + value.replaceAll("=", "");  
 
         if ($('#' + facetid)) {
             $('#' + facetid).prop('checked', false);
@@ -348,14 +395,31 @@ Microsoft.Facets = {
 
             var idx = this.selectedFacets.indexOf(result);
 
-            if (result.values.length <= 1 || result.type === "daterange") {
+            if (result.type === "daterange") {
                 this.selectedFacets.splice(idx, 1);
             }
             else {
                 // Check if the value is already present in that facet or not
                 var valueResult = this.selectedFacets[idx].values.filter(function (f) { return f.value === value; })[0];
-                idx = result.values.indexOf(valueResult);
-                result.values.splice(idx, 1);
+                // idx = result.values.indexOf(valueResult);
+                // result.values.splice(idx, 1);
+
+                // Unchecking event - Remove when last value
+                if (result.values.length <= 1) {
+                    Microsoft.Facets.selectedFacets.splice(idx, 1);
+
+                    if (result.type === "static") {
+                        var facetButton = Microsoft.Facets.GetFacetAccordionHeaderButtonId(Microsoft.Utils.jqid(facet));
+                        $('#'+facetButton).removeClass('text-danger');
+                    }
+                }
+                else {
+                    // Remove facet value entry
+                    var valueIdx = result.values.indexOf(valueResult);
+
+                    result.values.splice(valueIdx, 1);
+                }
+
             }
         }
 
@@ -533,7 +597,6 @@ Microsoft.Facets = {
 
                 // Check if the value is already present in that facet or not
                 var valueResult = result.values.filter(function (f) { return f.value === value; })[0];
-                //if (!result.values.includes(value)) {
                 if (!valueResult) {
                     // Checking event
                     if (valueIdx) {
@@ -564,11 +627,13 @@ Microsoft.Facets = {
             }
             else {
 
+                var default_operator = facet_cfg?.operator ? facet_cfg.operator : null; 
+
                 Microsoft.Facets.selectedFacets.push({
                     key: facet_key,
                     values: valueIdx ? [facet_source[valueIdx]] : [{ value: value }],
                     type: facet_type,
-                    operator: facet_cfg?.operator ? facet_cfg.operator : null,
+                    operator: default_operator ? default_operator : Microsoft.Search.Options.GetMVRefinerOperator(),
                     target: target ? target : null
                 });
             }
