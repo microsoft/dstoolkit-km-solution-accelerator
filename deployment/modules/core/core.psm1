@@ -2350,7 +2350,7 @@ function Add-KeyVaultFunctionsPolicies {
     # Shared Policies for Functions
     foreach ($plan in $functionscfg.AppPlans) {
         foreach ($functionApp in $plan.Services) {
-            $principalId = az functionapp identity show -n $functionApp.Name -g $plan.ResourceGroup --query principalId
+            $principalId = az functionapp identity show -n $functionApp.Name -g $plan.ResourceGroup --query principalId --out tsv
     
             az keyvault set-policy -n $params.keyvault -g $plan.ResourceGroup --object-id $principalId --secret-permissions get 
         }
@@ -2406,6 +2406,47 @@ function Publish-Solution {
     # Publishing settings will restart all app services.
     Publish-FunctionsSettings
     Publish-WebAppsSettings
+}
+
+function Update-Solution {
+    param (
+        [switch] $NewFunction,
+        [switch] $NewSkill,
+        [switch] $Search,
+        [switch] $UI
+    )
+
+    Sync-Config
+
+    if ( $NewFunction ) {
+        New-Functions
+        Build-Functions -Publish -KeyVaultPolicies -Settings        
+        Get-FunctionsKeys        
+        Sync-Config
+    }
+    
+    if ( $NewSkill ) {
+        Build-Functions -Publish -KeyVaultPolicies -Settings        
+        Get-FunctionsKeys
+        Sync-Config
+        Initialize-Search
+    }
+    
+    # if ( $Function ) {
+    #     Build-Functions -Publish -KeyVaultPolicies -Settings
+    # }
+
+    # if ($RebuildIndex) {
+    #     Remove-SearchIndex -name $params. -DeleteAliases
+    # }
+
+    if ($Search) {
+        Initialize-Search
+    }
+    
+    If ($UI) {
+        Build-WebApps -WindowsOnly -Publish -KeyVaultPolicies -Settings
+    }
 }
 
 function Optimize-Solution () {
