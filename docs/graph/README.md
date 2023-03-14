@@ -13,10 +13,10 @@ The concept and pipeline is as follows:
 A single function app demonstrate how to interact with Neo4j instance to populate that knowledge graph.
 
 We recommend the following readings to demonstrate different types of Relationships Extraction (RE)
-[Different ways of doing Relation Extraction from text](https://medium.com/@andreasherman/different-ways-of-doing-relation-extraction-from-text-7362b4c3169e)
-[From Text to a Knowledge Graph: The Information Extraction Pipeline](https://neo4j.com/blog/text-to-knowledge-graph-information-extraction-pipeline/)
+- [Different ways of doing Relation Extraction from text](https://medium.com/@andreasherman/different-ways-of-doing-relation-extraction-from-text-7362b4c3169e)
+- [From Text to a Knowledge Graph: The Information Extraction Pipeline](https://neo4j.com/blog/text-to-knowledge-graph-information-extraction-pipeline/)
 
-# Cipher queries
+# Cypher queries
 
 ```
 MATCH p=(n:Document) -[r:LINKED]->() WHERE r.strength > 5 RETURN p LIMIT 50 
@@ -26,7 +26,7 @@ MATCH p=(n:Skill)<-[]-(o:Document) RETURN p LIMIT 25
 ```
 
 To delete your entire graph...
-```cipher
+```cypher
 MATCH (n) DETACH DELETE n
 ```
 ## Document - Embedded relationships (i.e. attachments)
