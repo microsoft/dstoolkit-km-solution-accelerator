@@ -19,11 +19,15 @@ We recommend the following readings to demonstrate different types of Relationsh
 # Cipher queries
 
 ```
-MATCH (n) DETACH DELETE n
 MATCH p=(n:Document) -[r:LINKED]->() WHERE r.strength > 5 RETURN p LIMIT 50 
 MATCH p=(n:Organization)<-[]-(o:Document) RETURN p LIMIT 25
 MATCH p=(n:Product)<-[]-(o:Document) RETURN p LIMIT 25
 MATCH p=(n:Skill)<-[]-(o:Document) RETURN p LIMIT 25
+```
+
+To delete your entire graph...
+```cipher
+MATCH (n) DETACH DELETE n
 ```
 ## Document - Embedded relationships (i.e. attachments)
 
