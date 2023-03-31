@@ -1,6 +1,6 @@
 ﻿[
   {
-    "source": [ "folder1", "restricted" ],
+    "source": [ "site1", "folder1" ],
     "target": [ "securitygroup1","securitygroup2" ]
   },
   {
