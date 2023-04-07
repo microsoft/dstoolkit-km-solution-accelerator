@@ -1,0 +1,30 @@
+### Input 1
+POST http://localhost:7071/openai/chatcompletion
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "prompt": "What's the difference between garbanzo beans and chickpeas?"
+            }
+        }
+    ]
+}
+
+### Input 2
+POST http://localhost:7071/openai/chatcompletion
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "prompt": "Do you have a recipe of both ?"
+            }
+        }
+    ]
+}
+

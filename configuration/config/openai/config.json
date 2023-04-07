@@ -1,0 +1,19 @@
+{
+    "enable": false,
+    "Parameters": {
+        "cogSvcOpenAIType": "azure",
+        "cogSvcOpenAIVersion": "2022-12-01",
+        "cogSvcOpenAIEngine": "test"
+    },
+    "Items": [
+        {
+            "Name": "{{config.name}}oai",
+            "Kind":"OpenAI",
+            "Sku":"S0",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "Parameter":"cogSvcOpenAI",
+            "EnablePrivateAccess": true,
+            "AccessSubnetRestriction": true
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+# Do not include azure-functions-worker as it may conflict with the Azure Functions platform
+
+azure-identity
+
+azure-functions
+azure-functions-durable
+
+azure-search-documents
+
+azure-storage-blob
+
+langchain
+tiktoken
+openai
