@@ -261,6 +261,12 @@
                     "Functions": [
                         {
                             "Name": "Completion"
+                        },
+                        {
+                            "Name": "ChatCompletion"
+                        },
+                        {
+                            "Name": "ChatGraph"
                         }
                     ],
                     "AccessIPRestriction": false,

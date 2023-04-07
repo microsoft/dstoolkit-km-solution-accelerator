@@ -16,15 +16,12 @@ oai_engine = os.environ["OPENAI_ENGINE"]
 
 openai.api_type = "azure"
 openai.api_base = oai_endpoint
-# openai.api_version = "2023-03-15-preview"
 openai.api_version = oai_version
 openai.api_key = oai_key
 
 system_message = {"role": "system", "content": "You are a helpful assistant."}
 max_response_tokens = 250
 token_limit= 4096
-# conversation=[]
-# conversation.append(system_message)
 
 def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
     encoding = tiktoken.encoding_for_model(model)
@@ -95,11 +92,16 @@ def transform_value(headers, record):
         assert ('data' in record), "'data' field is required."
         data = record['data']
 
+        # https://learn.microsoft.com/en-us/azure/cognitive-services/openai/chatgpt-quickstart?tabs=command-line&pivots=programming-language-python
         conversation=[]
         conversation.append(system_message)
 
         # Chat Conversation
+        if "history" in data:
+            conversation += data["history"]
         conversation.append({"role": "user", "content": data['prompt']})
+
+        # Ensure the conversation fits into model tokens limitation
         conv_history_tokens = num_tokens_from_messages(conversation)
 
         while (conv_history_tokens+max_response_tokens >= token_limit):
@@ -107,8 +109,7 @@ def transform_value(headers, record):
             conv_history_tokens = num_tokens_from_messages(conversation)
 
         response = openai.ChatCompletion.create(
-            # engine="gpt-35-turbo", # The deployment name you chose when you deployed the ChatGPT or GPT-4 model.
-            engine="test", # The deployment name you chose when you deployed the ChatGPT or GPT-4 model.
+            engine=oai_engine,
             messages = conversation,
             temperature=.7,
             max_tokens=max_response_tokens,

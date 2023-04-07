@@ -22,7 +22,42 @@ content-type: application/json;charset=utf-8
         {
             "recordId": "1",
             "data": {
-                "prompt": "Do you have a recipe of both ?"
+                "prompt": "Do you have a recipe of both ?",
+                "history":[
+                    {"role": "user", "content": "What's the difference between garbanzo beans and chickpeas?"},
+                    {
+                        "role": "assistant",
+                        "content": "Garbanzo beans and chickpeas are actually the same thing! They are just two different names for the same type of legume. Garbanzo beans are more commonly used in Spanish and Mexican cuisine, while chickpeas are more commonly used in Middle Eastern and Mediterranean cuisine."
+                    }                    
+                ]
+            }
+        }
+    ]
+}
+
+
+### Input 3
+POST http://localhost:7071/openai/chatcompletion
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "prompt": "how long the first recipe will take ?",
+                "history":[
+                    {"role": "user", "content": "What's the difference between garbanzo beans and chickpeas?"},
+                    {
+                        "role": "assistant",
+                        "content": "Garbanzo beans and chickpeas are actually the same thing! They are just two different names for the same type of legume. Garbanzo beans are more commonly used in Spanish and Mexican cuisine, while chickpeas are more commonly used in Middle Eastern and Mediterranean cuisine."
+                    },
+                    {"role": "user", "content": "Do you have a recipe of both ?"},
+                    {
+                        "role": "assistant",
+                        "content": "Certainly! Here are two simple recipes for you:\n\nGarbanzo Bean Salad Recipe:\nIngredients:\n- 2 cups cooked garbanzo beans\n- 1 red onion, diced\n- 1 red bell pepper, diced\n- 1/4 cup chopped fresh parsley\n- 2 tablespoons olive oil\n- 1 tablespoon lemon juice\n- Salt and pepper to taste\n\nInstructions:\n1. In a large bowl, combine the cooked garbanzo beans, diced red onion, diced red bell pepper, and chopped fresh parsley.\n2. In a small bowl, whisk together the olive oil, lemon juice, salt, and pepper.\n3. Pour the dressing over the salad and toss to combine.\n4. Serve immediately or store in the refrigerator for up to 3 days.\n\nChickpea Curry Recipe:\nIngredients:\n- 2 tablespoons olive oil\n- 1 onion, diced\n- 3 garlic cloves, minced\n- 1 tablespoon curry powder\n- 1 teaspoon ground cumin\n- 1/2 teaspoon ground coriander\n- 1/2 teaspoon ground cinnamon\n- 1/4 teaspoon cayenne pepper (optional)\n- 2 cans chickpeas, drained and rinsed"
+                    }
+                ]
             }
         }
     ]

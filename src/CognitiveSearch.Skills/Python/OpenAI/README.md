@@ -10,8 +10,9 @@ Azure OpenAI Service provides REST API access to OpenAI's powerful language mode
 
 [Azure Open AI Studio](https://oai.azure.com/portal/)
 
-# Completion
+# Completion (GPT-3)
 
+[Completion GPT-3](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/quickstart?tabs=command-line&pivots=programming-language-python)
 This endpoint is used to call the Completion feature using the Azure Open AI service. To start the function you need to do a POST request to the endpoint. 
 
 The structure of the request is the following:
@@ -77,3 +78,13 @@ The output is as follows :
   ]
 }
 ```
+
+
+
+# ChatCompletion (ChatGPT & GPT-4)
+
+[Get started using ChatGPT (preview) and GPT-4 (preview) with Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/chatgpt-quickstart?tabs=command-line&pivots=programming-language-studio)
+
+# ChatGraph (ChatGPT)
+
+[Use ChatGPT to Query Your Neo4j Database](https://towardsdatascience.com/use-chatgpt-to-query-your-neo4j-database-78680a05ec2#d083-cf615c9d7f04)
