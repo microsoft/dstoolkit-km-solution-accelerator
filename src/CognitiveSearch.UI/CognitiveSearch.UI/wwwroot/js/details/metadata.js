@@ -124,7 +124,7 @@ Microsoft.Search.Results.Metadata = {
             fileContainerHTML+='  <li class="list-group-item text-break">'+result.email.subject+'</li>';    
         }
         if (result.summary && result.summary.length > 0) {
-            fileContainerHTML+='  <li class="list-group-item fw-bold">Summary</li>';
+            fileContainerHTML+='  <li class="list-group-item fw-bold">Extractive Summary</li>';
             fileContainerHTML+='  <li class="list-group-item">'+result.summary.join('...\r\n')+'</li>';    
         }
         fileContainerHTML+='</ul>';

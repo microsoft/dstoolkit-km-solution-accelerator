@@ -27,6 +27,18 @@
     }
   },
   {
+    "id": "chat",
+    "enable": true,
+    "renderingMethod": "Microsoft.Search.Results.Chat.render_tab",
+    "fonticon": "bi bi-chat-square-text",
+    "localization": {
+      "en": {
+        "name": "Chat",
+        "title": "Open a chat GPT conversation with the document."
+      }
+    }
+  },
+  {
     "id": "transcript",
     "enable": true,
     "renderingMethod": "Microsoft.Search.Results.Transcript.RenderTranscriptHTML",

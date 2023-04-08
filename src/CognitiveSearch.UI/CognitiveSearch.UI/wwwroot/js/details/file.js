@@ -12,11 +12,11 @@ Microsoft.Search.Results.File = {
         var contentFileHTML = this.render_file_container(result.document.embedded, result.metadata_storage_path, result.image ? result.image.image_data : null, result.page_number, result.parent);        
 
         if (contentFileHTML.length > 0) {
-            fileContainerHTML+='<div class="col-md-10 h-100">'
+            fileContainerHTML+='<div class="col-md-9 h-100">'
             fileContainerHTML+=contentFileHTML;
             fileContainerHTML+='</div>'
-
-            fileContainerHTML+='<div class="col-md-2">';
+ 
+            fileContainerHTML+='<div class="col-md-3">';
             fileContainerHTML+=Microsoft.Search.Results.Metadata.render_metadata_side_pane(result);
             fileContainerHTML+='</div>';
         }

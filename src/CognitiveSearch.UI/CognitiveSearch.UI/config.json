@@ -138,6 +138,28 @@
         "Tags": "organizations,countries,key_phrases,document_segments,email/message_from,email/message_to"
       },
       {
+        "id": "chat",
+        "pageTitle": "Knowledge Mining - Open AI Chat",
+        "name": "Chat",
+        "title": "Have some conversation with ChatGPT !",
+        "enable": true,
+        "path": "/OpenAI/Index",
+        "svgicon": "bi-chat-square-text.svg",
+        "enableExcelExport": false,
+        "enableDateRange": false
+      },
+      {
+        "id": "m365",
+        "pageTitle": "Knowledge Mining - Microsoft 365",
+        "name": "M365",
+        "title": "Explore your Microsoft 365 results here",
+        "enable": true,
+        "path": "/M365/Index",
+        "svgicon": "M365.png",
+        "enableExcelExport": false,
+        "enableDateRange": false
+      },
+      {
         "id": "web",
         "pageTitle": "Knowledge Mining - Web",
         "name": "Bing",
@@ -182,9 +204,9 @@
           {
             "name": "pages",
             "title": "Only view document pages or slides",
-            "fonticon": "bi bi-files",
+            "svgicon": "bi-files.svg",
             "method": "Microsoft.All.UpdateResultsAsCard",
-            "filter": "(document/embedded eq true)",
+            "filter": "(document/translated eq false and document/converted eq true)",
             "isdefault": true
           },
           {
@@ -193,6 +215,17 @@
             "fonticon": "bi bi-image",
             "method": "Microsoft.Images.UpdateImagesResults",
             "filter": "(document/embedded eq false)"
+          },
+          {
+            "name": "blank"
+          },
+          {
+            "name": "translatedpages",
+            "title": "Only search against translated pages or slides",
+            "svgicon": "bi-translate.svg",
+            "method": "Microsoft.All.UpdateResultsAsCard",
+            "filter": "(document/translated eq true and document/converted eq true)",
+            "classList": "btn-outline-warning"
           }
         ],
         "Tags": "organizations,countries,key_phrases,celebrities,landmarks"
@@ -219,7 +252,28 @@
         "path": "/Tables/Index",
         "searchMethod": "Microsoft.Tables.TablesSearch",
         "svgicon": "bi-table.svg",
-        "placeHolder": "Search your tables content..."
+        "placeHolder": "Search your tables content...",
+        "ResultsRenderings": [
+          {
+            "name": "tables",
+            "title": "Only search extracted tables",
+            "svgicon": "bi-table.svg",
+            "method": "Microsoft.Tables.UpdateTablesResults",
+            "filter": "(tables_count ge 1 and document/translated eq false and document/converted eq true)",
+            "isdefault": true
+          },
+          {
+            "name": "blank"
+          },
+          {
+            "name": "translatedtables",
+            "title": "Only search against translated translated tables",
+            "svgicon": "bi-translate.svg",
+            "method": "Microsoft.Tables.UpdateTablesResults",
+            "filter": "(tables_count ge 1 and document/translated eq true and document/converted eq true)",
+            "classList": "btn-outline-warning"
+          }
+        ]
       },
       {
         "id": "graph",
