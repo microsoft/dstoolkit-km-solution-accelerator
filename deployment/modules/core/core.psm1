@@ -33,6 +33,8 @@ function Import-ServicesConfig() {
 
             Set-Variable -Name $varName -Value $varValue -Visibility Public -Option AllScope -Force -Scope Global
     
+            Add-Param -Name ($folder.Name+"Enabled") -value $varValue.enable
+
             if ($varValue.enable) {
                 Import-ConfigParameters $varValue
             }
@@ -192,12 +194,16 @@ function Get-Parameters {
     return $values
 }
 
-function Add-Param($name, $value) {
-    if ( $global:params.PSobject.Properties.name -eq $name) {
-        $global:params.$name = $value
+function Add-Param {
+    param (
+        [string] $Name,
+        [string] $Value
+    )
+    if ( $global:params.PSobject.Properties.name -eq $Name) {
+        $global:params.$Name = $Value
     }
     else {
-        $global:params | Add-Member -MemberType NoteProperty -Name $name -Value $value -ErrorAction Ignore
+        $global:params | Add-Member -MemberType NoteProperty -Name $Name -Value $Value -ErrorAction Ignore
     }
 }
 

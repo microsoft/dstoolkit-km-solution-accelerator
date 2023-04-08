@@ -1,7 +1,6 @@
 {
-    "enable": true,
+    "enable": false,
     "Parameters": {
-        "webSearchEnabled": false,
         "webMarket": "en-uk"
     },
     "Items": [

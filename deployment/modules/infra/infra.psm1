@@ -278,7 +278,7 @@ function New-ContainerInstances {
 
 function New-AzureMapsService() {
 
-    if ($params.mapSearchEnabled) {
+    if ($params.mapsEnabled) {
 
         $exists = az maps account show -g $config.resourceGroupName -n $params.maps --query id --out tsv
 
@@ -300,7 +300,7 @@ function New-AzureMapsService() {
 }
 
 function New-BingSearchService() {
-    if ( $config.webSearchEnabled -or ($config.spellCheckEnabled -and $config.spellCheckProvider.Equals("Bing")) ) {
+    if ( $config.bingEnabled -or ($config.spellCheckEnabled -and $config.spellCheckProvider.Equals("Bing")) ) {
         Write-Host "Provision Bing Search service manually. When provisionned..." -ForegroundColor Red    
         $bingKey = Read-Host "Provide Bing Search Key " -MaskInput
         Add-Param "bingServicesKey" $bingKey
