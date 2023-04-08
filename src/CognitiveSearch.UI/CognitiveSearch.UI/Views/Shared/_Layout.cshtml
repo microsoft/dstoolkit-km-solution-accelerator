@@ -2,6 +2,8 @@
      Licensed under the MIT License. -->
 
 @using CognitiveSearch.UI.Configuration
+@using System.Security.Principal
+
 @inject AppConfig AppConfig
 
 <!DOCTYPE html>
@@ -73,7 +75,30 @@
     }
 
     <!-- Azure Application Insights Support -->
-    @Html.Raw(JavaScriptSnippet.FullScript)
+    @* @Html.Raw(JavaScriptSnippet.FullScript)
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script type="text/javascript">
+            appInsights.setAuthenticatedUserContext(@User.Claims.Single(c => c.Type == "aud").Value);
+        </script>
+    } *@
+    <script type="text/javascript">
+        var appInsights = window.appInsights || function (config) {
+        function r(config) { t[config] = function () { var i = arguments; t.queue.push(function () { t[config].apply(t, i) }) } } var t = { config: config }, u = document, e = window, o = "script", s = u.createElement(o), i, f; for (s.src = config.url || "//az416426.vo.msecnd.net/scripts/a/ai.0.js", u.getElementsByTagName(o)[0].parentNode.appendChild(s), t.cookie = u.cookie, t.queue = [], i = ["Event", "Exception", "Metric", "PageView", "Trace"]; i.length;)r("track" + i.pop()); return r("setAuthenticatedUserContext"), r("clearAuthenticatedUserContext"), config.disableExceptionTracking || (i = "onerror", r("_" + i), f = e[i], e[i] = function (config, r, u, e, o) { var s = f && f(config, r, u, e, o); return s !== !0 && t["_" + i](config, r, u, e, o), s }), t
+        }({
+            instrumentationKey: '@AppConfig.ApplicationInsights.InstrumentationKey'
+        });
+        window.appInsights = appInsights;
+        appInsights.trackPageView();
+    </script>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script>
+            var appInsightsUserName = '@User.Claims.FirstOrDefault(x => x.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier")?.Value';
+            appInsights.setAuthenticatedUserContext(appInsightsUserName);
+        </script>
+    }
 </head>
 
 <body>
@@ -111,9 +136,11 @@
         <script type="module" src="~/js/commons/suggestions.js" asp-append-version="true"></script>
         <script type="module" src="~/js/commons/tags.js" asp-append-version="true"></script>
         <script type="module" src="~/js/commons/telemetry.js" asp-append-version="true"></script>
+        <script type="module" src="~/js/commons/openai.js" asp-append-version="true"></script>
 
         <script type="module" src="~/js/details.js" asp-append-version="true"></script>
 
+        <script type="module" src="~/js/details/chat.js" asp-append-version="true"></script>
         <script type="module" src="~/js/details/embedded.js" asp-append-version="true"></script>
         <script type="module" src="~/js/details/entities.js" asp-append-version="true"></script>
         <script type="module" src="~/js/details/file.js" asp-append-version="true"></script>

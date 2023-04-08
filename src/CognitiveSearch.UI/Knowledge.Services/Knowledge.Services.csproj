@@ -11,6 +11,7 @@
     <Folder Include="Translation\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.AI.Language.QuestionAnswering" Version="1.1.0" />
     <PackageReference Include="Azure.Storage.Files.DataLake" Version="12.12.1" />
     <PackageReference Include="Neo4j.Driver" Version="5.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />

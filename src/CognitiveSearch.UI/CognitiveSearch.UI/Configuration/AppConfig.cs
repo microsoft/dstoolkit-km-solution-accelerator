@@ -6,8 +6,7 @@ using Knowledge.Configuration.Graph;
 using Knowledge.Configuration.Maps;
 using Knowledge.Configuration.WebSearch;
 
-namespace CognitiveSearch.UI.Configuration
-{
+namespace CognitiveSearch.UI.Configuration {
     public class AppConfig
     {
         public OrganizationConfig Organization { get; set; }
@@ -25,6 +24,8 @@ namespace CognitiveSearch.UI.Configuration
         public WebAPIBackend WebAPIBackend { get; set; }
 
         public QueryServiceConfig QueryServiceConfig { get; set; }
+
+        public ApplicationInsights ApplicationInsights { get; set; }
 
         public string UIVersion { get; set; }
     }

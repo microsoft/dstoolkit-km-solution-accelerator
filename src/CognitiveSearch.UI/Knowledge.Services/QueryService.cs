@@ -4,6 +4,7 @@
 using Knowledge.Configuration;
 using Knowledge.Models;
 using Knowledge.Models.Ingress;
+using Knowledge.Services.Answers;
 using Knowledge.Services.AzureSearch.REST;
 using Knowledge.Services.Helpers;
 using Knowledge.Services.QnA;
@@ -26,7 +27,7 @@ namespace Knowledge.Services
 
         private ISpellCheckingService spellcheckService;
         private ITranslationService translationService;
-        private IQnAService qnaService;
+        private IAnswersService qnaService;
         private ISemanticSearchService semanticService;
         private IWebSearchService webSearchService;
         private IAzureSearchService searchService;
@@ -39,7 +40,7 @@ namespace Knowledge.Services
             IDistributedCache cache,
             TelemetryClient telemetry,
             IAzureSearchService searchSvc,
-            IQnAService qnaService,
+            IAnswersService qnaService,
             ISpellCheckingService spellcheckService,
             ITranslationService translationService,
             ISemanticSearchService semanticService,

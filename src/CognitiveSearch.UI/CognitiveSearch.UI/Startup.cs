@@ -3,23 +3,30 @@
 
 using CognitiveSearch.UI.Configuration;
 using Knowledge.Configuration;
+using Knowledge.Configuration.Answers;
 using Knowledge.Configuration.AzureStorage;
+using Knowledge.Configuration.Chat;
 using Knowledge.Configuration.Graph;
 using Knowledge.Configuration.Maps;
+using Knowledge.Configuration.OpenAI;
 using Knowledge.Configuration.SemanticSearch;
 using Knowledge.Configuration.SpellChecking;
 using Knowledge.Configuration.Translation;
 using Knowledge.Configuration.WebSearch;
+using Knowledge.Services;
+using Knowledge.Services.Answers;
+using Knowledge.Services.AzureSearch;
 using Knowledge.Services.AzureSearch.SDK;
 using Knowledge.Services.AzureStorage;
+using Knowledge.Services.Chat;
 using Knowledge.Services.Graph.Facet;
 using Knowledge.Services.Metadata;
-using Knowledge.Services.QnA;
+using Knowledge.Services.OpenAI;
 using Knowledge.Services.SemanticSearch;
 using Knowledge.Services.SpellChecking;
 using Knowledge.Services.Translation;
 using Knowledge.Services.WebSearch;
-using Knowledge.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -31,12 +38,8 @@ using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System.IO;
-using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
-using Knowledge.Services.AzureSearch;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using WebOptimizer;
+using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
 namespace CognitiveSearch.UI
 {
@@ -149,6 +152,9 @@ namespace CognitiveSearch.UI
             WebAPIBackend webapiconfigData = Configuration.GetSection("WebAPIBackend").Get<WebAPIBackend>();
             services.AddSingleton<WebAPIBackend>(_ => webapiconfigData);
 
+            ApplicationInsights appInsightsData= Configuration.GetSection("ApplicationInsights").Get<ApplicationInsights>();
+            services.AddSingleton<ApplicationInsights>(_ => appInsightsData);
+
             // Global Configuration singleton 
             var appConfig = new AppConfig
             {
@@ -159,6 +165,7 @@ namespace CognitiveSearch.UI
                 GraphConfig = gconfigData,
                 WebSearchConfig = wsconfigData,
                 WebAPIBackend = webapiconfigData,
+                ApplicationInsights = appInsightsData,
                 UIVersion = Configuration.GetValue("UIVersion", "1.0.0")
             };
             services.AddSingleton(appConfig);
@@ -233,8 +240,14 @@ namespace CognitiveSearch.UI
             WebSearchConfig wsconfigData = Configuration.GetSection("WebSearchConfig").Get<WebSearchConfig>();
             services.AddSingleton<WebSearchConfig>(_ => wsconfigData);
 
-            QnAConfig qconfigData = Configuration.GetSection("QnAConfig").Get<QnAConfig>();
-            services.AddSingleton<QnAConfig>(_ => qconfigData);
+            ChatConfig chatConfigData = Configuration.GetSection("ChatConfig").Get<ChatConfig>();
+            services.AddSingleton<ChatConfig>(_ => chatConfigData);
+
+            OpenAIConfig oaiConfigData = Configuration.GetSection("OpenAIConfig").Get<OpenAIConfig>();
+            services.AddSingleton<OpenAIConfig>(_ => oaiConfigData);
+
+            AnswersConfig qconfigData = Configuration.GetSection("AnswersConfig").Get<AnswersConfig>();
+            services.AddSingleton<AnswersConfig>(_ => qconfigData);
 
             TranslationConfig tconfigData = Configuration.GetSection("TranslationConfig").Get<TranslationConfig>();
             services.AddSingleton<TranslationConfig>(_ => tconfigData);
@@ -251,7 +264,9 @@ namespace CognitiveSearch.UI
 
             // Services Singletons
             services.AddSingleton<IStorageService, StorageService>();
-            services.AddSingleton<IQnAService, QnAService>();
+            services.AddSingleton<IAnswersService, AnswersService>();
+            services.AddSingleton<IChatService, ChatService>();
+            services.AddSingleton<IOpenAIService, OpenAIService>();
             services.AddSingleton<ISpellCheckingService, SpellCheckingService>();
             services.AddSingleton<ITranslationService, TranslationService>();
             services.AddSingleton<IMetadataService, MetadataService>();

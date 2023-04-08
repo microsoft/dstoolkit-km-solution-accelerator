@@ -3,29 +3,37 @@
 
 namespace Knowledge.Services.QnA
 {
-    using Microsoft.Extensions.Caching.Distributed;
-    using Microsoft.Extensions.Caching.Memory;
+    using Knowledge.Configuration.Answers;
+    using Knowledge.Configuration.Answers.QnA;
+    using Knowledge.Models.Answers;
+    using Knowledge.Services.Answers;
     using Knowledge.Services.Helpers;
+    using Microsoft.ApplicationInsights;
+    using Microsoft.Extensions.Caching.Distributed;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
-    using Knowledge.Models.Answers;
 
-    public class QnAService : AbstractService, IQnAService
+    public class QnAService : AbstractService, IAnswersProvider
     {
         private QnAConfig config;
 
-        public QnAService(IDistributedCache cache, QnAConfig serviceConfig)
+        public QnAService(AnswersConfig config, IDistributedCache cache, TelemetryClient telemetry)
         {
             this.distCache = cache;
-            this.config = serviceConfig;
+            this.config = config.qnaConfig;
             this.CachePrefix = this.GetType().Name;
         }
 
-        public async Task<IList<Answer>> GetQnaAnswersAsync(string questionText, string queryId)
+        public string GetProviderName()
+        {
+            return this.config.Name;
+        }
+
+        public async Task<IList<Answer>> GetProjectAnswersAsync(string questionText)
         {
             LoggerHelper.Instance.LogVerbose($"Start:Invoked GetAnswer method in QnaService");
             IList<Answer> qnaResultItem = new List<Answer>();
@@ -71,7 +79,7 @@ namespace Knowledge.Services.QnA
                     var jsonResponse = JsonConvert.DeserializeObject<QnAResponse>(strresponse);
                     if ( jsonResponse != null && jsonResponse.answers != null)
                     {
-                        LoggerHelper.Instance.LogEvent("QnAService", "QNAService", queryId, this.config.KnowledgeDatabaseId, questionText, jsonResponse.answers.Count);
+                        LoggerHelper.Instance.LogEvent("QnAService", "QNAService", Guid.NewGuid().ToString(), this.config.KnowledgeDatabaseId, questionText, jsonResponse.answers.Count);
 
                         qnaResultItem = this.FormatQnAResponse(jsonResponse);
                         if (qnaResultItem != null)
@@ -81,7 +89,7 @@ namespace Knowledge.Services.QnA
                             this.AddCacheEntry(questionText, JsonConvert.SerializeObject(qnaResultItem), config.CacheExpirationTime);
                         }
 
-                        LoggerHelper.Instance.LogVerbose($"End:Invoked GetAnswer method in QnaService. Return value from http endpint");
+                        LoggerHelper.Instance.LogVerbose($"End:Invoked GetAnswer method in QnaService. Return value from http endpoint");
                     }
 
                     return qnaResultItem;
@@ -89,11 +97,16 @@ namespace Knowledge.Services.QnA
             }
             catch (Exception ex)
             {
-                LoggerHelper.Instance.LogError(ex, ex.Message, "SCIO.API", "QnaService.GetAnswer");
+                LoggerHelper.Instance.LogError(ex, ex.Message, "API", "QnaService.GetAnswer");
             }
 
             LoggerHelper.Instance.LogVerbose($"End:Invoked GetAnswer method in QnaService. Return empty result");
             return new List<Answer>();
+        }
+
+        public bool IsDefault()
+        {
+            throw new NotImplementedException();
         }
 
         private IList<Answer> FormatQnAResponse(QnAResponse result)
@@ -111,5 +124,11 @@ namespace Knowledge.Services.QnA
 
             return qnaResultItems;
         }
+
+        public Task<IList<Answer>> GetAnswersAsync(string question, string docid, string doctext)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

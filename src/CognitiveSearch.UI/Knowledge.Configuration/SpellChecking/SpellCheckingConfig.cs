@@ -1,10 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Knowledge.Configuration;
-
-namespace Knowledge.Configuration.SpellChecking
-{
+namespace Knowledge.Configuration.SpellChecking {
     public class SpellCheckingConfig : AbstractServiceConfig
     {
         public string Provider { get; set; }

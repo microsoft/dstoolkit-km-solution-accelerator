@@ -31,7 +31,7 @@ namespace Knowledge.Services.SpellChecking
 
                 foreach (var item in tests)
                 {
-                    if (config.Provider.Equals(item.GetProvider()))
+                    if (config.Provider.Equals(item.GetName()))
                     {
                         provider = (ISpellCheckingService)item;
                     }

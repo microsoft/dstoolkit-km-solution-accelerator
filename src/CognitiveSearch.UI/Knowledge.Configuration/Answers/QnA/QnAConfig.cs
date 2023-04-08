@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Knowledge.Configuration;
-
-namespace Knowledge.Services.QnA
+namespace Knowledge.Configuration.Answers.QnA
 {
     public class QnAConfig : AbstractServiceConfig
     {
