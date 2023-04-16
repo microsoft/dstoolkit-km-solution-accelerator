@@ -151,7 +151,6 @@ Once you set your eyes on a document i.e. report, you could enable an interactiv
 
 Asking questions to a particular document, manually mining information or knowledge gives the end-users the power to control part of the mining process. 
 
-
 AI + People better together. 
 
 ## Interactive Chat with your entire data corpus

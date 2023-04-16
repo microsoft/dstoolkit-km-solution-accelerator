@@ -1,5 +1,5 @@
 import openai
-from approaches.approach import Approach
+from .approach import Approach
 from azure.search.documents import SearchClient
 from azure.search.documents.models import QueryType
 from langchain.llms.openai import AzureOpenAI
@@ -7,8 +7,8 @@ from langchain.prompts import PromptTemplate, BasePromptTemplate
 from langchain.callbacks.base import CallbackManager
 from langchain.agents import Tool, AgentExecutor
 from langchain.agents.react.base import ReActDocstoreAgent
-from langchainadapters import HtmlCallbackHandler
-from text import nonewlines
+from ..langchainadapters import HtmlCallbackHandler
+from ..text import nonewlines
 from typing import List
 
 class ReadDecomposeAsk(Approach):
