@@ -3,7 +3,7 @@ import mimetypes
 import time
 import logging
 import openai
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, escape
 from azure.identity import DefaultAzureCredential
 from azure.search.documents import SearchClient
 from approaches.retrievethenread import RetrieveThenReadApproach
@@ -79,7 +79,7 @@ def content_file(path):
     mime_type = blob.properties["content_settings"]["content_type"]
     if mime_type == "application/octet-stream":
         mime_type = mimetypes.guess_type(path)[0] or "application/octet-stream"
-    return blob.readall(), 200, {"Content-Type": mime_type, "Content-Disposition": f"inline; filename={path}"}
+    return blob.readall(), 200, {"Content-Type": mime_type, "Content-Disposition": f"inline; filename={escape(path)}"}
     
 @app.route("/ask", methods=["POST"])
 def ask():
@@ -92,8 +92,8 @@ def ask():
         r = impl.run(request.json["question"], request.json.get("overrides") or {})
         return jsonify(r)
     except Exception as e:
-        logging.exception("Exception in /ask")
-        return jsonify({"error": str(e)}), 500
+        logging.exception(e)
+        return jsonify({"error": "Exception in /ask"}), 500
     
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -106,8 +106,8 @@ def chat():
         r = impl.run(request.json["history"], request.json.get("overrides") or {})
         return jsonify(r)
     except Exception as e:
-        logging.exception("Exception in /chat")
-        return jsonify({"error": str(e)}), 500
+        logging.exception(e)
+        return jsonify({"error": "Exception in /chat"}), 500
 
 def ensure_openai_token():
     global openai_token
