@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Knowledge.Services.QnA
+namespace Knowledge.Services.Answers
 {
     using Knowledge.Configuration.Answers;
     using Knowledge.Configuration.Answers.QnA;

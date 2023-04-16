@@ -1,7 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.IO;
+
 using CognitiveSearch.UI.Configuration;
+
 using Knowledge.Configuration;
 using Knowledge.Configuration.Answers;
 using Knowledge.Configuration.AzureStorage;
@@ -26,6 +29,7 @@ using Knowledge.Services.SemanticSearch;
 using Knowledge.Services.SpellChecking;
 using Knowledge.Services.Translation;
 using Knowledge.Services.WebSearch;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,10 +39,12 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.Net.Http.Headers;
+
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using System.IO;
+
 using WebOptimizer;
+
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
 namespace CognitiveSearch.UI

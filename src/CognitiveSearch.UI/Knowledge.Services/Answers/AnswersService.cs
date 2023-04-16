@@ -1,19 +1,23 @@
-﻿using Knowledge.Configuration.Answers;
-using Knowledge.Models.Answers;
-using Knowledge.Services.Answers;
-using Microsoft.ApplicationInsights;
-using Microsoft.Extensions.Caching.Distributed;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Knowledge.Services.SpellChecking
+using Knowledge.Configuration.Answers;
+using Knowledge.Models.Answers;
+
+using Microsoft.ApplicationInsights;
+using Microsoft.Extensions.Caching.Distributed;
+
+namespace Knowledge.Services.Answers
 {
     public class AnswersService : AbstractService, IAnswersService
     {
-        private AnswersConfig config; 
+        private new AnswersConfig config; 
 
         public List<IAnswersProvider> provider = new();
 
@@ -36,7 +40,7 @@ namespace Knowledge.Services.SpellChecking
                     provider.Add((IAnswersProvider)item);
                 }
 
-                // If the configured spellchecking service is not found, revert config to disabled.
+                // If the configured answers service is not found, revert config to disabled.
                 if (provider.Count == 0)
                 {
                     config.IsEnabled = false;

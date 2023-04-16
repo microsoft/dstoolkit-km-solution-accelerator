@@ -1,22 +1,26 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Knowledge.Services.QnA {
-    using Azure;
-    using Azure.AI.Language.QuestionAnswering;
-    using Knowledge.Configuration.Answers;
-    using Knowledge.Configuration.Answers.Language;
-    using Knowledge.Models.Answers;
-    using Knowledge.Services.Answers;
-    using Knowledge.Services.Helpers;
-    using Microsoft.ApplicationInsights;
-    using Microsoft.Extensions.Caching.Distributed;
-    using Newtonsoft.Json;
+namespace Knowledge.Services.Answers
+{
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
+
+    using Azure;
+    using Azure.AI.Language.QuestionAnswering;
+
+    using Knowledge.Configuration.Answers;
+    using Knowledge.Configuration.Answers.Language;
+    using Knowledge.Models.Answers;
+    using Knowledge.Services.Helpers;
+
+    using Microsoft.ApplicationInsights;
+    using Microsoft.Extensions.Caching.Distributed;
+
+    using Newtonsoft.Json;
 
     public class LanguageService : AbstractService, IAnswersProvider
     {

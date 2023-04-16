@@ -10,6 +10,11 @@
     "slotSetting": true
   },
   {
+    "name": "ApplicationInsights:InstrumentationKey",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey)",
+    "slotSetting": true
+  },
+  {
     "name": "AzureWebJobsStorage",
     "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString)",
     "slotSetting": false
@@ -330,6 +335,11 @@
     "slotSetting": false
   },
   {
+    "name": "AnswersConfig:QnAConfig:Name",
+    "value": "Azure QnA Cognitive Service",
+    "slotSetting": false
+  },
+  {
     "name": "AnswersConfig:QnAConfig:CacheExpirationTime",
     "value": "30",
     "slotSetting": false
@@ -481,7 +491,7 @@
   },
   {
     "name": "OpenAIConfig:Name",
-    "value": "{{openaicfg.}}",
+    "value": "Open AI Integration",
     "slotSetting": false
   },
   {
