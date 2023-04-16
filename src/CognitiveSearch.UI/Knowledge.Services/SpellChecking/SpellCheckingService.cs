@@ -10,7 +10,7 @@ namespace Knowledge.Services.SpellChecking
 {
     public class SpellCheckingService : AbstractService, ISpellCheckingService
     {
-        public SpellCheckingConfig config;
+        private new SpellCheckingConfig config;
 
         public ISpellCheckingService provider = null;
 

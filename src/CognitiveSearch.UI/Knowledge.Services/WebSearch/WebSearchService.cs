@@ -14,13 +14,13 @@ namespace Knowledge.Services.WebSearch
 
     public class WebSearchService : AbstractService, IWebSearchService
     {
-        static string path = "/v7.0/search";
+        static readonly string path = "/v7.0/search";
 
-        static string newsPath = "/v7.0/news/search";
-        static string newsTrendsPath = "/v7.0/news/trendingtopics";
+        static readonly string newsPath = "/v7.0/news/search";
+        static readonly string newsTrendsPath = "/v7.0/news/trendingtopics";
 
-        static string imagesPath = "/v7.0/images/search";
-        static string videosPath = "/v7.0/videos/search";
+        static readonly string imagesPath = "/v7.0/images/search";
+        static readonly string videosPath = "/v7.0/videos/search";
 
         // Each of the query parameters you may specify.
         private const string QUERY_PARAMETER = "?q=";  // Required

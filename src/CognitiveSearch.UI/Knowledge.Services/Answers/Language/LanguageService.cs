@@ -24,16 +24,17 @@ namespace Knowledge.Services.Answers
 
     public class LanguageService : AbstractService, IAnswersProvider
     {
-        private LanguageConfig config;
-        private QuestionAnsweringClient client; 
+        private readonly new LanguageConfig config;
+        private readonly QuestionAnsweringClient client; 
 
         public LanguageService(AnswersConfig config, IDistributedCache cache, TelemetryClient telemetry)
         {
             this.distCache = cache;
+            this.telemetryClient = telemetry;
             this.config = config.languageConfig;
             this.CachePrefix = this.GetType().Name;
 
-            Uri endpoint = new Uri(this.config.ServiceEndpoint);
+            Uri endpoint = new(this.config.ServiceEndpoint);
             AzureKeyCredential credential = new(this.config.ServiceKey);
 
             client = new QuestionAnsweringClient(endpoint, credential);
@@ -68,39 +69,37 @@ namespace Knowledge.Services.Answers
 
             try
             {
-                using (var request = new HttpRequestMessage())
+                using var request = new HttpRequestMessage();
+                // POST method
+                request.Method = HttpMethod.Post;
+                // Add host + service to get full URI
+                request.RequestUri = new Uri(this.config.ServiceEndpoint);
+                request.Headers.Add("Ocp-Apim-Subscription-Key", this.config.ServiceKey);
+
+                request.Content = new StringContent(question, Encoding.UTF8, "application/json");
+
+                // Send request to Azure service, get response
+                var response = await httpClient.SendAsync(request);
+                string strresponse = await response.Content.ReadAsStringAsync();
+
+                var jsonResponse = JsonConvert.DeserializeObject<QnAResponse>(strresponse);
+                if (jsonResponse != null && jsonResponse.answers != null)
                 {
-                    // POST method
-                    request.Method = HttpMethod.Post;
-                    // Add host + service to get full URI
-                    request.RequestUri = new Uri(this.config.ServiceEndpoint);
-                    request.Headers.Add("Ocp-Apim-Subscription-Key", this.config.ServiceKey);
+                    LoggerHelper.LogEvent("QnAService", "QNAService", docid, this.config.ProjectName, question, jsonResponse.answers.Count);
 
-                    request.Content = new StringContent(question, Encoding.UTF8, "application/json");
+                    qnaResultItem = this.FormatQnAResponse(jsonResponse);
 
-                    // Send request to Azure service, get response
-                    var response = await httpClient.SendAsync(request);
-                    string strresponse = await response.Content.ReadAsStringAsync();
-
-                    var jsonResponse = JsonConvert.DeserializeObject<QnAResponse>(strresponse);
-                    if (jsonResponse != null && jsonResponse.answers != null)
+                    if (qnaResultItem != null)
                     {
-                        LoggerHelper.Instance.LogEvent("QnAService", "QNAService", docid, this.config.ProjectName, question, jsonResponse.answers.Count);
+                        LoggerHelper.Instance.LogVerbose($"Set QnA Result into cache.");
 
-                        qnaResultItem = this.FormatQnAResponse(jsonResponse);
-
-                        if (qnaResultItem != null)
-                        {
-                            LoggerHelper.Instance.LogVerbose($"Set QnA Result into cache.");
-
-                            this.AddCacheEntry(question, JsonConvert.SerializeObject(qnaResultItem), config.CacheExpirationTime);
-                        }
-
-                        LoggerHelper.Instance.LogVerbose($"End:Invoked GetAnswer method in QnaService. Return value from http endpint");
+                        this.AddCacheEntry(question, JsonConvert.SerializeObject(qnaResultItem), config.CacheExpirationTime);
                     }
 
-                    return qnaResultItem;
+                    LoggerHelper.Instance.LogVerbose($"End:Invoked GetAnswer method in QnaService. Return value from http endpint");
                 }
+
+                return qnaResultItem;
             }
             catch (Exception ex)
             {
@@ -158,7 +157,7 @@ namespace Knowledge.Services.Answers
                 string projectName = this.config.ProjectName;
                 string deploymentName = this.config.DeploymentName;
 
-                QuestionAnsweringProject project = new QuestionAnsweringProject(projectName, deploymentName);
+                QuestionAnsweringProject project = new(projectName, deploymentName);
 
                 Response<AnswersResult> response = client.GetAnswers(question, project);
 

@@ -21,9 +21,9 @@ namespace Knowledge.Services.SemanticSearch
 {
     public class SemanticSearch : AzureSearchRESTService, ISemanticSearchService
     {
-        ITranslationService translationService;
+        private readonly ITranslationService translationService;
 
-        SemanticSearchConfig config;
+        private readonly new SemanticSearchConfig config;
 
         public SemanticSearch(TelemetryClient telemetry,
             ITranslationService translator,
@@ -54,10 +54,7 @@ namespace Knowledge.Services.SemanticSearch
                 return new AzureSearchRESTResponse();
             }
 
-            if (request.retrievableFields == null) 
-            {
-                request.retrievableFields = this.GetModel(request.indexName).ReducedRetrievableFields;
-            }
+            request.retrievableFields ??= this.GetModel(request.indexName).ReducedRetrievableFields;
 
             if (!string.IsNullOrEmpty(request.queryText))
             {
@@ -88,10 +85,7 @@ namespace Knowledge.Services.SemanticSearch
                 return new SearchResponse();
             }
 
-            if (request.retrievableFields == null)
-            {
-                request.retrievableFields = this.GetModel(request.indexName).ReducedRetrievableFields;
-            }
+            request.retrievableFields ??= this.GetModel(request.indexName).ReducedRetrievableFields;
 
             if (!string.IsNullOrEmpty(request.queryText))
             {
@@ -125,7 +119,7 @@ namespace Knowledge.Services.SemanticSearch
 
         private AzureSearchServiceRequest CreateSemanticSearchRequest(IngressSearchRequest req)
         {
-            AzureSearchServiceRequest request = new AzureSearchServiceRequest
+            AzureSearchServiceRequest request = new()
             {
                 search = req.queryText,
                 queryType = config.queryType,
@@ -145,7 +139,7 @@ namespace Knowledge.Services.SemanticSearch
                 request.select = String.Join(",", req.retrievableFields);
             }
 
-            List<String> SelectFacets = new List<String>();
+            List<String> SelectFacets = new();
 
             foreach (String item in GetModel(req.indexName).Facets.Select(f => f.Name).ToList())
             {

@@ -1,23 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using Knowledge.Configuration;
 using Knowledge.Models;
 using Knowledge.Models.Ingress;
 using Knowledge.Services.Answers;
-using Knowledge.Services.AzureSearch.REST;
 using Knowledge.Services.Helpers;
-using Knowledge.Services.QnA;
 using Knowledge.Services.SemanticSearch;
 using Knowledge.Services.SpellChecking;
 using Knowledge.Services.Translation;
 using Knowledge.Services.WebSearch;
+
 using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Caching.Distributed;
+
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Knowledge.Services
 {
@@ -25,16 +26,16 @@ namespace Knowledge.Services
     {
         protected const string QUERY_ALL = QueryHelper.QUERY_ALL;
 
-        private ISpellCheckingService spellcheckService;
-        private ITranslationService translationService;
-        private IAnswersService qnaService;
-        private ISemanticSearchService semanticService;
-        private IWebSearchService webSearchService;
-        private IAzureSearchService searchService;
+        private readonly ISpellCheckingService spellcheckService;
+        private readonly ITranslationService translationService;
+        private readonly IAnswersService qnaService;
+        private readonly ISemanticSearchService semanticService;
+        private readonly IWebSearchService webSearchService;
+        private readonly IAzureSearchService searchService;
 
-        QueryServiceConfig queryConfig;
+        private readonly QueryServiceConfig queryConfig;
 
-        SearchServiceConfig config;
+        private readonly new SearchServiceConfig config;
 
         public QueryService(QueryServiceConfig qconfig,SearchServiceConfig configuration,
             IDistributedCache cache,
@@ -108,7 +109,8 @@ namespace Knowledge.Services
 
             SearchResponse result;
 
-            Task.WaitAll(searchTask);
+            //Task.WaitAll(searchTask);
+            Task.WaitAny(searchTask);
 
             result = searchTask.Result;
 

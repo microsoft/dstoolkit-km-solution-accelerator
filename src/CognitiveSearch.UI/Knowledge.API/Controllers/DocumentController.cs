@@ -69,7 +69,7 @@ namespace Knowledge.API.Controllers
                 {
                     JObject document = (JObject)result.Results[0]["Document"];
 
-                    JObject image = (JObject) document.GetValue("image");
+                    JObject? image = document.GetValue("image") as JObject;
 
                     if (! String.IsNullOrEmpty((string)image.GetValue("thumbnail_medium")))
                     {
@@ -99,11 +99,11 @@ namespace Knowledge.API.Controllers
                 {
                     JObject document = (JObject)result.Results[0]["Document"];
 
-                    JObject image = (JObject)document.GetValue("image");
+                    JObject? image = document.GetValue("image") as JObject;
 
                     if (! String.IsNullOrEmpty((string)image.GetValue("thumbnail_medium")))
                     {
-                        return Content((string)image.GetValue("thumbnail_medium"));
+                        return Content(content: (string)image.GetValue("thumbnail_medium"));
                     }
                 }
             }

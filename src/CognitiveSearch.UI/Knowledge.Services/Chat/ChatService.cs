@@ -17,9 +17,9 @@ namespace Knowledge.Services.Metadata
 
     public class ChatService : AbstractService, IChatService
     {
-        private readonly ChatConfig config;
+        private readonly new ChatConfig config;
 
-        private IChatProvider provider;
+        private readonly IChatProvider provider;
 
         public ChatService(ChatConfig _config, IDistributedCache cache, TelemetryClient telemetry)
         {

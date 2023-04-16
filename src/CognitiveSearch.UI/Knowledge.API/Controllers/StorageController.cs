@@ -20,7 +20,7 @@ namespace Knowledge.API.Controllers.api
     [Authorize]
     public class StorageController : AbstractApiController
     {
-        private StorageConfig _storageConfig;
+        private readonly StorageConfig _storageConfig;
 
         private readonly HttpClient client = new();
 
@@ -47,7 +47,7 @@ namespace Knowledge.API.Controllers.api
                         var extension = Path.GetExtension(formFile.FileName);
                         var mimetype = MimeTypeMap.GetMimeType(extension);
 
-                        BlobHttpHeaders httpHeaders = new BlobHttpHeaders
+                        BlobHttpHeaders httpHeaders = new()
                         {
                             ContentType = mimetype
                         };
@@ -78,7 +78,7 @@ namespace Knowledge.API.Controllers.api
 
                             var mimetype = MimeTypeMap.GetMimeType("png");
 
-                            BlobHttpHeaders httpHeaders = new BlobHttpHeaders
+                            BlobHttpHeaders httpHeaders = new()
                             {
                                 ContentType = mimetype
                             };
@@ -99,7 +99,7 @@ namespace Knowledge.API.Controllers.api
 
                             var mimetype = MimeTypeMap.GetMimeType("txt");
 
-                            BlobHttpHeaders httpHeaders = new BlobHttpHeaders
+                            BlobHttpHeaders httpHeaders = new()
                             {
                                 ContentType = mimetype
                             };
@@ -146,27 +146,27 @@ namespace Knowledge.API.Controllers.api
                     mimetype = "application/pdf";
                 }
 
-                BlobHttpHeaders httpHeaders = new BlobHttpHeaders
+                BlobHttpHeaders httpHeaders = new()
                 {
                     ContentType = mimetype
                 };
 
                 IDictionary<string, string> metadata = new Dictionary<string, string>
                 {
-                    { "document_upload", "true" }
-                };
-                //Because the filename is not used to store the document (avoid special chars and long names issues) 
-                //We set the filename as custom Metadata
-                metadata.Add("site_domain", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(host)));
+                    { "document_upload", "true" },
+                    //Because the filename is not used to store the document (avoid special chars and long names issues) 
+                    //We set the filename as custom Metadata
+                    { "site_domain", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(host)) },
 
-                metadata.Add("document_title", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(webpage.name)));
-                metadata.Add("document_snippet", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(webpage.snippet)));
+                    { "document_title", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(webpage.name)) },
+                    { "document_snippet", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(webpage.snippet)) }
+                };
 
                 byte[] byteArray = await client.GetByteArrayAsync(webpage.url);
 
                 if (byteArray.Length > 0)
                 {
-                    MemoryStream stream = new MemoryStream(byteArray);
+                    MemoryStream stream = new(byteArray);
 
                     await blockBlob.UploadAsync(stream, httpHeaders, metadata);
                 }
@@ -203,25 +203,24 @@ namespace Knowledge.API.Controllers.api
                     mimetype = "application/pdf";
                 }
 
-                BlobHttpHeaders httpHeaders = new BlobHttpHeaders
+                BlobHttpHeaders httpHeaders = new()
                 {
                     ContentType = mimetype
                 };
 
                 IDictionary<string, string> metadata = new Dictionary<string, string>
                 {
-                    { "document_upload", "true" }
+                    { "document_upload", "true" },
+                    //Because the filename is not used to store the document (avoid special chars and long names issues) 
+                    //We set the filename as custom Metadata
+                    { "site_domain", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(host)) }
                 };
-
-                //Because the filename is not used to store the document (avoid special chars and long names issues) 
-                //We set the filename as custom Metadata
-                metadata.Add("site_domain", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(host)));
 
                 byte[] byteArray = await client.GetByteArrayAsync(urltodownload);
 
                 if (byteArray.Length > 0)
                 {
-                    MemoryStream stream = new MemoryStream(byteArray);
+                    MemoryStream stream = new(byteArray);
 
                     await blockBlob.UploadAsync(stream, httpHeaders, metadata);
                 }

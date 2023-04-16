@@ -46,7 +46,7 @@ namespace Knowledge.API.Controllers
             return permissions.ToArray();
         }
 
-        protected string GetUserId()
+        protected string? GetUserId()
         {
             if (User.Identity.IsAuthenticated)
             {

@@ -18,7 +18,7 @@ namespace Knowledge.Services.Metadata
     {
         private BlobContainerClient container { get; set; }
 
-        private StorageConfig config { get; set; }
+        private new StorageConfig config { get; set; }
 
         public MetadataService(TelemetryClient telemetry, StorageConfig _config)
         {
@@ -46,7 +46,7 @@ namespace Knowledge.Services.Metadata
                 if (existingblob)
                 {
                     // Get the metadata json file from the storage
-                    MemoryStream mstream = new MemoryStream();
+                    MemoryStream mstream = new();
                     await blob.DownloadToAsync(mstream);
 
                     mstream.Seek(0, SeekOrigin.Begin);

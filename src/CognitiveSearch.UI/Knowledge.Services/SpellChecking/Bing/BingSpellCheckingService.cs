@@ -102,12 +102,12 @@ namespace Knowledge.Services.SpellChecking.Bing
 
     public class BingSpellCheckingService : AbstractService, ISpellCheckingService, ISpellCheckingProvider
     {
-        public SpellCheckingConfig config;
+        private readonly new SpellCheckingConfig config;
 
         /// <summary>
         /// The HTTP client
         /// </summary>
-        static string path = "/v7.0/spellcheck";
+        static readonly string path = "/v7.0/spellcheck";
         //static string market = "en-US";
         //static string mode = "spell";
 
@@ -119,16 +119,11 @@ namespace Knowledge.Services.SpellChecking.Bing
             httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", config.SubscriptionKey);
         }
 
-        public string GetName()
-        {
-            return "Bing";
-        }
-
         public async Task<string> SpellCheckAsync(string text)
         {
             string url = config.Endpoint + path;
 
-            List<KeyValuePair<string, string>> values = new List<KeyValuePair<string, string>>
+            List<KeyValuePair<string, string>> values = new()
             {
                 new KeyValuePair<string, string>("setLang", config.SupportedLanguages),
                 new KeyValuePair<string, string>("mkt", config.Market),
@@ -138,7 +133,7 @@ namespace Knowledge.Services.SpellChecking.Bing
 
             HttpResponseMessage response = new();
 
-            using (FormUrlEncodedContent content = new FormUrlEncodedContent(values))
+            using (FormUrlEncodedContent content = new(values))
             {
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
 

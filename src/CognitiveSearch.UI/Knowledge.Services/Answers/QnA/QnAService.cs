@@ -19,11 +19,12 @@ namespace Knowledge.Services.Answers
 
     public class QnAService : AbstractService, IAnswersProvider
     {
-        private QnAConfig config;
+        private readonly new QnAConfig config;
 
         public QnAService(AnswersConfig config, IDistributedCache cache, TelemetryClient telemetry)
         {
             this.distCache = cache;
+            this.telemetryClient = telemetry;
             this.config = config.qnaConfig;
             this.CachePrefix = this.GetType().Name;
         }
@@ -59,41 +60,39 @@ namespace Knowledge.Services.Answers
 
             try
             {
-                using (var request = new HttpRequestMessage())
+                using var request = new HttpRequestMessage();
+                // POST method
+                request.Method = HttpMethod.Post;
+                // Add host + service to get full URI
+                request.RequestUri = new Uri(uri);
+                // set question
+                request.Content = new StringContent(question, Encoding.UTF8, "application/json");
+                // QnA Maker v1 Authorization
+                request.Headers.Add("Authorization", "EndpointKey " + this.config.QNAserviceKey);
+                // QnA Maker v2 Preview is now a Cognitive Service
+                request.Headers.Add("Ocp-Apim-Subscription-Key", this.config.QNAserviceKey);
+
+                // Send request to Azure service, get response
+                var response = await httpClient.SendAsync(request);
+                string strresponse = await response.Content.ReadAsStringAsync();
+
+                var jsonResponse = JsonConvert.DeserializeObject<QnAResponse>(strresponse);
+                if (jsonResponse != null && jsonResponse.answers != null)
                 {
-                    // POST method
-                    request.Method = HttpMethod.Post;
-                    // Add host + service to get full URI
-                    request.RequestUri = new Uri(uri);
-                    // set question
-                    request.Content = new StringContent(question, Encoding.UTF8, "application/json");
-                    // QnA Maker v1 Authorization
-                    request.Headers.Add("Authorization", "EndpointKey " + this.config.QNAserviceKey);
-                    // QnA Maker v2 Preview is now a Cognitive Service
-                    request.Headers.Add("Ocp-Apim-Subscription-Key", this.config.QNAserviceKey);
+                    LoggerHelper.LogEvent("QnAService", "QNAService", Guid.NewGuid().ToString(), this.config.KnowledgeDatabaseId, questionText, jsonResponse.answers.Count);
 
-                    // Send request to Azure service, get response
-                    var response = await httpClient.SendAsync(request);
-                    string strresponse = await response.Content.ReadAsStringAsync(); 
-
-                    var jsonResponse = JsonConvert.DeserializeObject<QnAResponse>(strresponse);
-                    if ( jsonResponse != null && jsonResponse.answers != null)
+                    qnaResultItem = this.FormatQnAResponse(jsonResponse);
+                    if (qnaResultItem != null)
                     {
-                        LoggerHelper.Instance.LogEvent("QnAService", "QNAService", Guid.NewGuid().ToString(), this.config.KnowledgeDatabaseId, questionText, jsonResponse.answers.Count);
+                        LoggerHelper.Instance.LogVerbose($"Set QnA Result into cache.");
 
-                        qnaResultItem = this.FormatQnAResponse(jsonResponse);
-                        if (qnaResultItem != null)
-                        {
-                            LoggerHelper.Instance.LogVerbose($"Set QnA Result into cache.");
-
-                            this.AddCacheEntry(questionText, JsonConvert.SerializeObject(qnaResultItem), config.CacheExpirationTime);
-                        }
-
-                        LoggerHelper.Instance.LogVerbose($"End:Invoked GetAnswer method in QnaService. Return value from http endpoint");
+                        this.AddCacheEntry(questionText, JsonConvert.SerializeObject(qnaResultItem), config.CacheExpirationTime);
                     }
 
-                    return qnaResultItem;
+                    LoggerHelper.Instance.LogVerbose($"End:Invoked GetAnswer method in QnaService. Return value from http endpoint");
                 }
+
+                return qnaResultItem;
             }
             catch (Exception ex)
             {

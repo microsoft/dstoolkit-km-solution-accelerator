@@ -166,7 +166,7 @@ namespace Knowledge.Services.AzureSearch.SDK
 
             // For more information on search parameters visit: 
             // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.search.models.searchparameters?view=azure-dotnet
-            SearchOptions options = new SearchOptions()
+            SearchOptions options = new()
             {
 
                 SearchMode = SearchMode.All,
@@ -191,7 +191,7 @@ namespace Knowledge.Services.AzureSearch.SDK
             }
 
             // Facets filter
-            List<String> facetsList = new List<String>();
+            List<String> facetsList = new();
 
             //if (selectFacets != null && selectFacets.Count > 0)
             if (selectFacets != null)
@@ -287,7 +287,7 @@ namespace Knowledge.Services.AzureSearch.SDK
 
         private async Task<string> GenerateSearchId(string searchText, SearchOptions options)
         {
-            return Guid.NewGuid().ToString();
+            return await Task.Run(() => Guid.NewGuid().ToString());
         }
 
         public string GetSearchId()
@@ -319,11 +319,11 @@ namespace Knowledge.Services.AzureSearch.SDK
                     // Populate selected facets from the Search Model
                     foreach (var facetResult in response.Facets.Where(f => this.GetModel(indexName).Facets.Where(x => x.Name == f.Key).Any()))
                     {
-                        List<FacetValue> values = new List<FacetValue>();
+                        List<FacetValue> values = new();
 
                         foreach (FacetResult fr in facetResult.Value)
                         {
-                            FacetValue fv = new FacetValue
+                            FacetValue fv = new()
                             {
                                 count = (long)fr.Count
                             };
@@ -407,7 +407,7 @@ namespace Knowledge.Services.AzureSearch.SDK
 
         public async Task RunIndexer(string indexerName)
         {
-            SearchIndexerClient _searchIndexerClient = new SearchIndexerClient(new Uri($"https://{this.serviceConfig.ServiceName}.search.windows.net/"), new AzureKeyCredential(this.serviceConfig.AdminKey));
+            SearchIndexerClient _searchIndexerClient = new(new Uri($"https://{this.serviceConfig.ServiceName}.search.windows.net/"), new AzureKeyCredential(this.serviceConfig.AdminKey));
 
             var indexStatus = await _searchIndexerClient.GetIndexerStatusAsync(indexerName);
             if (indexStatus.Value.LastResult.Status != IndexerExecutionStatus.InProgress)
@@ -461,11 +461,11 @@ namespace Knowledge.Services.AzureSearch.SDK
             UserOptions userOptions = new();
 
             // Perform search based on query, facets, filter, etc.
-            var response = this.SearchDocuments(searchText: QUERY_ALL,
+            var response = await Task.Run(() => this.SearchDocuments(searchText: QUERY_ALL,
                                                 incomingfilter: embeddedfilter,
                                                 parameters: queryParameters,
                                                 permissions: request.permissions,
-                                                indexName: request.indexName);
+                                                indexName: request.indexName));
 
             var results = response.GetResults();
 
@@ -500,13 +500,13 @@ namespace Knowledge.Services.AzureSearch.SDK
             UserOptions userOptions = new();
 
             // Perform search based on query, facets, filter, etc.
-            var response = this.SearchDocuments(searchText: QUERY_ALL,
+            var response = await Task.Run(() => this.SearchDocuments(searchText: QUERY_ALL,
                                                 selectFacets: new List<string>(),
                                                 selectFields: this.GetModel(request.indexName).ReducedRetrievableFields,
                                                 incomingfilter: embeddedfilter,
                                                 parameters: queryParameters,
                                                 permissions: request.permissions,
-                                                indexName: request.indexName);
+                                                indexName: request.indexName));
 
             var searchId = this.GetSearchId().ToString();
 
@@ -519,13 +519,13 @@ namespace Knowledge.Services.AzureSearch.SDK
         public async Task<SearchResponse> GetDocumentSiblings(IngressSearchRequest request)
         {
             // Perform search based on query, facets, filter, etc.
-            var response = this.SearchDocuments(searchText: QUERY_ALL,
+            var response = await Task.Run(() => this.SearchDocuments(searchText: QUERY_ALL,
                                                 selectFacets: new List<string>(),
                                                 selectFields: this.GetModel(request.indexName).ReducedRetrievableFields,
                                                 incomingfilter: request.incomingFilter,
                                                 parameters: request.parameters,
                                                 permissions: request.permissions,
-                                                indexName: request.indexName);
+                                                indexName: request.indexName));
 
             var searchId = this.GetSearchId().ToString();
 
@@ -547,13 +547,13 @@ namespace Knowledge.Services.AzureSearch.SDK
             UserOptions userOptions = new();
 
             // Perform search based on query, facets, filter, etc.
-            var response = this.SearchDocuments(searchText: QUERY_ALL,
+            var response = await Task.Run(() => this.SearchDocuments(searchText: QUERY_ALL,
                                                 selectFacets: new List<string>(),
                                                 selectFields: this.GetModel(request.indexName).ReducedRetrievableFields,
                                                 incomingfilter: embeddedfilter,
                                                 parameters: queryParameters,
                                                 permissions: request.permissions,
-                                                indexName: request.indexName);
+                                                indexName: request.indexName));
 
             var searchId = this.GetSearchId().ToString();
 
@@ -566,8 +566,7 @@ namespace Knowledge.Services.AzureSearch.SDK
         {
             SearchDocument response = await this.LookUp(request.indexName, request.index_key);
 
-            object document_id = null;
-
+            object document_id;
             if (response.TryGetValue("document_id", out document_id))
             {
                 request.document_id = (string)document_id; 
@@ -599,7 +598,7 @@ namespace Knowledge.Services.AzureSearch.SDK
             UserOptions userOptions = new();
 
             // Perform search based on query, facets, filter, etc.
-            var response = this.SearchDocuments(searchText: request.queryText,
+            var response = await Task.Run(() => this.SearchDocuments(searchText: request.queryText,
                                                 searchFacets: request.searchFacets,
                                                 selectFacets: new List<string>(),
                                                 selectFields: this.GetModel(request.indexName).ReducedRetrievableFields,
@@ -607,7 +606,7 @@ namespace Knowledge.Services.AzureSearch.SDK
                                                 incomingfilter: embeddedfilter,
                                                 parameters: queryParameters,
                                                 permissions: request.permissions,
-                                                indexName: request.indexName);
+                                                indexName: request.indexName));
 
             var searchId = this.GetSearchId().ToString();
 
@@ -800,14 +799,14 @@ namespace Knowledge.Services.AzureSearch.SDK
             UserOptions userOptions = request.options ?? (new());
 
             // Perform search based on query, facets, filter, etc.
-            var response = this.SearchDocuments(searchText: request.queryText,
+            var response = await Task.Run(() => this.SearchDocuments(searchText: request.queryText,
                                                 searchFacets: request.searchFacets,
                                                 selectFacets: new List<string>(),
                                                 selectFields: this.GetModel(request.indexName).ReducedRetrievableFields,
                                                 currentPage: request.currentPage,
                                                 incomingfilter: embeddedfilter,
                                                 parameters: queryParameters,
-                                                permissions: request.permissions, indexName: request.indexName);
+                                                permissions: request.permissions, indexName: request.indexName));
 
             var searchId = this.GetSearchId().ToString();
 

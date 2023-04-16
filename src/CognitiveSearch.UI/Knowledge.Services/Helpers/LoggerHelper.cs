@@ -12,16 +12,16 @@ namespace Knowledge.Services.Helpers
 
     public class LoggerHelper
     {
-        private bool enableLogger;
+        private readonly bool enableLogger;
 
-        private SeverityLevel minSevLevel;
+        private readonly SeverityLevel minSevLevel;
 
         //Our single instance of the singleton
         public static LoggerHelper Instance { get { return lazy.Value; } }
 
-        private static readonly Lazy<LoggerHelper> lazy = new Lazy<LoggerHelper>(() => new LoggerHelper());
+        private static readonly Lazy<LoggerHelper> lazy = new(() => new LoggerHelper());
 
-        private static TelemetryClient telemetryClient = new TelemetryClient(TelemetryConfiguration.CreateDefault());
+        private static readonly TelemetryClient telemetryClient = new(TelemetryConfiguration.CreateDefault());
 
         //Private constructor to deny instance creation of this class from outside
         private LoggerHelper()
@@ -64,7 +64,7 @@ namespace Knowledge.Services.Helpers
                 return;
             }
 
-            Dictionary<string, string> telemetricProps = new Dictionary<string, string>
+            Dictionary<string, string> telemetricProps = new()
             {
                 [ServicesConstants.AppInsightsCategory] = $"{applicationName}-{moduleName}",
                 [ServicesConstants.ApplicationName] = applicationName,
@@ -89,7 +89,7 @@ namespace Knowledge.Services.Helpers
             }
 
             // Data to push into AI which can be searched on
-            Dictionary<string, string> telemetricProps = new Dictionary<string, string>()
+            Dictionary<string, string> telemetricProps = new()
             {
                 [ServicesConstants.AppInsightsCategory] = $"{applicationName}-{moduleName}",
                 [ServicesConstants.ApplicationName] = applicationName,
@@ -115,7 +115,7 @@ namespace Knowledge.Services.Helpers
                 return;
             }
 
-            Dictionary<string, string> telemetricProps = new Dictionary<string, string>()
+            Dictionary<string, string> telemetricProps = new()
             {
                 [ServicesConstants.AppInsightsMessage] = message,
                 [ServicesConstants.AppInsightsCategory] = $"{applicationName}-{moduleName}",
@@ -140,7 +140,7 @@ namespace Knowledge.Services.Helpers
                 return;
             }
 
-            Dictionary<string, string> telemetricProps = new Dictionary<string, string>()
+            Dictionary<string, string> telemetricProps = new()
             {
                 [ServicesConstants.AppInsightsCategory] = $"{applicationName}-{moduleName}",
                 [ServicesConstants.ApplicationName] = applicationName,
@@ -160,7 +160,7 @@ namespace Knowledge.Services.Helpers
         /// <param name="indexName">Application name.</param>
         /// <param name="queryText">Module name.</param>
         /// <param name="resultCount">Module name.</param>
-        public void LogEvent(string eventName, string serviceName, string searchId, string indexName, string queryText, int resultCount)
+        public static void LogEvent(string eventName, string serviceName, string searchId, string indexName, string queryText, int resultCount)
         {
             var properties = new Dictionary<string, string>
             {
@@ -174,13 +174,13 @@ namespace Knowledge.Services.Helpers
             telemetryClient.TrackEvent(eventName, properties);
         }
 
-        //Implement functionality as public instance methods
-        public void ConfigureLoggerSettings(string key, bool enableLogger, SeverityLevel severityLevel)
-        {
-            telemetryClient.InstrumentationKey = key;
-            this.enableLogger = enableLogger;
-            this.minSevLevel = severityLevel;
-        }
+        ////Implement functionality as public instance methods
+        //public void ConfigureLoggerSettings(string key, bool enableLogger, SeverityLevel severityLevel)
+        //{
+        //    telemetryClient.InstrumentationKey = key;
+        //    this.enableLogger = enableLogger;
+        //    this.minSevLevel = severityLevel;
+        //}
 
         /// <summary>
         /// Returns whether logging is enabled.
