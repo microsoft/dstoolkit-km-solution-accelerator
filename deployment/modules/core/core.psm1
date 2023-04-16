@@ -197,7 +197,7 @@ function Get-Parameters {
 function Add-Param {
     param (
         [string] $Name,
-        [string] $Value
+        [object] $Value
     )
     if ( $global:params.PSobject.Properties.name -eq $Name) {
         $global:params.$Name = $Value
@@ -217,7 +217,7 @@ function Get-ParamValue() {
     if ($value) {
         if ($AsSecureString) {
             $value = ConvertTo-SecureString -String $value
-        }    
+        }
     }
 
     return $value
@@ -325,7 +325,7 @@ function Sync-Parameters {
 }
 
 function Initialize-StorageConfig {
-    # Container
+    # first Container is designated as data container
     $dataStorageContainerName = $params.storageContainers[0];
     Add-Param "dataStorageContainerName" $dataStorageContainerName
 
