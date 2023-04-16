@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CognitiveSearch.UI", "CognitiveSearch.UI\CognitiveSearch.UI.csproj", "{857387B9-8F3D-4AF8-B2DC-49839BED7BA1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1FEAB1A9-4863-4A4E-B6B9-E3B8297B32D9} = {1FEAB1A9-4863-4A4E-B6B9-E3B8297B32D9}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Knowledge.Services", "Knowledge.Services\Knowledge.Services.csproj", "{1FEAB1A9-4863-4A4E-B6B9-E3B8297B32D9}"
 EndProject
