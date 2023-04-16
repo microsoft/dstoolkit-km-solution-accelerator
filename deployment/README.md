@@ -252,7 +252,7 @@ As a result, if Bing is a requirement for your deployment, you will be asked to 
 
 | Services | Configuration parameter | Impact |
 | ------------- | ----------- | ----------- | 
-| Bing | webSearchEnabled or (config.spellCheckEnabled and config.spellCheckProvider is set to "Bing") | A value of true in your config will ask you to manually input the Bing Search Key while deploying |
+| Bing | bingEnabled or (config.spellCheckEnabled and config.spellCheckProvider is set to "Bing") | A value of true in your config will ask you to manually input the Bing Search Key while deploying |
 
 ## 5 Deploy Azure Functions
 

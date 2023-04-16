@@ -48,6 +48,8 @@ In a nutshell,
 "groupMembershipClaims": "SecurityGroup"
 ```
 
+Refer to Content Security model documentation in the Security page for more explanation on why Security Groups are needed. 
+
 # Update the environment configuration clientId 
 
 As your Enterprise Application is created, amend your environment deployment configuration to adjust the client id parameter.  

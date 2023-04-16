@@ -15,9 +15,9 @@ namespace Knowledge.Services.Graph.Custom
 
     public class GraphService : AbstractSearchService, IGraphCustomService
     {
-        private List<string> ignoreFields = new List<string>();
+        private readonly List<string> ignoreFields = new();
 
-        private GraphConfig config;
+        private readonly new GraphConfig config;
 
         public GraphService(TelemetryClient telemetry, IDistributedCache cache, SearchServiceConfig serviceConfig, GraphConfig gConfig)
         {
@@ -39,7 +39,7 @@ namespace Knowledge.Services.Graph.Custom
         {
             LoggerHelper.Instance.LogVerbose($"Start: Invoked GenerateGraph method");
 
-            return new GraphResponse();
+            return await Task.Run(() => new GraphResponse());
 
             //// Default value for number of children
             //if (graphEntity.NumberOfNeighbors == 0)

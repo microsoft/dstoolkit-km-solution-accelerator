@@ -1,8 +1,7 @@
 {
-    "enable": true,
+    "enable": false,
     "Parameters": {
-        "maps":"{{config.name}}maps",
-        "mapSearchEnabled": false
+        "maps":"{{config.name}}maps"
     },
     "Items": [
         {

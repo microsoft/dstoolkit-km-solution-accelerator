@@ -20,7 +20,7 @@ Microsoft.Tables = {
 
         if (path !== null) {
 
-            resultsHtml += '<div class="row results-cluster-row border-top border-3 border-warning">';
+            resultsHtml += '<div class="row results-cluster-row border-top border-3 border-secondary mt-1">';
             resultsHtml += '<div class="col-md-2">';
 
             resultsHtml += '<div class="row">';
@@ -76,7 +76,13 @@ Microsoft.Tables = {
                 var extraMetadataContainerHTML = '';
 
                 var table_id = docresult.index_key + i;
-                extraMetadataContainerHTML += '<div class="container mt-2 border-start border-2 border-warning" style="overflow-x:auto;">';
+
+                if (docresult.document.translated) {
+                    extraMetadataContainerHTML += '<div class="container mt-2 border-start border-2 border-warning" style="overflow-x:auto;">';
+                }
+                else {
+                    extraMetadataContainerHTML += '<div class="container mt-2 border-start border-2 border-primary" style="overflow-x:auto;">';
+                }
 
                 extraMetadataContainerHTML += '<table id=' + table_id + ' class="table table-hover table-striped">';
                 extraMetadataContainerHTML += '<thead>';
@@ -165,6 +171,30 @@ Microsoft.Tables = {
 
                 extraMetadataContainerHTML += '</div><br/>';
 
+                // Table Chat
+                extraMetadataContainerHTML += '<div id="' + table_id + '-chat" >';
+                extraMetadataContainerHTML += '<div id="' + table_id + '-chat-content-chat-prompt-content" class="d-none">';
+                //TODO convert table matrix to CSV Format
+                var csvformat = '';
+                for (var l = 0; l < table_matrix.length; l++) {
+                    csvformat += '|';
+                    for (var k = 0; k < table_matrix[l].length; k++) {
+                        if (table_matrix[l][k] && table_matrix[l][k].text) {
+                            csvformat += table_matrix[l][k].text + '|';
+                        }
+                        else {
+                            csvformat += ' |';
+                        }
+                    }
+                    csvformat += '\n';
+                }
+                extraMetadataContainerHTML += csvformat;
+                extraMetadataContainerHTML += '</div>';
+
+                extraMetadataContainerHTML += '<div id="' + table_id + '-chat-content" >';
+                extraMetadataContainerHTML += '</div>';
+                extraMetadataContainerHTML += '</div>';
+
                 $(target_tag_id).append(extraMetadataContainerHTML);
 
                 var table = $('#' + table_id).DataTable({
@@ -179,7 +209,9 @@ Microsoft.Tables = {
                     searching: false
                 });
 
-                table.buttons().container().appendTo('#' + table_id+'_wrapper .col-md-6:eq(0)');
+                table.buttons().container().appendTo('#' + table_id + '_wrapper .col-md-6:eq(0)');
+
+                Microsoft.Search.Results.Chat.render_chat_view(table_id+"-chat-content","Ask your table anything...","TableChat");
             }
 
             if (tables.length > 0) {
@@ -209,7 +241,16 @@ Microsoft.Tables = {
             }
             Microsoft.View.currentQuery = $("#q").val();
 
-            // Get center of map to use to score the search results
+            var rendering_filter = Microsoft.View.config.filter ? Microsoft.View.config.filter : '';
+
+            if (Microsoft.Search.results_rendering > -1) {
+                if (Microsoft.View.config.resultsRenderings[Microsoft.Search.results_rendering].filter) {
+                    if (rendering_filter.length > 0) {
+                        rendering_filter += ' and ';
+                    }
+                    rendering_filter += Microsoft.View.config.resultsRenderings[Microsoft.Search.results_rendering].filter;
+                }
+            }
 
             $.postAPIJSON('/api/search/getdocuments',
                 {
@@ -218,7 +259,7 @@ Microsoft.Tables = {
                     currentPage: ++Microsoft.Search.currentPage,
                     parameters: Microsoft.Search.Parameters,
                     options: Microsoft.Search.Options,
-                    incomingFilter: 'tables_count ge 1'
+                    incomingFilter: rendering_filter
                 },
                 function (data) {
                     Microsoft.Tables.TablesUpdate(data, Microsoft.Search.currentPage);

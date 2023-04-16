@@ -21,7 +21,7 @@
     },
     {
         "name": "NEO4J_ENABLED",
-        "value": "{{param.Neo4jEnabled}}",
+        "value": "{{param.graphEnabled}}",
         "slotSetting": false
     },
     {

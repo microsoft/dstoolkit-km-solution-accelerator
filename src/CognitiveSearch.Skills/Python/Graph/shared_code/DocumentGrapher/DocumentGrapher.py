@@ -199,28 +199,28 @@ def merge_document_node_tx(tx, document):
 
     if is_image(document):
         category='Image'
-        CIPHER_QUERY=f'MERGE (n:Image {{key: "{dockey}", name: "{title}", last_modified:"{last_modified}"}}) RETURN n.key AS result'
+        CYPHER_QUERY=f'MERGE (n:Image {{key: "{dockey}", name: "{title}", last_modified:"{last_modified}"}}) RETURN n.key AS result'
     elif is_slide(document):
         category='Slide'
-        CIPHER_QUERY=f'MERGE (n:Slide {{key: "{dockey}", name: "{title}", number:{page_number}, last_modified:"{last_modified}"}}) RETURN n.key AS result'
+        CYPHER_QUERY=f'MERGE (n:Slide {{key: "{dockey}", name: "{title}", number:{page_number}, last_modified:"{last_modified}"}}) RETURN n.key AS result'
         parent_node = True
     elif is_page(document):
         category='Page'
-        CIPHER_QUERY=f'MERGE (n:Page {{key: "{dockey}", name: "{title}", number:{page_number}, last_modified:"{last_modified}"}}) RETURN n.key AS result'
+        CYPHER_QUERY=f'MERGE (n:Page {{key: "{dockey}", name: "{title}", number:{page_number}, last_modified:"{last_modified}"}}) RETURN n.key AS result'
         parent_node = True
     else:
         category='Document'
-        CIPHER_QUERY=f'MERGE (n:Document {{key: "{dockey}", name: "{title}", last_modified:"{last_modified}"}}) RETURN n.key AS result'
+        CYPHER_QUERY=f'MERGE (n:Document {{key: "{dockey}", name: "{title}", last_modified:"{last_modified}"}}) RETURN n.key AS result'
 
-    result = tx.run(CIPHER_QUERY)
+    result = tx.run(CYPHER_QUERY)
     noderecord = result.single()
 
     if parent_node:
         # Parent relationship
         if 'document_parent' in document:
             parentkey=document['document_parent']['key']
-            CIPHER_QUERY=f'MATCH (parent:Document {{key: "{parentkey}"}}), (doc:NODETYPE {{key: "{dockey}"}}) MERGE (parent)<-[r:PARENT]-(doc) RETURN type(r) AS result'
-            result = tx.run(CIPHER_QUERY.replace("NODETYPE",category))
+            CYPHER_QUERY=f'MATCH (parent:Document {{key: "{parentkey}"}}), (doc:NODETYPE {{key: "{dockey}"}}) MERGE (parent)<-[r:PARENT]-(doc) RETURN type(r) AS result'
+            result = tx.run(CYPHER_QUERY.replace("NODETYPE",category))
             parent_record = result.single()
         
     return noderecord["result"], category
@@ -256,11 +256,11 @@ def merge_ner_node_tx(tx, entity):
     name=entity['text']
     # score=entity['confidenceScore']
 
-    CIPHER_QUERY=f'MERGE (n:CATEGORY {{name: "{name}", key:"{name}"}}) RETURN n.key AS result'
+    CYPHER_QUERY=f'MERGE (n:CATEGORY {{name: "{name}", key:"{name}"}}) RETURN n.key AS result'
 
     # query = ("MERGE (n:CATEGORY {name: '$name', key:'$name', confidenceScore:$score}) RETURN n.key AS result").replace("CATEGORY",entity['category'])
     # result = tx.run(query, name=entity['text'], score=entity['confidenceScore'])
-    result = tx.run(CIPHER_QUERY.replace("CATEGORY",entity['category']))
+    result = tx.run(CYPHER_QUERY.replace("CATEGORY",entity['category']))
     record = result.single()
     return record["result"]
 
@@ -277,8 +277,8 @@ def merge_document_ner_edge_tx(tx, category, document, entity):
     count=entity['count']
 
     # Query
-    CIPHER_QUERY=f'MATCH (ent:CATEGORY {{key:"{entid}"}}), (doc:NODETYPE {{key:"{docid}"}}) MERGE (doc)-[r:REFERENCES {{count:{count}}}]->(ent) RETURN type(r) AS result'
-    result = tx.run(CIPHER_QUERY.replace("CATEGORY",entcat).replace("NODETYPE",category))
+    CYPHER_QUERY=f'MATCH (ent:CATEGORY {{key:"{entid}"}}), (doc:NODETYPE {{key:"{docid}"}}) MERGE (doc)-[r:REFERENCES {{count:{count}}}]->(ent) RETURN type(r) AS result'
+    result = tx.run(CYPHER_QUERY.replace("CATEGORY",entcat).replace("NODETYPE",category))
     record = result.single()
     return record["result"]
 
@@ -318,8 +318,8 @@ def merge_linked_entities(entities):
 def merge_entity_node_tx(tx, entity):
     entid = get_linkent_id(entity)
     name=entity['name']
-    CIPHER_QUERY=f'MERGE (n:Entity {{key:"{entid}", name: "{name}"}}) RETURN n.key AS result'
-    result = tx.run(CIPHER_QUERY)
+    CYPHER_QUERY=f'MERGE (n:Entity {{key:"{entid}", name: "{name}"}}) RETURN n.key AS result'
+    result = tx.run(CYPHER_QUERY)
     record = result.single()
     return record["result"]
 
@@ -329,21 +329,21 @@ def merge_document_entity_edge_tx(tx, category, document, entity):
     entid = get_linkent_id(entity)
     strength=len(entity['matches'])
     # Query
-    CIPHER_QUERY=f'MATCH (ent:Entity {{key: "{entid}"}}), (doc:NODETYPE {{key: "{docid}"}}) MERGE (doc)-[r:LINKED {{strength:{strength}}}]->(ent) RETURN type(r) AS result'
-    result = tx.run(CIPHER_QUERY.replace("NODETYPE",category))
+    CYPHER_QUERY=f'MATCH (ent:Entity {{key: "{entid}"}}), (doc:NODETYPE {{key: "{docid}"}}) MERGE (doc)-[r:LINKED {{strength:{strength}}}]->(ent) RETURN type(r) AS result'
+    result = tx.run(CYPHER_QUERY.replace("NODETYPE",category))
     record = result.single()
     return record["result"]
 
 def merge_entity_source_tx(tx, name):
-    CIPHER_QUERY=f'MERGE (n:EntitySource {{name:"{name}"}}) RETURN n.name AS result'
-    result = tx.run(CIPHER_QUERY)
+    CYPHER_QUERY=f'MERGE (n:EntitySource {{name:"{name}"}}) RETURN n.name AS result'
+    result = tx.run(CYPHER_QUERY)
     record = result.single()
     return record["result"]
 
 def merge_document_entity_source_edge_tx (tx, key, value):
     entid=value['entid']
     url=value['url']
-    CIPHER_QUERY=f'MATCH (ent:Entity {{key: "{entid}"}}), (src:EntitySource {{name: "{key}"}}) MERGE (ent)-[r:SOURCED {{url:"{url}"}}]->(src) RETURN type(r) AS result'
-    result = tx.run(CIPHER_QUERY)
+    CYPHER_QUERY=f'MATCH (ent:Entity {{key: "{entid}"}}), (src:EntitySource {{name: "{key}"}}) MERGE (ent)-[r:SOURCED {{url:"{url}"}}]->(src) RETURN type(r) AS result'
+    result = tx.run(CYPHER_QUERY)
     record = result.single()
     return record["result"]

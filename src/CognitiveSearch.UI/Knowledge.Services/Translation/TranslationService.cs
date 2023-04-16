@@ -14,7 +14,7 @@ namespace Knowledge.Services.Translation
 {
     public class TranslationService : AbstractService, ITranslationService
     {
-        public TranslationConfig config;
+        private readonly new TranslationConfig config;
 
         public TranslationService(IDistributedCache cache, TranslationConfig serviceConfig, TelemetryClient telemetry)
         {
@@ -35,49 +35,47 @@ namespace Knowledge.Services.Translation
 
             var requestBody = JsonConvert.SerializeObject(body);
 
-            using (var request = new HttpRequestMessage())
+            using var request = new HttpRequestMessage();
+            // In the next few sections you'll add code to construct the request.
+
+            // Build the request.
+            // Set the method to Post.
+            request.Method = HttpMethod.Post;
+            // Construct the URI and add headers.
+            request.RequestUri = new Uri(this.config.Endpoint + route);
+            request.Content = new StringContent(requestBody, Encoding.UTF8, "application/json");
+            request.Headers.Add("Ocp-Apim-Subscription-Key", this.config.SubscriptionKey);
+            request.Headers.Add("Ocp-Apim-Subscription-Region", this.config.ServiceRegion);
+
+            // Send the request and get response.
+            HttpResponseMessage response = await httpClient.SendAsync(request).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
             {
-                // In the next few sections you'll add code to construct the request.
+                // Read response as a string.
+                string result = await response.Content.ReadAsStringAsync();
 
-                // Build the request.
-                // Set the method to Post.
-                request.Method = HttpMethod.Post;
-                // Construct the URI and add headers.
-                request.RequestUri = new Uri(this.config.Endpoint + route);
-                request.Content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-                request.Headers.Add("Ocp-Apim-Subscription-Key", this.config.SubscriptionKey);
-                request.Headers.Add("Ocp-Apim-Subscription-Region", this.config.ServiceRegion);
-
-                // Send the request and get response.
-                HttpResponseMessage response = await httpClient.SendAsync(request).ConfigureAwait(false);
-
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    // Read response as a string.
-                    string result = await response.Content.ReadAsStringAsync();
-
-                    try
+                    // Deserialize the response using the classes created earlier.
+                    TranslationResult[] deserializedOutput = JsonConvert.DeserializeObject<TranslationResult[]>(result);
+                    // Iterate over the deserialized results.
+                    foreach (TranslationResult o in deserializedOutput)
                     {
-                        // Deserialize the response using the classes created earlier.
-                        TranslationResult[] deserializedOutput = JsonConvert.DeserializeObject<TranslationResult[]>(result);
-                        // Iterate over the deserialized results.
-                        foreach (TranslationResult o in deserializedOutput)
+                        // Iterate over the results and print each translation.
+                        foreach (Translation t in o.Translations)
                         {
-                            // Iterate over the results and print each translation.
-                            foreach (Translation t in o.Translations)
-                            {
-                                return t;
-                            }
+                            return t;
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        this.telemetryClient.TrackException(ex);
-                    }
                 }
-
-                return null;
+                catch (Exception ex)
+                {
+                    this.telemetryClient.TrackException(ex);
+                }
             }
+
+            return null;
         }
 
 

@@ -1,0 +1,18 @@
+### Input 1
+POST http://localhost:7071/openai/chatretrieve
+content-type: application/json;charset=utf-8
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "method":"Ask",
+                "approach":"rda",
+                "question": "What's the difference between garbanzo beans and chickpeas?",
+                "overrides":{}
+            }
+        }
+    ]
+}
+

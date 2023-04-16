@@ -2,10 +2,10 @@
     "enable": true,
     "GroupId": "Functions",
     "Apptype": "FunctionApp",
-    "PrivateDNSZone":"privatelink.azurewebsites.net",
-    "Parameters" : [],
+    "PrivateDNSZone": "privatelink.azurewebsites.net",
+    "Parameters": [],
     "AppPlans": [
-         {
+        {
             "Id": "skillsplan",
             "Name": "{{config.name}}skillsplan",
             "Sku": "{{param.pricing.premium}}",
@@ -238,6 +238,35 @@
                         },
                         {
                             "Name": "DocumentGrapherHttpStart"
+                        }
+                    ],
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": true
+                }
+            ]
+        },
+        {
+            "Id": "openaiplan",
+            "Name": "{{config.name}}openaiplan",
+            "Sku": "{{param.pricing.premium}}",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "IsLinux": true,
+            "Services": [
+                {
+                    "Id": "openai",
+                    "Name": "{{config.name}}oai",
+                    "Version": 4,
+                    "PythonVersion": 3.9,
+                    "Path": "src\\CognitiveSearch.Skills\\Python\\OpenAI",
+                    "Functions": [
+                        {
+                            "Name": "Completion"
+                        },
+                        {
+                            "Name": "ChatCompletion"
+                        },
+                        {
+                            "Name": "ChatGraph"
                         }
                     ],
                     "AccessIPRestriction": false,

@@ -51,11 +51,11 @@ namespace Knowledge.API.Controllers
                                                            string? suggester = "suggester1",
                                                            string? indexName = DEFAULT_INDEX_NAME)
         {
-            List<string> candidates = new List<string>();
+            List<string> candidates = new();
 
             if (!string.IsNullOrEmpty(term))
             {
-                ApiSuggestionRequest request = new ApiSuggestionRequest
+                ApiSuggestionRequest request = new()
                 {
                     indexName = indexName,
                     term = term,
@@ -90,7 +90,7 @@ namespace Knowledge.API.Controllers
 
             if (!string.IsNullOrEmpty(term))
             {
-                ApiSuggestionRequest request = new ApiSuggestionRequest
+                ApiSuggestionRequest request = new()
                 {
                     indexName = indexName,
                     term = term,

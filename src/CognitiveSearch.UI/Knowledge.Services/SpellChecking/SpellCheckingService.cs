@@ -10,7 +10,7 @@ namespace Knowledge.Services.SpellChecking
 {
     public class SpellCheckingService : AbstractService, ISpellCheckingService
     {
-        public SpellCheckingConfig config;
+        private new SpellCheckingConfig config;
 
         public ISpellCheckingService provider = null;
 
@@ -31,7 +31,7 @@ namespace Knowledge.Services.SpellChecking
 
                 foreach (var item in tests)
                 {
-                    if (config.Provider.Equals(item.GetProvider()))
+                    if (config.Provider.Equals(item.GetName()))
                     {
                         provider = (ISpellCheckingService)item;
                     }

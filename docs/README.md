@@ -18,3 +18,6 @@ _Table of Contents_
 | Virtual Network | Virtual Network configuration |[README](vnet/README.md)| 
 ||||
 
+# Azure Open AI 
+
+To understand how Azure Open AI can move your solution to the next level, refer to [here](openai/README.md)

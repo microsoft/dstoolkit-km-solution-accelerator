@@ -1,31 +1,40 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Knowledge.Services.QnA
+namespace Knowledge.Services.Answers
 {
-    using Microsoft.Extensions.Caching.Distributed;
-    using Microsoft.Extensions.Caching.Memory;
+    using Knowledge.Configuration.Answers;
+    using Knowledge.Configuration.Answers.QnA;
+    using Knowledge.Models.Answers;
+    using Knowledge.Services.Answers;
     using Knowledge.Services.Helpers;
+    using Microsoft.ApplicationInsights;
+    using Microsoft.Extensions.Caching.Distributed;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
-    using Knowledge.Models.Answers;
 
-    public class QnAService : AbstractService, IQnAService
+    public class QnAService : AbstractService, IAnswersProvider
     {
-        private QnAConfig config;
+        private readonly new QnAConfig config;
 
-        public QnAService(IDistributedCache cache, QnAConfig serviceConfig)
+        public QnAService(AnswersConfig config, IDistributedCache cache, TelemetryClient telemetry)
         {
             this.distCache = cache;
-            this.config = serviceConfig;
+            this.telemetryClient = telemetry;
+            this.config = config.qnaConfig;
             this.CachePrefix = this.GetType().Name;
         }
 
-        public async Task<IList<Answer>> GetQnaAnswersAsync(string questionText, string queryId)
+        public string GetProviderName()
+        {
+            return this.config.Name;
+        }
+
+        public async Task<IList<Answer>> GetProjectAnswersAsync(string questionText)
         {
             LoggerHelper.Instance.LogVerbose($"Start:Invoked GetAnswer method in QnaService");
             IList<Answer> qnaResultItem = new List<Answer>();
@@ -51,49 +60,52 @@ namespace Knowledge.Services.QnA
 
             try
             {
-                using (var request = new HttpRequestMessage())
+                using var request = new HttpRequestMessage();
+                // POST method
+                request.Method = HttpMethod.Post;
+                // Add host + service to get full URI
+                request.RequestUri = new Uri(uri);
+                // set question
+                request.Content = new StringContent(question, Encoding.UTF8, "application/json");
+                // QnA Maker v1 Authorization
+                request.Headers.Add("Authorization", "EndpointKey " + this.config.QNAserviceKey);
+                // QnA Maker v2 Preview is now a Cognitive Service
+                request.Headers.Add("Ocp-Apim-Subscription-Key", this.config.QNAserviceKey);
+
+                // Send request to Azure service, get response
+                var response = await httpClient.SendAsync(request);
+                string strresponse = await response.Content.ReadAsStringAsync();
+
+                var jsonResponse = JsonConvert.DeserializeObject<QnAResponse>(strresponse);
+                if (jsonResponse != null && jsonResponse.answers != null)
                 {
-                    // POST method
-                    request.Method = HttpMethod.Post;
-                    // Add host + service to get full URI
-                    request.RequestUri = new Uri(uri);
-                    // set question
-                    request.Content = new StringContent(question, Encoding.UTF8, "application/json");
-                    // QnA Maker v1 Authorization
-                    request.Headers.Add("Authorization", "EndpointKey " + this.config.QNAserviceKey);
-                    // QnA Maker v2 Preview is now a Cognitive Service
-                    request.Headers.Add("Ocp-Apim-Subscription-Key", this.config.QNAserviceKey);
+                    LoggerHelper.LogEvent("QnAService", "QNAService", Guid.NewGuid().ToString(), this.config.KnowledgeDatabaseId, questionText, jsonResponse.answers.Count);
 
-                    // Send request to Azure service, get response
-                    var response = await httpClient.SendAsync(request);
-                    string strresponse = await response.Content.ReadAsStringAsync(); 
-
-                    var jsonResponse = JsonConvert.DeserializeObject<QnAResponse>(strresponse);
-                    if ( jsonResponse != null && jsonResponse.answers != null)
+                    qnaResultItem = this.FormatQnAResponse(jsonResponse);
+                    if (qnaResultItem != null)
                     {
-                        LoggerHelper.Instance.LogEvent("QnAService", "QNAService", queryId, this.config.KnowledgeDatabaseId, questionText, jsonResponse.answers.Count);
+                        LoggerHelper.Instance.LogVerbose($"Set QnA Result into cache.");
 
-                        qnaResultItem = this.FormatQnAResponse(jsonResponse);
-                        if (qnaResultItem != null)
-                        {
-                            LoggerHelper.Instance.LogVerbose($"Set QnA Result into cache.");
-
-                            this.AddCacheEntry(questionText, JsonConvert.SerializeObject(qnaResultItem), config.CacheExpirationTime);
-                        }
-
-                        LoggerHelper.Instance.LogVerbose($"End:Invoked GetAnswer method in QnaService. Return value from http endpint");
+                        this.AddCacheEntry(questionText, JsonConvert.SerializeObject(qnaResultItem), config.CacheExpirationTime);
                     }
 
-                    return qnaResultItem;
+                    LoggerHelper.Instance.LogVerbose($"End:Invoked GetAnswer method in QnaService. Return value from http endpoint");
                 }
+
+                return qnaResultItem;
             }
             catch (Exception ex)
             {
-                LoggerHelper.Instance.LogError(ex, ex.Message, "SCIO.API", "QnaService.GetAnswer");
+                LoggerHelper.Instance.LogError(ex, ex.Message, "API", "QnaService.GetAnswer");
             }
 
             LoggerHelper.Instance.LogVerbose($"End:Invoked GetAnswer method in QnaService. Return empty result");
             return new List<Answer>();
+        }
+
+        public bool IsDefault()
+        {
+            throw new NotImplementedException();
         }
 
         private IList<Answer> FormatQnAResponse(QnAResponse result)
@@ -111,5 +123,11 @@ namespace Knowledge.Services.QnA
 
             return qnaResultItems;
         }
+
+        public Task<IList<Answer>> GetAnswersAsync(string question, string docid, string doctext)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

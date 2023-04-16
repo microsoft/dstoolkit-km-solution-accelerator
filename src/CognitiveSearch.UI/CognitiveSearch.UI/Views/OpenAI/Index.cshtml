@@ -1,0 +1,52 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+     Licensed under the MIT License. -->
+@model CognitiveSearch.UI.Models.SearchViewModel
+
+@using CognitiveSearch.UI.Configuration
+@inject AppConfig AppConfig
+@inject UIConfig UIConfig
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Pass controller data to view -->
+<script>
+    Microsoft["View"] = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+</script>
+
+
+<!--Open AI-->
+<div class="container">
+    <div class="border rounded p-1">
+        <h5>This chat capability is brought to you by 
+            <a target="_blank" href="https://azure.microsoft.com/">
+                <img title="Azure" style="height:32px" src="~/images/logos/azure.png">
+            </a>
+            <span> & </span>
+            <a target="_blank" href="https://openai.com">
+                <img title="Open AI" style="height:32px" src="~/images/logos/OpenAI.png">
+            </a>
+        </h5>
+    </div>
+</div>
+
+
+<div id="results-container" class="container">
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            Microsoft.Config.init().then(() => {
+
+                Microsoft.Search.initSearchVertical(Microsoft.View.config);
+
+                $("#navbar-row-1").attr("style", "display: none !important");
+
+                Microsoft.Search.Results.Chat.render_chat_view()
+            });
+        });
+    </script>
+}

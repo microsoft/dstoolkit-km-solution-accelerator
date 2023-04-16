@@ -33,6 +33,8 @@ function Import-ServicesConfig() {
 
             Set-Variable -Name $varName -Value $varValue -Visibility Public -Option AllScope -Force -Scope Global
     
+            Add-Param -Name ($folder.Name+"Enabled") -value $varValue.enable
+
             if ($varValue.enable) {
                 Import-ConfigParameters $varValue
             }
@@ -192,12 +194,16 @@ function Get-Parameters {
     return $values
 }
 
-function Add-Param($name, $value) {
-    if ( $global:params.PSobject.Properties.name -eq $name) {
-        $global:params.$name = $value
+function Add-Param {
+    param (
+        [string] $Name,
+        [object] $Value
+    )
+    if ( $global:params.PSobject.Properties.name -eq $Name) {
+        $global:params.$Name = $Value
     }
     else {
-        $global:params | Add-Member -MemberType NoteProperty -Name $name -Value $value -ErrorAction Ignore
+        $global:params | Add-Member -MemberType NoteProperty -Name $Name -Value $Value -ErrorAction Ignore
     }
 }
 
@@ -211,7 +217,7 @@ function Get-ParamValue() {
     if ($value) {
         if ($AsSecureString) {
             $value = ConvertTo-SecureString -String $value
-        }    
+        }
     }
 
     return $value
@@ -319,7 +325,7 @@ function Sync-Parameters {
 }
 
 function Initialize-StorageConfig {
-    # Container
+    # first Container is designated as data container
     $dataStorageContainerName = $params.storageContainers[0];
     Add-Param "dataStorageContainerName" $dataStorageContainerName
 
@@ -507,7 +513,8 @@ function Get-AllServicesKeys() {
     Get-AzureMapsSubscriptionKey
     Get-FunctionsKeys
     Get-SearchServiceKeys
-    
+    Get-OpenAIKey
+
     Sync-Config
 
     if ($AddToKeyVault) {
@@ -595,7 +602,7 @@ function Get-CognitiveServiceKey {
     
 function Get-AzureMapsSubscriptionKey {
     
-    if ($params.mapSearchEnabled) {
+    if ($mapscfg.enable) {
         $mapsKey = az maps account keys list --name $params.maps --resource-group $config.resourceGroupName --query primaryKey --out tsv
         Add-Param "mapsSubscriptionKey" $mapsKey
     
@@ -1275,7 +1282,7 @@ function Compress-Release() {
     
     Test-DirectoryExistence (join-path $releasePath "windows")
     Test-DirectoryExistence (join-path $releasePath "linux")
-    Test-DirectoryExistence (join-path $releasePath "ui")
+    Test-DirectoryExistence (join-path $releasePath "webapps")
      
     $releases = Get-ChildItem -Directory $deploymentdir -Recurse | Where-Object { $_.Name -match $now }
           
@@ -1729,8 +1736,6 @@ function Test-Functions() {
                 Write-Host "Testing Function "$function.name -ForegroundColor DarkBlue
                 $url = az functionapp function show -g $plan.ResourceGroup -n $functionApp.Name --function-name $function.Name --query invokeUrlTemplate --out tsv
                 if ($url) {
-                    # $uri= [uri]::new($url)
-                    # $uri.Scheme="https"
                     $url = $url.Replace("http://", "https://")   
                     try {
                         $fkey = az functionapp function keys list -g $plan.ResourceGroup -n $functionApp.Name --function-name $function.Name --query default --out tsv
@@ -1741,7 +1746,7 @@ function Test-Functions() {
                     catch {
                     }
     
-                    Write-Host $furl
+                    # Write-Host $furl
     
                     try {
                         $response = Invoke-WebRequest -Uri $furl -Method Post -Body '{"values":[{"recordId":"0","data":{}}]}' -Headers @{'Content-Type' = 'application/json' }
@@ -1899,38 +1904,36 @@ function Build-WebApps {
     $now = Get-Date -Format "yyyyMMddHHmmss"
     function publish_windows($function) {
         Write-Host $pwd
-        $buildpath = join-path $deploymentdir "ui" ($function + ".publish." + $now)
+        $buildpath = join-path $deploymentdir "webapps" ($function + ".publish." + $now)
         Write-Host $buildpath
         dotnet publish -c RELEASE -o $buildpath | Out-Null
         return $buildpath
     }
     function publish_linux($function) {
         Write-Host $pwd
-        $buildpath = join-path $deploymentdir "ui" ($function + ".publish." + $now)
+        $buildpath = join-path $deploymentdir "webapps" ($function + ".publish." + $now)
         Write-Host $buildpath
         dotnet publish -r linux-x64 --self-contained false -c RELEASE -o $buildpath | Out-Null
         return $buildpath
     }
     
-    # dotnet publish -r linux-x64 --self-contained false
-    
     foreach ($plan in $webappscfg.AppPlans) {
         foreach ($webApp in $plan.Services) {
             if (-not $webApp.Image) {
-    
-                Write-Host "Building Cross-Platform WebApp "$webApp.Name -ForegroundColor DarkGreen
-                # Build the corresponding Web App
+
                 $appLocation = (join-path $global:workpath ".." $webApp.Path)
                 Write-Host $appLocation -ForegroundColor DarkGreen
     
                 Push-Location $appLocation
                 if ($plan.IsLinux) {
                     if (-not $WindowsOnly) {
+                        Write-Host "Building Linux WebApp "$webApp.Name -ForegroundColor DarkGreen
                         $respath = publish_linux $webApp.Name
                     }
                 }
                 else {
                     if (-not $LinuxOnly) {
+                        Write-Host "Building Windows WebApp "$webApp.Name -ForegroundColor DarkGreen
                         $respath = publish_windows $webApp.Name
                     }
                 }
@@ -2141,7 +2144,7 @@ function Publish-WebApps {
             if (-not $webApp.Image) {
                 if (-not $plan.IsLinux) {
     
-                    $releasepath = "releases/ui/" + $webApp.Name + ".publish.latest.zip"
+                    $releasepath = "releases/webapps/" + $webApp.Name + ".publish.latest.zip"
     
                     if ($production) {
                         az webapp deployment source config-zip --resource-group $plan.ResourceGroup `
@@ -2350,7 +2353,7 @@ function Add-KeyVaultFunctionsPolicies {
     # Shared Policies for Functions
     foreach ($plan in $functionscfg.AppPlans) {
         foreach ($functionApp in $plan.Services) {
-            $principalId = az functionapp identity show -n $functionApp.Name -g $plan.ResourceGroup --query principalId
+            $principalId = az functionapp identity show -n $functionApp.Name -g $plan.ResourceGroup --query principalId --out tsv
     
             az keyvault set-policy -n $params.keyvault -g $plan.ResourceGroup --object-id $principalId --secret-permissions get 
         }
@@ -2406,6 +2409,47 @@ function Publish-Solution {
     # Publishing settings will restart all app services.
     Publish-FunctionsSettings
     Publish-WebAppsSettings
+}
+
+function Update-Solution {
+    param (
+        [switch] $NewFunction,
+        [switch] $NewSkill,
+        [switch] $Search,
+        [switch] $UI
+    )
+
+    Sync-Config
+
+    if ( $NewFunction ) {
+        New-Functions
+        Build-Functions -Publish -KeyVaultPolicies -Settings        
+        Get-FunctionsKeys        
+        Sync-Config
+    }
+    
+    if ( $NewSkill ) {
+        Build-Functions -Publish -KeyVaultPolicies -Settings        
+        Get-FunctionsKeys
+        Sync-Config
+        Initialize-Search
+    }
+    
+    # if ( $Function ) {
+    #     Build-Functions -Publish -KeyVaultPolicies -Settings
+    # }
+
+    # if ($RebuildIndex) {
+    #     Remove-SearchIndex -name $params. -DeleteAliases
+    # }
+
+    if ($Search) {
+        Initialize-Search
+    }
+    
+    If ($UI) {
+        Build-WebApps -WindowsOnly -Publish -KeyVaultPolicies -Settings
+    }
 }
 
 function Optimize-Solution () {
@@ -2506,6 +2550,65 @@ function Resume-Solution {
     # Start Linux WebApp
     Restore-WebApps -LinuxOnly
 
+}
+#endregion
+
+#region Open AI 
+function Get-OpenAIKey {
+
+    if ($openaicfg.enable) {
+
+        foreach ($azureResource in $openaicfg.Items) {
+            Write-Host "Checking Open AI Service existence "$azureResource.Name
+    
+            $exists = az cognitiveservices account show --name $azureResource.Name --resource-group $azureResource.ResourceGroup --query id --out tsv
+    
+            if ( $exists ) {
+                Write-Host "Fetching OpenAI Service key "$azureResource.Name
+    
+                $cogServicesKey = az cognitiveservices account keys list --name $azureResource.Name -g $azureResource.ResourceGroup --query key1 --out tsv
+    
+                if ( $cogServicesKey -and $cogServicesKey.Length -gt 0 ) {
+                    Add-Param ($azureResource.Parameter+"Key") $cogServicesKey
+                }
+    
+                # Endpoint
+                $cogEndpoint = az cognitiveservices account show -n $azureResource.Name -g $azureResource.ResourceGroup --query properties.endpoint --out tsv 
+                if ( $cogEndpoint -and $cogEndpoint.Length -gt 0 ) {
+                    Add-Param ($azureResource.Parameter+"Endpoint") $cogEndpoint
+                }
+            }
+        }
+        Save-Parameters    
+    }
+}
+
+function Deploy-OpenAIModule () {
+    param (
+        [string] $DeploymentName,
+        [string] $ModelName,
+        [string] $ModelVersion
+    )
+
+    az cognitiveservices account deployment create `
+        -g $openaicfg.Items[0].ResourceGroup `
+        -n $openaicfg.Items[0].Name `
+        --deployment-name $DeploymentName `
+        --model-name $ModelName `
+        --model-version $ModelVersion  `
+        --model-format OpenAI `
+        --scale-settings-scale-type "Standard"    
+}
+
+function Remove-OpenAIModel() { 
+    param (
+        [string] $DeploymentName
+    )
+
+    az cognitiveservices account deployment delete `
+    -g $openaicfg.Items[0].ResourceGroup `
+    -n $openaicfg.Items[0].Name `
+    --deployment-name $DeploymentName    
 }
 #endregion
 

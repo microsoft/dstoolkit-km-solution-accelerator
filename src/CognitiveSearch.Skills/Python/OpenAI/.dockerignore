@@ -1,0 +1,8 @@
+local.settings.json
+docs
+train-dataset
+tests
+notebooks
+deploy
+dashboard
+.venv

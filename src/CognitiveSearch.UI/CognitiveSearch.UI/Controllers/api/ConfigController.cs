@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Azure.Core;
 
 namespace CognitiveSearch.UI.Controllers.api
 {
@@ -12,9 +13,9 @@ namespace CognitiveSearch.UI.Controllers.api
     [Authorize]
     public class ConfigController : Controller
     {
-        private AppConfig config;
+        private readonly AppConfig config;
 
-        private static DefaultContractResolver contractResolver = new DefaultContractResolver
+        private static readonly DefaultContractResolver contractResolver = new()
         {
             NamingStrategy = new CamelCaseNamingStrategy
             {
@@ -22,7 +23,7 @@ namespace CognitiveSearch.UI.Controllers.api
             }
         };
 
-        private JsonSerializerSettings settings = new JsonSerializerSettings
+        private readonly JsonSerializerSettings settings = new()
         {
             ContractResolver = contractResolver,
             Formatting = Formatting.Indented
@@ -36,7 +37,7 @@ namespace CognitiveSearch.UI.Controllers.api
         [HttpGet("get")]
         public async Task<IActionResult> GetAppConfigAsync()
         {
-            return Content(JsonConvert.SerializeObject(config, settings), "application/json");
+            return await Task.Run(() => Content(JsonConvert.SerializeObject(config, settings), "application/json"));
         }
     }
 }

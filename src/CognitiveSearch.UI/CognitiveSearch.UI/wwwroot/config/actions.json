@@ -43,6 +43,16 @@
     "enable": true
   },
   {
+    "id": "actionchat",
+    "name": "Chat",
+    "title": "Open a chat GPT conversation with the document",
+    "class": "btn-outline-secondary",
+    "method": "Microsoft.Results.Details.render_quick_details",
+    "icon": "bi bi-chat-square-text",
+    "parameters": ["n.index_key","'chat'"],
+    "enable": true
+  },
+  {
     "id": "actiontables",
     "name": "Tables",
     "title": "Show document Tables",

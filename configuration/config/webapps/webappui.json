@@ -10,6 +10,11 @@
     "slotSetting": true
   },
   {
+    "name": "ApplicationInsights:InstrumentationKey",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey)",
+    "slotSetting": true
+  },
+  {
     "name": "AzureWebJobsStorage",
     "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString)",
     "slotSetting": false
@@ -101,7 +106,7 @@
   },
   {
     "name": "MapConfig:IsEnabled",
-    "value": "{{param.mapSearchEnabled}}",
+    "value": "{{param.mapsEnabled}}",
     "slotSetting": false
   },
   {
@@ -325,38 +330,43 @@
     "slotSetting": false
   },
   {
-    "name": "QnAConfig:IsEnabled",
+    "name": "AnswersConfig:QnAConfig:IsEnabled",
     "value": false,
     "slotSetting": false
   },
   {
-    "name": "QnAConfig:CacheExpirationTime",
+    "name": "AnswersConfig:QnAConfig:Name",
+    "value": "Azure QnA Cognitive Service",
+    "slotSetting": false
+  },
+  {
+    "name": "AnswersConfig:QnAConfig:CacheExpirationTime",
     "value": "30",
     "slotSetting": false
   },
   {
-    "name": "QnAConfig:KnowledgeDatabaseId",
+    "name": "AnswersConfig:QnAConfig:KnowledgeDatabaseId",
     "value": "",
     "slotSetting": false
   },
   {
-    "name": "QnAConfig:QNAScoreThreshold",
+    "name": "AnswersConfig:QnAConfig:QNAScoreThreshold",
     "value": "50",
     "slotSetting": false
   },
   {
-    "name": "QnAConfig:QNAServiceEndpoint",
+    "name": "AnswersConfig:QnAConfig:QNAServiceEndpoint",
     "value": "",
     "slotSetting": false
   },
   {
-    "name": "QnAConfig:QNAserviceKey",
+    "name": "AnswersConfig:QnAConfig:QNAserviceKey",
     "value": "",
     "slotSetting": false
   },
   {
     "name": "WebSearchConfig:IsEnabled",
-    "value": "{{param.webSearchEnabled}}",
+    "value": "{{param.bingEnabled}}",
     "slotSetting": false
   },
   {
@@ -456,7 +466,7 @@
   },
   {
     "name": "Neo4jConfig:IsEnabled",
-    "value": "{{param.Neo4jEnabled}}",
+    "value": "{{param.graphEnabled}}",
     "slotSetting": false
   },
   {
@@ -472,6 +482,41 @@
   {
     "name": "Neo4jConfig:Password",
     "value": "{{param.Neo4jPassword}}",
+    "slotSetting": false
+  },
+  {
+    "name": "OpenAIConfig:IsEnabled",
+    "value": "{{param.openaiEnabled}}",
+    "slotSetting": false
+  },
+  {
+    "name": "OpenAIConfig:Name",
+    "value": "Open AI Integration",
+    "slotSetting": false
+  },
+  {
+    "name": "OpenAIConfig:ServiceEndpoint",
+    "value": "{{param.cogSvcOpenAIEndpoint}}",
+    "slotSetting": false
+  },
+  {
+    "name": "OpenAIConfig:ServiceKey",
+    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcOpenAIKey)",
+    "slotSetting": false
+  },
+  {
+    "name": "OpenAIConfig:ChatServiceEndpoint",
+    "value": "{{param.openai.ChatCompletion}}",
+    "slotSetting": false
+  },
+  {
+    "name": "OpenAIConfig:Version",
+    "value": "",
+    "slotSetting": false
+  },
+  {
+    "name": "OpenAIConfig:CacheExpirationTime",
+    "value": "30",
     "slotSetting": false
   }
 ]

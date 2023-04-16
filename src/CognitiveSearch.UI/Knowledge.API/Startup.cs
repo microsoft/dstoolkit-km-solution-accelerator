@@ -2,20 +2,24 @@
 // Licensed under the MIT License.
 
 using Knowledge.Configuration;
+using Knowledge.Configuration.Answers;
 using Knowledge.Configuration.AzureStorage;
+using Knowledge.Configuration.Chat;
 using Knowledge.Configuration.Graph;
 using Knowledge.Configuration.Maps;
+using Knowledge.Configuration.OpenAI;
 using Knowledge.Configuration.SemanticSearch;
 using Knowledge.Configuration.SpellChecking;
 using Knowledge.Configuration.Translation;
 using Knowledge.Configuration.WebSearch;
 using Knowledge.Services;
+using Knowledge.Services.Answers;
 using Knowledge.Services.AzureSearch;
 using Knowledge.Services.AzureSearch.SDK;
 using Knowledge.Services.AzureStorage;
+using Knowledge.Services.Chat;
 using Knowledge.Services.Graph.Facet;
 using Knowledge.Services.Metadata;
-using Knowledge.Services.QnA;
 using Knowledge.Services.SemanticSearch;
 using Knowledge.Services.SpellChecking;
 using Knowledge.Services.Translation;
@@ -113,8 +117,17 @@ namespace Knowledge.API
             WebSearchConfig wsconfigData = Configuration.GetSection("WebSearchConfig").Get<WebSearchConfig>();
             services.AddSingleton<WebSearchConfig>(_ => wsconfigData);
 
-            QnAConfig qconfigData = Configuration.GetSection("QnAConfig").Get<QnAConfig>();
-            services.AddSingleton<QnAConfig>(_ => qconfigData);
+            ChatConfig chatConfigData = Configuration.GetSection("ChatConfig").Get<ChatConfig>();
+            services.AddSingleton<ChatConfig>(_ => chatConfigData);
+
+            OpenAIConfig oaiConfigData = Configuration.GetSection("OpenAIConfig").Get<OpenAIConfig>();
+            services.AddSingleton<OpenAIConfig>(_ => oaiConfigData);
+
+            AnswersConfig qconfigData = Configuration.GetSection("AnswersConfig").Get<AnswersConfig>();
+            services.AddSingleton<AnswersConfig>(_ => qconfigData);
+
+            //QnAConfig qconfigData = Configuration.GetSection("QnAConfig").Get<QnAConfig>();
+            //services.AddSingleton<QnAConfig>(_ => qconfigData);
 
             TranslationConfig tconfigData = Configuration.GetSection("TranslationConfig").Get<TranslationConfig>();
             services.AddSingleton<TranslationConfig>(_ => tconfigData);
@@ -131,14 +144,14 @@ namespace Knowledge.API
 
             // Services Singletons
             services.AddSingleton<IStorageService, StorageService>();
-            services.AddSingleton<IQnAService, QnAService>();
+            services.AddSingleton<IAnswersService, AnswersService>();
             services.AddSingleton<ISpellCheckingService, SpellCheckingService>();
             services.AddSingleton<ITranslationService, TranslationService>();
+            services.AddSingleton<IChatService, ChatService>();
             services.AddSingleton<IMetadataService, MetadataService>();
             services.AddSingleton<ISemanticSearchService, SemanticSearch>();
             services.AddSingleton<IWebSearchService, WebSearchService>();
             services.AddSingleton<IAzureSearchService, AzureSearchService>();
-
             services.AddSingleton<IAzureSearchSDKService, AzureSearchSDKService>();
             services.AddSingleton<IFacetGraphService, FacetGraphService>();
 

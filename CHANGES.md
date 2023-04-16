@@ -1,5 +1,12 @@
 # Changes log
 
+## March 2023 - v1.5
+
+- Open AI scenarios (documentation)
+- UI & API improvements
+- Documentation
+- Bugs fixing
+
 ## February 2023 - v1.4
 
 - UI & API improvements

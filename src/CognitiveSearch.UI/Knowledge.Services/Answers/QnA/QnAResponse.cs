@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Knowledge.Models.Answers;
 using System.Collections.Generic;
 
-namespace Knowledge.Services.QnA
+using Knowledge.Models.Answers;
+
+namespace Knowledge.Services.Answers
 {
     public class QnAResponse
     {
