@@ -1282,7 +1282,7 @@ function Compress-Release() {
     
     Test-DirectoryExistence (join-path $releasePath "windows")
     Test-DirectoryExistence (join-path $releasePath "linux")
-    Test-DirectoryExistence (join-path $releasePath "ui")
+    Test-DirectoryExistence (join-path $releasePath "webapps")
      
     $releases = Get-ChildItem -Directory $deploymentdir -Recurse | Where-Object { $_.Name -match $now }
           
@@ -1904,38 +1904,36 @@ function Build-WebApps {
     $now = Get-Date -Format "yyyyMMddHHmmss"
     function publish_windows($function) {
         Write-Host $pwd
-        $buildpath = join-path $deploymentdir "ui" ($function + ".publish." + $now)
+        $buildpath = join-path $deploymentdir "webapps" ($function + ".publish." + $now)
         Write-Host $buildpath
         dotnet publish -c RELEASE -o $buildpath | Out-Null
         return $buildpath
     }
     function publish_linux($function) {
         Write-Host $pwd
-        $buildpath = join-path $deploymentdir "ui" ($function + ".publish." + $now)
+        $buildpath = join-path $deploymentdir "webapps" ($function + ".publish." + $now)
         Write-Host $buildpath
         dotnet publish -r linux-x64 --self-contained false -c RELEASE -o $buildpath | Out-Null
         return $buildpath
     }
     
-    # dotnet publish -r linux-x64 --self-contained false
-    
     foreach ($plan in $webappscfg.AppPlans) {
         foreach ($webApp in $plan.Services) {
             if (-not $webApp.Image) {
-    
-                Write-Host "Building Cross-Platform WebApp "$webApp.Name -ForegroundColor DarkGreen
-                # Build the corresponding Web App
+
                 $appLocation = (join-path $global:workpath ".." $webApp.Path)
                 Write-Host $appLocation -ForegroundColor DarkGreen
     
                 Push-Location $appLocation
                 if ($plan.IsLinux) {
                     if (-not $WindowsOnly) {
+                        Write-Host "Building Linux WebApp "$webApp.Name -ForegroundColor DarkGreen
                         $respath = publish_linux $webApp.Name
                     }
                 }
                 else {
                     if (-not $LinuxOnly) {
+                        Write-Host "Building Windows WebApp "$webApp.Name -ForegroundColor DarkGreen
                         $respath = publish_windows $webApp.Name
                     }
                 }
@@ -2146,7 +2144,7 @@ function Publish-WebApps {
             if (-not $webApp.Image) {
                 if (-not $plan.IsLinux) {
     
-                    $releasepath = "releases/ui/" + $webApp.Name + ".publish.latest.zip"
+                    $releasepath = "releases/webapps/" + $webApp.Name + ".publish.latest.zip"
     
                     if ($production) {
                         az webapp deployment source config-zip --resource-group $plan.ResourceGroup `

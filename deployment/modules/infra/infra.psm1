@@ -252,7 +252,6 @@ function New-ACRService {
     }
 }
 
-
 function New-ContainerInstances {
 
     foreach ($azureResource in $acicfg.Items) {
