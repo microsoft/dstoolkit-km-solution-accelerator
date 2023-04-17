@@ -61,7 +61,7 @@ Microsoft.Search.Results.Chat = {
                 // chatHTML += '   </div>';
                 chatHTML += '</div>';
 
-                $.find("#" + this.GetTargetChatContent(targetid)).prepend(chatHTML);
+                $("#" + this.GetTargetChatContent(targetid)).prepend(chatHTML);
             }
 
             if (chatdocument) {
@@ -117,7 +117,7 @@ Microsoft.Search.Results.Chat = {
         chatHTML += '<div><img src="/images/logos/ChatGPT.svg" width="32px" class="img1"/></div>';
         chatHTML += '</div>';
 
-        $.find("#"+this.GetTargetChatContent(targetid)).prepend(chatHTML);
+        $("#"+this.GetTargetChatContent(targetid)).prepend(chatHTML);
     },
 
     render_chat_view: function (targetid = "results-container", placeHolder ="Ask me anything...", method="Chat") {
@@ -200,7 +200,7 @@ Microsoft.Search.Results.Chat = {
         containerHTML += '</div>';
         containerHTML += '</div>';
 
-        $.find("#" + targetid).html(containerHTML);
+        $("#" + targetid).html(containerHTML);
 
         return containerHTML;
     },
