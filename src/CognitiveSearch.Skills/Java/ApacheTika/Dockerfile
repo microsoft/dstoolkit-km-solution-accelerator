@@ -27,7 +27,7 @@ ENV LANG en_US.UTF-8
 #	
 # and place it on the same directory as the Dockerfile
 #
-ENV TIKA_VERSION 2.2.2-SNAPSHOT
+ENV TIKA_VERSION 2.7.0
 ENV TIKA_SERVER_PKG=tika-server-standard-$TIKA_VERSION.jar
 ENV TIKA_HOME=/usr/local
 
