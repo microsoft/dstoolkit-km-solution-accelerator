@@ -1886,6 +1886,21 @@ function New-WebApps {
 
             # HTTPS Only flag => integrated in the create command
             # az webapp update  -g $plan.ResourceGroup -n $webApp.Name --set httpsOnly=true
+
+            # Disable FTP and SCM Basic Authentication 
+            az resource update --resource-group $plan.ResourceGroup `
+            --name ftp `
+            --namespace Microsoft.Web `
+            --resource-type basicPublishingCredentialsPolicies `
+            --parent sites/$webApp.Name `
+            --set properties.allow=false
+
+            az resource update --resource-group $plan.ResourceGroup `
+            --name scm `
+            --namespace Microsoft.Web `
+            --resource-type basicPublishingCredentialsPolicies `
+            --parent sites/$webApp.Name `
+            --set properties.allow=false
         }
     }
 }
