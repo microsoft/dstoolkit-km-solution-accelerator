@@ -76,3 +76,21 @@ defaultLanguageCode: en
         }
     ]
 }
+
+###
+POST http://localhost:7071/language/entityrecognition
+content-type: application/json;charset=utf-8
+minimumPrecision: 0.2
+defaultLanguageCode: en
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "languageCode": "en"
+            }
+        }
+    ]
+}
+

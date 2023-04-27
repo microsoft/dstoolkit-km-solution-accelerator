@@ -116,7 +116,7 @@ def transform_value_small(headers, records):
                         if len(extracted_entity['matches'])>0:
                             document['data']['entities'].append(extracted_entity)
                 else:
-                    document['errors'] = [{"message": doc.error.code + ": " + doc.error.message}]
+                    document['warnings'] = [{"message": doc.error.code + ": " + doc.error.message}]
                 results['values'].append(document)
     except KeyError as error:
         ids = []
@@ -188,6 +188,7 @@ def transform_value_big(headers, record):
     try:
         document = {}
         document['recordId'] = recordId
+        document['warnings'] = []
 
         document['data'] = {}
         document['data']['entities'] = []
@@ -195,55 +196,58 @@ def transform_value_big(headers, record):
         assert ('data' in record), "'data' field is required."
         data = record['data']
 
-        # https://aka.ms/text-analytics-data-limits
-        text = data['text']
-        chunks = [text[i:i+MAX_CHARS_PER_DOC] for i in range(0, len(text), MAX_CHARS_PER_DOC)]
+        if "text" in data:
+            # https://aka.ms/text-analytics-data-limits
+            text = data['text']
+            chunks = [text[i:i+MAX_CHARS_PER_DOC] for i in range(0, len(text), MAX_CHARS_PER_DOC)]
 
-        # If the number of chunks is greater than the maximum allowed, then ignore the rest of it.
-        if len(chunks) > MAX_DOC_PER_REQUEST:
-            chunks=chunks[:MAX_DOC_PER_REQUEST]
+            # If the number of chunks is greater than the maximum allowed, then ignore the rest of it.
+            if len(chunks) > MAX_DOC_PER_REQUEST:
+                chunks=chunks[:MAX_DOC_PER_REQUEST]
 
-        if 'languageCode' not in data:
-            if 'defaultLanguageCode' in headers:
-                data['languageCode'] = str(headers['defaultLanguageCode'])
-            else:
-                data['languageCode'] = 'en'
+            if 'languageCode' not in data:
+                if 'defaultLanguageCode' in headers:
+                    data['languageCode'] = str(headers['defaultLanguageCode'])
+                else:
+                    data['languageCode'] = 'en'
 
-        result = text_analytics_client.recognize_linked_entities(chunks, language = data['languageCode'])
+            result = text_analytics_client.recognize_linked_entities(chunks, language = data['languageCode'])
 
-        for doc in result:
-            if not doc.is_error:
-                for entity in doc.entities:
-                    extracted_entity = {}
-                    extracted_entity['name'] = entity.name
-                    extracted_entity['id'] = entity.data_source_entity_id
-                    extracted_entity['language'] = entity.language
-                    extracted_entity['url'] = entity.url
-                    extracted_entity['bingId'] = entity.bing_entity_search_api_id
-                    extracted_entity['dataSource'] = entity.data_source
-                    extracted_entity['matches'] = []
-                    for match in entity.matches:
-                        min_precision = 0
-                        if 'minimumPrecision' in headers:
-                            min_precision = float(headers['minimumPrecision'])
-                        elif "MIN_PRECISION_ENTITY_LINKING" in os.environ:
-                            min_precision = float(os.environ["MIN_PRECISION_ENTITY_LINKING"])
-                        
-                        if match.confidence_score < min_precision:
-                            continue
-                        extracted_match = {
-                            "text": match.text,
-                            "offset": match.offset,
-                            "length": match.length,
-                            "confidenceScore": match.confidence_score
-                        } 
-                        extracted_entity['matches'].append(extracted_match)
-                    if len(extracted_entity['matches'])>0:
-                        document['data']['entities'].append(extracted_entity)
+            for doc in result:
+                if not doc.is_error:
+                    for entity in doc.entities:
+                        extracted_entity = {}
+                        extracted_entity['name'] = entity.name
+                        extracted_entity['id'] = entity.data_source_entity_id
+                        extracted_entity['language'] = entity.language
+                        extracted_entity['url'] = entity.url
+                        extracted_entity['bingId'] = entity.bing_entity_search_api_id
+                        extracted_entity['dataSource'] = entity.data_source
+                        extracted_entity['matches'] = []
+                        for match in entity.matches:
+                            min_precision = 0
+                            if 'minimumPrecision' in headers:
+                                min_precision = float(headers['minimumPrecision'])
+                            elif "MIN_PRECISION_ENTITY_LINKING" in os.environ:
+                                min_precision = float(os.environ["MIN_PRECISION_ENTITY_LINKING"])
+                            
+                            if match.confidence_score < min_precision:
+                                continue
+                            extracted_match = {
+                                "text": match.text,
+                                "offset": match.offset,
+                                "length": match.length,
+                                "confidenceScore": match.confidence_score
+                            } 
+                            extracted_entity['matches'].append(extracted_match)
+                        if len(extracted_entity['matches'])>0:
+                            document['data']['entities'].append(extracted_entity)
 
-            else:
-                document['errors'] = [{"message": doc.error.code + ": " + doc.error.message}]
-
+                else:
+                    document['warnings'].append({"message": doc.error.code + ": " + doc.error.message})
+        else:
+            document['data']['entities'] = []
+            document['warnings'] = [{"message": "No text found in the input"}]
 
     except KeyError as error:
         return (

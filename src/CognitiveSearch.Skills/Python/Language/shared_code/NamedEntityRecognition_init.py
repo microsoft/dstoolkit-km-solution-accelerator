@@ -86,10 +86,9 @@ def transform_value_small(headers, records, entity_recognition_mapping):
                 languageData[value['data']['languageCode']] = {'ids': [], 'chunks':[]}
             languageData[value['data']['languageCode']]['ids'].append(value['recordId'])
             languageData[value['data']['languageCode']]['chunks'].append(value['data']['text'])
+
         for lang in languageData:
-
             result = text_analytics_client.recognize_entities(languageData[lang]['chunks'], language = lang)
-
             categories = LanguageConstants.ENTITY_CATEGORIES
             if "categories" in headers:
                 categories = headers['categories']
@@ -133,6 +132,7 @@ def transform_value_small(headers, records, entity_recognition_mapping):
                 else:
                     document['errors'] = [{"message": doc.error.code + ": " + doc.error.message}]
                 results['values'].append(document)
+
     except KeyError as error:
         ids = []
         for value in records:
@@ -209,63 +209,66 @@ def transform_value_big(headers, record, entity_recognition_mapping):
         assert ('data' in record), "'data' field is required."
         data = record['data']
 
-        # https://aka.ms/text-analytics-data-limits
-        text = data['text']
-        chunks = [text[i:i+MAX_CHARS_PER_DOC] for i in range(0, len(text), MAX_CHARS_PER_DOC)]
+        if "text" in data:
+            # https://aka.ms/text-analytics-data-limits
+            text = data['text']
+            chunks = [text[i:i+MAX_CHARS_PER_DOC] for i in range(0, len(text), MAX_CHARS_PER_DOC)]
 
-        # If the number of chunks is greater than the maximum allowed, then ignore the rest of it.
-        if len(chunks) > MAX_DOC_PER_REQUEST:
-            chunks=chunks[:MAX_DOC_PER_REQUEST]
-        
-        if 'languageCode' not in data:
-            if 'defaultLanguageCode' in headers:
-                data['languageCode'] = str(headers['defaultLanguageCode'])
-            else:
-                data['languageCode'] = 'en'
-        
-        result = text_analytics_client.recognize_entities(chunks, language = data['languageCode'])
-        
-        categories = LanguageConstants.ENTITY_CATEGORIES
-        if "categories" in headers:
-            categories = headers['categories']
-        elif "ENTITY_RECOGNITION_CATEGORIES" in os.environ:
-            categories = os.environ['ENTITY_RECOGNITION_CATEGORIES']
+            # If the number of chunks is greater than the maximum allowed, then ignore the rest of it.
+            if len(chunks) > MAX_DOC_PER_REQUEST:
+                chunks=chunks[:MAX_DOC_PER_REQUEST]
+            
+            if 'languageCode' not in data:
+                if 'defaultLanguageCode' in headers:
+                    data['languageCode'] = str(headers['defaultLanguageCode'])
+                else:
+                    data['languageCode'] = 'en'
+            
+            result = text_analytics_client.recognize_entities(chunks, language = data['languageCode'])
+            
+            categories = LanguageConstants.ENTITY_CATEGORIES
+            if "categories" in headers:
+                categories = headers['categories']
+            elif "ENTITY_RECOGNITION_CATEGORIES" in os.environ:
+                categories = os.environ['ENTITY_RECOGNITION_CATEGORIES']
 
-        categories_dict = dict(filter(lambda elem: elem[0] in categories, entity_recognition_mapping.items()))
-        
-        for doc in result:
-            namedEntities = []
-            if not doc.is_error:
-                for entity in doc.entities:
-                    if entity.category not in categories_dict:
-                        categories_dict[entity.category]={"name": entity.category, "matched":[]}
-                    if entity.category in categories_dict:
-                        min_precision = 0
-                        if 'minimumPrecision' in headers:
-                            min_precision = float(headers['minimumPrecision'])
-                        elif "MIN_PRECISION_ENTITY_RECOGNITION" in os.environ:
-                            min_precision = float(os.environ["MIN_PRECISION_ENTITY_RECOGNITION"])
-                        if entity.confidence_score < min_precision:
-                            continue
+            categories_dict = dict(filter(lambda elem: elem[0] in categories, entity_recognition_mapping.items()))
+            
+            for doc in result:
+                namedEntities = []
+                if not doc.is_error:
+                    for entity in doc.entities:
+                        if entity.category not in categories_dict:
+                            categories_dict[entity.category]={"name": entity.category, "matched":[]}
+                        if entity.category in categories_dict:
+                            min_precision = 0
+                            if 'minimumPrecision' in headers:
+                                min_precision = float(headers['minimumPrecision'])
+                            elif "MIN_PRECISION_ENTITY_RECOGNITION" in os.environ:
+                                min_precision = float(os.environ["MIN_PRECISION_ENTITY_RECOGNITION"])
+                            if entity.confidence_score < min_precision:
+                                continue
+                        
+                            entity_extracted = {}
+                            entity_extracted['category'] = entity.category
+                            categories_dict[entity.category]['matched'].append(entity.text)
+                            entity_extracted['subcategory'] = entity.subcategory
+                            entity_extracted['length'] = entity.length
+                            entity_extracted['offset'] = entity.offset
+                            entity_extracted['confidenceScore'] = entity.confidence_score
+                            entity_extracted['text'] = entity.text
+                            namedEntities.append(entity_extracted)
                     
-                        entity_extracted = {}
-                        entity_extracted['category'] = entity.category
-                        categories_dict[entity.category]['matched'].append(entity.text)
-                        entity_extracted['subcategory'] = entity.subcategory
-                        entity_extracted['length'] = entity.length
-                        entity_extracted['offset'] = entity.offset
-                        entity_extracted['confidenceScore'] = entity.confidence_score
-                        entity_extracted['text'] = entity.text
-                        namedEntities.append(entity_extracted)
-                
-                if len(namedEntities) > 0:
-                    for category in  categories_dict:
-                        document['data'][categories_dict[category]['name']] = categories_dict[category]['matched']
-                    document['data']['namedEntities'] = namedEntities
+                    if len(namedEntities) > 0:
+                        for category in  categories_dict:
+                            document['data'][categories_dict[category]['name']] = categories_dict[category]['matched']
+                        document['data']['namedEntities'] = namedEntities
 
-            else:
-                document['errors'] = [{"message": doc.error.code + ": " + doc.error.message}]
-
+                else:
+                    document['errors'] = [{"message": doc.error.code + ": " + doc.error.message}]
+        else:
+            document['data']['namedEntities'] = []
+            document['warnings'] = [{"message": "No text found in the input"}]
 
     except KeyError as error:
         return (
