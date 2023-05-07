@@ -1368,8 +1368,6 @@ function New-Functions {
         foreach ($functionApp in $plan.Services) {
             # Linux-based function
             if ($plan.IsLinux) {
-                $imageName = $params.acr + "/" + $functionApp.Image
-    
                 if (!(Test-FunctionExistence $functionApp.Name)) {
                     if ($consumption) {
                         # Create a Function App
@@ -1386,6 +1384,10 @@ function New-Functions {
                     }
                     else {
                         if ($functionApp.Image) {
+                            # $imageName = $params.acr + "/" + $functionApp.Image
+                            # Image names must be prefixed with server 
+                            # local repository is $params.acr or {{config.name}}acr.azurecr.io
+
                             # Create a Function App
                             az functionapp create --name $functionApp.Name `
                                 --storage-account $params.techStorageAccountName `
@@ -1395,7 +1397,7 @@ function New-Functions {
                                 --os-type Linux `
                                 --https-only true `
                                 --app-insights $params.appInsightsService `
-                                --deployment-container-image-name $imageName                        
+                                --deployment-container-image-name $functionApp.Image                        
                         }
                         else {
                             az functionapp create --name $functionApp.Name `
@@ -1815,17 +1817,20 @@ function New-WebApps {
         }
     
         foreach ($webApp in $plan.Services) {
+            Write-Host "Evaluating Web App "$webApp.Name -ForegroundColor DarkYellow
             if ($plan.IsLinux) {
                 if (-not $WindowsOnly) {
-                    $imageName = $params.acr + "/" + $webApp.Image
-    
+                    # $imageName = $params.acr + "/" + $webApp.Image
+                    # Image names must be prefixed with server 
+                    # local repository is $params.acr or {{config.name}}acr.azurecr.io
                     if ( !(Test-WebAppExistence $webApp.Name)) {
+                        Write-Host "Creating Web App "$webApp.Name -ForegroundColor DarkYellow
                         # Create a Web App
                         az webapp create --name $webApp.Name `
                             --plan $plan.Name `
                             --resource-group $plan.ResourceGroup `
                             --https-only true `
-                            --deployment-container-image-name $imageName
+                            --deployment-container-image-name $webApp.Image
                         
                         $storekey = $params.techStorageConnectionString
     
@@ -1837,10 +1842,10 @@ function New-WebApps {
                 }
             }
             else {
-    
                 if (-not $LinuxOnly) {
                     # Create the webui app service 
                     if ( !(Test-WebAppExistence $webApp.Name)) {
+                        Write-Host "Creating Web App "$webApp.Name -ForegroundColor DarkYellow
                         az webapp create `
                             --name $webApp.Name `
                             --plan $plan.Name `
@@ -1878,14 +1883,33 @@ function New-WebApps {
                 }
             }
     
+            Write-Host "Configuring Web App "$webApp.Name -ForegroundColor DarkYellow
+
             # Assign a system managed identity
             az webapp identity assign -g $plan.ResourceGroup -n $webApp.Name
+            Write-Host "Assigned System identity " -ForegroundColor DarkYellow
                 
             # FTP State to FTPS Only
             az webapp config set -g $plan.ResourceGroup -n $webApp.Name --ftps-state FtpsOnly
+            Write-Host "FTPS Only " -ForegroundColor DarkYellow
 
-            # HTTPS Only flag => integrated in the create command
-            # az webapp update  -g $plan.ResourceGroup -n $webApp.Name --set httpsOnly=true
+            # Disable FTP and SCM Basic Authentication 
+            $parent ="sites/"+$webApp.Name 
+            az resource update --resource-group $plan.ResourceGroup `
+            --name ftp `
+            --namespace Microsoft.Web `
+            --resource-type basicPublishingCredentialsPolicies `
+            --parent $parent `
+            --set properties.allow=false
+
+            az resource update --resource-group $plan.ResourceGroup `
+            --name scm `
+            --namespace Microsoft.Web `
+            --resource-type basicPublishingCredentialsPolicies `
+            --parent $parent `
+            --set properties.allow=false
+
+            Write-Host "FTP and SCM Basic Authentication" -ForegroundColor DarkYellow
         }
     }
 }

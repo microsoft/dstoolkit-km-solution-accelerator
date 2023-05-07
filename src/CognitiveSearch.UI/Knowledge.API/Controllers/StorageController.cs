@@ -20,6 +20,8 @@ namespace Knowledge.API.Controllers.api
     [Authorize]
     public class StorageController : AbstractApiController
     {
+        private const string BLOB_RETRY_TAG = "AzureSearch_RetryTag";
+
         private readonly StorageConfig _storageConfig;
 
         private readonly HttpClient client = new();
@@ -277,7 +279,15 @@ namespace Knowledge.API.Controllers.api
                         metadata.Add(metadataItem.Key, metadataItem.Value);
                     }
                     // Add our retry metadata
-                    metadata.Add("AzureSearch_RetryTag", DateTime.UtcNow.ToString("yyyyMMddHHmmss"));
+                    var now = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+                    if (metadata.ContainsKey(BLOB_RETRY_TAG))
+                    {
+                        metadata[BLOB_RETRY_TAG] = now;
+                    }
+                    else
+                    {
+                        metadata.Add(BLOB_RETRY_TAG, now);
+                    }
 
                     await blockBlob.SetMetadataAsync(metadata);
 

@@ -1,5 +1,11 @@
 # Changes log
 
+## April 2023 - v1.6 
+
+- Apache Tika 2.7.0 upgrade - Tika now taken from my own docker repository https://hub.docker.com/repository/docker/puthurr/tika2/general
+- Documentation
+- Bugs fixing
+
 ## March 2023 - v1.5
 
 - Open AI scenarios (documentation)

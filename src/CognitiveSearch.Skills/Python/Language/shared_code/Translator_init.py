@@ -8,11 +8,16 @@ import azure.functions as func
 import json
 import requests, uuid
 import os
+import time
+import math
 
 endpoint = os.environ["TEXT_TRANSLATION_ENDPOINT"]
 subscription_key = os.environ["TEXT_TRANSLATION_KEY"]
 location = os.environ["TEXT_TRANSLATION_LOCATION"]
 version = os.environ["TEXT_TRANSLATION_VERSION"]
+# retry = int(os.environ["TEXT_TRANSLATION_RETRY"])
+
+DEFAULT_RETRY_SECONDS = 2.0
 
 #https://docs.microsoft.com/en-us/azure/cognitive-services/translator/request-limits
 MAX_CHARS_PER_DOC=int(os.environ["TEXT_TRANSLATION_MAX_CHARS_PER_DOC"])
@@ -82,8 +87,8 @@ def transform_value(headers, record):
     try:
         document = {}
         document['recordId'] = recordId
-
         document['data'] = {}
+        document['warnings'] = []
 
         assert ('data' in record), "'data' field is required."
         data = record['data']
@@ -154,18 +159,35 @@ def transform_value(headers, record):
                 response_text = ''
                 for chunk in chunks:
                     body = [{'text': chunk}]
-                    request = requests.post(constructed_url, params=params, headers=headers_translator, json=body)
-                    response = request.json()
-                    if request.status_code == 200:
-                        response_text += response[0]['translations'][0]['text']
+                    response = requests.post(constructed_url, params=params, headers=headers_translator, json=body)
+                    response_content = response.json()
+                    if response.status_code == 200:
+                        response_text += response_content[0]['translations'][0]['text']
+                    elif response.status_code == 429 or response.status_code == 429001:
+                        # Too Many Requests - Rate limiting
+                        logging.warn(f'Too Many Requests - one retry')
+                        document['warnings'].append({"message": "429 - Too Many Requests"})
+                        # Wait a bit and retry
+                        if ('retry-after-ms' in response.headers):
+                            # request.headers.headers. retry-after-ms
+                            time.sleep(max(DEFAULT_RETRY_SECONDS,float(response.headers['retry-after-ms'])/1000))
+                        else:
+                            time.sleep(DEFAULT_RETRY_SECONDS)
+                        response = requests.post(constructed_url, params=params, headers=headers_translator, json=body)
+                        response_content = response.json()
+                        if response.status_code == 200:
+                            response_text += response_content[0]['translations'][0]['text']
+                        else:
+                            document['warnings'].append({"message": response.text})
                     else:
-                        document['errors'] = [{"message": request.text}]
+                        document['warnings'].append({"message": f'Error {response.status_code} - {response.text}'})
 
                 document['data']['translatedText'] = response_text
             else:
                 document['data']['translatedText'] = data['text']
         else:
             document['data']['translatedText'] = ''
+            document['warnings'] = [{"message": "No text to translate"}]
 
     except KeyError as error:
         return (

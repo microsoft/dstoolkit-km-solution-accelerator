@@ -33,7 +33,7 @@
                 {
                     "Id": "tikaserver",
                     "Name": "{{config.name}}tikaserver",
-                    "Image": "microsoft/tikaserver:latest",
+                    "Image": "docker.io/puthurr/tika2:latest",
                     "AccessIPRestriction": true,
                     "AccessSubnetRestriction": true,
                     "EnablePrivateAccess": true
