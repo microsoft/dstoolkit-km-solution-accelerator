@@ -94,9 +94,9 @@ The built images will be build and published to the solution designated Azure Co
 {
     "Images": [
         {
-            "Id":1,
-            "Name": "microsoft/tikaserver",
-            "Path": "..\\src\\CognitiveSearch.Skills\\Java\\ApacheTika"
+            "Id":2,
+            "Name": "microsoft/vision",
+            "Path": "..\\src\\CognitiveSearch.Skills\\Python\\Vision"
         }
     ]
 }
@@ -274,20 +274,26 @@ The **config.json** holds the list of Web Applications to build for the solution
 
 ```json
 {
+    "enable": true,
+    "GroupId": "WebApps",
+    "Apptype": "WebApp",
+    "PrivateDNSZone": "privatelink.azurewebsites.net",
+    "Parameters" : [],
     "AppPlans": [
         {
             "Name": "{{config.name}}uiplan",
             "Sku": "{{param.pricing.premium}}",
-            "ResourceGroup":"{{config.ResourceGroupName}}",
-            "IsLinux":false,
-            "WebApps": [
+            "ResourceGroup": "{{config.ResourceGroupName}}",
+            "IsLinux": false,
+            "Services": [
                 {
-                    "Id":"webappui",
+                    "Id": "webappui",
                     "Name": "{{config.name}}ui",
                     "Path": "src\\CognitiveSearch.UI\\CognitiveSearch.UI",
-                    "vnetPrivateEndpoint":false,
-                    "vnetIntegration":true,
-                    "slots":[
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": false,
+                    "EnablePrivateAccess": false,
+                    "slots": [
                         "staging"
                     ]
                 }
@@ -296,15 +302,16 @@ The **config.json** holds the list of Web Applications to build for the solution
         {
             "Name": "{{config.name}}tikaplan",
             "Sku": "{{param.pricing.premium}}",
-            "ResourceGroup":"{{config.ResourceGroupName}}",
-            "IsLinux":true,
-            "WebApps": [
+            "ResourceGroup": "{{config.ResourceGroupName}}",
+            "IsLinux": true,
+            "Services": [
                 {
-                    "Id":"tikaserver",
+                    "Id": "tikaserver",
                     "Name": "{{config.name}}tikaserver",
-                    "Image": "microsoft/tikaserver:latest",
-                    "vnetPrivateEndpoint":true,
-                    "vnetIntegration":true
+                    "Image": "docker.io/puthurr/tika2:latest",
+                    "AccessIPRestriction": true,
+                    "AccessSubnetRestriction": true,
+                    "EnablePrivateAccess": true
                 }
             ]
         }

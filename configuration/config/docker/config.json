@@ -2,12 +2,6 @@
     "enable": true,
     "Images": [
         {
-            "Id":1,
-            "Name": "microsoft/tikaserver",
-            "Path": "..\\src\\CognitiveSearch.Skills\\Java\\ApacheTika",
-            "webapp": true
-        },
-        {
             "Id":2,
             "Name": "microsoft/vision",
             "Path": "..\\src\\CognitiveSearch.Skills\\Python\\Vision"
