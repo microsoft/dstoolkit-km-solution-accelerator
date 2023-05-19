@@ -26,11 +26,15 @@ document_translation_client = DocumentTranslationClient(endpoint, credential)
 blob_storage_integration=False
 
 # Where the translated documents will be put
-TRANSLATION_CONTAINER = 'translation'
+if 'TRANSLATION_STORAGE_CONTAINER_NAME' in os.environ:
+    TRANSLATION_CONTAINER = os.environ['TRANSLATION_STORAGE_CONTAINER_NAME']
+else:
+    TRANSLATION_CONTAINER = 'translation'
 
-if 'StorageAccountName' in os.environ:
-    STORAGE_ACCOUNT_NAME=os.environ['StorageAccountName']
-    STORAGE_ACCOUNT_KEY=os.environ['StorageKey']
+
+if 'STORAGE_ACCOUNT_NAME' in os.environ:
+    STORAGE_ACCOUNT_NAME=os.environ['STORAGE_ACCOUNT_NAME']
+    STORAGE_ACCOUNT_KEY=os.environ['STORAGE_ACCOUNT_KEY']
     blob_storage_integration=True
 
 

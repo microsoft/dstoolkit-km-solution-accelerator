@@ -13,7 +13,7 @@ import math
 
 endpoint = os.environ["TEXT_TRANSLATION_ENDPOINT"]
 subscription_key = os.environ["TEXT_TRANSLATION_KEY"]
-location = os.environ["TEXT_TRANSLATION_LOCATION"]
+region = os.environ["TEXT_TRANSLATION_REGION"]
 version = os.environ["TEXT_TRANSLATION_VERSION"]
 # retry = int(os.environ["TEXT_TRANSLATION_RETRY"])
 
@@ -101,7 +101,7 @@ def transform_value(headers, record):
         elif "suggestedFrom" in headers and headers["suggestedFrom"] in available_language:
             fromLanguageCode = headers["suggestedFrom"]
 
-        toLanguageCode = headers["defaultToLanguageCode"]
+        toLanguageCode = headers["defaultToLanguageCode"] if "defaultToLanguageCode" in headers else "en"
         if "toLanguageCode" in data:
             toLanguageCode = data["toLanguageCode"]
 
@@ -128,7 +128,7 @@ def transform_value(headers, record):
             
         document['data']['translatedToLanguageCode'] = toLanguageCode
 
-        if "text" in data:
+        if ("text" in data and len(data['text']) > 0):
             if fromLanguageCode != toLanguageCode:
                 params = {
                     'api-version': version,
@@ -139,8 +139,8 @@ def transform_value(headers, record):
 
                 headers_translator = {
                     'Ocp-Apim-Subscription-Key': subscription_key,
-                    'Ocp-Apim-Subscription-Region': location,
-                    'Content-type': 'application/json',
+                    'Ocp-Apim-Subscription-Region': region,
+                    'Content-type': 'application/json; charset=UTF-8',
                     'X-ClientTraceId': str(uuid.uuid4())
                 }
 

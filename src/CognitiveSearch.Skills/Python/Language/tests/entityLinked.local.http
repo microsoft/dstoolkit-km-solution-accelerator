@@ -24,6 +24,24 @@ type: small
     ]
 }
 
+### Empty text
+POST http://localhost:7071/language/entitylinking
+content-type: application/json;charset=utf-8
+minimumPrecision: 0.2
+defaultLanguageCode: en
+type: big
+
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "text": "" 
+            }
+        }
+    ]
+}
+
 ###
 POST http://localhost:7071/language/entitylinking
 content-type: application/json;charset=utf-8

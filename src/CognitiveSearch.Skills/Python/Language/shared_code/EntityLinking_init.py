@@ -196,7 +196,7 @@ def transform_value_big(headers, record):
         assert ('data' in record), "'data' field is required."
         data = record['data']
 
-        if "text" in data:
+        if ("text" in data and len(data['text']) > 0):
             # https://aka.ms/text-analytics-data-limits
             text = data['text']
             chunks = [text[i:i+MAX_CHARS_PER_DOC] for i in range(0, len(text), MAX_CHARS_PER_DOC)]
