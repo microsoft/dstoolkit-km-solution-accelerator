@@ -145,7 +145,7 @@ function Add-NewSubnettoAllResources {
         $subnetName
     )
 
-    $azureResourcesArray = ($cogservicescfg, $storagecfg, $keyvaultcfg, $conregistrycfg)
+    $azureResourcesArray = ($cogservicescfg, $storagecfg, $keyvaultcfg, $acrcfg)
     foreach ($azureResource in $azureResourcesArray) {
         $serviceEndpoint = $azureResource.ServiceEndPoint
         foreach ($item in $azureResource.items) {
@@ -803,7 +803,7 @@ function Initialize-VNET {
     Set-VNETResource $cogservicescfg
     Set-VNETResource $storagecfg
     Set-VNETResource $keyvaultcfg
-    Set-VNETResource $conregistrycfg
+    Set-VNETResource $acrcfg
 
     # VNET integration for Azure Cognitive Search
     Set-VNETSearch
@@ -826,7 +826,7 @@ function Initialize-VNET {
 
 function Import-VNETConfig {
 
-    $global:vnetcfg = [string] (Get-Content -Path (join-path $global:envpath "config" "vnet" "config.json"))
+    $global:vnetcfg = [string] (Get-Content -Path (join-path $global:envpath "services" "vnet" "config.json"))
     $global:vnetcfg = ConvertFrom-Json $global:vnetcfg
 
     Import-ConfigParameters $global:vnetcfg
@@ -855,13 +855,13 @@ function Import-VNETConfig {
 
 function Import-createpeConfig() {
     # Import Other configurations like functions
-    $global:createpecfg = [string] (Get-Content -Path (join-path $global:envpath "config" "vnet" "createpe.json"))
+    $global:createpecfg = [string] (Get-Content -Path (join-path $global:envpath "services" "vnet" "createpe.json"))
     $global:createpecfg = ConvertFrom-Json $global:createpecfg
 }
 
 function Import-groupidConfig() {
     # Import Other configurations like functions
-    $global:groupidcfg = [string] (Get-Content -Path (join-path $global:envpath "config" "vnet" "groupid.json"))
+    $global:groupidcfg = [string] (Get-Content -Path (join-path $global:envpath "services" "vnet" "groupid.json"))
     $global:groupidcfg = ConvertFrom-Json $global:groupidcfg
 }
 

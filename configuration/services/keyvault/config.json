@@ -1,0 +1,29 @@
+{
+    "enable": true,
+    "ServiceEndPoint":"Microsoft.KeyVault",
+    "GroupId":"KeyVault",
+    "Apptype":"KeyVault",
+    "PrivateDNSZone":"privatelink.vaultcore.azure.net",
+    "Parameters" : {
+        "keyvault": "{{config.name}}kv"
+    },
+    "Items": [
+        {
+            "Name": "{{config.name}}kv",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "Sku": "Premium",
+            "EnablePrivateAccess":true,
+            "AccessSubnetRestriction":true,
+            "Permissions" :[
+                {
+                    "Name" :"AZ CLI client id",
+                    "ObjectId":"04b07795-8ddb-461a-bbee-02f9e1bf7b46"
+                },
+                {
+                    "Name" :"Service Principal Github Actions",
+                    "ObjectId":"9d981ef2-40aa-41e5-8347-89185848e3c2"
+                }
+            ]
+        }
+    ]
+}

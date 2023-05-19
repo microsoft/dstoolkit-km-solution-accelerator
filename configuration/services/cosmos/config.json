@@ -1,0 +1,19 @@
+{
+    "enable": true,
+    "ServiceEndPoint": "Microsoft.AzureCosmosDB",
+    "GroupId": "Table",
+    "Apptype": "Storage",
+    "PrivateDNSZone": "privatelink.table.cosmos.azure.com",
+    "Parameters": {
+    },
+    "Items": [
+        {
+            "Id": "cosmos1",
+            "Name": "{{config.name}}cosmos1",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "Tables": [
+                "Configuration"
+            ]
+        }
+    ]
+}

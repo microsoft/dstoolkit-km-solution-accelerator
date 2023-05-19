@@ -1,0 +1,20 @@
+{
+    "enable": false,
+    "Parameters": {
+        "cogSvcOpenAIType": "azure",
+        "cogSvcOpenAIVersion": "2023-03-15-preview",
+        "cogSvcOpenAIEngine": "chat",
+        "cogSvcOpenAIEmbeddingsModel": "text-embedding-ada-002"
+    },
+    "Items": [
+        {
+            "Name": "{{config.name}}oai",
+            "Kind": "OpenAI",
+            "Sku": "S0",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "Parameter": "cogSvcOpenAI",
+            "EnablePrivateAccess": true,
+            "AccessSubnetRestriction": true
+        }
+    ]
+}

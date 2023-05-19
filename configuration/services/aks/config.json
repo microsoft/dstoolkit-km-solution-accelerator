@@ -1,0 +1,16 @@
+{
+    "enable": false,
+    "Parameters": {
+        "aks": "{{config.name}}aks",
+        "kubernetesHost": "https://{{config.name}}aks.intra.contoso.com",
+        "aksNodesPool" : "kmpool",
+        "aksSkillsPool": "kmpool"
+    },
+    "Items": [
+        {
+            "Name": "{{config.name}}aks",
+            "ResourceGroup": "{{config.ResourceGroupName}}",
+            "VMSize":"Standard_DS4_v2"
+        }
+    ]
+}

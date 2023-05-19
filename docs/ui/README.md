@@ -361,7 +361,7 @@ When enabled, each search query is translated to English before being sent to AC
 
 ## Query SpellChecking 
 
-When the spellcheck service is enabled by config.spellCheckEnabled and that the config.spellCheckProvider is set to "Bing", this feature will leverage Microsoft Bing to spell check your search query. 
+When the spellcheck service is enabled by param.spellCheckEnabled and that the config.spellCheckProvider is set to "Bing", this feature will leverage Microsoft Bing to spell check your search query. 
 
 Make sure to review [Microsoft Privacy Statement](https://go.microsoft.com/fwlink/?LinkId=521839)
 

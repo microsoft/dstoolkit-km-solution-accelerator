@@ -1,0 +1,2 @@
+ConfigKey,ConfigKey@type,ConfigValue,ConfigValue@type,PartitionKey,Restricted,Restricted@type,RowKey,Timestamp
+AzureOCRAPISupportedValues,Edm.String,"{ ""MinimumWidth"" : ""50"", ""MaximumWidth"" : ""10000"", ""MinimumHeight"" : ""50"", ""MaximumHeight"" : ""10000"", ""SupportedExtensions"" : ["".jpeg"", "".jpg"", "".jpe"", "".png"", "".pnz"", "".tiff"", "".tif""], ""MaximumSize"" : ""20971520"", ""MinimumSize"" : ""1024"" }",Edm.String,ICS,TRUE,Edm.Boolean,AzureOCRAPISupportedValues,2019-12-25T07:07:03.527Z

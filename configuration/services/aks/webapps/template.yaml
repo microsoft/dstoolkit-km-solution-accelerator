@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{appname}}-webapp
+  labels:
+    app: kubernetes-series
+    tier: monitor
+spec:
+  selector:
+    # Pods will match with the following labels
+    matchLabels:
+      name: {{appname}}-webapp
+  template:
+    metadata:
+      labels:
+        name: {{appname}}-webapp
+    spec:
+      containers:
+      - name: {{appname}}-webapp
+        image: {{param.acr}}/{{config.name}}/{{appname}}:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: WEBSITE_HOSTNAME
+          value: "{{param.kubernetesHost}}"
+        - name: AZURE_STORAGE_CONNECTION_STRING
+          value: "{{param.dataStorageConnectionString}}"
+        - name: APPINSIGHTS_INSTRUMENTATIONKEY
+          value: "{{param.appInsightsServiceKey}}"
+        - name: AzureWebJobsStorage
+          value: "{{param.techStorageConnectionString}}"
+        resources:
+          requests:
+            cpu: 500m
+            memory: 2Gi
+          limits:
+            cpu: 4000m
+            memory: 16Gi
+      nodeSelector:
+        agentpool: poolcogs
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{appname}}-service
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    name: {{appname}}-webapp

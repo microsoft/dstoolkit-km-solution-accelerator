@@ -820,7 +820,7 @@ __index.json__ (snippet)
 
 3 general parameters helps you control your content security implementation
 
-__webappui.json__ 
+__webui.json__ 
 ```json
   {
     "name": "SearchServiceConfig:IsSecurityTrimmingEnabled",

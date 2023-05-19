@@ -58,6 +58,18 @@ New-AzureMapsService
 Write-Host "=============================================================="
 New-BingSearchService
 
+Write-Host "=============================================================="
+New-Cosmos
+
+Write-Host "=============================================================="
+New-ServiceBus
+
+Write-Host "=============================================================="
+New-RedisCache
+
+Write-Host "=============================================================="
+New-AKSCluster
+
 # Save and Apply the Parameters we got
 Sync-Config
 

@@ -1,0 +1,62 @@
+[
+    {
+        "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey)",
+        "slotSetting": true
+    },
+    {
+        "name": "AzureWebJobsStorage",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString)",
+        "slotSetting": false
+    },
+    {
+        "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+        "value": "false",
+        "slotSetting": false
+    },
+    {
+        "name": "METADATA_STORAGE_CONNECTION_STRING",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/dataStorageConnectionString)",
+        "slotSetting": false
+    },
+    {
+        "name": "METADATA_STORAGE_CONTAINER_NAME",
+        "value": "{{param.metadataStorageContainerName}}",
+        "slotSetting": false
+    },
+    {
+        "name": "IMAGES_STORAGE_CONTAINER_NAME",
+        "value": "{{param.imagesStorageContainerName}}",
+        "slotSetting": false
+    },
+    {
+        "name": "VECTOR_STORAGE_CONNECTION_STRING",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/dataStorageConnectionString)",
+        "slotSetting": false
+    },
+    {
+        "name": "VECTOR_STORAGE_CONTAINER_NAME",
+        "value": "{{param.vectorsStorageContainerName}}",
+        "slotSetting": false
+    },
+    {
+        "name": "NEO4J_ENABLED",
+        "value": "{{param.graphEnabled}}",
+        "slotSetting": false
+    },
+    {
+        "name": "NEO4J_ENDPOINT",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/Neo4jConnectionString)",
+        "slotSetting": false
+    },
+    {
+        "name": "NEO4J_USERNAME",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/Neo4jUsername)",
+        "slotSetting": false
+    },
+    {
+        "name": "NEO4J_PASSWORD",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/Neo4jPassword)",
+        "slotSetting": false
+    }
+]

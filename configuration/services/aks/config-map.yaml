@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{config.name}}-configmap
+  namespace: bobakm
+data:
+  WEBSITE_HOSTNAME: "{{param.kubernetesHost}}"
+  AZURE_STORAGE_CONNECTION_STRING: "{{param.dataStorageConnectionString}}"
+  APPINSIGHTS_INSTRUMENTATIONKEY: "{{param.appInsightsServiceKey}}"
+  AzureWebJobsStorage: "{{param.techStorageConnectionString}}"
+  FORMS_RECOGNIZER_ENDPOINT: "https://{{param.cogSvcForm}}.cognitiveservices.azure.com"
+  FORMS_RECOGNIZER_KEY: "{{param.cogSvcFormKey}}"
+  COMPUTER_VISION_ENDPOINT: "https://{{param.cogSvcVision}}.cognitiveservices.azure.com"
+  COMPUTER_VISION_KEY: "{{param.cogSvcVisionKey}}"
+  BLOB_CONNECT_STRING: "{{param.dataStorageConnectionString}}"
+  LANGUAGE_ENDPOINT: "https://{{param.cogSvcLanguage}}.cognitiveservices.azure.com"
+  LANGUAGE_KEY: "{{param.cogSvcLanguageKey}}"
+  TEXT_TRANSLATION_ENDPOINT: "https://{{param.cogSvcTranslate}}.cognitiveservices.azure.com/translator/text/v3.0"
+  TEXT_TRANSLATION_KEY: "{{param.cogSvcTranslateKey}}"
+  TEXT_TRANSLATION_REGION : "{{config.location}}"
+  TEXT_TRANSLATION_VERSION: "3.0" 
+  MODEL_SIZE: "lg"
+  STORAGE_ACCOUNT_NAME: "{{param.dataStorageAccountName}}"
+  STORAGE_ACCOUNT_KEY: "{{param.dataStorageAccountKey}}"
+  NoisePhrases: "Document Id,last updated when,Labels,Parentlabels,Title Tags,Attachment Tags,[image: ],<,>,Please document here or link to the file.,[image:,last updated by"
+  stopwords: "image,internet,E-Mail,Fax,freundlichen Grüßen,Title Tags,Attachment Tags,pptx,Document Id,Parentlabels,Table of content,table of contents"
+  ContainerConnectionString: "{{param.dataStorageConnectionString}}"
+  ContainersList: "{{param.StorageContainersAsString}}"
+  TikaContainerUrl: "{{param.kubernetesGateway}}"
+  TikaConverterSupportedExtensions: "pdf,ppt,pptx,pptm"
+  UserAgent: "MicrosoftPOC/1.0"
+  X_Tika_PDFAllPagesAsImages: "{{param.X_Tika_PDFAllPagesAsImages}}"
+  METADATA_STORAGE_CONNECTION_STRING: "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/dataStorageConnectionString)"
+  METADATA_STORAGE_CONTAINER_NAME: "{{param.metadataStorageContainerName}}"
+  IMAGES_STORAGE_CONTAINER_NAME: "{{param.imagesStorageContainerName}}"
+  VECTOR_STORAGE_CONNECTION_STRING: "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/dataStorageConnectionString)"
+  VECTOR_STORAGE_CONTAINER_NAME: "{{param.vectorsStorageContainerName}}"

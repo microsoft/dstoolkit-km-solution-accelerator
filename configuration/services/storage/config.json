@@ -1,0 +1,48 @@
+{
+    "enable": true,
+    "ServiceEndPoint": "Microsoft.Storage",
+    "GroupId": "Blob",
+    "Apptype": "Storage",
+    "PrivateDNSZone":"privatelink.blob.core.windows.net",
+    "Parameters": {
+        "dataStorageAccountName": "{{config.name}}data",
+        "techStorageAccountName": "{{config.name}}tech",
+        "storageContainers": [
+            "documents",
+            "images",
+            "metadata",
+            "translation",
+            "vectors"
+        ],
+        "metadataStorageContainerName": "metadata",
+        "imageStorageContainerName": "images",
+        "translationStorageContainerName": "translation",
+        "vectorsStorageContainerName": "vectors",
+        "storageFileShares": [
+            "neo4jdata",
+            "neo4jlogs"
+        ]
+    },
+    "Items": [
+        {
+            "Id": "data",
+            "Name": "{{config.name}}data",
+            "Accountkind": "StorageV2",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "IsDataStorage": true,
+            "EnableHierarchicalNamespace": true,
+            "EnablePrivateAccess": true,
+            "AccessSubnetRestriction": true
+        },
+        {
+            "Id": "tech",
+            "Name": "{{config.name}}tech",
+            "Accountkind": "StorageV2",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "IsDataStorage": false,
+            "EnableHierarchicalNamespace": true,
+            "EnablePrivateAccess": true,
+            "AccessSubnetRestriction": true
+        }
+    ]
+}

@@ -59,26 +59,29 @@ function New-AzureKeyVault() {
         if ( $exists ) {
             Write-Host "Key Vault service already exists...Skipping.";
         }
-        else {    
+        else {
             az keyvault create --location $config.location `
                 --name $azureResource.Name `
                 --resource-group $azureResource.ResourceGroup `
-                --sku $azureResource.Sku
+                --sku $azureResource.Sku `
+                --enable-purge-protection
 
             Write-Host "Adding Az Cli required permissions to KeyVault" -ForegroundColor Yellow
-
-            # 04b07795-8ddb-461a-bbee-02f9e1bf7b46 is AZ CLI client id
-            az keyvault set-policy --name $azureResource.Name --object-id 04b07795-8ddb-461a-bbee-02f9e1bf7b46 `
-                --certificate-permissions get list create delete `
-                --key-permissions get list create delete `
-                --secret-permissions get set list delete
-            
-            $currentUserId = ((az ad signed-in-user show) | ConvertFrom-Json).id
-            az keyvault set-policy --name $azureResource.Name --object-id $currentUserId `
-                --certificate-permissions get list create delete `
-                --key-permissions get list create delete `
-                --secret-permissions get set list delete
         }
+
+        # Configurable with a list of object ids...
+        foreach ($permission in $AzureResource.Permissions) {
+            az keyvault set-policy --name $azureResource.Name --object-id $permission.ObjectId `
+            --certificate-permissions get list create delete `
+            --key-permissions get list create delete `
+            --secret-permissions get set list delete
+        }
+        
+        $currentUserId = ((az ad signed-in-user show) | ConvertFrom-Json).id
+        az keyvault set-policy --name $azureResource.Name --object-id $currentUserId `
+            --certificate-permissions get list create delete `
+            --key-permissions get list create delete `
+            --secret-permissions get set list delete
     }
 }
 
@@ -135,26 +138,26 @@ function New-StorageAccount {
 
             if ($azureResource.IsDataStorage) {
 
-                Get-DataStorageAccountAccessKeys
+                Get-StorageAccountsKeys -Id data
                 
                 # Iterate through the list of containers to create. 
                 foreach ($container in $params.storageContainers) {
                     az storage container create -n $container `
                         --account-name $params.dataStorageAccountName `
-                        --account-key $params.storageAccountKey `
-                        --resource-group $config.resourceGroupName
+                        --account-key $params.dataStorageAccountKey `
+                        --resource-group $azureResource.ResourceGroup
                 }
                     
                 # Soft blob deletion policy (7 days)
                 az storage account blob-service-properties update --account-name $params.dataStorageAccountName `
-                    --resource-group $config.resourceGroupName `
+                    --resource-group $azureResource.ResourceGroup `
                     --enable-delete-retention true `
                     --delete-retention-days 7
 
                 # storageFileShares
                 foreach ($container in $params.storageFileShares) {
                     az storage share-rm create `
-                    --resource-group $config.resourceGroupName `
+                    --resource-group $azureResource.ResourceGroup `
                     --storage-account $params.dataStorageAccountName `
                     --name $container `
                     --quota 1024 `
@@ -162,14 +165,9 @@ function New-StorageAccount {
                 }
             }
         }
-
-        if ($azureResource.IsDataStorage) {
-            Get-DataStorageAccountAccessKeys
-        }
-        else {
-            Get-TechStorageAccountAccessKeys
-        }
     }
+
+    Get-StorageAccountsKeys
 }
 
 function New-CognitiveServices {
@@ -224,7 +222,7 @@ function New-SearchServices {
 
         if ($searchcfg.Parameters.semanticSearchEnabled)
         {
-            Enable-SemanticSearch $azureResource.Name
+            Enable-SemanticSearch -ServiceName $azureResource.Name -ResourceGroup $azureResource.ResourceGroup
         }
 
     }
@@ -235,11 +233,11 @@ function New-SearchServices {
 
 function New-ACRService {
 
-    foreach ($azureResource in $conregistrycfg.Items) {
+    foreach ($azureResource in $acrcfg.Items) {
 
         Write-Host "Provisionning ACR service "$azureResource.Name;
 
-        $exists = az acr show -g $azureResource.ResourceGroup -n $azureResource.Name --query id --out tsv
+        $exists = az acr show -n $azureResource.Name -g $azureResource.ResourceGroup --query id --out tsv
 
         if ( $exists ) {
             Write-Host "ACR service already exists...Skipping.";
@@ -258,7 +256,8 @@ function New-ContainerInstances {
 
         Write-Host "Provisionning Container Instances service(s) "$azureResource.Name;
 
-        $exists = az container show -g $azureResource.ResourceGroup -n $azureResource.Name --query id --out tsv
+        # $exists = az container show -g $azureResource.ResourceGroup -n $azureResource.Name --query id --out tsv
+        $exists = az container show -n $azureResource.Name --query id --out tsv
 
         if ( $exists ) {
             Write-Host "ACI service already exists...Skipping.";
@@ -292,20 +291,160 @@ function New-AzureMapsService() {
             --accept-tos
 
             $mapsKey = az maps account keys list --name $params.maps --resource-group $config.resourceGroupName --query primaryKey --out tsv
-            Add-Param "mapsSubscriptionKey" $mapsKey
+            Add-Param -Name "mapsSubscriptionKey" -Value $mapsKey
             Save-Parameters
         }
     }
 }
 
+#region Bing
 function New-BingSearchService() {
-    if ( $config.bingEnabled -or ($config.spellCheckEnabled -and $config.spellCheckProvider.Equals("Bing")) ) {
+    if ( $config.bingEnabled -or ($param.spellCheckEnabled -and $config.spellCheckProvider.Equals("Bing")) ) {
         Write-Host "Provision Bing Search service manually. When provisionned..." -ForegroundColor Red    
         $bingKey = Read-Host "Provide Bing Search Key " -MaskInput
-        Add-Param "bingServicesKey" $bingKey
+        Add-Param -Name "bingServicesKey" -Value $bingKey
         Save-Parameters
     }
 }
+#endregion
+
+#region Cosmos
+function New-Cosmos() {
+    if ($cosmoscfg.enable) {
+        foreach ($azureResource in $cosmoscfg.Items) {
+
+            $exists = az cosmosdb check-name-exists -n $azureResource.Name --query id --out tsv
+
+            if ($exists) {
+                Write-Host "Azure Cosmos service already exists...Skipping.";
+            }
+            else {
+                az cosmosdb create `
+                -g $config.resourceGroupName `
+                --name $azureResource.Name `
+                --subscription $config.subscriptionId `
+                --capabilities EnableTable
+            }
+
+            # TODO Check --assign-identity
+
+            foreach ($table in $azureResource.Tables) { 
+
+                $tableExists = az cosmosdb table exists `
+                -g $config.resourceGroupName `
+                --account-name $azureResource.Name `
+                --name $table
+
+                if ($tableExists.Equals("true")) {
+                    Write-Host "Azure Cosmos table already exists...Skipping.";
+                }
+                else {
+                    az cosmosdb table create `
+                    -g $config.resourceGroupName `
+                    --account-name $azureResource.Name `
+                    --name $table
+
+                    # TODO - Load the configuration tables here ? 
+
+                }
+            }
+        }
+
+        Get-CosmosTableConnectionString
+    }
+}
+#endregion
+
+#region ServiceBus
+function New-ServiceBus() {
+    if ($servicebuscfg.enable) {
+        foreach ($azureResource in $servicebuscfg.Items) {
+            # https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-quickstart-cli
+            az servicebus namespace create `
+            -g $config.resourceGroupName `
+            --name $azureResource.Name `
+            --location $config.location
+
+            foreach ($queue in $servicebuscfg.Queues) {
+                # Create the Queues we need 
+                az servicebus queue create `
+                -g $config.resourceGroupName `
+                --namespace-name $azureResource.Name `
+                --name $queue `
+                --max-size 5120 `
+                --max-message-size 1024 `
+                --max-delivery-count 10 `
+                --lock-duration 5 `
+                --enable-session false `
+                --enable-partitioning false `
+                --enable-dead-lettering-on-message-expiration true `
+                --enable-batched-operations true `
+                --default-message-time-to-live 90 `
+                --status Active `
+                --enable-duplicate-detection true `
+                --duplicate-detection-history-time-window 10 `
+                --default-message-time-to-live P90D
+            }
+
+            Get-ServiceBusConnectionString
+        }
+    }
+}
+#endregion
+
+#region Redis
+function New-RedisCache() {
+    if ($rediscfg.enable) {
+        $existingRedis = az redis list -g $config.resourceGroupName
+        foreach ($redisResource in $rediscfg.Items) {
+            if ($redisResource.Name -in $existingRedis) {
+                Write-Host "Redis already exists...Skipping."
+            }
+            else {
+                az redis create --location $config.location `
+                --name $redisResource.Name `
+                --resource-group $config.resourceGroupName `
+                --sku $redisResource.SKU `
+                --vm-size $redisResource.VMSize
+            }
+        }
+        Get-RedisConnectionString
+     }
+}
+#endregion
+
+#region AKS
+function New-AKSCluster() {
+    if ($akscfg.enable) {    
+        $existingAKS = az aks list --query [].name --out tsv
+        foreach ($azureResource in $akscfg.Items) {
+            if ($azureResource.Name -in $existingAKS) {
+                Write-Host "AKS cluster already exists...Skipping."
+            }
+            else {
+                az aks create -g $azureResource.ResourceGroup `
+                    -n $azureResource.Name `
+                    --enable-managed-identity `
+                    --enable-cluster-autoscaler `
+                    --min-count 1 `
+                    --max-count 3 `
+                    --node-count 1 `
+                    --nodepool-name $config.name `
+                    --node-vm-size $azureResource.VMSize `
+                    --generate-ssh-keys
+
+                    # --enable-keda `
+            }
+
+            # Get AKS credentials
+            az aks get-credentials -n $azureResource.Name -g $azureResource.ResourceGroup
+            
+            # Ensure ACR is attached to AKS
+            az aks update -n $azureResource.Name -g $azureResource.ResourceGroup --attach-acr $params.acrName
+        }
+    }
+}
+#endregion
 
 #region Access Restriction for App Services
 

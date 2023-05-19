@@ -1,0 +1,22 @@
+{
+    "enable": true,
+    "GroupId":"ContainerRegistry",
+    "ServiceEndPoint":"Microsoft.ContainerRegistry",
+    "Apptype":"ContainerRegistry",
+    "PrivateDNSZone":"privatelink.azurecr.io",
+    "Parameters" : {
+        "acr": "{{config.name}}acr.azurecr.io",
+        "acrName": "{{config.name}}acr"
+    },
+    "Items": [
+        {
+            "Id": "acr",
+            "Name": "{{config.name}}acr",
+            "FullName": "{{config.name}}acr.azurecr.io",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "EnablePrivateAccess":true,
+            "AccessSubnetRestriction":true,
+            "IPAddressToAdd":[]
+        }
+    ]
+}

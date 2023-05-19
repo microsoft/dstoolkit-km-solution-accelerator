@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vision-app
+  labels:
+    # any Pods with matching labels are included in this Daemon Set
+    app: kubernetes-series
+    tier: monitor
+spec:
+  selector:
+    # Pods will match with the following labels
+    matchLabels:
+      name: vision-app
+  template:
+    metadata:
+      labels:
+        name: vision-app
+    spec:
+      containers:
+      - name: vision-app
+        image: {{param.acr}}/{{config.name}}/vision:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: WEBSITE_HOSTNAME
+          value: "{{param.kubernetesHost}}"
+        - name: AZURE_STORAGE_CONNECTION_STRING
+          value: "{{param.dataStorageConnectionString}}"
+        - name: APPINSIGHTS_INSTRUMENTATIONKEY
+          value: "{{param.appInsightsServiceKey}}"
+        - name: AzureWebJobsStorage
+          value: "{{param.techStorageConnectionString}}"
+        - name: FORMS_RECOGNIZER_ENDPOINT
+          value: "https://{{param.cogSvcForm}}.cognitiveservices.azure.com"
+        - name: FORMS_RECOGNIZER_KEY
+          value: "{{param.cogSvcFormKey}}"
+        - name: COMPUTER_VISION_ENDPOINT
+          value: "https://{{param.cogSvcVision}}.cognitiveservices.azure.com"
+        - name: COMPUTER_VISION_KEY
+          value: "{{param.cogSvcVisionKey}}"
+        resources:
+          requests:
+            cpu: 500m
+            memory: 2Gi
+          limits:
+            cpu: 4000m
+            memory: 16Gi
+      nodeSelector:
+        agentpool: poolcogs
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: vision-service
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    name: vision-app

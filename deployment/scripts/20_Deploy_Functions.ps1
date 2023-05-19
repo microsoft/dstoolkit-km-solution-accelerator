@@ -3,16 +3,15 @@ param(
     [switch]$DockerBuild,
     [switch]$NoProvision,
     [switch]$Upgrade
-    )
+)
 
 $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
 
 Write-Host $ScriptDir
 
-if ($EnvironmentName)
-{
+if ($EnvironmentName) {
     Write-Host "Selected Environment "$EnvironmentName
-    $initPath=Join-Path $ScriptDir ".." "init_env.ps1"
+    $initPath = Join-Path $ScriptDir ".." "init_env.ps1"
     .  $initPath -Name $EnvironmentName -NoLogin
 }
 

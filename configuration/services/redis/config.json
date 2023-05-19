@@ -1,0 +1,19 @@
+{
+    "enable": true,
+    "ServiceEndPoint": "Microsoft.Storage",
+    "GroupId": "Blob",
+    "Apptype": "Storage",
+    "PrivateDNSZone": "privatelink.blob.core.windows.net",
+    "Parameters": {},
+    "Items": [
+        {
+            "Id": "redis",
+            "Name": "{{config.name}}redis",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "EnablePrivateAccess": false,
+            "AccessSubnetRestriction": false,
+            "SKU": "Standard",
+            "VMSize": "C0"
+        }
+    ]
+}

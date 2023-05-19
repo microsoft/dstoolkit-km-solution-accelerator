@@ -1,0 +1,47 @@
+[
+    {
+        "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey)",
+        "slotSetting": true
+    },
+    {
+        "name": "AzureWebJobsStorage",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString)",
+        "slotSetting": false
+    },
+    {
+        "name": "ContainerConnectionString",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/dataStorageConnectionString)",
+        "slotSetting": false
+    },
+    {
+        "name": "ContainersList",
+        "value": "{{param.StorageContainersAsString}}",
+        "slotSetting": false
+    },
+    {
+        "name": "MetadataContainerName",
+        "value": "{{param.metadataStorageContainerName}}",
+        "slotSetting": false
+    },
+    {
+        "name": "ImageContainerName",
+        "value": "{{param.imageStorageContainerName}}",
+        "slotSetting": false
+    },
+    {
+        "name": "TikaContainerUrl",
+        "value": "{{param.TikaContainerUrl}}",
+        "slotSetting": false
+    },
+    {
+        "name": "UserAgent",
+        "value": "MicrosoftPOC/1.0",
+        "slotSetting": false
+    },
+    {
+        "name": "X_Tika_PDFAllPagesAsImages",
+        "value": "{{param.X_Tika_PDFAllPagesAsImages}}",
+        "slotSetting": false
+    }
+]

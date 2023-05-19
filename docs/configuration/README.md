@@ -50,7 +50,7 @@ The file services.json contains a pre-defined list of services names to deploy.
     "appgw": "{{config.name}}appgw",
     "aks": "{{config.name}}aks",
     "acr": "{{config.name}}acr.azurecr.io",
-    "acr_prefix": "{{config.name}}acr",
+    "acrName": "{{config.name}}acr",
     "maps": "{{config.name}}maps",
     "bing": "{{config.name}}bing",
     "keyvault": "{{config.name}}kv",
@@ -366,7 +366,7 @@ The **config.json** holds the list of Web Applications to build for the solution
             "IsLinux":false,
             "WebApps": [
                 {
-                    "Id":"webappui",
+                    "Id":"webui",
                     "Name": "{{config.name}}ui",
                     "Path": "src\\CognitiveSearch.UI\\CognitiveSearch.UI",
                     "vnetPrivateEndpoint":false,

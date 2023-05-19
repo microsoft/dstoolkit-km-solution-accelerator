@@ -1,0 +1,27 @@
+{
+    "enable": true,
+    "GroupId": "Search",
+    "ServiceEndPoint": "Microsoft.Search",
+    "Apptype": "Search",
+    "PrivateDNSZone":"privatelink.search.windows.net",
+    "Parameters": {
+        "searchServiceName": "{{config.name}}search",
+        "searchDefaultFromLanguageCode": "en",
+        "searchDefaultToLanguageCode": "en",
+        "searchVersion": "2021-04-30-Preview",
+        "searchManagementVersion": "2022-12-01",
+        "searchSku": "standard",
+        "searchIndexerEnvironment": "standard",
+        "semanticSearchEnabled": true
+    },
+    "Items": [
+        {
+            "Id": "search",
+            "Name": "{{config.name}}search",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "EnablePrivateAccess": true,
+            "AddIPAddressRule": false,
+            "AddPrivateSharedLink": true
+        }
+    ]
+}

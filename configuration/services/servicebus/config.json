@@ -1,0 +1,21 @@
+{
+    "enable": true,
+    "ServiceEndPoint": "Microsoft.ServiceBus",
+    "GroupId": "Blob",
+    "Apptype": "Storage",
+    "PrivateDNSZone": "privatelink.servicebus.windows.net",
+    "Parameters": {},
+    "Items": [
+        {
+            "Id": "bus",
+            "Name": "{{config.name}}bus",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "EnablePrivateAccess": true,
+            "AccessSubnetRestriction": true,
+            "AuthorizationRule": "RootManageSharedAccessKey",
+            "Queues": [
+                "SampleQueue"
+            ]
+        }
+    ]
+}

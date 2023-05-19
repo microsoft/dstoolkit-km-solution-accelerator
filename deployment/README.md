@@ -179,12 +179,11 @@ dataStorageAccountName            : kmcontosodata
 vnetnsg                           : kmcontosonsg
 aks                               : kmcontosoaks
 acr                               : kmcontosoacr.azurecr.io
-acr_prefix                        : kmcontosoacr
+acrName                        : kmcontosoacr
 maps                              : kmcontosomaps
 bing                              : kmcontosobing
 keyvault                          : kmcontosokv
 TikaContainerUrl                  : https://kmcontosotikaserver.azurewebsites.net
-dataStorageContainerName          : documents
 StorageContainerAddressesAsString : https://kmcontosodata.blob.core.windows.net/documents,https://kmcontosodata.blob.core.w 
                                     indows.net/images,https://kmcontosodata.blob.core.windows.net/metadata
 synonymsSynonymMap                : kmcontoso-synonyms
@@ -252,7 +251,7 @@ As a result, if Bing is a requirement for your deployment, you will be asked to 
 
 | Services | Configuration parameter | Impact |
 | ------------- | ----------- | ----------- | 
-| Bing | bingEnabled or (config.spellCheckEnabled and config.spellCheckProvider is set to "Bing") | A value of true in your config will ask you to manually input the Bing Search Key while deploying |
+| Bing | bingEnabled or (param.spellCheckEnabled and config.spellCheckProvider is set to "Bing") | A value of true in your config will ask you to manually input the Bing Search Key while deploying |
 
 ## 5 Deploy Azure Functions
 
@@ -294,7 +293,7 @@ Our solution accelerator User Interface authentication supports the built-in Azu
 
 https://docs.microsoft.com/en-us/azure/app-service/configure-authentication-provider-aad
 
-We provide additional details on authentication [here](../configuration/config/Authentication.md).
+We provide additional details on authentication [here](../configuration/services/Authentication.md).
 
 ## 7 Initialize Azure Cognitive Search 
 

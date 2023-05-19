@@ -20,26 +20,36 @@ function Resolve-Environment {
     }
 }
 
-function Import-ServicesConfig() {
+function Import-ConfigItem {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string] $Name
+    )
 
-    $folders = Get-ChildItem -Directory -Path (join-path $global:envpath "config")
+    $folders = Get-ChildItem -Directory -Path (join-path $global:envpath $Name)
 
     foreach ($folder in $folders) {
-        if (Test-Path $(join-Path $folder.FullName "config.json")) 
-        {
+        if (Test-Path $(join-Path $folder.FullName "config.json")) {
             $varValue = [string] (Get-Content -Path $(join-path $folder.FullName "config.json"))
             $varValue = ConvertFrom-Json $varValue
             $varName = $folder.Name + "cfg"
 
             Set-Variable -Name $varName -Value $varValue -Visibility Public -Option AllScope -Force -Scope Global
     
-            Add-Param -Name ($folder.Name+"Enabled") -value $varValue.enable
+            Add-Param -Name ($folder.Name + "Enabled") -Value $varValue.enable
 
             if ($varValue.enable) {
                 Import-ConfigParameters $varValue
             }
         }
     }
+
+    Save-Parameters
+}
+
+function Import-ServicesConfig() {
+    Import-ConfigItem -Name "services"
+    Import-ConfigItem -Name "features"
 }
 
 function Import-ConfigParameters ($inputcfg) {
@@ -48,7 +58,7 @@ function Import-ConfigParameters ($inputcfg) {
     if ($inputcfg.Parameters) {
         foreach ($entry in $(Get-Member -InputObject $inputcfg.Parameters -MemberType NoteProperty)) {
             $value = $entry.Name
-            Add-Param $entry.Name $inputcfg.Parameters.$value
+            Add-Param -Name $entry.Name -Value $inputcfg.Parameters.$value
         }
         Save-Parameters
     }
@@ -123,6 +133,25 @@ function ConvertTo-String {
     return [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR((($secureString))))
 }
 
+function Add-Config {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string] $Name,
+        [Parameter(Mandatory = $true)]
+        [object] $Value
+    )
+    if ( $global:config.PSobject.Properties.name -eq $Name) {
+        $global:config.$Name = $Value
+    }
+    else {
+        $global:config | Add-Member -MemberType NoteProperty -Name $Name -Value $Value -ErrorAction Ignore
+    }
+}
+
+function Save-Config {
+    $global:config | ConvertTo-Json -Depth 100 -Compress | Out-File -FilePath (join-path $global:envpath "config.json")
+}
+
 function Import-Params() {
 
     $global:params = New-Object -TypeName PSObject
@@ -148,7 +177,7 @@ function Import-Params() {
             if ( Test-KeyVaultCandidate $prop.Name ) {
                 $propValue = Get-ParamValue $prop.Name -AsSecureString
                 if ($propValue) {
-                    Add-Param $prop.Name (ConvertTo-String -secureString $propValue)
+                    Add-Param -Name $prop.Name -Value (ConvertTo-String -secureString $propValue)
                 }
             }
         }
@@ -170,12 +199,12 @@ function Add-ExtendedParameters {
             $subproperties = $property.Value.PSobject.Members
             foreach ($member in $subproperties) {
                 if ($member.MemberType -eq "NoteProperty") {
-                    Add-Param ($property.Name + "." + $member.Name) $member.Value   
+                    Add-Param -Name ($property.Name + "." + $member.Name) -Value $member.Value   
                 }
             }    
         }
         else {
-            Add-Param $property.Name $property.Value        
+            Add-Param -Name $property.Name -Value $property.Value        
         }
     }
 }
@@ -217,7 +246,7 @@ function Get-ParamValue() {
     if ($value) {
         if ($AsSecureString) {
             $value = ConvertTo-SecureString -String $value
-        }
+        }    
     }
 
     return $value
@@ -262,7 +291,7 @@ function Sync-Config {
 
     $parameters = Get-Member -InputObject $global:config -MemberType NoteProperty
     
-    $folders = @("config", "monitoring", "tests")
+    $folders = @("services", "monitoring", "tests")
     
     foreach ($folder in $folders) {
         $templates = Get-ChildItem -File -Path (join-path $global:envpath $folder) -Recurse
@@ -299,7 +328,7 @@ function Sync-Parameters {
     if ($global:params) {
         $parameterslist = Get-Member -InputObject $global:params -MemberType NoteProperty
     
-        $folders = @("config", "monitoring", "tests")
+        $folders = @("services", "monitoring", "tests")
         
         foreach ($folder in $folders) {
             $templates = Get-ChildItem -File -Path (join-path $global:envpath $folder) -Recurse
@@ -325,11 +354,11 @@ function Sync-Parameters {
 }
 
 function Initialize-StorageConfig {
-    # first Container is designated as data container
+    # Container
     $dataStorageContainerName = $params.storageContainers[0];
-    Add-Param "dataStorageContainerName" $dataStorageContainerName
+    Add-Param -Name "dataStorageContainerName" -Value $dataStorageContainerName
 
-    Add-Param "StorageContainersAsString" $([String]::Join(',', $params.storageContainers))
+    Add-Param -Name "StorageContainersAsString" -Value $([String]::Join(',', $params.storageContainers))
 
     # Create the containers entries for UI SAS access
     $StorageContainerAddresses = @()
@@ -337,8 +366,8 @@ function Initialize-StorageConfig {
         $url = "https://" + $global:params.dataStorageAccountName + ".blob.core.windows.net/" + $container
         $StorageContainerAddresses += $url
     }
-    Add-Param "StorageContainerAddresses" $StorageContainerAddresses
-    Add-Param "StorageContainerAddressesAsString" $([String]::Join(',', $StorageContainerAddresses))
+    Add-Param -Name "StorageContainerAddresses" -Value $StorageContainerAddresses
+    Add-Param -Name "StorageContainerAddressesAsString" -Value $([String]::Join(',', $StorageContainerAddresses))
 }
 
 function Sync-Modules {
@@ -360,7 +389,7 @@ function Get-DeploymentOverlayPath {
     )
     
     # Default override path under the Deployment folder
-    $overridepath = join-path $global:workpath "config" $config.id  $relpath "*"
+    $overridepath = join-path $global:workpath "services" $config.id  $relpath "*"
     
     if ($config.overlayPath) {
         Write-Debug -Message ("Using configured overlay path " + $config.overlayPath)
@@ -441,7 +470,7 @@ function Push-Data() {
     # Upload documents
     az storage blob upload-batch `
         --account-name $params.dataStorageAccountName `
-        --account-key $params.storageAccountKey  `
+        --account-key $params.dataStorageAccountKey  `
         --overwrite `
         -d $container `
         -s $sourcepath
@@ -462,7 +491,7 @@ function Get-ContainerFilesList () {
             --file-system $container `
             --recursive `
             --account-name $params.dataStorageAccountName `
-            --account-key $params.storageAccountKey `
+            --account-key $params.dataStorageAccountKey `
             --exclude-dir `
             --query "[].{name:name}" `
             --output tsv
@@ -472,7 +501,7 @@ function Get-ContainerFilesList () {
             --file-system $container `
             --recursive `
             --account-name $params.dataStorageAccountName `
-            --account-key $params.storageAccountKey `
+            --account-key $params.dataStorageAccountKey `
             --exclude-dir `
             --query "[].{name:name}" `
             --output tsv    
@@ -495,7 +524,7 @@ function Add-BlobRetryTag () {
         --file-system $container `
         --path $path `
         --account-name $params.dataStorageAccountName `
-        --account-key $params.storageAccountKey  `
+        --account-key $params.dataStorageAccountKey  `
         --metadata AzureSearch_RetryTag=$now
     
 }
@@ -507,13 +536,17 @@ function Get-AllServicesKeys() {
         [switch] $AddToKeyVault
     )
     Get-AppInsightsInstrumentationKey
-    Get-TechStorageAccountAccessKeys
-    Get-DataStorageAccountAccessKeys
+    Get-StorageAccountsKeys
+
     Get-CognitiveServiceKey
     Get-AzureMapsSubscriptionKey
     Get-FunctionsKeys
     Get-SearchServiceKeys
     Get-OpenAIKey
+    Get-ServiceBusConnectionString
+    Get-RedisConnectionString
+    Get-CosmosTableConnectionString
+    Get-AKSCredentials
 
     Sync-Config
 
@@ -529,7 +562,7 @@ function Get-AppInsightsInstrumentationKey {
         $key = az monitor app-insights component show --app $tuple.Value -g $config.resourceGroupName --query instrumentationKey  --out tsv
     
         if ( $key -and $key.length -gt 0 ) {
-            Add-Param ($tuple.Name + "Key") $key
+            Add-Param -Name ($tuple.Name + "Key") -Value $key
         }            
     }
     Save-Parameters
@@ -540,7 +573,7 @@ function Get-AppInsightsInstrumentationKey {
         $key = az monitor app-insights component show --app $tuple.Value -g $config.resourceGroupNameWindows --query instrumentationKey  --out tsv
     
         if ( $key -and $key.length -gt 0 ) {
-            Add-Param ($tuple.Name + "Key") $key
+            Add-Param -Name ($tuple.Name + "Key") -Value $key
         }            
     }
     Save-Parameters
@@ -551,31 +584,35 @@ function Get-AppInsightsInstrumentationKey {
         $key = az monitor app-insights component show --app $tuple.Value -g $config.resourceGroupNameLinux --query instrumentationKey  --out tsv
     
         if ( $key -and $key.length -gt 0 ) {
-            Add-Param ($tuple.Name + "Key") $key
+            Add-Param -Name ($tuple.Name + "Key") -Value $key
         }            
     }
     Save-Parameters
 }
-    
-function Get-TechStorageAccountAccessKeys {
-    
-    $techStorageAccountKey = az storage account keys list --account-name $params.techStorageAccountName -g $config.resourceGroupName --query [0].value  --out tsv
-    Add-Param "techStorageAccountKey" $techStorageAccountKey
-    
-    $techStorageConnectionString = 'DefaultEndpointsProtocol=https;AccountName=' + $params.techStorageAccountName + ';AccountKey=' + $techStorageAccountKey + ';EndpointSuffix=core.windows.net'
-    Add-Param "techStorageConnectionString" $techStorageConnectionString
-    
-    Save-Parameters
-}
 
-function Get-DataStorageAccountAccessKeys {
-    
-    $storageAccountKey = az storage account keys list --account-name $params.dataStorageAccountName -g $config.resourceGroupName --query [0].value --out tsv
-    Add-Param "storageAccountKey" $storageAccountKey
-    
-    $storageConnectionString = 'DefaultEndpointsProtocol=https;AccountName=' + $params.dataStorageAccountName + ';AccountKey=' + $storageAccountKey + ';EndpointSuffix=core.windows.net'
-    Add-Param "storageConnectionString" $storageConnectionString
-    
+function Get-StorageAccountsKeys {
+    param (
+        [string] $Id
+    )
+
+    foreach ($azureResource in $storagecfg.Items) {
+
+        if ($Id -and $azureResource.Id -ne $Id) {
+            continue
+        }
+
+        Write-Host ("Service Name  " + $azureResource.Name) -ForegroundColor Yellow
+        $exists = az storage account show --name $azureResource.Name --resource-group $azureResource.ResourceGroup --query id --out tsv
+
+        if ( $exists ) {
+            $storageAccountKey = az storage account keys list --account-name $azureResource.Name -g $azureResource.ResourceGroup --query [0].value  --out tsv
+            Add-Param -Name ($azureResource.Id + "StorageAccountKey") -Value $storageAccountKey
+            
+            $storageConnectionString = 'DefaultEndpointsProtocol=https;AccountName=' + $azureResource.Name + ';AccountKey=' + $storageAccountKey + ';EndpointSuffix=core.windows.net'
+            Add-Param -Name ($azureResource.Id + "StorageConnectionString") -Value $storageConnectionString   
+        }
+    }
+
     Save-Parameters
 }
     
@@ -592,7 +629,7 @@ function Get-CognitiveServiceKey {
             $cogServicesKey = az cognitiveservices account keys list --name $azureResource.Name -g $azureResource.ResourceGroup --query key1 --out tsv
 
             if ( $cogServicesKey -and $cogServicesKey.Length -gt 0 ) {
-                Add-Param ($azureResource.Parameter+"Key") $cogServicesKey
+                Add-Param -Name ($azureResource.Parameter + "Key") -Value $cogServicesKey
             }
         }
     }
@@ -601,12 +638,61 @@ function Get-CognitiveServiceKey {
 }
     
 function Get-AzureMapsSubscriptionKey {
-    
     if ($mapscfg.enable) {
         $mapsKey = az maps account keys list --name $params.maps --resource-group $config.resourceGroupName --query primaryKey --out tsv
-        Add-Param "mapsSubscriptionKey" $mapsKey
+        Add-Param -Name "mapsSubscriptionKey" -Value $mapsKey
     
         Save-Parameters
+    }
+}
+
+# Get Service Bus Namespace Connection String
+function Get-ServiceBusConnectionString {
+    if ($servicebuscfg.enable) {
+        foreach ($azureResource in $servicebuscfg.Items) {
+            # TODO check to capture connection string 
+            $connection = az servicebus namespace authorization-rule keys list `
+                --resource-group $config.resourceGroupName `
+                --namespace-name $azureResource.Name `
+                --name $azureResource.AuthorizationRule `
+                --query primaryConnectionString `
+                --output tsv
+            
+            Add-Param -Name ($azureResource.Id + "ConnectionString") -Value $connection
+
+            Save-Parameters
+        }
+    }
+}
+
+# Get Redis Cache Connection String
+function Get-RedisConnectionString {
+    if ($rediscfg.enable) {
+        foreach ($azureResource in $rediscfg.Items) {
+            # TODO check to capture connection string not the key
+            $primaryKey = (az redis list-keys --name $azureResource.Name --resource-group $config.resourceGroupName | ConvertFrom-Json).primaryKey
+            $connection = ($azureResource.Name + ".redis.cache.windows.net:6380,password=$primaryKey,ssl=True,abortConnect=False,ConnectRetry=3,ConnectTimeout=5000,SyncTimeout=5000")
+    
+            Add-Param -Name ($azureResource.Id + "ConnectionString") -Value $connection
+
+            Save-Parameters
+        }
+    }
+}
+
+# Get Cosmos Connection strings
+function Get-CosmosTableConnectionString() {
+    if ($cosmoscfg.enable) {
+        foreach ($azureResource in $cosmoscfg.Items) {
+            $list = (az cosmosdb keys list --type connection-strings `
+                    --resource-group $config.resourceGroupName `
+                    --name $azureResource.Name | ConvertFrom-Json)
+            $value = $list.connectionStrings | where-Object -Property Description -EQ  "Primary Table Connection String"
+ 
+            Add-Param -Name ($azureResource.Id + "ConnectionString") -Value $value.connectionString
+
+            Save-Parameters
+        }
     }
 }
 #endregion
@@ -620,43 +706,43 @@ function Initialize-SearchConfig {
         for ($i = 0; $i -lt $searchcfg.searchBlobPartitions.Count; $i++) {
             $partitionName = $searchcfg.searchBlobPartitions[$i]
     
-            $indexerPath = join-path $global:envpath "config" "search" "indexers" "documents.json"
+            $indexerPath = join-path $global:envpath "services" "search" "indexers" "documents.json"
             if ( test-path $indexerPath) {
                 # Create a partition datasource for documents
-                $datasource = Get-Content -Path (join-path $global:envpath "config" "search" "datasources" "documents.json") -Raw
+                $datasource = Get-Content -Path (join-path $global:envpath "services" "search" "datasources" "documents.json") -Raw
                 $jsonobj = ConvertFrom-Json $datasource
                 $jsonobj.name = ($config.name + "-documents-" + $i)
                 $jsonobj.container | Add-Member -MemberType NoteProperty -Name "query" -Value $partitionName -ErrorAction Ignore
-                $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "config" "search" "datasources" ("documents-" + $i + ".json")) -Force
+                $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "services" "search" "datasources" ("documents-" + $i + ".json")) -Force
     
                 # Create a partition indexer for documents
-                $datasource = Get-Content -Path (join-path $global:envpath "config" "search" "indexers" "documents.json") -Raw
+                $datasource = Get-Content -Path (join-path $global:envpath "services" "search" "indexers" "documents.json") -Raw
                 $jsonobj = ConvertFrom-Json $datasource
                 $jsonobj.name = ($config.name + "-documents-" + $i)
                 $jsonobj.dataSourceName = ($config.name + "-documents-" + $i)
-                $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "config" "search" "indexers" ("documents-" + $i + ".json")) -Force    
+                $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "services" "search" "indexers" ("documents-" + $i + ".json")) -Force    
             }
     
-            $indexerPath = join-path $global:envpath "config" "search" "indexers" "images.json"
+            $indexerPath = join-path $global:envpath "services" "search" "indexers" "images.json"
             if ( test-path $indexerPath) {
                 # Create a partition datasource for images
-                $datasource = Get-Content -Path (join-path $global:envpath "config" "search" "datasources" "images.json") -Raw
+                $datasource = Get-Content -Path (join-path $global:envpath "services" "search" "datasources" "images.json") -Raw
                 $jsonobj = ConvertFrom-Json $datasource
                 $jsonobj.name = ($config.name + "-images-" + $i)
                 $jsonobj.container | Add-Member -MemberType NoteProperty -Name "query" -Value $partitionName -ErrorAction Ignore
-                $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "config" "search" "datasources" ("images-" + $i + ".json")) -Force
+                $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "services" "search" "datasources" ("images-" + $i + ".json")) -Force
     
                 # Create a partition indexer for images
-                $datasource = Get-Content -Path (join-path $global:envpath "config" "search" "indexers" "images.json") -Raw
+                $datasource = Get-Content -Path (join-path $global:envpath "services" "search" "indexers" "images.json") -Raw
                 $jsonobj = ConvertFrom-Json $datasource
                 $jsonobj.name = ($config.name + "-images-" + $i)
                 $jsonobj.dataSourceName = ($config.name + "-images-" + $i)
-                $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "config" "search" "indexers" ("images-" + $i + ".json")) -Force
+                $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "services" "search" "indexers" ("images-" + $i + ".json")) -Force
     
             }
         }
-        Remove-item (join-path $global:envpath "config" "search" "indexers" "documents.json") -Force -ErrorAction SilentlyContinue
-        Remove-Item (join-path $global:envpath "config" "search" "indexers" "images.json") -Force -ErrorAction SilentlyContinue
+        Remove-item (join-path $global:envpath "services" "search" "indexers" "documents.json") -Force -ErrorAction SilentlyContinue
+        Remove-Item (join-path $global:envpath "services" "search" "indexers" "images.json") -Force -ErrorAction SilentlyContinue
     }
     
     Initialize-SearchParameters    
@@ -668,11 +754,11 @@ function Initialize-SearchParameters {
     
     # Get the list of Synonyms Maps
     $synonymmaps = @()
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "synonyms") -Recurse
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "synonyms") -Recurse
     foreach ($file in $files) {
         $item = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
         $value = ($config.name + "-" + $item)
-        Add-Param $item"SynonymMap" $value
+        Add-Param -Name $item"SynonymMap" -Value $value
         $synonymmaps += $value
     }
     Add-Param "searchSynonymMaps" $synonymmaps
@@ -680,70 +766,77 @@ function Initialize-SearchParameters {
     
     # Get the list of SkillsSets
     $skillslist = @()
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "skillsets")
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "skillsets")
     foreach ($file in $files) {
         $item = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
         $value = ($config.name + "-" + $item)
-        Add-Param $item"SkillSet" $value
+        Add-Param -Name $item"SkillSet" -Value $value
         $skillslist += $value
     }
-    Add-Param "searchSkillSets" $skillslist
+    Add-Param -Name "searchSkillSets" -Value $skillslist
     Write-Debug -Message "Parameters SkillSet created"
     
     # Get the list of Indexes
     $indexeslist = @()
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "indexes")
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "indexes")
     foreach ($file in $files) {
         $item = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
         $value = ($config.name + "-" + $item)
-        Add-Param $item"Name" $value
+        Add-Param -Name $item"Name" -Value $value
         $indexeslist += $value
     }
-    Add-Param "searchIndexes" ($indexeslist | Join-String -Property $_ -Separator ",")
-    Add-Param "searchIndexesList" $indexeslist
+    Add-Param -Name "searchIndexes" -Value ($indexeslist | Join-String -Property $_ -Separator ",")
+    Add-Param -Name "searchIndexesList" -Value $indexeslist
     Write-Debug -Message "Parameters Indexes created"
     
     # Get the list of DataSources
     $datasourceslist = @()
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "datasources")
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "datasources")
     foreach ($file in $files) {
         $item = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
         $value = ($config.name + "-" + $item)
-        Add-Param $item"DataSource" $value
-        Add-Param $item"StorageContainerName" $item            
+        Add-Param -Name $item"DataSource" -Value $value
+        Add-Param -Name $item"StorageContainerName" -Value $item            
         $datasourceslist += $value
     }
-    Add-Param "searchDataSources" $datasourceslist
+    Add-Param -Name "searchDataSources" -Value $datasourceslist
     Write-Debug -Message "Parameters DataSources created"
     
     # Get the list of Indexers
     $indexersList = @()
-    $indexersStemList=@()
+    $indexersStemList = @()
 
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "indexers")
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "indexers")
     foreach ($file in $files) {
         $item = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
         $value = ($config.name + "-" + $item)
-        Add-Param $item"Indexer" $value
+        Add-Param -Name $item"Indexer" -Value $value
         $indexersList += $value
         $indexersStemList += $item
     }
-    Add-Param "searchIndexers" ($indexersList | Join-String -Property $_ -Separator ",")
-    Add-Param "searchIndexersList" $indexersList
-    Add-Param "searchIndexersStemList" $indexersStemList
+    Add-Param -Name "searchIndexers" -Value ($indexersList | Join-String -Property $_ -Separator ",")
+    Add-Param -Name "searchIndexersList" -Value $indexersList
+    Add-Param -Name "searchIndexersStemList" -Value $indexersStemList
     Write-Debug -Message "Parameters Indexers created"
 }
     
-function Get-SearchServiceKeys {    
+function Get-SearchServiceKeys {
     Write-Host "Fetching Search service keys..." -ForegroundColor DarkBlue
 
-    $searchServiceKey = az search admin-key show --resource-group $config.resourceGroupName --service-name $params.searchServiceName  --query primaryKey --out tsv
-    Add-Param "searchServiceKey" $searchServiceKey
-        
-    $searchServiceQueryKey = az search query-key list --resource-group $config.resourceGroupName --service-name $params.searchServiceName  --query [0].key --out tsv
-    Add-Param "searchServiceQueryKey" $searchServiceQueryKey
+    foreach ($azureResource in $searchcfg.Items) {
+
+        Write-Host "Provisionning Search Service "$azureResource.Name
+
+        $searchServiceKey = az search admin-key show --resource-group $azureResource.ResourceGroup --service-name $azureResource.Name --query primaryKey --out tsv
+        # TODO use ID trick 
+        Add-Param -Name "searchServiceKey" -Value $searchServiceKey
+            
+        $searchServiceQueryKey = az search query-key list --resource-group $azureResource.ResourceGroup --service-name $azureResource.Name --query [0].key --out tsv
+        # TODO use ID trick 
+        Add-Param -Name "searchServiceQueryKey" -Value $searchServiceQueryKey
     
-    Save-Parameters
+        Save-Parameters
+    }
 }
 
 function Invoke-SearchAPI {
@@ -771,8 +864,30 @@ function Invoke-SearchAPI {
 }
 
 function Get-SearchMgtUrl () {
-    $mgturl = "https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName
-    $mgturl += "?api-version="+$searchcfg.Parameters.searchManagementVersion
+    param (
+        [Parameter(Mandatory = $false)]
+        [string]$ServiceName,
+        [Parameter(Mandatory = $false)]
+        [string]$ResourceGroup,
+        [Parameter(Mandatory = $false)]
+        [string]$ApiVersion
+    )
+
+    if (-not $ServiceName) {
+        $ServiceName = $params.searchServiceName
+    }
+    if (-not $ResourceGroup) {
+        $ResourceGroup = $config.resourceGroupName
+    }
+
+    $mgturl = "https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $ResourceGroup + "/providers/Microsoft.Search/searchServices/" + $ServiceName
+
+    if ($ApiVersion){
+        $mgturl += "?api-version=" + $ApiVersion
+    }
+    else {
+        $mgturl += "?api-version=" + $searchcfg.Parameters.searchManagementVersion
+    }
     return $mgturl
 }
 
@@ -799,7 +914,7 @@ function Update-SearchAliases {
     )
     Write-Debug -Message "Creating/Updating existing Search Aliases"
     
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "aliases") -Recurse
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "aliases") -Recurse
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
@@ -814,7 +929,7 @@ function Update-SearchSynonyms {
     )
     Write-Debug -Message "Creating/Updating existing Search Synonym Map(s)"
     
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "synonyms") -Recurse
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "synonyms") -Recurse
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
@@ -829,7 +944,7 @@ function Update-SearchIndex {
     )
     Write-Debug -Message "Creating/Updating existing Search Index(es)"
     
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "indexes") -Recurse
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "indexes") -Recurse
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
@@ -875,7 +990,7 @@ function Update-SearchDataSource {
     )
     Write-Debug -Message "Creating/Updating existing Search DataSource(s)"
     
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "datasources")
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "datasources")
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
@@ -897,7 +1012,7 @@ function Update-SearchSkillSet {
     )
     Write-Debug -Message "Creating/Updating existing Search SkillSet(s)"
     
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "skillsets")
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "skillsets")
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
@@ -921,7 +1036,7 @@ function Update-SearchIndexer {
     )
     Write-Debug -Message "Creating/Updating existing Search Indexer(s)"
     
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "indexers")
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "indexers")
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
@@ -970,7 +1085,7 @@ function Reset-SearchIndexer {
     )
     Write-Host "Reset Search Indexer(s)"
     
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "indexers")
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "indexers")
     
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
@@ -999,25 +1114,25 @@ function Start-SearchIndexer {
     )
     Write-Host "Run Search Indexer(s) "$name
     
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "indexers")
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "indexers")
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
     
         if ( $name ) {
             if ( $jsonobj.name.indexOf($name) -ge 0) {
-                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/run?api-version=" + $searchcfg.Parameters.searchManagementVersion) -method "POST" 
+                Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/run?api-version=" + $searchcfg.Parameters.searchVersion) -method "POST" 
             }
         }
         else {
-            Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/run?api-version=" + $searchcfg.Parameters.searchManagementVersion) -method "POST" 
+            Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "/run?api-version=" + $searchcfg.Parameters.searchVersion) -method "POST" 
         }
     }
 };
     
 function Get-SearchIndexersStatus {
     $indexersStatus = @()
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "indexers")
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "indexers")
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
@@ -1077,7 +1192,18 @@ function Get-SearchIndexerStatus {
 }
     
 function Get-SearchServiceDetails() {
-    az rest --method GET --url $(Get-SearchMgtUrl)
+    foreach ($azureResource in $searchcfg.Items) {
+
+        Write-Host "Search Service details for "$azureResource.Name
+
+        $exists = az search service show --name $azureResource.Name --resource-group $azureResource.ResourceGroup --query id --out tsv
+
+        if ( $exists ) {
+            $mgturl = Get-SearchMgtUrl -ServiceName $azureResource.Name -ResourceGroup $azureResource.ResourceGroup
+
+            az rest --method GET --url $mgturl
+        }
+    }
 }
     
 # https://docs.microsoft.com/en-us/rest/api/searchservice/preview-api/reset-documents
@@ -1100,33 +1226,32 @@ function Reset-SearchDocument {
 
 # https://learn.microsoft.com/en-us/azure/search/semantic-search-overview
 
-function Enable-SemanticSearch ($searchServiceName) {
+function Enable-SemanticSearch () {
+    param (
+        [Parameter(Mandatory = $false)]
+        [string]$ServiceName,
+        [Parameter(Mandatory = $false)]
+        [string]$ResourceGroup
+    )
 
-    $mgturl = ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/")
-    if ($searchServiceName) {
-        $mgturl += $searchServiceName
-    }
-    else {
-        $mgturl += $params.searchServiceName
-    }
-    $mgturl += "?api-version=2021-04-01-Preview"
+    $mgturl = Get-SearchMgtUrl -ServiceName $ServiceName -ResourceGroup $ResourceGroup -ApiVersion $searchcfg.Parameters.searchManagementVersion
 
-    Push-Location (Join-Path $global:envpath "config" "search" "semantic")
+    Push-Location (Join-Path $global:envpath "services" "search" "semantic")
     az rest --method PUT --url $mgturl --body '@enable.json'
     Pop-Location
 }
 
-function Disable-SemanticSearch ($searchServiceName) {
-    $mgturl = ("https://management.azure.com/subscriptions/" + $config.subscriptionId + "/resourceGroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/")
-    if ($searchServiceName) {
-        $mgturl += $searchServiceName
-    }
-    else {
-        $mgturl += $params.searchServiceName
-    }
-    $mgturl += "?api-version=2021-04-01-Preview"
+function Disable-SemanticSearch () {
+    param (
+        [Parameter(Mandatory = $false)]
+        [string]$ServiceName,
+        [Parameter(Mandatory = $false)]
+        [string]$ResourceGroup
+    )
 
-    Push-Location (Join-Path $global:envpath "config" "search" "semantic")
+    $mgturl = Get-SearchMgtUrl -ServiceName $ServiceName -ResourceGroup $ResourceGroup -ApiVersion $searchcfg.Parameters.searchManagementVersion
+
+    Push-Location (Join-Path $global:envpath "services" "search" "semantic")
     az rest --method PUT --url $mgturl --body '@disable.json'
     Pop-Location
 }
@@ -1136,12 +1261,12 @@ function Suspend-Search {
     # https://learn.microsoft.com/en-us/azure/search/search-howto-schedule-indexers?tabs=rest#configure-a-schedule
     Write-Host "Suspend Indexers' Scheduling..."
 
-    $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "indexers")
+    $files = Get-ChildItem -File -Path (join-path $global:envpath "services" "search" "indexers")
     foreach ($file in $files) {
         $configBody = [string] (Get-Content -Path $file.FullName)
         $jsonobj = ConvertFrom-Json $configBody
-        $jsonobj.schedule=$null
-        $updatedCfg=(Convertto-json $jsonobj -Depth 100)
+        $jsonobj.schedule = $null
+        $updatedCfg = (Convertto-json $jsonobj -Depth 100)
         Invoke-SearchAPI -url ("/indexers/" + $jsonobj.name + "?api-version=" + $searchcfg.Parameters.searchVersion) -method "PUT" -body $updatedCfg
     }
 }
@@ -1159,21 +1284,19 @@ function Get-SearchFailedItems {
         [switch] $Tagging
     )
 
-    function Format-ErrorKey ($error) {
-        $id = $error.key.Split("&")[0].Replace("localId=", "");
+    function Format-ErrorKey ($searchError) {
+        $id = $searchError.key.Split("&")[0].Replace("localId=", "");
         $id = [System.Web.HttpUtility]::UrlDecode($id);
         # Find the base url of the document url to remove it.
-        foreach($storageUrl in $params.StorageContainerAddresses)
-        {
-            if ($id.indexOf($storageUrl) -ge 0)
-            {
-                $baseurl=$storageUrl
+        foreach ($storageUrl in $params.StorageContainerAddresses) {
+            if ($id.indexOf($storageUrl) -ge 0) {
+                $baseurl = $storageUrl
             }
         }
-        return [System.Web.HttpUtility]::UrlDecode($id.Replace($baseurl+"/",""));
+        return [System.Web.HttpUtility]::UrlDecode($id.Replace($baseurl + "/", ""));
     }
 
-    $now = Get-Date -Format "yyyyMMddHHmmss"
+    # $now = Get-Date -Format "yyyyMMddHHmmss"
 
     if ($Indexer) {
         $indexersTargetList = @($Indexer)
@@ -1199,8 +1322,7 @@ function Get-SearchFailedItems {
         }
 
         # Executions History
-        if (-not $SkipHistory)
-        {
+        if (-not $SkipHistory) {
             $executions = $status.executionHistory
 
             # $executions | format-table -AutoSize
@@ -1208,10 +1330,10 @@ function Get-SearchFailedItems {
             foreach ($exec in $executions) {
             
                 if ( $exec.itemsFailed -gt 0) {
-                    Write-Host ("failed "+$exec.startTime+" "+$exec.endTime+" "+$exec.itemsProcessed+" "+$exec.itemsFailed) -ForegroundColor DarkMagenta
+                    Write-Host ("failed " + $exec.startTime + " " + $exec.endTime + " " + $exec.itemsProcessed + " " + $exec.itemsFailed) -ForegroundColor DarkMagenta
                 }
                 else {
-                    Write-Host ($exec.status+" "+$exec.startTime+" "+$exec.endTime+" "+$exec.itemsProcessed+" "+$exec.itemsFailed) -ForegroundColor DarkGreen
+                    Write-Host ($exec.status + " " + $exec.startTime + " " + $exec.endTime + " " + $exec.itemsProcessed + " " + $exec.itemsFailed) -ForegroundColor DarkGreen
                 }
         
                 if ( $exec.status -eq "reset" ) {
@@ -1273,29 +1395,37 @@ function Test-DirectoryExistence {
 }
 function Compress-Release() {
     param (
-        [string]$deploymentdir,
-        [string]$now
+        [string]$SourcePath,
+        [string]$Timestamp,
+        [string]$subfolder=""
     )
     
     $releasePath = Join-Path $global:envpath "releases"
     Test-DirectoryExistence $releasePath
     
-    Test-DirectoryExistence (join-path $releasePath "windows")
-    Test-DirectoryExistence (join-path $releasePath "linux")
+    Test-DirectoryExistence (join-path $releasePath "functions")
+    Test-DirectoryExistence (join-path $releasePath "functions" "windows")
+    Test-DirectoryExistence (join-path $releasePath "functions" "linux")
+
     Test-DirectoryExistence (join-path $releasePath "webapps")
-     
-    $releases = Get-ChildItem -Directory $deploymentdir -Recurse | Where-Object { $_.Name -match $now }
-          
+    Test-DirectoryExistence (join-path $releasePath "webjobs")
+    
+    
+    $releases = Get-ChildItem -Directory $SourcePath -Recurse | Where-Object { $_.Name -match $Timestamp }
+
     foreach ($release in $releases) {
         Write-host "Zipping "$release.Name
-        $reldestpath = join-path $deploymentdir ($release.Name + ".zip")
+        $reldestpath = join-path $SourcePath ($release.Name + ".zip")
         Push-Location $release.FullName
         Compress-Archive -Path ".\*" -DestinationPath $reldestpath -Force
         Pop-Location
     
-        $zipname = ((Join-Path $releasePath $release.Parent.Name $release.Name.Replace($now, "")) + "latest.zip")
-        Write-Host $zipname
-        Copy-Item $reldestpath $zipname -Force    
+        $zipname = ((Join-Path $releasePath $subfolder $release.Parent.Name $release.Name.Replace($Timestamp, "")) + "latest.zip")
+        Write-Host "Copying to release "$zipname
+        Copy-Item $reldestpath $zipname -Force
+
+        # Clean the build folder (disk space reclaim)
+        Remove-Item $release.FullName -Force -Recurse
     }
 }
 #endregion
@@ -1309,7 +1439,17 @@ function Test-FunctionExistence {
     
     return ($exists.Length -gt 0)
 }
+
+# function Get-FunctionSettings {
+#     param (
+#         [string]$Name
+#     )
     
+#     $settings = az functionapp config appsettings list --name $Name --resource-group $functionscfg.ResourceGroup | ConvertFrom-Json
+    
+#     return $settings
+# }
+
 function Get-AzureFunctionFiles() {
     param (
         [string] $srcPath
@@ -1498,7 +1638,7 @@ function Build-Functions () {
         [switch] $Settings
     )
     
-    $deploymentdir = Test-DirectoryExistence (join-Path $global:envpath "build")
+    $deploymentdir = Test-DirectoryExistence (join-Path $global:envpath "build" "functions")
     
     $now = Get-Date -Format "yyyyMMddHHmmss"
     function build($function) {
@@ -1526,8 +1666,13 @@ function Build-Functions () {
                         # $respath = $deploymentdir+"\linux\"+$functionApp.Name+".publish."+$now
                         $respath = join-path $deploymentdir "linux" ($functionApp.Name + ".publish." + $now)
                 
-                        Remove-Item $respath -Recurse -ErrorAction SilentlyContinue
-    
+                        if (Test-Path -Path $respath) {
+                            Write-Host ("Cleaning old directory " + $functionApp.Name) -ForegroundColor DarkCyan
+                            Remove-Item -Path $respath -Recurse -ErrorAction SilentlyContinue -Force
+                            Start-Sleep -Seconds 5
+                        }
+
+                        # Test if the directory exists, create it if not
                         Test-DirectoryExistence $respath
     
                         $srcPath = join-path $global:workpath ".." $functionApp.Path
@@ -1547,11 +1692,17 @@ function Build-Functions () {
             }
         }
     }
+
+    if ( -not $LinuxOnly) {
+        Compress-Release -SourcePath (Join-Path $deploymentdir "windows") -Timestamp $now -subfolder "functions"
+    }
     
-    Compress-Release $deploymentdir $now
+    if ( -not $WindowsOnly) {
+        Compress-Release -SourcePath (Join-Path $deploymentdir "linux") -Timestamp $now -subfolder "functions"
+    }
     
     # add build version evertytime we build the webapp
-    Add-Param "FunctionsBuildVersion" $now
+    Add-Param -Name "FunctionsBuildVersion" -Value $now
         
     Sync-Config
 
@@ -1574,13 +1725,15 @@ function Publish-Functions() {
         
     Push-Location $global:envpath
     
+    $basepath = join-path "releases" "functions"
+
     foreach ($plan in $functionscfg.AppPlans) {
         foreach ($functionApp in $plan.Services) {
             if (! $plan.IsLinux) {
                 if (-not $LinuxOnly) {
                     Write-host "Publishing Windows function "$functionApp.Name
     
-                    $releasepath = join-path "releases" "windows" ($functionApp.Name + ".publish.latest.zip")
+                    $releasepath = join-path $basepath "windows" ($functionApp.Name + ".publish.latest.zip")
                     az webapp deployment source config-zip --resource-group $plan.ResourceGroup --name $functionApp.Name --src $releasepath
                 }
             }
@@ -1589,9 +1742,9 @@ function Publish-Functions() {
                     if ($functionApp.Path) {
                         Write-host "Publishing Python function "$functionApp.Name
     
-                        $releasepath = join-path "releases" "linux" ($functionApp.Name + ".publish.latest.zip")
+                        $releasepath = join-path $basepath "linux" ($functionApp.Name + ".publish.latest.zip")
     
-                        $unzipPath = join-path "releases" "linux" $functionApp.Name
+                        $unzipPath = join-path $basepath "linux" $functionApp.Name
                         Expand-Archive -Path $releasepath -DestinationPath $unzipPath -Force
                         Push-Location $unzipPath
                         func azure functionapp publish $functionApp.Name --build remote --python
@@ -1631,31 +1784,30 @@ function Restart-Functions() {
     Pop-Location
 }
 
-function Publish-FunctionSettings() {
-    param (
-        $plan,
-        $functionApp
-    )
-
-    $settingspath = "config/functions/" + $functionApp.Id + ".json" 
-    
-    if (Test-Path $settingspath) {
-        az webapp config appsettings set -g $plan.ResourceGroup -n $functionApp.Name --settings @$settingspath
-    }
-
-    $settingspath = "config/functions/" + $functionApp.Id + "." + $config.id + ".json"
-
-    if (Test-Path $settingspath) {
-        az webapp config appsettings set -g $plan.ResourceGroup -n $functionApp.Name --settings @$settingspath
-    }
-}
-
 function Publish-FunctionsSettings() {
     param (
         [switch] $LinuxOnly,
         [switch] $WindowsOnly
     )
-
+    function Publish-FunctionSettings() {
+        param (
+            $plan,
+            $functionApp
+        )
+    
+        $settingspath = "services/functions/" + $functionApp.Id + ".json" 
+        
+        if (Test-Path $settingspath) {
+            az webapp config appsettings set -g $plan.ResourceGroup -n $functionApp.Name --settings @$settingspath
+        }
+    
+        $settingspath = "services/functions/" + $functionApp.Id + "." + $config.id + ".json"
+    
+        if (Test-Path $settingspath) {
+            az webapp config appsettings set -g $plan.ResourceGroup -n $functionApp.Name --settings @$settingspath
+        }
+    }
+    
     # Make sure we have the latest configuration & parameters in
     Sync-Config
     
@@ -1699,20 +1851,20 @@ function Get-FunctionsKeys() {
                 $url = az functionapp function show -g $plan.ResourceGroup -n $functionApp.Name --function-name $function.Name --query invokeUrlTemplate --out tsv
                 if ($url) {
                     $url = $url.Replace("http://", "https://")
-                    Add-Param ($functionApp.Id + "." + $function.Name + ".url") $url
+                    Add-Param -Name ($functionApp.Id + "." + $function.Name + ".url") -Value $url
         
                     try {
                         $fkey = az functionapp function keys list -g $plan.ResourceGroup -n $functionApp.Name --function-name $function.Name --query default --out tsv
                         if ( $fkey ) {
                             $furl = $url + "?code=" + $fkey
                             Write-host $furl
-                            Add-Param ($functionApp.Id + "." + $function.Name) $furl
-                            Add-Param ($functionApp.Id + "." + $function.Name + ".key") $fkey    
+                            Add-Param -Name ($functionApp.Id + "." + $function.Name) -Value $furl
+                            Add-Param -Name ($functionApp.Id + "." + $function.Name + ".key") -Value $fkey    
                         }
                     }
                     catch {
-                        Add-Param ($functionApp.Id + "." + $function.Name) $url
-                        Add-Param ($functionApp.Id + "." + $function.Name + ".key") ""                    
+                        Add-Param -Name ($functionApp.Id + "." + $function.Name) -Value $url
+                        Add-Param -Name ($functionApp.Id + "." + $function.Name + ".key") -Value ""                    
                     }    
                 }
             }
@@ -1844,7 +1996,7 @@ function New-WebApps {
             else {
                 if (-not $LinuxOnly) {
                     # Create the webui app service 
-                    if ( !(Test-WebAppExistence $webApp.Name)) {
+                    if ( !(Test-WebAppExistence $webApp.Name) && !($webApp.Name.endswith("job"))) {
                         Write-Host "Creating Web App "$webApp.Name -ForegroundColor DarkYellow
                         az webapp create `
                             --name $webApp.Name `
@@ -1885,6 +2037,13 @@ function New-WebApps {
     
             Write-Host "Configuring Web App "$webApp.Name -ForegroundColor DarkYellow
 
+            # App Service Logging
+            az webapp log config --application-logging azureblobstorage `
+                --resource-group $plan.ResourceGroup `
+                --name $webApp.Name `
+                --detailed-error-messages true `
+                --failed-request-tracing true
+
             # Assign a system managed identity
             az webapp identity assign -g $plan.ResourceGroup -n $webApp.Name
             Write-Host "Assigned System identity " -ForegroundColor DarkYellow
@@ -1893,7 +2052,7 @@ function New-WebApps {
             az webapp config set -g $plan.ResourceGroup -n $webApp.Name --ftps-state FtpsOnly
             Write-Host "FTPS Only " -ForegroundColor DarkYellow
 
-            # Disable FTP and SCM Basic Authentication 
+            # Disable FTP and SCM Basic Authentication
             $parent ="sites/"+$webApp.Name 
             az resource update --resource-group $plan.ResourceGroup `
             --name ftp `
@@ -1923,28 +2082,37 @@ function Build-WebApps {
         [switch] $Settings
     )
     
-    $deploymentdir = Test-DirectoryExistence (join-Path $global:envpath "build")
+    $deploymentdir = Test-DirectoryExistence (join-Path $global:envpath "build" "webapps")
     
     $now = Get-Date -Format "yyyyMMddHHmmss"
     function publish_windows($function) {
         Write-Host $pwd
-        $buildpath = join-path $deploymentdir "webapps" ($function + ".publish." + $now)
+        $buildpath = join-path $deploymentdir ($function + ".publish." + $now)
         Write-Host $buildpath
-        dotnet publish -c RELEASE -o $buildpath | Out-Null
+        try {
+            dotnet publish -c RELEASE -o $buildpath | Out-Null
+        }
+        catch {
+            Write-Host "Exception occurred in publish: "$_.Exception.Message -ForegroundColor DarkRed
+        }
         return $buildpath
     }
     function publish_linux($function) {
         Write-Host $pwd
-        $buildpath = join-path $deploymentdir "webapps" ($function + ".publish." + $now)
+        $buildpath = join-path $deploymentdir ($function + ".publish." + $now)
         Write-Host $buildpath
         dotnet publish -r linux-x64 --self-contained false -c RELEASE -o $buildpath | Out-Null
         return $buildpath
     }
     
+    # dotnet publish -r linux-x64 --self-contained false
+    
     foreach ($plan in $webappscfg.AppPlans) {
         foreach ($webApp in $plan.Services) {
             if (-not $webApp.Image) {
-
+    
+                Write-Host "Building Cross-Platform WebApp "$webApp.Name -ForegroundColor DarkGreen
+                # Build the corresponding Web App
                 $appLocation = (join-path $global:workpath ".." $webApp.Path)
                 Write-Host $appLocation -ForegroundColor DarkGreen
     
@@ -1975,11 +2143,12 @@ function Build-WebApps {
         }
     }
     
-    Compress-Release $deploymentdir $now
+    Compress-Release -SourcePath $deploymentdir -Timestamp $now
     
     # add build version evertytime we build the webapp
-    Add-Param "WebAppBuildVersion" $now
-    
+    Add-Param -Name "WebAppBuildVersion" -Value $now
+    Sync-Parameters
+
     Sync-Config
     
     if ( $Publish ) {
@@ -1992,7 +2161,7 @@ function Build-WebApps {
         Publish-WebAppsSettings -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly
     }
 }
-    
+
 function Restart-WebApps {
     param (
         [switch] $Production,
@@ -2142,7 +2311,7 @@ function Restore-WebApps {
     )
 
     New-WebApps -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly
-
+    
     Build-WebApps -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly -Publish -KeyVaultPolicies -Settings
 
     Set-WebAppServicesAccessRestriction
@@ -2162,9 +2331,9 @@ function Publish-WebApps {
     
     Push-Location $global:envpath 
     foreach ($plan in $webappscfg.AppPlans) {
-    
+        Write-Host "Deploying plan "$plan.Name -ForegroundColor DarkYellow
+      
         foreach ($webApp in $plan.Services) {
-    
             if (-not $webApp.Image) {
                 if (-not $plan.IsLinux) {
     
@@ -2179,8 +2348,8 @@ function Publish-WebApps {
                         az webapp deployment source config-zip --resource-group $plan.ResourceGroup `
                             --name $webApp.Name `
                             --slot $Slot `
-                            --src $releasepath                        
-                    }
+                            --src $releasepath    
+                    }                    
                 }
             }
         }
@@ -2208,7 +2377,7 @@ function Publish-WebAppsSettings {
         foreach ($webApp in $plan.Services) {
             Write-Host $webApp
     
-            $settingspath = "config/webapps/" + $webApp.Id + ".json" 
+            $settingspath = "services/webapps/" + $webApp.Id + ".json" 
     
             if (Test-Path $settingspath) {
                 if (-not $plan.IsLinux) {
@@ -2235,7 +2404,7 @@ function Publish-WebAppsSettings {
                 }
             }
     
-            $settingspath = "config/webapps/" + $webApp.Id + "." + $config.id + ".json"
+            $settingspath = "services/webapps/" + $webApp.Id + "." + $config.id + ".json"
     
             if (Test-Path $settingspath) {
                 if (-not $plan.IsLinux) {
@@ -2265,7 +2434,7 @@ function Publish-WebAppsSettings {
     }
     Pop-Location
 }
-    
+
 function Set-WebAppAuthentication {
     
     # az webapp auth microsoft update --name
@@ -2282,44 +2451,312 @@ function Set-WebAppAuthentication {
 }
 
 #endregion
+
+#region Azure WebJobs
+function New-WebJobs {    
+   
+    foreach ($plan in $webjobscfg.AppPlans) {
+      
+        # Create a Windows plan
+        if (!(Test-AppPlanExistence $plan.Name)) {
+            az appservice plan create -g $plan.ResourceGroup `
+                --name $plan.Name `
+                --location $config.location `
+                --sku $plan.Sku   
+        }
+
+        # Create the webjob app service 
+        if ( !(Test-WebAppExistence $plan.AppserviceName)) {
+            az webapp create `
+                --name $plan.AppserviceName `
+                --plan $plan.Name `
+                --resource-group $plan.ResourceGroup `
+                --https-only true `
+                --runtime 'dotnet:6'
+                            
+            if ($config.stagingUIEnabled) {
+                az webapp deployment slot create --name $plan.AppserviceName `
+                    --resource-group $plan.ResourceGroup `
+                    --https-only true `
+                    --slot staging `
+                    --configuration-source $plan.AppserviceName    
+            }
+        }
+        # Use 64 bits worker process
+        az webapp config set -g $plan.ResourceGroup -n $plan.AppserviceName --use-32bit-worker-process false
+
+        # App Service Logging
+        az webapp log config --application-logging azureblobstorage `
+            --resource-group $plan.ResourceGroup `
+            --name $plan.AppserviceName `
+            --detailed-error-messages true `
+            --failed-request-tracing true   
     
+        # Assign a system managed identity
+        az webapp identity assign -g $plan.ResourceGroup -n $plan.AppserviceName
+            
+        # FTP State to FTPS Only
+        az webapp config set -g $plan.ResourceGroup -n $plan.AppserviceName --ftps-state FtpsOnly
+    }
+}
+
+function Build-WebJobs {
+    param (
+        [switch] $Publish,
+        [switch] $KeyVaultPolicies,
+        [switch] $Settings
+    )
+    
+    $deploymentdir = Test-DirectoryExistence (join-Path $global:envpath "build" "webjobs")
+    
+    $now = Get-Date -Format "yyyyMMddHHmmss"
+    function publish_windows($function) {
+        Write-Host $pwd
+        $buildpath = join-path $deploymentdir ($function + ".publish." + $now)
+        Write-Host $buildpath
+        try {
+            dotnet publish -c RELEASE -o $buildpath | Out-Null
+        }
+        catch {
+            Write-Host "Exception occurred in publish: "$_.Exception.Message -ForegroundColor DarkRed
+        }
+        return $buildpath
+    }
+       
+    # dotnet publish -r linux-x64 --self-contained false
+    
+    foreach ($plan in $webjobscfg.AppPlans) {
+        foreach ($webApp in $plan.Services) {
+            Write-Host "Building Cross-Platform WebApp "$webApp.Name -ForegroundColor DarkGreen
+            # Build the corresponding Web App
+            $appLocation = (join-path $global:workpath ".." $webApp.Path)
+            Write-Host $appLocation -ForegroundColor DarkGreen
+    
+            Push-Location $appLocation
+                
+            $respath = publish_windows $webApp.Name
+                
+            Pop-Location
+                
+            # Add the UI override (i.e. config.json + wwwroot branding support)
+            # $overridepath = Get-DeploymentOverlayPath (join-path "02-CognitiveSearch.UI" "CognitiveSearch.UI")
+            $overridepath = Get-DeploymentOverlayPath $webApp.Path
+            Write-Host ("Building WebApp - Add a potential overlay " + $overridepath)
+    
+            if ( test-path $overridepath) {
+                Copy-Item -Path $overridepath -Destination $respath -Recurse -Force
+            }
+        }
+    }
+    Compress-Release -SourcePath $deploymentdir -TimeStamp $now
+    
+    # add build version evertytime we build the webapp
+    Add-Param -Name "WebAppBuildVersion" -Value $now
+    Sync-Parameters
+    
+    Sync-Config
+    
+    if ( $Publish ) {
+        Publish-WebJobs 
+    }
+    if ( $KeyVaultPolicies ) {
+        Add-KeyVaultWebJobsPolicies
+    }
+    if ( $Settings ) {
+        Publish-WebJobsSettings 
+    }
+}  
+
+function Restore-WebJobs {
+    
+    New-WebJobs
+    
+    Build-WebJobs -Publish -KeyVaultPolicies -Settings
+
+    Set-WebAppServicesAccessRestriction
+}
+
+function Publish-WebJobs {
+    param (
+        [switch] $Production,
+        [string] $Slot = "staging"
+    )
+    
+    if (-not $config.stagingUIEnabled) {
+        $Production = $true
+    }
+    
+    Push-Location $global:envpath 
+    foreach ($plan in $webjobscfg.AppPlans) {
+        foreach ($webApp in $plan.Services) {
+            $releasepath = "releases/webjobs/" + $webApp.Name + ".publish.latest.zip"
+            
+            $kuduCredentials = getKuduCreds $plan.AppserviceName $plan.ResourceGroup
+            webjobDeployment $plan.AppserviceName $webApp.Name $kuduCredentials $releasepath
+        }
+    }
+    Pop-Location
+}
+
+function getKuduCreds($appName, $resourceGroupName) {
+    Write-Host "Getting Publish credentials" -ForegroundColor DarkYellow
+  
+    $user = az webapp deployment list-publishing-profiles -n $appName -g $resourceGroupName `
+        --query "[?publishMethod=='MSDeploy'].userName" -o tsv
+  
+    $pass = az webapp deployment list-publishing-profiles -n $appName -g $resourceGroupName `
+        --query "[?publishMethod=='MSDeploy'].userPWD" -o tsv
+  
+    $pair = "$($user):$($pass)"
+  
+    $encodedCreds = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($pair))
+  
+    return $encodedCreds
+}
+
+function webjobDeployment([string]$appName, [string]$webjobName, [string]$encodedCreds, [string]$publishZip) {
+    Write-Host ("Deploying the webjob : " + $webjobName + " for Web App: " + $appName) -ForegroundColor DarkYellow
+    Write-Host ("====================================================================")
+    try {
+        $ZipHeaders = @{
+            Authorization         = "Basic {0}" -f $encodedCreds
+            "Content-Disposition" = "attachment; filename=run.cmd"
+        }
+  
+        # upload the job using the Kudu WebJobs API
+        Invoke-WebRequest -Uri https://$appName.scm.azurewebsites.net/api/continuouswebjobs/$webjobName -Headers $ZipHeaders `
+            -InFile $publishZip -ContentType "application/zip" -Method Put
+       
+        Write-Host ("Webjob deployed in Ready state") -ForegroundColor DarkYellow
+        az webapp webjob continuous start --webjob-name $webjobName --name $appName --resource-group $config.resourceGroupName
+  
+        Write-Host ("Web Job now started in continous mode") -ForegroundColor DarkYellow
+        Write-Host ("====================================================================")
+    }
+    catch {
+        Write-Host ("Error occurred while deploying the web job : " + $webjobName + " Message : " + $_.Exception.Message) -ForegroundColor Red
+    }
+}
+
+function Publish-WebJobsSettings {
+    param (
+        [switch] $Production,
+        [string] $Slot = "staging"
+    )
+    
+    if (-not $config.stagingUIEnabled) {
+        $Production = $true
+    }
+    
+    # Make sure we have the latest configuration & parameters in
+    Sync-Config
+    
+    Push-Location $global:envpath
+    foreach ($plan in $webjobscfg.AppPlans) {
+        foreach ($webApp in $plan.Services) {
+            Write-Host $webApp
+    
+            $settingspath = "services/webjobs/" + $webApp.Id + ".json" 
+    
+            if (Test-Path $settingspath) {
+                Write-Host ("Path Exists " + $settingspath)
+
+                if ($production) {
+                    az webapp config appsettings set -g $plan.ResourceGroup `
+                        -n $plan.AppserviceName `
+                        --settings @$settingspath
+                }
+                else {
+                    az webapp config appsettings set -g $plan.ResourceGroup `
+                        -n $plan.AppserviceName `
+                        --slot $Slot `
+                        --settings @$settingspath
+                }
+            }
+        }
+    }
+    
+    $settingspath = "services/webjobs/" + $webApp.Id + "." + $config.id + ".json"
+    
+    if (Test-Path $settingspath) {
+        if ($production) {
+            az webapp config appsettings set -g $plan.ResourceGroup `
+                -n $plan.AppserviceName `
+                --settings @$settingspath
+        }
+        else {
+            az webapp config appsettings set -g $plan.ResourceGroup `
+                -n $plan.AppserviceName `
+                --slot $Slot `
+                --settings @$settingspath
+        }
+    }
+                             
+    Pop-Location
+}
+#endregion
+
 #region Docker 
 
 function Build-DockerImages {
     param (
-        [Int64] $ImageId = 0,
-        [switch] $WebApp
+        [string] $Id,
+        [string] $Prefix,
+        [switch] $WebApp,
+        [switch] $WebJob,
+        [switch] $Local
     )
     
-    Write-Host "Parameter ImageId "$ImageId
-    
-    foreach ($image in $dockercfg.Images) {
-        Write-Host ("Docker Image " + $image.Id + " " + $image.Name)
+    $dockercfg.Images | Foreach-Object -ThrottleLimit 1 -Parallel {
+        #Action that will run in Parallel. Reference the current object via $PSItem and bring in outside variables with $USING:varname
+        $image = $PSItem
+
+        Write-Host ("Docker Image Id:" + $image.Id + " Name:" + $image.Name)
     
         $build = $false
-    
-        if ($WebApp) {
+  
+        if ($USING:WebApp) {
             if ($image.webapp) {
                 $build = $true
-            }   
+            }
         }
-        elseif (($ImageId -eq 0) -or ($ImageId -eq $image.Id)) {
-            $build = $true
+        elseif ($USING:WebJob) {
+            if ($image.webjob) {
+                $build = $true
+            }
         }
-    
-        if ($build) {
-            Write-Host "Building image..." -ForegroundColor DarkYellow
-    
-            $imgdockerfile = join-path $global:workpath $image.Path Dockerfile
-    
-            if ($image.BuildContext) {
-                Push-Location (join-path $global:workpath $image.BuildContext)
+        elseif (-not $USING:Id) {
+            if ($USING:Prefix) {
+                if ($image.Id.StartsWith($USING:Prefix)) {
+                    $build = $true
+                }
             }
             else {
-                Push-Location (join-path $global:workpath $image.Path)
+                $build = $true
             }
-    
-            az acr build --platform linux --image $image.Name --registry $params.acr --file $imgdockerfile . 
+        }
+        elseif ($USING:Id -and ($USING:Id -eq $image.Id)) {
+            $build = $true
+        }
+  
+        if ($build) {
+            Write-Host ("Building " + $image.Name) -ForegroundColor DarkYellow
+  
+            $imgdockerfile = join-path $USING:workpath $image.Path Dockerfile
+  
+            if ($image.BuildContext) {
+                Push-Location (join-path $USING:workpath $image.BuildContext)
+            }
+            else {
+                Push-Location (join-path $USING:workpath $image.Path)
+            }
+  
+            if ($USING:Local) {
+                docker build -t $image.Name -f $imgdockerfile .
+            }
+            else {
+                az acr build --platform linux --image $image.Name --registry $USING:params.acr --file $imgdockerfile --only-show-errors . 
+            }
             Pop-Location 
         }
     }
@@ -2329,7 +2766,7 @@ function Build-DockerImages {
 }
     
 #endregion
-    
+  
 #region Key Vault
 function Initialize-KeyVault {
     Add-KeyVaultSecrets
@@ -2379,28 +2816,60 @@ function Add-KeyVaultFunctionsPolicies {
         foreach ($functionApp in $plan.Services) {
             $principalId = az functionapp identity show -n $functionApp.Name -g $plan.ResourceGroup --query principalId --out tsv
     
-            az keyvault set-policy -n $params.keyvault -g $plan.ResourceGroup --object-id $principalId --secret-permissions get 
+            az keyvault set-policy -n $params.keyvault --object-id $principalId --secret-permissions get 
         }
     }
 }
 
 function Add-KeyVaultWebAppsPolicies {
+
     foreach ($plan in $webappscfg.AppPlans) {
+    
         foreach ($webApp in $plan.Services) {
-            $principalId = az webapp identity show -n $webApp.Name -g $plan.ResourceGroup --query principalId
-            az keyvault set-policy -n $params.keyvault -g $plan.ResourceGroup --object-id $principalId --secret-permissions get 
+    
+            $principalId = az webapp identity show -n $webApp.Name -g $plan.ResourceGroup --query principalId --output tsv
+    
+            az keyvault set-policy --name $params.keyvault --object-id $principalId --secret-permissions get
     
             if ($config.stagingUIEnabled -and -not $plan.IsLinux) {
-                $principalId = az webapp identity show -n $webApp.Name -g $plan.ResourceGroup --slot staging --query principalId
-                az keyvault set-policy -n $params.keyvault -g $plan.ResourceGroup --object-id $principalId --secret-permissions get 
+    
+                $principalId = az webapp identity show -n $webApp.Name -g $plan.ResourceGroup --slot staging --query principalId --output tsv
+    
+                az keyvault set-policy -n $params.keyvault --object-id $principalId --secret-permissions get
+    
             }
+    
         }
+    
     }
+    
 }
     
+function Add-KeyVaultWebJobsPolicies {
+    
+    foreach ($plan in $webjobscfg.AppPlans) {
+        $principalId = az webapp identity show -n $plan.AppserviceName -g $plan.ResourceGroup --query principalId --output tsv
+        
+        az keyvault set-policy -n $params.keyvault --object-id $principalId --secret-permissions get
+    
+        if ($config.stagingUIEnabled) {
+    
+            $principalId = az webapp identity show -n $plan.AppserviceName -g $plan.ResourceGroup --slot staging --query principalId --output tsv
+    
+            az keyvault set-policy -n $params.keyvault --object-id $principalId --secret-permissions get
+        }
+    
+    }
+    
+}
 #endregion
     
 #region Solution 
+
+function Clear-Solution() {
+
+    Remove-Item $global:envpath -Recurse -Force
+}
 
 function Build-Solution {
     param (
@@ -2409,7 +2878,8 @@ function Build-Solution {
     Build-DockerImages
     Build-Functions
     Build-WebApps
-    
+    Build-WebJobs
+
     if ($Publish) {
         Publish-Solution
     }
@@ -2574,6 +3044,7 @@ function Resume-Solution {
     # Start Linux WebApp
     Restore-WebApps -LinuxOnly
 
+    Restore-WebJobs
 }
 #endregion
 
@@ -2593,13 +3064,13 @@ function Get-OpenAIKey {
                 $cogServicesKey = az cognitiveservices account keys list --name $azureResource.Name -g $azureResource.ResourceGroup --query key1 --out tsv
     
                 if ( $cogServicesKey -and $cogServicesKey.Length -gt 0 ) {
-                    Add-Param ($azureResource.Parameter+"Key") $cogServicesKey
+                    Add-Param -Name ($azureResource.Parameter + "Key") -Value $cogServicesKey
                 }
     
                 # Endpoint
                 $cogEndpoint = az cognitiveservices account show -n $azureResource.Name -g $azureResource.ResourceGroup --query properties.endpoint --out tsv 
                 if ( $cogEndpoint -and $cogEndpoint.Length -gt 0 ) {
-                    Add-Param ($azureResource.Parameter+"Endpoint") $cogEndpoint
+                    Add-Param -Name ($azureResource.Parameter + "Endpoint") -Value $cogEndpoint
                 }
             }
         }
@@ -2630,10 +3101,52 @@ function Remove-OpenAIModel() {
     )
 
     az cognitiveservices account deployment delete `
-    -g $openaicfg.Items[0].ResourceGroup `
-    -n $openaicfg.Items[0].Name `
-    --deployment-name $DeploymentName    
+        -g $openaicfg.Items[0].ResourceGroup `
+        -n $openaicfg.Items[0].Name `
+        --deployment-name $DeploymentName    
 }
 #endregion
+
+#region AKS
+
+function Get-AKSCredentials {
+    if ($akscfg.enable) {
+        $existingAKS = az aks list --query [].name --out tsv
+        foreach ($azureResource in $akscfg.Items) {
+            if ($azureResource.Name -in $existingAKS) {
+                # Get AKS credentials
+                az aks get-credentials -n $azureResource.Name -g $azureResource.ResourceGroup            
+            }
+        }
+    }
+}
+
+function Initialize-AKS() {
+
+    kubectl apply -f (join-path $global:envpath "services/aks/config-map.yaml")
+    
+    # Deploy-FunctionsAKS
+    # Deploy-WebAppsAKS
+    kubectl apply -f (join-path $global:envpath "services/aks/webapps/tika.yaml")
+
+    # For each docker image, find the corresponding yaml file and apply it to the cluster
+    # kubectl apply -f (join-path $global:envpath "services/aks/ingress.yaml")
+}
+function Deploy-FunctionsAKS() {
+
+    $template = Get-Content (join-path $global:envpath "services/aks/functions/template.yaml") -Raw
+
+    foreach ($plan in $functionscfg.AppPlans) {
+        Write-Host "Plan "$plan.Name
+        foreach ($functionApp in $plan.Services) {
+            # Load the function and corresponding settings
+            $settingspath = "services/functions/" + $functionApp.Id + ".json" 
+        
+        }
+    }
+}
+
+#endregion
+
 
 Export-ModuleMember -Function *

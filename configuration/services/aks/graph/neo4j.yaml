@@ -1,0 +1,42 @@
+apiVersion: '2019-12-01'
+location: {{config.location}}
+name: {{config.name}}neo4j
+properties:
+  containers:
+  - name: {{config.name}}neo4j
+    properties:
+      environmentVariables: []
+      image: neo4j:latest
+      ports:
+      - port: 7474
+      - port: 7687
+      resources:
+        requests:
+          cpu: 2.0
+          memoryInGB: 3.0
+      volumeMounts:
+      - mountPath: /data
+        name: filesharedata
+      - mountPath: /logs
+        name: filesharelogs
+  osType: Linux
+  restartPolicy: Always
+  ipAddress:
+    type: Public
+    ports:
+      - port: 7474
+      - port: 7687
+    dnsNameLabel: {{config.name}}neo4j
+  volumes:
+  - name: filesharedata
+    azureFile:
+      sharename: neo4jdata
+      storageAccountName: {{param.dataStorageAccountName}}
+      storageAccountKey: {{param.dataStorageAccountKey}}
+  - name: filesharelogs
+    azureFile:
+      sharename: neo4jlogs
+      storageAccountName: {{param.dataStorageAccountName}}
+      storageAccountKey: {{param.dataStorageAccountKey}}
+tags: {}
+type: Microsoft.ContainerInstance/containerGroups

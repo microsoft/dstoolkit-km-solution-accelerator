@@ -1,0 +1,9 @@
+{
+    "id": "spellCheck",
+    "enable": false,
+    "Parameters" : {
+        "spellCheckEnabled": false,
+        "spellCheckProvider": "Bing"    
+    },
+    "Items": []
+}

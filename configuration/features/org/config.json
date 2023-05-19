@@ -1,0 +1,12 @@
+{
+    "id": "org",
+    "enable": true,
+    "Parameters": {
+        "organisation": "Contoso Ltd.",
+        "organisationWebsite": "https://www.contoso.com/",
+        "organisationLogoUrl": "~/images/logos/dstoolkit.png",
+        "organisationLogoProviderUrl": "~/images/logos/provider-logo.png",
+        "adminUser": "admin@contoso.com"
+    },
+    "Items": []
+}

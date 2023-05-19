@@ -1,0 +1,75 @@
+{
+    "enable": true,
+    "type": "static",
+    "Images": [
+
+        {
+            "Id": "kmvision",
+            "Name": "{{config.name}}/vision",
+            "Path": "..\\src\\CognitiveSearch.Skills\\Python\\Vision"
+        },
+        {
+            "Id": "kmlanguage",
+            "Name": "{{config.name}}/language",
+            "Path": "..\\src\\CognitiveSearch.Skills\\Python\\Language"
+        },
+        {
+            "Id": "kmentities",
+            "Name": "{{config.name}}/entities",
+            "Path": "..\\src\\CognitiveSearch.Skills\\C#\\Entities.Function",
+            "BuildContext": "..\\src\\CognitiveSearch.Skills\\C#"
+        },
+        {
+            "Id": "kmimgext",
+            "Name": "{{config.name}}/imgext",
+            "Path": "..\\src\\CognitiveSearch.Skills\\C#\\Image\\Image.Extraction",
+            "BuildContext": "..\\src\\CognitiveSearch.Skills\\C#"
+        },
+        {
+            "Id": "kmtextext",
+            "Name": "{{config.name}}/textext",
+            "Path": "..\\src\\CognitiveSearch.Skills\\C#\\Text.Function",
+            "BuildContext": "..\\src\\CognitiveSearch.Skills\\C#"
+        },
+        {
+            "Id": "kmmtdext",
+            "Name": "{{config.name}}/mtdext",
+            "Path": "..\\src\\CognitiveSearch.Skills\\C#\\Metadata\\Extraction",
+            "BuildContext": "..\\src\\CognitiveSearch.Skills\\C#"
+        },
+        {
+            "Id": "kmgeo",
+            "Name": "{{config.name}}/geo",
+            "Path": "..\\src\\CognitiveSearch.Skills\\C#\\Geo\\GeoLocations",
+            "BuildContext": "..\\src\\CognitiveSearch.Skills\\C#"
+        },
+        {
+            "Id": "kmmtda",
+            "Name": "{{config.name}}/mtda",
+            "Path": "..\\src\\CognitiveSearch.Skills\\C#\\Metadata\\Assignment",
+            "BuildContext": "..\\src\\CognitiveSearch.Skills\\C#"
+        },
+        {
+            "Id": "kmgraph",
+            "Name": "{{config.name}}/graph",
+            "Path": "..\\src\\CognitiveSearch.Skills\\Python\\Graph"
+        },
+        {
+            "Id": "kmopenai",
+            "Name": "{{config.name}}/openai",
+            "Path": "..\\src\\CognitiveSearch.Skills\\Python\\OpenAI"
+        },
+        {
+            "Id": "kmwebui",
+            "Name": "{{config.name}}/webui",
+            "Path": "..\\src\\CognitiveSearch.UI\\CognitiveSearch.UI",
+            "BuildContext": "..\\src\\CognitiveSearch.UI"
+        },
+        {
+            "Id": "kmwebapi",
+            "Name": "{{config.name}}/webapi",
+            "Path": "..\\src\\CognitiveSearch.UI\\Knowledge.API",
+            "BuildContext": "..\\src\\CognitiveSearch.UI"
+        }
+    ]
+}

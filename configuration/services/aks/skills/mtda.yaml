@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: mtda-app
+  labels:
+    # any Pods with matching labels are included in this Daemon Set
+    app: kubernetes-series
+    tier: monitor
+spec:
+  selector:
+    # Pods will match with the following labels
+    matchLabels:
+      name: mtda-app
+  template:
+    metadata:
+      labels:
+        name: mtda-app
+    spec:
+      containers:
+      - name: mtda-app
+        image: {{param.acr}}/{{config.name}}/mtda:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: WEBSITE_HOSTNAME
+          value: "{{param.kubernetesHost}}"
+        - name: AZURE_STORAGE_CONNECTION_STRING
+          value: "{{param.dataStorageConnectionString}}"
+        - name: APPINSIGHTS_INSTRUMENTATIONKEY
+          value: "{{param.appInsightsServiceKey}}"
+        - name: AzureWebJobsStorage
+          value: "{{param.techStorageConnectionString}}"
+        - name: ContainerConnectionString
+          value: "{{param.dataStorageConnectionString}}"
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+      nodeSelector:
+        agentpool: poolskills
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: mtda-service
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    name: mtda-app
