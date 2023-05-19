@@ -87,7 +87,7 @@ def transform_value(headers, record):
 
         max_descriptions = 3
 
-        if 'imgUrl' in data:
+        if 'imgUrl' in data and 'imgSasToken' in data:
             image_url = data["imgUrl"]  + data["imgSasToken"]
             print(image_url)
             rawHttpResponse = computer_vision_client.describe_image(image_url,max_descriptions,language=language,raw=True)

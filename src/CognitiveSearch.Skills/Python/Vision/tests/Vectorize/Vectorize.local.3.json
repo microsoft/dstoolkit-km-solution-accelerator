@@ -1,0 +1,32 @@
+{
+    "values": [
+        {
+            "recordId": "1",
+            "data": {
+                "imgUrl" : "https://dstkkmdevpublic.blob.core.windows.net/public/knowledge-mining-auditing-and-risk-compliance.png",
+                "imgSasToken" : ""
+            }
+        },
+        {
+            "recordId": "2",
+            "data": {
+                "imgUrl" : "https://dstkkmdevpublic.blob.core.windows.net/public/knowledge-mining-contract-management.png",
+                "imgSasToken" : ""
+            }
+        },
+        {
+            "recordId": "3",
+            "data": {
+                "imgUrl" : "https://dstkkmdevpublic.blob.core.windows.net/public/mining/knowledge-mining-business-process-management.png",
+                "imgSasToken" : ""
+            }
+        },
+        {
+            "recordId": "4",
+            "data": {
+                "imgUrl" : "https://dstkkmdevpublic.blob.core.windows.net/public/mining/knowledge-mining-digital-asset-management.png",
+                "imgSasToken" : ""
+            }
+        }
+    ]
+}

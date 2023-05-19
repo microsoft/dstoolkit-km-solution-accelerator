@@ -85,7 +85,7 @@ def transform_value(headers, record):
                 language=data['language']
             else:
                 language="en"
-            if 'imgUrl' in data:
+            if 'imgUrl' in data and 'imgSasToken' in data:
                 image_url = data["imgUrl"]  + data["imgSasToken"]
                 print(image_url)
                 # SDK call

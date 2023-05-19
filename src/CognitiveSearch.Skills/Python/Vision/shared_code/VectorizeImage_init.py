@@ -1,21 +1,35 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
 
+# Image Vectorization - PREVIEW 4.0
+# https://github.com/Azure/cognitive-search-vector-pr
+# 
+# https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/how-to/image-retrieval
+# 
+# Text Vectorization is done with OpenAI
+#
+
 import io
 import logging
 import azure.functions as func
 import time
 import json
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
-from azure.cognitiveservices.vision.computervision.models import VisualFeatureTypes, OperationStatusCodes
 from msrest.authentication import CognitiveServicesCredentials
 import base64
 from io import BytesIO
 import os
+import requests
+from .Utils import StorageUtils
 
+# Environment variables
 endpoint = os.environ["COMPUTER_VISION_ENDPOINT"]
 key = os.environ["COMPUTER_VISION_KEY"]
 
+version = os.getenv("COMPUTER_VISION_API_VERSION", "2023-02-01-preview")
+model = os.getenv("COMPUTER_VISION_API_MODEL", "latest")
+
+# SDK Computer Vision client
 credentials = CognitiveServicesCredentials(key)
 computer_vision_client = ComputerVisionClient(
     endpoint=endpoint,
@@ -80,51 +94,47 @@ def transform_value(headers, record):
         assert ('data' in record), "'data' field is required."
         data = record['data'] 
 
-        raw = True
-        numberOfCharsInOperationId = 36
+        if 'imgUrl' in data and 'imgSasToken' in data:
+            if len(data['imgUrl']) > 0:
+                image_url = data["imgUrl"]  + data["imgSasToken"]
+                print(image_url)
+            
+                path = f'/computervision/retrieval:vectorizeImage'
+                constructed_url = endpoint + path
+                # curl.exe -v -X POST "https://<endpoint>/computervision/retrieval:vectorizeImage?api-version=2023-02-01-preview&modelVersion=latest" 
+                # -H "Content-Type: application/json" -H "Ocp-Apim-Subscription-Key: <subscription-key>" --data-ascii "
+                # {
+                # 'url':'https://learn.microsoft.com/azure/cognitive-services/computer-vision/media/quickstarts/presentation.png'
+                # }"
 
-        if 'language' in data:
-            language=data['language']
-        else:
-            language=None
+                request_vision = {
+                    'url': image_url
+                }
+                params_vision = {
+                    'api-version': version,
+                    'modelVersion': model
+                }
+                headers_vision = {
+                    'Ocp-Apim-Subscription-Key': key,
+                    'Content-type': 'application/json; charset=UTF-8'
+                }
+                response = requests.post(constructed_url, params=params_vision, headers=headers_vision, json=request_vision)
+                response_content = response.json()
 
-        rawHttpResponse=None
-        
-        if 'imgUrl' in data and 'imgSasToken' in data:        
-            image_url = data["imgUrl"]  + data["imgSasToken"]
-            print(image_url)
-            # SDK call
-            if language:
-                rawHttpResponse = computer_vision_client.read(image_url, language=language, raw=True)
+                if response.status_code == requests.codes.ok:
+                    document['data']=response_content
+
+                    # Sink it to the Vectorization Index
+                    StorageUtils.persist_vector_object(data["imgUrl"], '.json',document)
+
+                elif response.status_code == requests.codes.too_many_requests:
+                    document['warnings'].append({ "message": "Error:" + str(response.status_code) })
+                else:
+                    document['warnings'].append({ "message": "Error:" + str(response.status_code) })
             else:
-                rawHttpResponse = computer_vision_client.read(image_url, raw=True)
-        elif 'file_data' in data:
-            img_stream=io.BytesIO(base64.b64decode(data["file_data"]["data"]))
-            if language:
-                rawHttpResponse = computer_vision_client.read_in_stream(img_stream, language=language, raw=True)
-            else:
-                rawHttpResponse = computer_vision_client.read_in_stream(img_stream, raw=True)
-
-        if rawHttpResponse:
-            # Get ID from returned headers
-            operationLocation = rawHttpResponse.headers["Operation-Location"]
-            idLocation = len(operationLocation) - numberOfCharsInOperationId
-            operationId = operationLocation[idLocation:]
-            logging.info(f'Read operation id {str(operationId)}')
-
-            while True:
-                time.sleep(5)
-                # SDK call
-                result = computer_vision_client.get_read_result(operationId, raw=True)
-
-                # Get data
-                if result.output.status == OperationStatusCodes.succeeded:
-                    document['data']['read']=json.loads(result.response.content)
-                    break
-
-                if result.output.status == OperationStatusCodes.failed:
-                    document['warnings'].append({ "message": "Error:" + str(result.output.status) })
-                    break
+                # Return empty response
+                document['data']=''
+                document['warnings'].append({ "message": "Empty url(s) or Sas token found.)"})
         else:
             # Return empty response
             document['data']=''

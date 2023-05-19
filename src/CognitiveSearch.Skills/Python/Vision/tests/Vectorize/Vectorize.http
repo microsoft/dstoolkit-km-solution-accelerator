@@ -1,0 +1,17 @@
+### Empty urls
+POST http://localhost:7071/vision/vectorizeimage
+content-type: application/json;charset=utf-8
+
+< Vectorize.local.1.json
+
+### Empty input
+POST http://localhost:7071/vision/vectorizeimage
+content-type: application/json;charset=utf-8
+
+< Vectorize.local.2.json
+
+### x images
+POST http://localhost:7071/vision/vectorizeimage
+content-type: application/json;charset=utf-8
+
+< Vectorize.local.3.json

@@ -127,7 +127,7 @@ def transform_value(headers, record):
         # description = "Description"
         # objects = "Objects"
         # brands = "Brands"
-        if 'imgUrl' in data:
+        if 'imgUrl' in data and 'imgSasToken' in data:
             image_url = data["imgUrl"]  + data["imgSasToken"]
             print(image_url)
             # SDK call

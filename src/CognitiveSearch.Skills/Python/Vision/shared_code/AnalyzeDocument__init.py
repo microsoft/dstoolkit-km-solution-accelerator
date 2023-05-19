@@ -15,6 +15,8 @@ from azure.ai.formrecognizer import DocumentAnalysisClient
 from azure.storage.blob import BlobClient
 import base64
 
+from .Utils import StorageUtils
+
 #
 # Helpers 
 #
@@ -27,12 +29,6 @@ def format_polygon(polygon):
     if not polygon:
         return "N/A"
     return ", ".join(["[{}, {}]".format(p.x, p.y) for p in polygon])
-
-class DateTimeEncoder(JSONEncoder):
-        #Override the default method
-        def default(self, obj):
-            if isinstance(obj, (datetime.date, datetime.datetime)):
-                return obj.isoformat()
 
 #
 # FORM Rcognizer variables
@@ -58,20 +54,6 @@ form_recognizer_client = FormRecognizerClient(form_endpoint, AzureKeyCredential(
 document_analysis_client = DocumentAnalysisClient(
     endpoint=form_endpoint, credential=AzureKeyCredential(form_key)
 )
-
-#
-# Azure Blob Storage for response persistence 
-#
-blob_storage_integration=False
-blob_conn_string = None
-
-if ('METADATA_STORAGE_CONNECTION_STRING' in os.environ):
-    # Retrieve the connection string from an environment variable. Note that a connection
-    # string grants all permissions to the caller, making it less secure than obtaining a
-    # BlobClient object using credentials.
-    blob_conn_string = os.environ["METADATA_STORAGE_CONNECTION_STRING"]
-
-    blob_storage_integration=True
 
 #
 # HOCR Generation
@@ -135,30 +117,12 @@ def compose_response(json_data):
     
     return json.dumps(results, ensure_ascii=False, cls=DateTimeEncoder)
 
-# 
-# Save the output to metadata container
-#
-def persist_output(blobname, suffix, result):
-
-    if blob_storage_integration:
-        # Save the pages output to metadata for latter use
-        blob_client = BlobClient.from_connection_string(blob_conn_string,container_name="metadata", blob_name=blobname+suffix)
-        data = json.dumps(result, ensure_ascii=False, cls=DateTimeEncoder)
-        blob_client.upload_blob(data=data,overwrite=True)
-
-def persist_text(blobname, suffix, data):
-
-    if blob_storage_integration:
-        # Save the pages output to metadata for latter use
-        blob_client = BlobClient.from_connection_string(blob_conn_string,container_name="metadata", blob_name=blobname+suffix)
-        blob_client.upload_blob(data=data,overwrite=True)
-
 #
 # Extract Tables from Results
 #
-def extract_tables(blobname,result):
+def extract_tables(blobname,input_tables):
     tables = []
-    for table_idx, table in enumerate(result.tables):       
+    for table_idx, table in enumerate(input_tables):
         print(
             "Table # {} has {} rows and {} columns".format(
                 table_idx, table.row_count, table.column_count
@@ -216,11 +180,11 @@ def extract_tables(blobname,result):
             }
         ))
 
-    persist_output(blobname,".tables",result.tables)
+    persist_object(blobname,".tables",tables)
 
     # Pivoted tables TODO
     pivoted_tables=[]
-    persist_output(blobname,".pivoted.tables",pivoted_tables)
+    persist_object(blobname,".pivoted.tables",pivoted_tables)
 
     return tables
 
@@ -280,31 +244,35 @@ def extract_pages(base_url,blobname,result):
         # Page
         hocrdocument+=("</div>")
 
-    persist_output(blobname,".pages",result.pages)
+    # not serializable object...
+    # persist_object(blobname,".pages",result.pages)
 
     # HOcr
     hocrdocument+=HOcrFooter
     persist_text(blobname,".hocr",hocrdocument)
 
-
 #
 # Extract Paragraphs (Layout)
 #
-def extract_paragraphs(blobname,result):
+def extract_paragraphs(blobname,input_paragraphs):
     paragraphs=[]
-    for paragraph in result.paragraphs:
-        paragraphs.append(paragraph.content)
+    for paragraph in input_paragraphs:
+        paragraphs.append({
+                "role": paragraph.role if paragraph.role is not None else "inline",
+                "content":paragraph.content,
+                "length":len(paragraph.content)
+        })
 
-    persist_output(blobname,".paragraphs",result.paragraphs)
+    StorageUtils.persist_object(blobname,".paragraphs",paragraphs)
 
     return paragraphs
 
 #
 # Extract KV pairs
 #
-def extract_kv(blobname,result):
+def extract_kv(blobname,key_value_pairs):
     kvs=[]
-    for kv_pair in result.key_value_pairs:
+    for kv_pair in key_value_pairs:
         if kv_pair.key and kv_pair.value:
             kvs.append({
                 "key":kv_pair.key.content,
@@ -316,7 +284,7 @@ def extract_kv(blobname,result):
                 "value":''
             })
 
-    persist_output(blobname,".kvs",result.key_value_pairs)
+    StorageUtils.persist_object(blobname,".kvs",kvs)
 
     return kvs
 
@@ -354,14 +322,7 @@ def transform_value(value):
 
         logging.info(f'Form recognized base url {base_url}')
 
-        target_url=None
-        if blob_storage_integration:
-            # Get a blob client from
-            blob_client = BlobClient.from_blob_url(blob_url=base_url)
-            if blob_client.container_name == 'images':
-                target_url = blob_client.blob_name
-            else:
-                target_url = blob_client.container_name+"/"+blob_client.blob_name
+        target_url=StorageUtils.getTargetUrl(base_url)
 
         logging.info(f'Form recognized target url {target_url}')
 
@@ -375,17 +336,17 @@ def transform_value(value):
         # Extract Paragraphs
         paragraphs=[]
         if result.paragraphs:
-            paragraphs = extract_paragraphs(target_url,result)
+            paragraphs = extract_paragraphs(target_url,result.paragraphs)
 
         # Extract Tables
         tables=[]
         if result.tables:
-            tables = extract_tables(target_url,result)
+            tables = extract_tables(target_url,result.tables)
         
         # Extract Key Value Pairs
         kvs=[]
         if result.key_value_pairs:
-            kvs = extract_kv(target_url,result)
+            kvs = extract_kv(target_url,result.key_value_pairs)
 
         # Extract Styles
         if result.styles:
