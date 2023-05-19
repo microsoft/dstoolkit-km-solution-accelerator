@@ -15,7 +15,7 @@ from azure.ai.formrecognizer import DocumentAnalysisClient
 from azure.storage.blob import BlobClient
 import base64
 
-from .Utils import StorageUtils
+from .Utils import StorageUtils, DateTimeEncoder
 
 #
 # Helpers 
@@ -180,11 +180,11 @@ def extract_tables(blobname,input_tables):
             }
         ))
 
-    persist_object(blobname,".tables",tables)
+    StorageUtils.persist_object(blobname,".tables",tables)
 
     # Pivoted tables TODO
     pivoted_tables=[]
-    persist_object(blobname,".pivoted.tables",pivoted_tables)
+    StorageUtils.persist_object(blobname,".pivoted.tables",pivoted_tables)
 
     return tables
 
@@ -245,11 +245,11 @@ def extract_pages(base_url,blobname,result):
         hocrdocument+=("</div>")
 
     # not serializable object...
-    # persist_object(blobname,".pages",result.pages)
+    # StorageUtils.persist_object(blobname,".pages",result.pages)
 
     # HOcr
     hocrdocument+=HOcrFooter
-    persist_text(blobname,".hocr",hocrdocument)
+    StorageUtils.persist_text(blobname,".hocr",hocrdocument)
 
 #
 # Extract Paragraphs (Layout)

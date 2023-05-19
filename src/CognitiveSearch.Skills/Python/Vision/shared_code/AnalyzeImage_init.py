@@ -16,6 +16,8 @@ import tempfile
 
 import os
 
+from .Utils import StorageUtils, DateTimeEncoder
+
 endpoint = os.environ["COMPUTER_VISION_ENDPOINT"]
 key = os.environ["COMPUTER_VISION_KEY"]
 

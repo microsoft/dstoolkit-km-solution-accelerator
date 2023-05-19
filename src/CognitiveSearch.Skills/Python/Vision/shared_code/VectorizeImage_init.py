@@ -20,7 +20,8 @@ import base64
 from io import BytesIO
 import os
 import requests
-from .Utils import StorageUtils
+
+from .Utils import StorageUtils, DateTimeEncoder
 
 # Environment variables
 endpoint = os.environ["COMPUTER_VISION_ENDPOINT"]

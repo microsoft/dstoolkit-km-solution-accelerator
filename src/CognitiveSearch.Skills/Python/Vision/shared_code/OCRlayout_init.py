@@ -6,6 +6,8 @@ import json
 import azure.functions as func
 from ocrlayout.bboxhelper import BBoxHelper
 
+from .Utils import StorageUtils, DateTimeEncoder
+
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     logging.info(f'{context.function_name} HTTP trigger function processed a request.')
     if hasattr(context, 'retry_context'):

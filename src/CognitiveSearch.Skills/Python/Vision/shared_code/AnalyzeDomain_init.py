@@ -12,6 +12,8 @@ import base64
 from io import BytesIO
 import os
 
+from .Utils import StorageUtils, DateTimeEncoder
+
 endpoint = os.environ["COMPUTER_VISION_ENDPOINT"]
 key = os.environ["COMPUTER_VISION_KEY"]
 
