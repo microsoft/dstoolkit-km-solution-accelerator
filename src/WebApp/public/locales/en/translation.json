@@ -1,0 +1,34 @@
+{
+    "common": {
+        "title": "Enterprise Copilot Search and Knowledge Mining",
+        "loading": "Loading...",
+        "add": "Add",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save"
+    },
+    "components": {
+        "header-bar": {
+            "home": "Home",
+            "contribute": "Contribute",
+            "blog": "Blog",
+            "sign-in": "Sign in",
+            "sign-out": "Sign out"
+        },
+        "footer": {
+            "contact": "Contact Us",
+            "privacy": "Privacy",
+            "manage-cookies": "Manage cookies",
+            "terms-of-use": "Terms of use",
+            "copyright": "© 2023"
+        }
+    },
+    "entities": {},
+    "pages": {
+        "home": {
+            "title": "Knowledge Mining Accelerator",
+            "subtitle": "AI-driven web and data exploration, unstructured data insight extraction.",
+            "url": "https://dstkkmui.azurewebsites.net"
+        }
+    }
+}
