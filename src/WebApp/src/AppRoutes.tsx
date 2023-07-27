@@ -12,6 +12,8 @@ function App() {
         <Routes>
             <Route path="/" element={<Home />} />
 
+            <Route path="/search" element={<Home isSearchResultsPage={true} />} />
+
             {/* <Route
                 path="/something"
                 element={
