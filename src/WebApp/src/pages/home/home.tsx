@@ -7,6 +7,8 @@ import { httpClient } from "../../utils/httpClient/httpClient";
 import { Header } from "../../components/header/header";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { SearchBox, SearchBoxHandle } from "../../components/searchBox/searchBox";
+import { Filter } from "../../components/filter/filter";
+import { FacetType } from "../../types/facet";
 
 interface HomeProps {
     isSearchResultsPage?: boolean;
@@ -17,6 +19,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [query, setQuery] = useState<string>();
     const [searchParams, setSearchParams] = useSearchParams();
+    const [filters, setFilters] = useState<Record<FacetType, string[]>>();
 
     const navigate = useNavigate();
 
@@ -48,6 +51,11 @@ export function Home({ isSearchResultsPage }: HomeProps) {
             setSearchParams("");
             setQuery("");
         }
+    }
+
+    function onFilterChanged(newFilters: Record<FacetType, string[]>): void {
+        console.log("*** onFilterChanged");
+        setFilters(newFilters);
     }
 
     // Custom hook that can be used instead of useEffect() with zero dependencies.
@@ -97,7 +105,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                 </div>
             </Header>
             <main className="grid grid-cols-1 gap-y-4 px-8 pt-8 md:grid-cols-4 md:gap-x-12 md:px-24">
-
+                <Filter className="mt-5" onFilterChanged={onFilterChanged} />
                 
 
                 {isLoading && (
