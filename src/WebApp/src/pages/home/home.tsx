@@ -96,7 +96,10 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                     </div>
                 </div>
             </Header>
-            <main className="px-8 pt-8 md:px-24">
+            <main className="grid grid-cols-1 gap-y-4 px-8 pt-8 md:grid-cols-4 md:gap-x-12 md:px-24">
+
+                
+
                 {isLoading && (
                     <div className="mt-16 w-full">
                         <Spinner size="extra-large" />
