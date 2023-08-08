@@ -21,6 +21,15 @@
             "manage-cookies": "Manage cookies",
             "terms-of-use": "Terms of use",
             "copyright": "© 2023"
+        },
+        "search-box": {
+            "label": "I am looking for",
+            "placeholder": "e.g. visual inspection"
+        },
+        "filter": {
+            "title": "Filter",
+            "industry": "Industry",
+            "clear-all": "Clear all"
         }
     },
     "entities": {},
