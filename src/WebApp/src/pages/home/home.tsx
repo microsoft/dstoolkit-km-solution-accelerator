@@ -10,7 +10,7 @@ import { SearchBox, SearchBoxHandle } from "../../components/searchBox/searchBox
 import { Filter } from "../../components/filter/filter";
 import { FacetType } from "../../types/facet";
 import { HeaderMenu } from "../../components/headerMenu/headerMenu";
-import { Filter20Filled } from "@fluentui/react-icons";
+import { FilterButton } from "../../components/filter/showHideFilterButton";
 
 interface HomeProps {
     isSearchResultsPage?: boolean;
@@ -22,6 +22,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
     const [query, setQuery] = useState<string>();
     const [searchParams, setSearchParams] = useSearchParams();
     const [filters, setFilters] = useState<Record<FacetType, string[]>>();
+    const [filterOpen, setFilterOpen] = useState<boolean>(true);
 
     const navigate = useNavigate();
 
@@ -58,6 +59,11 @@ export function Home({ isSearchResultsPage }: HomeProps) {
     function onFilterChanged(newFilters: Record<FacetType, string[]>): void {
         console.log("*** onFilterChanged");
         setFilters(newFilters);
+    }
+
+    function onFilterPress(): void {
+        console.log("*** onFilterPress");
+        setFilterOpen(!filterOpen);
     }
 
     // Custom hook that can be used instead of useEffect() with zero dependencies.
@@ -111,10 +117,9 @@ export function Home({ isSearchResultsPage }: HomeProps) {
 
             <main className="md:px-18 grid grid-cols-4 gap-x-8 gap-y-8 px-8 pt-2 md:grid-cols-4 md:gap-x-8">
                 
+                
                 <div className="col-span-1 col-start-1 px-4 pt-1">
-                    <Button className="" icon={<Filter20Filled />} appearance="subtle">
-                        Filter
-                    </Button>
+                    <FilterButton className="" onFilterPress={onFilterPress} />
                 </div>
                 
                 <div className="col-span-1 col-start-2">
@@ -123,9 +128,11 @@ export function Home({ isSearchResultsPage }: HomeProps) {
 
                 <div className="absolute left-0 right-0 mt-11 w-full border-b border-b-neutral-300"></div>
 
+                {filterOpen && (
                 <div className="col-span-1 col-start-1 px-10">
                     <Filter className="" onFilterChanged={onFilterChanged} />
                 </div>
+                )}
 
                 {/* <div className="col-span-2 md:col-span-3 ">
                 {isLoading && (
