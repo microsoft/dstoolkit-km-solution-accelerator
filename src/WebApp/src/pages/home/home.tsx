@@ -84,7 +84,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
     return (
         <>
             <Header
-                className="flex flex-col justify-between bg-contain bg-right-bottom bg-no-repeat md:bg-black"
+                className="flex flex-col justify-between bg-contain bg-right-bottom bg-no-repeat"
                 size={!isSearchResultsPage ? "large" : "medium"}
             >
                 <HeaderBar location={NavLocation.Home} />
@@ -115,33 +115,33 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                 </div>
             </Header>
 
-            <main className="md:px-18 grid grid-cols-4 gap-x-8 gap-y-8 px-8 pt-2 md:grid-cols-4 md:gap-x-8">
-                
-                
-                <div className="col-span-1 col-start-1 px-4 pt-1">
-                    <FilterButton className="" onFilterPress={onFilterPress} />
-                </div>
-                
-                <div className="col-span-1 col-start-2">
-                    <HeaderMenu className="md:col-span-1" />
-                </div>
-
-                <div className="absolute left-0 right-0 mt-11 w-full border-b border-b-neutral-300"></div>
-
-                {filterOpen && (
-                <div className="col-span-1 col-start-1 px-10">
-                    <Filter className="" onFilterChanged={onFilterChanged} />
-                </div>
-                )}
-
-                {/* <div className="col-span-2 md:col-span-3 ">
-                {isLoading && (
-                    <div className="mt-16 w-full">
-                        <Spinner size="extra-large" />
+            <main className="w-full pt-2">
+                <div className="grid grid-cols-5 gap-x-4 gap-y-8 md:grid-cols-5 md:gap-x-8">
+                    <div className="col-span-1 col-start-1 px-4 pt-1">
+                        <FilterButton className="" onFilterPress={onFilterPress} />
                     </div>
-                )}
-                {!isLoading && <>Page content</>}
-                </div> */}
+
+                    <div className="col-span-1 col-start-2">
+                        <HeaderMenu className="md:col-span-1" />
+                    </div>
+
+                    <div className="absolute left-0 right-0 mt-11 w-full border-b border-b-neutral-300"></div>
+
+                    {filterOpen && (
+                        <div className="col-span-1 col-start-1 px-10">
+                            <Filter className="" onFilterChanged={onFilterChanged} />
+                        </div>
+                    )}
+
+                    <div className="col-span-2 px-3 md:col-span-3 ">
+                        {isLoading && (
+                            <div className="mt-16 w-full">
+                                <Spinner size="extra-large" />
+                            </div>
+                        )}
+                        {!isLoading && <>Page content</>}
+                    </div>
+                </div>
             </main>
         </>
     );
