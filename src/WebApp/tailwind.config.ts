@@ -12,6 +12,7 @@ export default {
             fontWeight: {
                 semilight: "350",
             },
+            
         },
 
         fontSize: {
@@ -25,7 +26,7 @@ export default {
             "5xl": ["42px", "52px"], // h1 (header)
         },
         fontFamily: {
-            sans: ["Segoe UI", "Roboto", "Helvetica Neue", "sans-serif", "ui-sans-serif", "system-ui"],
+            sans: ["Segoe UI", "Roboto", "Helvetica Neue", "sans-serif", "ui-sans-serif", "system-ui", "roboto-condensed"],
         },
         colors: {
             transparent: "transparent",
@@ -51,6 +52,9 @@ export default {
             },
             tertiary: {
                 500: "#253E8E",
+            },
+            zinc: {
+                500: "#868686",
             },
             red: colors.red,
             yellow: colors.yellow,

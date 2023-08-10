@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { HeaderBar, NavLocation } from "../../components/headerBar/headerBar";
 import { Paged } from "../../types/paged";
-import { Spinner, Dropdown, Option } from "@fluentui/react-components";
+import { Spinner, Dropdown, Option, Divider, Button } from "@fluentui/react-components";
 import { httpClient } from "../../utils/httpClient/httpClient";
 import { Header } from "../../components/header/header";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { SearchBox, SearchBoxHandle } from "../../components/searchBox/searchBox";
 import { Filter } from "../../components/filter/filter";
 import { FacetType } from "../../types/facet";
+import { HeaderMenu } from "../../components/headerMenu/headerMenu";
+import { Filter20Filled } from "@fluentui/react-icons";
 
 interface HomeProps {
     isSearchResultsPage?: boolean;
@@ -76,26 +78,28 @@ export function Home({ isSearchResultsPage }: HomeProps) {
     return (
         <>
             <Header
-                className="bg-contain bg-right-bottom bg-no-repeat md:bg-[url('/img/header-default.png')]"
-                size={"large"}
+                className="flex flex-col justify-between bg-contain bg-right-bottom bg-no-repeat md:bg-black"
+                size={!isSearchResultsPage ? "large" : "medium"}
             >
                 <HeaderBar location={NavLocation.Home} />
                 <div>
                     <div>
-                        <h1 className="max-sm:text-3xl">{t("pages.home.title")}</h1>
-                        <div className="mb-10 w-full text-lg md:w-1/2">{t("pages.home.subtitle")}</div>
+                        {/* <h1 className="max-sm:text-3xl">{t("pages.home.title")}</h1> */}
+                        {/* <div className="mb-10 w-full text-lg md:w-1/2">{t("pages.home.subtitle")}</div> */}
 
                         <SearchBox
                             ref={searchBoxRef}
                             className={`w-full ${
-                                !isSearchResultsPage
-                                    ? "items-center"
-                                    : "items-baseline justify-center max-sm:items-center"
+                                // !isSearchResultsPage
+                                //     ? "items-center"
+                                //     :
+                                "mb-10 mt-10 items-baseline justify-center max-sm:items-center"
                             }`}
                             labelClassName={`font-semilight ${
-                                !isSearchResultsPage
-                                    ? "text-[23px] max-sm:text-base"
-                                    : "text-[33px] max-sm:text-base leading-8"
+                                // !isSearchResultsPage
+                                //     ? "text-[23px] max-sm:text-base"
+                                //     :
+                                "text-[33px] max-sm:text-base leading-8"
                             }`}
                             inputClassName="max-w-xs flex-grow"
                             onSearchChanged={onSearchChanged}
@@ -104,16 +108,33 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                     </div>
                 </div>
             </Header>
-            <main className="grid grid-cols-1 gap-y-4 px-8 pt-8 md:grid-cols-4 md:gap-x-12 md:px-24">
-                <Filter className="mt-5" onFilterChanged={onFilterChanged} />
-                
 
+            <main className="md:px-18 grid grid-cols-4 gap-x-8 gap-y-8 px-8 pt-2 md:grid-cols-4 md:gap-x-8">
+                
+                <div className="col-span-1 col-start-1 px-4 pt-1">
+                    <Button className="" icon={<Filter20Filled />} appearance="subtle">
+                        Filter
+                    </Button>
+                </div>
+                
+                <div className="col-span-1 col-start-2">
+                    <HeaderMenu className="md:col-span-1" />
+                </div>
+
+                <div className="absolute left-0 right-0 mt-11 w-full border-b border-b-neutral-300"></div>
+
+                <div className="col-span-1 col-start-1 px-10">
+                    <Filter className="" onFilterChanged={onFilterChanged} />
+                </div>
+
+                {/* <div className="col-span-2 md:col-span-3 ">
                 {isLoading && (
                     <div className="mt-16 w-full">
                         <Spinner size="extra-large" />
                     </div>
                 )}
                 {!isLoading && <>Page content</>}
+                </div> */}
             </main>
         </>
     );

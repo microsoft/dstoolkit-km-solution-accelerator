@@ -18,7 +18,6 @@ const containerStyles: Readonly<Record<string, string>> = {
 };
 
 export function Header({ children, className, size }: HeaderProps) {
-    console.log("sizde", size)
     return (
         <header className={`w-full ${containerStyles[size || "small"]}`}>
             <div

@@ -57,11 +57,11 @@ export const SearchBox = forwardRef<SearchBoxHandle, SearchBoxProps>(
 
         return (
             <div className={`${className || ""} flex gap-3`}>
-                <label className={labelClassName || ""} htmlFor={inputId}>
+                {/* <label className={labelClassName || ""} htmlFor={inputId}>
                     {t("components.search-box.label")}
-                </label>
+                </label> */}
                 <Input
-                    className={inputClassName || ""}
+                    className={`${inputClassName || ""}`}
                     contentBefore={<Search20Regular />}
                     placeholder={placeholder || t("components.search-box.placeholder")}
                     id={inputId}
