@@ -116,7 +116,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
             </Header>
 
             <main className="w-full pt-2">
-                <div className="grid grid-cols-5 gap-x-4 gap-y-8 md:grid-cols-5 md:gap-x-8">
+                <div className="grid -mx-24 grid-cols-5 gap-x-4 gap-y-8 md:grid-cols-5 md:gap-x-8">
                     <div className="col-span-1 col-start-1 px-4 pt-1">
                         <FilterButton className="" onFilterPress={onFilterPress} />
                     </div>

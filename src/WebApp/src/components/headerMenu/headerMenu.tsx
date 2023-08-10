@@ -22,7 +22,7 @@ export function HeaderMenu({ className }: HeaderMenuProps) {
         },
     ];
 
-    const commonTabClassName = "mr-6";
+    const commonTabClassName = "mr-10";
 
     return (
         <>
