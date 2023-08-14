@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { HeaderBar, NavLocation } from "../../components/headerBar/headerBar";
 import { Paged } from "../../types/paged";
-import { Spinner, Dropdown, Option } from "@fluentui/react-components";
+import { Spinner, Dropdown, Option, Divider, Button } from "@fluentui/react-components";
 import { httpClient } from "../../utils/httpClient/httpClient";
 import { Header } from "../../components/header/header";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { SearchBox, SearchBoxHandle } from "../../components/searchBox/searchBox";
 import { Filter } from "../../components/filter/filter";
 import { FacetType } from "../../types/facet";
+import { HeaderMenu } from "../../components/headerMenu/headerMenu";
+import { FilterButton } from "../../components/filter/showHideFilterButton";
 
 interface HomeProps {
     isSearchResultsPage?: boolean;
@@ -20,6 +22,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
     const [query, setQuery] = useState<string>();
     const [searchParams, setSearchParams] = useSearchParams();
     const [filters, setFilters] = useState<Record<FacetType, string[]>>();
+    const [filterOpen, setFilterOpen] = useState<boolean>(true);
 
     const navigate = useNavigate();
 
@@ -58,6 +61,11 @@ export function Home({ isSearchResultsPage }: HomeProps) {
         setFilters(newFilters);
     }
 
+    function onFilterPress(): void {
+        console.log("*** onFilterPress");
+        setFilterOpen(!filterOpen);
+    }
+
     // Custom hook that can be used instead of useEffect() with zero dependencies.
     // Avoids a double execution of the effect when in React 18 DEV mode with <React.StrictMode>
     // useEffectOnce(() => {
@@ -76,26 +84,28 @@ export function Home({ isSearchResultsPage }: HomeProps) {
     return (
         <>
             <Header
-                className="bg-contain bg-right-bottom bg-no-repeat md:bg-[url('/img/header-default.png')]"
-                size={"large"}
+                className="flex flex-col justify-between bg-contain bg-right-bottom bg-no-repeat"
+                size={!isSearchResultsPage ? "large" : "medium"}
             >
                 <HeaderBar location={NavLocation.Home} />
                 <div>
                     <div>
-                        <h1 className="max-sm:text-3xl">{t("pages.home.title")}</h1>
-                        <div className="mb-10 w-full text-lg md:w-1/2">{t("pages.home.subtitle")}</div>
+                        {/* <h1 className="max-sm:text-3xl">{t("pages.home.title")}</h1> */}
+                        {/* <div className="mb-10 w-full text-lg md:w-1/2">{t("pages.home.subtitle")}</div> */}
 
                         <SearchBox
                             ref={searchBoxRef}
                             className={`w-full ${
-                                !isSearchResultsPage
-                                    ? "items-center"
-                                    : "items-baseline justify-center max-sm:items-center"
+                                // !isSearchResultsPage
+                                //     ? "items-center"
+                                //     :
+                                "mb-10 mt-10 items-baseline justify-center max-sm:items-center"
                             }`}
                             labelClassName={`font-semilight ${
-                                !isSearchResultsPage
-                                    ? "text-[23px] max-sm:text-base"
-                                    : "text-[33px] max-sm:text-base leading-8"
+                                // !isSearchResultsPage
+                                //     ? "text-[23px] max-sm:text-base"
+                                //     :
+                                "text-[33px] max-sm:text-base leading-8"
                             }`}
                             inputClassName="max-w-xs flex-grow"
                             onSearchChanged={onSearchChanged}
@@ -104,16 +114,40 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                     </div>
                 </div>
             </Header>
-            <main className="grid grid-cols-1 gap-y-4 px-8 pt-8 md:grid-cols-4 md:gap-x-12 md:px-24">
-                <Filter className="mt-5" onFilterChanged={onFilterChanged} />
-                
 
-                {isLoading && (
-                    <div className="mt-16 w-full">
-                        <Spinner size="extra-large" />
+            <main className="w-full pt-2">
+                <div className="grid grid-cols-3 gap-x-4 gap-y-8 md:grid-cols-5 md:gap-x-8">
+                        <div className="col-span-1 col-start-1 pt-1 ">
+                            <FilterButton className="" onFilterPress={onFilterPress} />
+                        </div>
+
+                        <div className="col-start-2 col-span-1  md:col-start-2 md:col-span-3 flex">
+                            <HeaderMenu className="" />
+                        </div>
+
+                        <div className="col-start-3 col-span-3 md:col-start-5 md:col-span-1 md:mt-2">
+                            <Button className="flex" onClick={() => console.log("click")} icon={<img src="\img\Copilot.png"></img> } appearance="subtle">
+                                Copilot
+                            </Button>
+                        </div>
+
+                    <div className="absolute left-0 right-0 mt-11 w-full border-b border-b-neutral-300"></div>
+
+                    {filterOpen && (
+                        <div className="col-span-1 col-start-1 hidden px-4 md:block">
+                            <Filter className="" onFilterChanged={onFilterChanged} />
+                        </div>
+                    )}
+
+                    <div className="col-span-2 col-start-2 px-3 md:col-span-3 md:col-start-2 ">
+                        {isLoading && (
+                            <div className="mt-16 w-full">
+                                <Spinner size="extra-large" />
+                            </div>
+                        )}
+                        {!isLoading && <>Page content</>}
                     </div>
-                )}
-                {!isLoading && <>Page content</>}
+                </div>
             </main>
         </>
     );

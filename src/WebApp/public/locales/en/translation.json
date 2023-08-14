@@ -24,11 +24,12 @@
         },
         "search-box": {
             "label": "I am looking for",
-            "placeholder": "e.g. visual inspection"
+            "placeholder": "Ask me anything..."
         },
         "filter": {
             "title": "Filter",
-            "industry": "Industry",
+            "industries": "Industries",
+            "tags": "Tags",
             "clear-all": "Clear all"
         }
     },

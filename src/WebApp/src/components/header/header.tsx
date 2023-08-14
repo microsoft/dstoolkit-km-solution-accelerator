@@ -13,16 +13,15 @@ const styles: Readonly<Record<string, string>> = {
 };
 const containerStyles: Readonly<Record<string, string>> = {
     ["small"]: "h-[180px] md:h-[240px]",
-    ["medium"]: "h-[312px] bg-neutral-200",
-    ["large"]: "h-[344px] bg-neutral-200",
+    ["medium"]: "h-[312px] bg-black",
+    ["large"]: "h-[344px] bg-black",
 };
 
 export function Header({ children, className, size }: HeaderProps) {
-    console.log("sizde", size)
     return (
         <header className={`w-full ${containerStyles[size || "small"]}`}>
             <div
-                className={`_max-content-width mx-auto flex h-full flex-col justify-between px-8 pt-8 text-left md:px-24 md:pt-16 ${
+                className={`_max-content-width mx-auto flex h-full flex-col justify-between pt-8 text-left md:pt-16 ${
                     styles[size || "small"]
                 } ${className || ""}`}
             >
