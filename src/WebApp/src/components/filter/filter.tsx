@@ -33,19 +33,12 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
     const [facetResult, setFacetResult] = React.useState<Facet[]>([]);
 
     const [allInd, setAllInd] = React.useState<string[]>([]);
-    const [countByInd, setCountByInd] = React.useState<Record<string, number>>({});
     const [checkedInd, setCheckedInd] = React.useState<string[]>([]);
 
     const [allTags, setAllTags] = React.useState<string[]>([]);
-    const [countByTag, setCountByTag] = React.useState<Record<string, number>>({});
     const [checkedTags, setCheckedTags] = React.useState<string[]>([]);
 
-    const [allTypes, setAllTypes] = React.useState<string[]>([]);
-    const [countByType, setCountByType] = React.useState<Record<string, number>>({});
     const [checkedTypes, setCheckedTypes] = React.useState<string[]>([]);
-
-    const [checkedFacet, setCheckedFacet] = React.useState<string[]>([]);
-    const [countByFacet, setCountByFacet] = React.useState<Record<string, number>>({});
 
     const initCompleted = useRef<boolean>(false);
 
@@ -57,26 +50,12 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
         loadAllFacetsAsync();
     });
 
-    // useEffect(() => {
-    //     if (!facetsCounts || facetsCounts.length === 0) return;
-
-    //     const inIndustries = facetsCounts.find((f) => f.name === FacetType.Industries)?.categories || {};
-    //     setCountByInd(inIndustries);
-
-    //     const inTags = facetsCounts.find((f) => f.name === FacetType.Tags)?.categories || {};
-    //     setCountByTag(inTags);
-
-    //     // const inTypes = facetsCounts.find((f) => f.name === FacetType.AssetTypes)?.categories || {};
-    //     // setCountByType(inTypes);
-    // }, [facetsCounts]);
-
     useEffect(() => {
         // If all facets are selected send empty filter list
         if (initCompleted.current)
             onFilterChanged({
                 [FacetType.Industries]: checkedInd.length === allInd.length ? [] : checkedInd,
                 [FacetType.Tags]: checkedTags.length === allTags.length ? [] : checkedTags,
-                // [FacetType.AssetTypes]: checkedTypes.length === allTypes.length ? [] : checkedTypes,
             });
     }, [checkedInd, checkedTags, checkedTypes]);
 
@@ -86,7 +65,6 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
 
         const indCat = facetResult.find((f) => f.name === FacetType.Industries)?.categories || {};
         const tagsCat = facetResult.find((f) => f.name === FacetType.Tags)?.categories || {};
-        // const typesCat = facetResult.find((f) => f.name === FacetType.AssetTypes)?.categories || {};
 
         const industries = Object.entries(indCat)?.map((name) => {
             return name[0];
@@ -94,12 +72,9 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
         const tags = Object.entries(tagsCat)?.map((name) => {
             return name[0];
         });
-        // const types = Object.entries(typesCat)?.map((name) => {
-        //     return name[0];
-        // });
+        
         setAllInd(industries);
         setAllTags(tags);
-        // setAllTypes(types);
         initCompleted.current = true;
     }
 
@@ -109,7 +84,7 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
     }
 
     const [openItems, setOpenItems] = React.useState(["1"]);
-    const handleToggle: AccordionToggleEventHandler<string> = (event, data) => {
+    const handleToggle: AccordionToggleEventHandler<string> = (event: any, data: { value: any; }) => {
         const { value } = data;
         setOpenItems((prevOpenItems) => {
             if (prevOpenItems.includes(value)) {
@@ -120,8 +95,7 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
         });
     };
 
-    const handleCheckboxChange = (facetName: string, category: string, checked: boolean) => {
-        console.log("*** handleCheckboxChange", facetName, category);
+    const handleCheckboxChange = (facetName: string, category: string, checked: boolean|string) => {
         if (facetName === FacetType.Industries) {
             setCheckedInd(checked ? [...checkedInd, category] : checkedInd.filter((c) => c !== category));
         } else if (facetName === FacetType.Tags) {

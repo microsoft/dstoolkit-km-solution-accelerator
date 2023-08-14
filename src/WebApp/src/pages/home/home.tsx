@@ -121,12 +121,12 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                             <FilterButton className="" onFilterPress={onFilterPress} />
                         </div>
 
-                        <div className="col-start-2 col-span-1  md:col-start-2 md:col-span-3 bg-green-200 flex">
+                        <div className="col-start-2 col-span-1  md:col-start-2 md:col-span-3 flex">
                             <HeaderMenu className="" />
                         </div>
 
                         <div className="col-start-3 col-span-3 md:col-start-5 md:col-span-1 md:mt-2">
-                            <Button className="flex" onClick={onFilterPress} icon={<img src="\img\Copilot.png"></img> } appearance="subtle">
+                            <Button className="flex" onClick={() => console.log("click")} icon={<img src="\img\Copilot.png"></img> } appearance="subtle">
                                 Copilot
                             </Button>
                         </div>
