@@ -28,7 +28,8 @@
         },
         "filter": {
             "title": "Filter",
-            "industry": "Industry",
+            "industries": "Industries",
+            "tags": "Tags",
             "clear-all": "Clear all"
         }
     },

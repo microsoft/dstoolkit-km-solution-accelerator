@@ -15,19 +15,15 @@ export function HeaderMenu({ className }: HeaderMenuProps) {
         { value: "Translated Pages", label: "Translated Pages" },
         { value: "Emails", label: "Emails" },
         { value: "Attachments", label: "Attachments" },
-        {
-            value: "Copilot",
-            label: "Copilot",
-            icon: <img src="\img\Copilot.png" />,
-        },
+        
     ];
 
-    const commonTabClassName = "mr-10";
+    const commonTabClassName = "";
 
     return (
         <>
             <div className={`${className || ""} `}>
-                <div className="flex justify-between">
+                <div className="flex ">
                     <TabList defaultSelectedValue={"ALL"} appearance="subtle">
                         {tabs.map((tab) => (
                             <Tab key={tab.value} value={tab.value} icon={tab.icon} className={commonTabClassName}>

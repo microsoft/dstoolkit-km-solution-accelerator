@@ -116,24 +116,30 @@ export function Home({ isSearchResultsPage }: HomeProps) {
             </Header>
 
             <main className="w-full pt-2">
-                <div className="grid -mx-24 grid-cols-5 gap-x-4 gap-y-8 md:grid-cols-5 md:gap-x-8">
-                    <div className="col-span-1 col-start-1 px-4 pt-1">
-                        <FilterButton className="" onFilterPress={onFilterPress} />
-                    </div>
+                <div className="grid grid-cols-3 gap-x-4 gap-y-8 md:grid-cols-5 md:gap-x-8">
+                        <div className="col-span-1 col-start-1 pt-1 ">
+                            <FilterButton className="" onFilterPress={onFilterPress} />
+                        </div>
 
-                    <div className="col-span-1 col-start-2">
-                        <HeaderMenu className="md:col-span-1" />
-                    </div>
+                        <div className="col-start-2 col-span-1  md:col-start-2 md:col-span-3 bg-green-200 flex">
+                            <HeaderMenu className="" />
+                        </div>
+
+                        <div className="col-start-3 col-span-3 md:col-start-5 md:col-span-1 md:mt-2">
+                            <Button className="flex" onClick={onFilterPress} icon={<img src="\img\Copilot.png"></img> } appearance="subtle">
+                                Copilot
+                            </Button>
+                        </div>
 
                     <div className="absolute left-0 right-0 mt-11 w-full border-b border-b-neutral-300"></div>
 
                     {filterOpen && (
-                        <div className="col-span-1 col-start-1 px-10">
+                        <div className="col-span-1 col-start-1 hidden px-4 md:block">
                             <Filter className="" onFilterChanged={onFilterChanged} />
                         </div>
                     )}
 
-                    <div className="col-span-2 px-3 md:col-span-3 ">
+                    <div className="col-span-2 col-start-2 px-3 md:col-span-3 md:col-start-2 ">
                         {isLoading && (
                             <div className="mt-16 w-full">
                                 <Spinner size="extra-large" />

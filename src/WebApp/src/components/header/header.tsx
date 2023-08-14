@@ -21,7 +21,7 @@ export function Header({ children, className, size }: HeaderProps) {
     return (
         <header className={`w-full ${containerStyles[size || "small"]}`}>
             <div
-                className={`_max-content-width mx-auto flex h-full flex-col justify-between px-8 pt-8 text-left md:px-24 md:pt-16 ${
+                className={`_max-content-width mx-auto flex h-full flex-col justify-between pt-8 text-left md:pt-16 ${
                     styles[size || "small"]
                 } ${className || ""}`}
             >

@@ -135,37 +135,21 @@ export function HeaderBar({ location }: { location?: NavLocation }) {
 
     return (
         <>
-            <div className="flex items-center justify-between">
-                {/* <div className="flex items-center w-[367px] h-[22px] relative">
-                    <img
-                        className="h-[24px] w-[112px] object-contain object-left"
-                        src="/img/logo-small.png"
-                        alt={t("common.title")}
-                    />
-
-                    <Link type="button" to="/" className="ml-4 border-l-[1.5px] border-l-neutral-500 pl-4">
-                        <div className="text-base font-bold leading-tight tracking-wider text-white">CONTOSO</div>
-                        <div className="absolute left-[243px] top-[39px] text-base text-sm font-bold leading-tight text-black">
-                            {" "}
+            <div className="flex flex-nowrap items-center justify-between px-4">
+                <div className="flex flex-row w-1/3 gap-2" >
+                    <img className="order-1" src="/img/ms-logo-small.png" alt="logo" />
+                    <div className="order-2 border border-zinc-500"></div>
+                    <div className="order-3 flex w-1/2 flex-row">
+                        <img className="mr-2" src="/img/Contoso_Logo_sm.png" alt="logo" />
+                        <div className="mr-2 pt-1 font-roboto order-4 text-base font-bold leading-tight tracking-wider text-white">
+                            CONTOSO
+                        </div>
+                        <div className="order-5 pt-1.5 text-sm font-semibold leading-tight text-white">
                             Knowledge Mining
                         </div>
-                        <h5>{t("common.title")}</h5>
-                    </Link>
-                </div> */}
-                <div className="relative h-[22px] w-[367px]">
-                    <img className="w-[98.36px] h-[21px] left-0 top-[1px] absolute flex-col justify-start items-start inline-flex" src="/img/ms-logo-small.png" alt="logo" />
-                    <img className="w-[21px] h-[21px] left-[135px] top-[1px] absolute" src="/img/Contoso_Logo_sm.png" alt="logo" />
-                    <div className="left-[243px] top-[5.5px] absolute text-white text-sm font-semibold leading-tight">
-                        {" "}
-                        Knowledge Mining
                     </div>
-                    <div className="absolute left-[165px] top-[2px] text-base font-bold leading-tight tracking-wider text-white font-roboto">
-                        CONTOSO
-                    </div>
-                    <div className="border-zinc-500 absolute left-[118px] top-0 h-[0px] w-[22px] origin-top-left rotate-90 border"></div>
-                    <div className="absolute left-[135px] top-[1px] h-[21px] w-[21px]" />
-                    <div className="absolute left-0 top-[1px] inline-flex h-[21px] w-[98.36px] flex-col items-start justify-start" />
                 </div>
+
                 <nav className="whitespace-nowrap text-lg font-semibold leading-10">
                     <ul
                         className={
