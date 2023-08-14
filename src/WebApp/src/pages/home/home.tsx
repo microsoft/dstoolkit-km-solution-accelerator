@@ -95,11 +95,11 @@ export function Home({ isSearchResultsPage }: HomeProps) {
 
                         <SearchBox
                             ref={searchBoxRef}
-                            className={`w-full ${
+                            className={`w-full flex ${
                                 // !isSearchResultsPage
                                 //     ? "items-center"
                                 //     :
-                                "mb-10 mt-10 items-baseline justify-center max-sm:items-center"
+                                "pt-5 pb-5 -mb-5 justify-center justify-items-center max-sm:items-center"
                             }`}
                             labelClassName={`font-semilight ${
                                 // !isSearchResultsPage
