@@ -6,7 +6,6 @@ import { Link, makeStyles } from "@fluentui/react-components";
 import { httpClient } from "../../utils/httpClient/httpClient";
 import { useEffectOnce } from "../../utils/react/useEffectOnce";
 import { Facet, FacetType } from "../../types/facet";
-import { mockFacets } from "./mockFacets";
 // import { RunFlags } from "../../types/runFlags";
 import {
     Accordion,
@@ -60,7 +59,8 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
     }, [checkedInd, checkedTags, checkedTypes]);
 
     async function loadAllFacetsAsync() {
-        const facetResult: Facet[] = mockFacets;
+        const facetResult: Facet[] = await httpClient.get(`${window.ENV.API_URL}/api/facets`);
+
         setFacetResult(facetResult);
 
         const indCat = facetResult.find((f) => f.name === FacetType.Industries)?.categories || {};
@@ -72,7 +72,7 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
         const tags = Object.entries(tagsCat)?.map((name) => {
             return name[0];
         });
-        
+
         setAllInd(industries);
         setAllTags(tags);
         initCompleted.current = true;
@@ -84,7 +84,7 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
     }
 
     const [openItems, setOpenItems] = React.useState(["1"]);
-    const handleToggle: AccordionToggleEventHandler<string> = (event: any, data: { value: any; }) => {
+    const handleToggle: AccordionToggleEventHandler<string> = (event: any, data: { value: any }) => {
         const { value } = data;
         setOpenItems((prevOpenItems) => {
             if (prevOpenItems.includes(value)) {
@@ -95,7 +95,7 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
         });
     };
 
-    const handleCheckboxChange = (facetName: string, category: string, checked: boolean|string) => {
+    const handleCheckboxChange = (facetName: string, category: string, checked: boolean | string) => {
         if (facetName === FacetType.Industries) {
             setCheckedInd(checked ? [...checkedInd, category] : checkedInd.filter((c) => c !== category));
         } else if (facetName === FacetType.Tags) {
