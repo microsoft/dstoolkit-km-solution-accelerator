@@ -1,8 +1,6 @@
-import { FacetType } from "../../types/facet";
-
-export const mockFacets = [
+const mockFacets = [
     {
-        name: FacetType.Industries,
+        name: "industries",
         categories: {
             All: 20,
             Manufacturing: 15,
@@ -17,7 +15,7 @@ export const mockFacets = [
         totalResults: 134,
     },
     {
-        name: FacetType.Tags,
+        name: "tags",
         categories: {
             // All: 10,
             // Manufacturing: 5,
@@ -32,3 +30,5 @@ export const mockFacets = [
         totalResults: 54,
     },
 ];
+
+export { mockFacets };
