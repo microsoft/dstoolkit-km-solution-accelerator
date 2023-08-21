@@ -1,0 +1,10 @@
+.input_wrapper {
+    border-radius: 40px !important;
+    width: 50%;
+    height: 60px;
+}
+/* Focus element */
+.input_wrapper:focus-within::after {
+    margin-left: 20px;
+    margin-right: 20px;
+}

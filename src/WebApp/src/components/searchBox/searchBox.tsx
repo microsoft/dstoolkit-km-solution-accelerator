@@ -1,9 +1,10 @@
 import React, { forwardRef, useImperativeHandle, ChangeEvent, KeyboardEvent } from "react";
 import { Input } from "@fluentui/react-input";
 import { useTranslation } from "react-i18next";
-import { Search20Regular } from "@fluentui/react-icons";
-import { InputOnChangeData, useId } from "@fluentui/react-components";
+import { Button, InputOnChangeData, useId } from "@fluentui/react-components";
 import { useDebouncedCallback } from "use-debounce";
+import { Keyboard24Regular, Mic24Regular, SearchVisual24Regular, Search24Regular } from "@fluentui/react-icons";
+import "./searchInput.scss";
 
 export interface SearchBoxHandle {
     reset: () => void;
@@ -16,6 +17,18 @@ interface SearchBoxProps {
     initialValue?: string;
     placeholder?: string;
     onSearchChanged: (searchValue: string) => void;
+}
+
+const MicButton = () => {
+    return <Button className="mic_button" icon={<Mic24Regular />} appearance="subtle" />;
+};
+
+const KeyBoardButton = () => {
+    return <Button className="keyboard_button" icon={<Keyboard24Regular />} appearance="subtle" />;
+};
+
+const SearchVisualButton = () => {
+    return <Button className="searchVisual_button" icon={<SearchVisual24Regular />} appearance="subtle" />;
 }
 
 export const SearchBox = forwardRef<SearchBoxHandle, SearchBoxProps>(
@@ -56,13 +69,21 @@ export const SearchBox = forwardRef<SearchBoxHandle, SearchBoxProps>(
         }
 
         return (
-            <div className={`${className || ""} flex gap-3`}>
+            <div className={`${className || ""}`}>
                 {/* <label className={labelClassName || ""} htmlFor={inputId}>
                     {t("components.search-box.label")}
                 </label> */}
                 <Input
-                    className={`${inputClassName || ""}`}
-                    contentBefore={<Search20Regular />}
+                    className={`input_wrapper`}
+                    contentBefore={<Search24Regular />}
+                    contentAfter={
+                        <div className="flex">
+                            <KeyBoardButton />
+                            <MicButton />
+                            <SearchVisualButton />
+                        </div>
+                    }
+                    size="large"
                     placeholder={placeholder || t("components.search-box.placeholder")}
                     id={inputId}
                     onChange={onChange}
