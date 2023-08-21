@@ -136,17 +136,15 @@ export function HeaderBar({ location }: { location?: NavLocation }) {
     return (
         <>
             <div className="flex flex-nowrap items-center justify-between px-4">
-                <div className="flex flex-row w-1/3 gap-2" >
-                    <img className="order-1" src="/img/ms-logo-small.png" alt="logo" />
-                    <div className="order-2 border border-zinc-500"></div>
-                    <div className="order-3 flex w-1/2 flex-row">
-                        <img className="mr-2" src="/img/Contoso_Logo_sm.png" alt="logo" />
-                        <div className="mr-2 pt-1 font-roboto order-4 text-base font-bold leading-tight tracking-wider text-white">
-                            CONTOSO
-                        </div>
-                        <div className="order-5 pt-1.5 text-sm font-semibold leading-tight text-white">
-                            Knowledge Mining
-                        </div>
+                <div className="flex w-1/2 flex-row gap-2">
+                    <img className="my-auto" src="/img/ms-logo-small.png" alt="logo" />
+                    <div className="border border-zinc-500"></div>
+                    <img className="my-auto mr-2" src="/img/Contoso_Logo_sm.png" alt="logo" />
+                    <div className="font-roboto order-4 mr-2 pt-1 text-base font-bold leading-tight tracking-wider text-white">
+                        CONTOSO
+                    </div>
+                    <div className="order-5 pt-1.5 text-sm font-semibold leading-tight text-white">
+                        Knowledge Mining
                     </div>
                 </div>
 
