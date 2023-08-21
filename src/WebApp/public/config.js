@@ -1,8 +1,7 @@
 window.ENV = {
     ENVIRONMENT: "local",
-    API_URL: "https://?", 
-    APP_INSIGHTS_CS:
-        "InstrumentationKey=?;IngestionEndpoint=?",
+    API_URL: "http://localhost:5901",
+    APP_INSIGHTS_CS: "InstrumentationKey=?;IngestionEndpoint=?",
     AUTH: {
         clientId: "",
         authority: "",
@@ -15,5 +14,5 @@ window.ENV = {
                 scopes: ["api://?/api.access"],
             },
         },
-    }
+    },
 };
