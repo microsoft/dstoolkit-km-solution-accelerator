@@ -87,7 +87,9 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                 className="flex flex-col justify-between bg-contain bg-right-bottom bg-no-repeat"
                 size={!isSearchResultsPage ? "large" : "medium"}
             >
-                <HeaderBar location={NavLocation.Home} />
+                <div className="justify-self-center">
+                    <HeaderBar location={NavLocation.Home} />
+                </div>
                 <div>
                     <div>
                         {/* <h1 className="max-sm:text-3xl">{t("pages.home.title")}</h1> */}
@@ -99,7 +101,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                                 // !isSearchResultsPage
                                 //     ? "items-center"
                                 //     :
-                                "pt-5 pb-5 -mb-5 justify-center justify-items-center max-sm:items-center"
+                                "mt-10 pt-5 pb-5 -mb-5 justify-center justify-items-center max-sm:items-center"
                             }`}
                             labelClassName={`font-semilight ${
                                 // !isSearchResultsPage
@@ -117,19 +119,22 @@ export function Home({ isSearchResultsPage }: HomeProps) {
 
             <main className="w-full pt-2">
                 <div className="grid grid-cols-3 gap-x-4 gap-y-8 md:grid-cols-5 md:gap-x-8">
-                        <div className="col-span-1 col-start-1 pt-1 ">
+                        <div className="col-span-1 col-start-1 pt-1 ml-12">
                             <FilterButton className="" onFilterPress={onFilterPress} />
                         </div>
 
                         <div className="col-start-2 col-span-1  md:col-start-2 md:col-span-3 flex">
                             <HeaderMenu className="" />
-                        </div>
-
-                        <div className="col-start-3 col-span-3 md:col-start-5 md:col-span-1 md:mt-2">
-                            <Button className="flex" onClick={() => console.log("click")} icon={<img src="\img\Copilot.png"></img> } appearance="subtle">
+                            <Button className="" onClick={() => console.log("click")} icon={<img src="\img\Copilot.png"></img> } appearance="subtle">
                                 Copilot
                             </Button>
                         </div>
+
+                        {/* <div className="col-start-2 col-span-2 md:col-start-4 md:col-span-1 md:mt-2">
+                            <Button className="" onClick={() => console.log("click")} icon={<img src="\img\Copilot.png"></img> } appearance="subtle">
+                                Copilot
+                            </Button>
+                        </div> */}
 
                     <div className="absolute left-0 right-0 mt-11 w-full border-b border-b-neutral-300"></div>
 

@@ -114,8 +114,8 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
     // We can't make it sticky because there are too many filters and it would not allow us to scroll to the last ones "md:sticky md:top-5 md:self-start"
     return (
         <div className={`${className || ""} flex flex-col`}>
-            <div className="flex items-center justify-between pb-2">
-                <span className="text-lg font-medium">{t("components.filter.title")}</span>
+            <div className="flex items-center justify-between ml-2 mr-2 pb-2">
+                <span className="text-lg font-medium ml-10">{t("components.filter.title")}</span>
                 <Link className={classes.clearAll} onClick={clearAll}>
                     {t("components.filter.clear-all")}
                 </Link>

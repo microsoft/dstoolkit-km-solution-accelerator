@@ -12,9 +12,9 @@ const styles: Readonly<Record<string, string>> = {
     ["large"]: "pb-8 md:pb-16",
 };
 const containerStyles: Readonly<Record<string, string>> = {
-    ["small"]: "h-[180px] md:h-[240px]",
-    ["medium"]: "h-[312px] bg-black",
-    ["large"]: "h-[344px] bg-black",
+    ["small"]: "h-[180px] md:h-[180px]",
+    ["medium"]: "h-[180px] bg-black",
+    ["large"]: "h-[240] bg-black",
 };
 
 export function Header({ children, className, size }: HeaderProps) {
