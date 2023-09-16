@@ -140,18 +140,18 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                     <div className="absolute left-0 right-0 mt-11 w-full border-b border-b-neutral-300"></div>
 
                     {filterOpen && (
-                        <div className="col-span-1 col-start-1 hidden px-4 -ml-3 md:block">
+                        <div className="col-span-1 col-start-1 md:block">
                             <Filter className="" onFilterChanged={onFilterChanged} />
                         </div>
                     )}
 
                     <div className="col-span-3 col-start-2 ">
                         <div className="flex justify-between">
-                            <div className="flex ml-5 mt-1">
+                            <div className="flex ml-5">
                                 About X Results 
                             </div>
-                            <div className="flex mr-40 mt-1">
-                                <DateFilterDropdownMenu></DateFilterDropdownMenu>
+                            <div className="flex mr-40 ">
+                                <DateFilterDropdownMenu />
                             </div>
                         </div>
                     </div>

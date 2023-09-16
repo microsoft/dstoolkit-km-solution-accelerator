@@ -23,7 +23,7 @@ export function DateFilterDropdownMenu(props: any) {
                 
                 {...props}
                 >
-                <Option key="2" value="2">
+                <Option key="1" value="1">
                     All
                 </Option>
                 <Option key="2" value="2">

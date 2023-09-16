@@ -61,6 +61,7 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
     async function loadAllFacetsAsync() {
         const facetResult: Facet[] = await httpClient.get(`${window.ENV.API_URL}/api/facets`);
 
+        console.log("*** facetResult", facetResult);
         setFacetResult(facetResult);
 
         const indCat = facetResult.find((f) => f.name === FacetType.Industries)?.categories || {};
@@ -121,6 +122,7 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
                 </Link>
             </div>
 
+            <div className="ml-10" >
             <Accordion openItems={openItems} onToggle={handleToggle} multiple collapsible>
                 {facetResult.map((facet, idx) => (
                     <AccordionItem key={idx} value={facet.name}>
@@ -146,6 +148,7 @@ export function Filter({ className, /* facetsCounts, */ onFilterChanged }: Filte
                     </AccordionItem>
                 ))}
             </Accordion>
+            </div>
         </div>
     );
 }
