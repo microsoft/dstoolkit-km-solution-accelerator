@@ -488,6 +488,24 @@
     "@griffel/react" "^1.5.7"
     "@swc/helpers" "^0.4.14"
 
+"@fluentui/react-avatar@^9.5.30":
+  version "9.5.30"
+  resolved "https://registry.yarnpkg.com/@fluentui/react-avatar/-/react-avatar-9.5.30.tgz#ff6f17e04e32e7d48f2b1429f4d693c626cdbfe3"
+  integrity sha512-o99XKfWp0WWGwSh+z9zOqiqtk9Rq1ypuP2a9RPWOo8ua+uQe4Z+q6Ij+A7SmfP3gGMmoQRq7u/HDoXLVCaxszg==
+  dependencies:
+    "@fluentui/react-badge" "^9.1.36"
+    "@fluentui/react-context-selector" "^9.1.34"
+    "@fluentui/react-icons" "^2.0.207"
+    "@fluentui/react-jsx-runtime" "^9.0.8"
+    "@fluentui/react-popover" "^9.8.5"
+    "@fluentui/react-shared-contexts" "^9.7.3"
+    "@fluentui/react-tabster" "^9.12.9"
+    "@fluentui/react-theme" "^9.1.12"
+    "@fluentui/react-tooltip" "^9.3.6"
+    "@fluentui/react-utilities" "^9.13.3"
+    "@griffel/react" "^1.5.14"
+    "@swc/helpers" "^0.5.1"
+
 "@fluentui/react-badge@^9.1.20":
   version "9.1.20"
   resolved "https://registry.yarnpkg.com/@fluentui/react-badge/-/react-badge-9.1.20.tgz#c8ec521666de09248f833eb7470116410ace0b47"
@@ -500,6 +518,19 @@
     "@fluentui/react-utilities" "^9.10.1"
     "@griffel/react" "^1.5.7"
     "@swc/helpers" "^0.4.14"
+
+"@fluentui/react-badge@^9.1.36":
+  version "9.1.36"
+  resolved "https://registry.yarnpkg.com/@fluentui/react-badge/-/react-badge-9.1.36.tgz#a3d4f4b37369e3e2a99d8144eb856663ed3cdc06"
+  integrity sha512-g81RFuT70zMLIM/opPo6DPnZ9XHVXboYsObpZybbsHRS9ryDf+uBX0NaqtAKPJWfAJaHMyhtALoFrQ31tS8J0w==
+  dependencies:
+    "@fluentui/react-icons" "^2.0.207"
+    "@fluentui/react-jsx-runtime" "^9.0.8"
+    "@fluentui/react-shared-contexts" "^9.7.3"
+    "@fluentui/react-theme" "^9.1.12"
+    "@fluentui/react-utilities" "^9.13.3"
+    "@griffel/react" "^1.5.14"
+    "@swc/helpers" "^0.5.1"
 
 "@fluentui/react-button@^9.3.23":
   version "9.3.23"
@@ -1180,6 +1211,23 @@
     keyborg "^2.0.0"
     tabster "^4.7.0"
 
+"@fluentui/react-tags-preview@^0.2.10":
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/@fluentui/react-tags-preview/-/react-tags-preview-0.2.10.tgz#0f0fcb8596389cb4fe2ff210f5009a05d1f96f81"
+  integrity sha512-J3QHH7z6at3pPuT917NLW6AIZE++p2OAz7v3tR+lx99Fl/kAnH/7Havycrv+ZtTiahhaCGB+ML8oSzSKDR25Jw==
+  dependencies:
+    "@fluentui/keyboard-keys" "^9.0.4"
+    "@fluentui/react-aria" "^9.3.36"
+    "@fluentui/react-avatar" "^9.5.30"
+    "@fluentui/react-icons" "^2.0.207"
+    "@fluentui/react-jsx-runtime" "^9.0.8"
+    "@fluentui/react-shared-contexts" "^9.7.3"
+    "@fluentui/react-tabster" "^9.12.9"
+    "@fluentui/react-theme" "^9.1.12"
+    "@fluentui/react-utilities" "^9.13.3"
+    "@griffel/react" "^1.5.14"
+    "@swc/helpers" "^0.5.1"
+
 "@fluentui/react-text@^9.3.17":
   version "9.3.17"
   resolved "https://registry.yarnpkg.com/@fluentui/react-text/-/react-text-9.3.17.tgz#aaeb56ad6be2c6c727e7f08dbc7dc35a1da69b1e"
@@ -1269,6 +1317,21 @@
     "@fluentui/react-utilities" "^9.10.1"
     "@griffel/react" "^1.5.7"
     "@swc/helpers" "^0.4.14"
+
+"@fluentui/react-tooltip@^9.3.6":
+  version "9.3.6"
+  resolved "https://registry.yarnpkg.com/@fluentui/react-tooltip/-/react-tooltip-9.3.6.tgz#8b36d14bc810e00e64b979233dfcd94e0c555efc"
+  integrity sha512-TQN5xb5pOUVPOi1ClS5ZZRa3qFdnaYPb3PGv2fccxZUdx1z26MKcq/wB0udHJtV0LGnbzCHWqUE2Rzzy/cUhzg==
+  dependencies:
+    "@fluentui/keyboard-keys" "^9.0.4"
+    "@fluentui/react-jsx-runtime" "^9.0.8"
+    "@fluentui/react-portal" "^9.3.14"
+    "@fluentui/react-positioning" "^9.9.11"
+    "@fluentui/react-shared-contexts" "^9.7.3"
+    "@fluentui/react-theme" "^9.1.12"
+    "@fluentui/react-utilities" "^9.13.3"
+    "@griffel/react" "^1.5.14"
+    "@swc/helpers" "^0.5.1"
 
 "@fluentui/react-tree@9.0.0-beta.25":
   version "9.0.0-beta.25"

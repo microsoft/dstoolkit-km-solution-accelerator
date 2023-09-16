@@ -18,7 +18,7 @@ export function HeaderMenu({ className }: HeaderMenuProps) {
         
     ];
 
-    const commonTabClassName = "";
+    const commonTabClassName = "mr-2";
 
     return (
         <>

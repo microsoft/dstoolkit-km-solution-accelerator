@@ -39,14 +39,14 @@ export function DateFilterDropdownMenu(props: any) {
                     Past year
                 </Option>
                 <Divider />
-                    <div className="mt-2 mb-2 ml-6">
+                    <div className="mt-2 mb-2 ml-7">
                         Custom Date
-                        <div className="flex flex-row flex-nowrap justify-around gap-2 mr-5 ml-2">
+                        <div className="flex flex-row flex-nowrap justify-around gap-2 mr-7 ">
                             <CustomDatePicker />
                             <CustomDatePicker />
                         </div>
                     </div>
-                    <div className="flex justify-end mr-2 mb-2">
+                    <div className="flex justify-end mr-5 mb-2">
                         <Button appearance="outline" size="small" >Apply</Button>
                     </div>
             </Dropdown>

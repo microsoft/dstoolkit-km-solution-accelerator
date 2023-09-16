@@ -12,6 +12,7 @@ import { FacetType } from "../../types/facet";
 import { HeaderMenu } from "../../components/headerMenu/headerMenu";
 import { FilterButton } from "../../components/filter/showHideFilterButton";
 import { DateFilterDropdownMenu } from "../../components/datePicker/dateFilterDropdownMenu";
+import { SearchResultCard } from "../../components/searchResult/searchResultCard";
 
 interface HomeProps {
     isSearchResultsPage?: boolean;
@@ -164,7 +165,10 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                                     <Spinner size="extra-large" />
                                 </div>
                             )}
-                            {!isLoading && <>Page content</>}
+                            {!isLoading && 
+                                <div className="ml-5 mt-5" >
+                                  <SearchResultCard />
+                                </div>}
                         </div>
                     </div>
 
