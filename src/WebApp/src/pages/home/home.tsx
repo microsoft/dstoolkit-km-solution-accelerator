@@ -11,6 +11,7 @@ import { Filter } from "../../components/filter/filter";
 import { FacetType } from "../../types/facet";
 import { HeaderMenu } from "../../components/headerMenu/headerMenu";
 import { FilterButton } from "../../components/filter/showHideFilterButton";
+import { DateFilterDropdownMenu } from "../../components/datePicker/dateFilterDropdownMenu";
 
 interface HomeProps {
     isSearchResultsPage?: boolean;
@@ -87,7 +88,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                 className="flex flex-col justify-between bg-contain bg-right-bottom bg-no-repeat"
                 size={!isSearchResultsPage ? "large" : "medium"}
             >
-                <div className="justify-self-center">
+                <div className="-ml-8">
                     <HeaderBar location={NavLocation.Home} />
                 </div>
                 <div>
@@ -119,7 +120,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
 
             <main className="w-full pt-2">
                 <div className="grid grid-cols-3 gap-x-4 gap-y-8 md:grid-cols-5 md:gap-x-8">
-                        <div className="col-span-1 col-start-1 pt-1 ml-12">
+                        <div className="col-span-1 col-start-1 pt-1 ml-8">
                             <FilterButton className="" onFilterPress={onFilterPress} />
                         </div>
 
@@ -139,10 +140,21 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                     <div className="absolute left-0 right-0 mt-11 w-full border-b border-b-neutral-300"></div>
 
                     {filterOpen && (
-                        <div className="col-span-1 col-start-1 hidden px-4 md:block">
+                        <div className="col-span-1 col-start-1 hidden px-4 -ml-3 md:block">
                             <Filter className="" onFilterChanged={onFilterChanged} />
                         </div>
                     )}
+
+                    <div className="col-span-3 col-start-2 ">
+                        <div className="flex justify-between">
+                            <div className="flex ml-5 mt-1">
+                                About X Results 
+                            </div>
+                            <div className="flex mr-40 mt-1">
+                                <DateFilterDropdownMenu></DateFilterDropdownMenu>
+                            </div>
+                        </div>
+                    </div>
 
                     <div className="col-span-2 col-start-2 px-3 md:col-span-3 md:col-start-2 ">
                         {isLoading && (
