@@ -98,11 +98,11 @@ export function Home({ isSearchResultsPage }: HomeProps) {
 
                         <SearchBox
                             ref={searchBoxRef}
-                            className={`w-full flex ${
+                            className={`flex w-full ${
                                 // !isSearchResultsPage
                                 //     ? "items-center"
                                 //     :
-                                "mt-10 pt-5 pb-5 -mb-5 justify-center justify-items-center max-sm:items-center"
+                                "-mb-5 mt-10 justify-center justify-items-center pb-5 pt-5 max-sm:items-center"
                             }`}
                             labelClassName={`font-semilight ${
                                 // !isSearchResultsPage
@@ -120,18 +120,23 @@ export function Home({ isSearchResultsPage }: HomeProps) {
 
             <main className="w-full pt-2">
                 <div className="grid grid-cols-3 gap-x-4 gap-y-8 md:grid-cols-5 md:gap-x-8">
-                        <div className="col-span-1 col-start-1 pt-1 ml-8">
-                            <FilterButton className="" onFilterPress={onFilterPress} />
-                        </div>
+                    <div className="col-span-1 col-start-1 ml-8 pt-1">
+                        <FilterButton className="" onFilterPress={onFilterPress} />
+                    </div>
 
-                        <div className="col-start-2 col-span-1  md:col-start-2 md:col-span-3 flex">
-                            <HeaderMenu className="" />
-                            <Button className="" onClick={() => console.log("click")} icon={<img src="\img\Copilot.png"></img> } appearance="subtle">
-                                Copilot
-                            </Button>
-                        </div>
+                    <div className="col-span-1 col-start-2  flex md:col-span-3 md:col-start-2">
+                        <HeaderMenu className="" />
+                        <Button
+                            className=""
+                            onClick={() => console.log("click")}
+                            icon={<img src="\img\Copilot.png"></img>}
+                            appearance="subtle"
+                        >
+                            Copilot
+                        </Button>
+                    </div>
 
-                        {/* <div className="col-start-2 col-span-2 md:col-start-4 md:col-span-1 md:mt-2">
+                    {/* <div className="col-start-2 col-span-2 md:col-start-4 md:col-span-1 md:mt-2">
                             <Button className="" onClick={() => console.log("click")} icon={<img src="\img\Copilot.png"></img> } appearance="subtle">
                                 Copilot
                             </Button>
@@ -147,23 +152,23 @@ export function Home({ isSearchResultsPage }: HomeProps) {
 
                     <div className="col-span-3 col-start-2 ">
                         <div className="flex justify-between">
-                            <div className="flex ml-5">
-                                About X Results 
-                            </div>
-                            <div className="flex mr-40 ">
+                            <div className="ml-5 flex">About X Results</div>
+                            <div className="mr-40 flex ">
                                 <DateFilterDropdownMenu />
                             </div>
                         </div>
+
+                        <div className="flex flex-col">
+                            {isLoading && (
+                                <div className="mt-16 w-full">
+                                    <Spinner size="extra-large" />
+                                </div>
+                            )}
+                            {!isLoading && <>Page content</>}
+                        </div>
                     </div>
 
-                    <div className="col-span-2 col-start-2 px-3 md:col-span-3 md:col-start-2 ">
-                        {isLoading && (
-                            <div className="mt-16 w-full">
-                                <Spinner size="extra-large" />
-                            </div>
-                        )}
-                        {!isLoading && <>Page content</>}
-                    </div>
+                    
                 </div>
             </main>
         </>
