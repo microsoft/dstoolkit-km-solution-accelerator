@@ -13,6 +13,7 @@ import { HeaderMenu } from "../../components/headerMenu/headerMenu";
 import { FilterButton } from "../../components/filter/showHideFilterButton";
 import { DateFilterDropdownMenu } from "../../components/datePicker/dateFilterDropdownMenu";
 import { SearchResultCard } from "../../components/searchResult/searchResultCard";
+import { ChatIntegration } from "../../components/copilot/ChatIntegration";
 
 interface HomeProps {
     isSearchResultsPage?: boolean;
@@ -25,6 +26,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
     const [searchParams, setSearchParams] = useSearchParams();
     const [filters, setFilters] = useState<Record<FacetType, string[]>>();
     const [filterOpen, setFilterOpen] = useState<boolean>(true);
+    const [showCopilot, setShowCopilot] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
@@ -66,6 +68,11 @@ export function Home({ isSearchResultsPage }: HomeProps) {
     function onFilterPress(): void {
         console.log("*** onFilterPress");
         setFilterOpen(!filterOpen);
+    }
+
+    function toggleCopilot(): void {
+        console.log("*** toggleCopilot");
+        setShowCopilot(!showCopilot);
     }
 
     // Custom hook that can be used instead of useEffect() with zero dependencies.
@@ -119,8 +126,8 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                 </div>
             </Header>
 
-            <main className="w-full pt-2">
-                <div className="grid grid-cols-3 gap-x-4 gap-y-8 md:grid-cols-5 md:gap-x-8">
+            <main className="w-full pt-2 border border-red-400">
+                <div className="grid gap-y-8 grid-cols-5 gap-x-2">
                     <div className="col-span-1 col-start-1 ml-8 pt-1">
                         <FilterButton className="" onFilterPress={onFilterPress} />
                     </div>
@@ -129,7 +136,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                         <HeaderMenu className="" />
                         <Button
                             className=""
-                            onClick={() => console.log("click")}
+                            onClick={() => toggleCopilot()}
                             icon={<img src="\img\Copilot.png"></img>}
                             appearance="subtle"
                         >
@@ -165,14 +172,21 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                                     <Spinner size="extra-large" />
                                 </div>
                             )}
-                            {!isLoading && 
-                                <div className="ml-5 mt-5" >
-                                  <SearchResultCard />
-                                </div>}
+                            {!isLoading && (
+                                <div className="ml-5 mt-5">
+                                    <SearchResultCard />
+                                </div>
+                            )}
                         </div>
                     </div>
 
-                    
+                    {showCopilot && (
+                        <div className="col-span-1 col-start-5 -mt-8">
+                            <div className="flex flex-col">
+                                <ChatIntegration />
+                            </div>
+                        </div>
+                    )}
                 </div>
             </main>
         </>
