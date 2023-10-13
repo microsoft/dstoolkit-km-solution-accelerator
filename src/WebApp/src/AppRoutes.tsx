@@ -1,32 +1,32 @@
-import React, { useEffect } from "react";
-import { Routes, Route, Outlet } from "react-router-dom";
-import { useMsal } from "@azure/msal-react";
-import { InteractionStatus, RedirectRequest } from "@azure/msal-browser";
-import { Auth } from "./utils/auth/auth";
+import { Routes, Route } from "react-router-dom";
 import { Home } from "./pages/home/home";
 
 function App() {
-    // const { accounts } = useMsal();
-
     return (
         <Routes>
             <Route path="/" element={<Home />} />
-
             <Route path="/search" element={<Home isSearchResultsPage={true} />} />
-
-            {/* <Route
-                path="/something"
-                element={
-                    <ProtectedRoute isAllowed={isPlatformAdmin(accounts)}>
-                        <PageA />
-                    </ProtectedRoute>
-                }
-            /> */}
             <Route path="*" element={<NotFound />} />
         </Routes>
     );
 }
 
+function NotFound() {
+    return (
+        <main className="p-8 md:px-24">
+            <h1>Not Found</h1>
+        </main>
+    );
+}
+
+/*
+* No need to use ProtectedRoute component as all routes in this app are protected and we use a MsalAuthenticationTemplate at App level.
+* <Route path="/something"
+*         element={<ProtectedRoute isAllowed={isPlatformAdmin(accounts)}>
+*                        <PageA />
+*                 </ProtectedRoute>}
+* /> 
+*
 function ProtectedRoute({ isAllowed, children }: { isAllowed?: boolean; children: JSX.Element }): JSX.Element | null {
     const { instance, inProgress } = useMsal();
 
@@ -47,14 +47,6 @@ function ProtectedRoute({ isAllowed, children }: { isAllowed?: boolean; children
     }
 }
 
-function NotFound() {
-    return (
-        <main className="p-8 md:px-24">
-            <h1>Not Found</h1>
-        </main>
-    );
-}
-
 function Unauthorized() {
     const { instance } = useMsal();
 
@@ -68,4 +60,5 @@ function Unauthorized() {
         </main>
     );
 }
+*/
 export default App;
