@@ -14,7 +14,7 @@ const useStyles = makeStyles({
 export function SearchResultCard() {
     const styles = useStyles();
     return (
-        <div className="min-h-80 flex min-w-[278px] flex-grow flex-col overflow-hidden rounded-b-xl bg-white py-5 pl-5 pr-4 shadow-lg">
+        <div className="min-h-80 flex min-w-[278px] flex-grow flex-col overflow-hidden bg-white py-5 pl-5 pr-4 ">
             <div className="-ml-5 -mr-4 -mt-5 h-1" />
             <div className="flex flex-row ">
                 <div className="flex items-center">imggggggggggg</div>
@@ -30,7 +30,7 @@ export function SearchResultCard() {
                 </div>
             </div>
 
-            <h6 className="border-b border-b-neutral-300 pb-5"></h6>
+            
             <div className="flex flex-1 min-h-[80px] text-ellipsis pt-2 ">
                 Fabric integrates proven technologies like Azure Data Factory, Azure Synapse, and Microsoft Power BI
                 into a single unified product, empowering data and business professionals alike to unlock the potential
@@ -52,6 +52,7 @@ export function SearchResultCard() {
                     </Tag>
                 </TagGroup>
             </div>
+            <h6 className="border-b border-b-neutral-300 pb-5"></h6>
         </div>
     );
 }
