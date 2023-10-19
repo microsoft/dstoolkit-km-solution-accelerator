@@ -13,7 +13,7 @@ namespace Knowledge.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class SearchController : AbstractApiController
+    public class SearchController : CustomControllerBase
     {
         private const string DEFAULT_INDEX_NAME = "index";
 
@@ -35,7 +35,7 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getlatestdocuments")]
-        public async System.Threading.Tasks.Task<IActionResult> GetLatestDocumentsAsync(ApiSearchRequest request)
+        public async Task<IActionResult> GetLatestDocumentsAsync(ApiSearchRequest request)
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();

@@ -10,8 +10,8 @@ import os
 
 from . import LanguageConstants
 
-endpoint = os.environ["LANGUAGE_ENDPOINT"]
-key = os.environ["LANGUAGE_KEY"]
+endpoint = os.environ["COGNITIVE_SERVICES_ENDPOINT"]
+key = os.environ["COGNITIVE_SERVICES_KEY"]
 
 #https://docs.microsoft.com/en-us/azure/cognitive-services/language-service/concepts/data-limits#maximum-characters-per-document
 MAX_CHARS_PER_DOC=int(os.environ["MAX_CHARS_PER_DOC"])

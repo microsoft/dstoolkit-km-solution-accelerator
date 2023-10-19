@@ -14,7 +14,7 @@ namespace Knowledge.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AnswersController : AbstractApiController
+    public class AnswersController : CustomControllerBase
     {
         ISemanticSearchService semanticService;
 
@@ -27,7 +27,7 @@ namespace Knowledge.API.Controllers
 
 
         [HttpPost("getanswers")]
-        public async System.Threading.Tasks.Task<IActionResult> GetAnswersAsync(ApiSearchRequest request)
+        public async Task<IActionResult> GetAnswersAsync(ApiSearchRequest request)
         {
             request.permissions = GetUserPermissions();
 

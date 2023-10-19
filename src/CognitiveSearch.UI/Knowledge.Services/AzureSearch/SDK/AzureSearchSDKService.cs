@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using Azure;
+using Azure.Identity;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
@@ -407,7 +408,7 @@ namespace Knowledge.Services.AzureSearch.SDK
 
         public async Task RunIndexer(string indexerName)
         {
-            SearchIndexerClient _searchIndexerClient = new(new Uri($"https://{this.serviceConfig.ServiceName}.search.windows.net/"), new AzureKeyCredential(this.serviceConfig.AdminKey));
+            SearchIndexerClient _searchIndexerClient = new(new Uri($"https://{this.serviceConfig.ServiceName}.search.windows.net/"), new DefaultAzureCredential());
 
             var indexStatus = await _searchIndexerClient.GetIndexerStatusAsync(indexerName);
             if (indexStatus.Value.LastResult.Status != IndexerExecutionStatus.InProgress)
@@ -834,10 +835,6 @@ namespace Knowledge.Services.AzureSearch.SDK
         {
             throw new NotImplementedException();
         }
-
-        public Task<SearchResponse> GetSimilarDocuments(IngressSearchRequest request)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

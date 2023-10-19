@@ -12,8 +12,8 @@ from azure.storage.blob import BlobClient,generate_blob_sas, generate_container_
 
 from .. import LanguageConstants
 
-endpoint = os.environ["DOCUMENT_TRANSLATION_ENDPOINT"]
-subscription_key = os.environ["DOCUMENT_TRANSLATION_KEY"]
+endpoint = os.environ["COGNITIVE_SERVICES_ENDPOINT"]
+subscription_key = os.environ["COGNITIVE_SERVICES_ENDPOINT"]
 target_language = os.environ["DOCUMENT_TRANSLATION_LANGUAGE"]
 
 credential = AzureKeyCredential(subscription_key)

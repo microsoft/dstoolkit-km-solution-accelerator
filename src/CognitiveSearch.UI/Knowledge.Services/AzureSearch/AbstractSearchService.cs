@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Azure;
+using Azure.Identity;
 using Azure.Search.Documents.Indexes;
-using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Sas;
 using Knowledge.Configuration;
@@ -34,23 +33,20 @@ namespace Knowledge.Services.AzureSearch
 
         protected virtual void InitSearchClients()
         {
-            // Create an HTTP reference to the catalog index
-            this._searchIndexClient = new SearchIndexClient(new Uri($"https://{this.serviceConfig.ServiceName}.search.windows.net/"), new AzureKeyCredential(this.serviceConfig.AdminKey));
+            _searchIndexClient = new SearchIndexClient(new Uri($"https://{this.serviceConfig.ServiceName}.search.windows.net/"), new DefaultAzureCredential());
 
-            foreach (var index in this.serviceConfig.GetSearchIndexes())
+            try
             {
-                try
-                {
-                    var schema = new SearchSchema().AddFields(_searchIndexClient.GetIndex(index).Value.Fields);
+                var schema = new SearchSchema().AddFields(_searchIndexClient.GetIndex(serviceConfig.IndexName).Value.Fields);
 
-                    SearchModels.Add(new SearchModel(schema, this.serviceConfig, this.graphConfig, index));
+                SearchModels.Add(new SearchModel(schema, this.serviceConfig, this.graphConfig, serviceConfig.IndexName));
 
-                }
-                catch (Exception)
-                {
-                    throw new Exception("Could not initialise Search Models. Validate Search connectivity.");
-                }
             }
+            catch (Exception ex)
+            {
+                throw new Exception("Could not initialise Search Models. Validate Search connectivity.");
+            }
+
         }
 
         protected SearchModel GetModel(string indexName = null)
@@ -78,20 +74,16 @@ namespace Knowledge.Services.AzureSearch
         protected Dictionary<string, string> GetContainerSasUris()
         {
             // data source information. Currently supporting x data sources indexed by different indexers
-            List<string> s_containerAddresses = new();
-
             // We need to refresh the s_tokens every time or they will become invalid.
             Dictionary<string, string> s_tokens = new();
 
-            string accountName = storageConfig.StorageAccountName;
-            string accountKey = storageConfig.StorageAccountKey;
+            var blobClient = new BlobServiceClient(new Uri($"https://{storageConfig.StorageAccountName}.blob.core.windows.net/"), new DefaultAzureCredential());
 
-            StorageSharedKeyCredential storageSharedKeyCredential = new(accountName, accountKey);
-            s_containerAddresses = this.storageConfig.GetStorageContainerAddresses();
-
-            for (int i = 0; i < s_containerAddresses.Count; i++)
+            var containers = storageConfig.StorageContainers.Split(',');
+            for (int i = 0; i < containers.Length; i++)
             {
-                BlobContainerClient container = new(new Uri(s_containerAddresses[i]), new StorageSharedKeyCredential(accountName, accountKey));
+                var container = blobClient.GetBlobContainerClient(containers[0]);
+
                 var policy = new BlobSasBuilder
                 {
                     Protocol = SasProtocol.HttpsAndHttp,
@@ -102,13 +94,11 @@ namespace Knowledge.Services.AzureSearch
                     IPRange = new SasIPRange(IPAddress.None, IPAddress.None)
                 };
                 policy.SetPermissions(BlobSasPermissions.Read);
-                var sas = policy.ToSasQueryParameters(storageSharedKeyCredential);
-                BlobUriBuilder sasUri = new BlobUriBuilder(container.Uri)
-                {
-                    Sas = sas
-                };
 
-                s_tokens.TryAdd(s_containerAddresses[i], "?" + sasUri.Sas.ToString());
+                var userDelegationKey = blobClient.GetUserDelegationKey(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddHours(4));
+
+                var sas = policy.ToSasQueryParameters(userDelegationKey, container.AccountName).ToString();
+                s_tokens.TryAdd($"https://{storageConfig.StorageAccountName}.blob.core.windows.net/{containers[i]}", "?" + sas);
             }
 
             return s_tokens;

@@ -16,7 +16,7 @@ namespace Knowledge.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class DocumentController : AbstractApiController
+    public class DocumentController : CustomControllerBase
     {
         private IMetadataService metadataService { get; set; }
 

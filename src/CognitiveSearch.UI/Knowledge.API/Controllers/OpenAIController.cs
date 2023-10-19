@@ -13,7 +13,7 @@ namespace Knowledge.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class OpenAIController : AbstractApiController {
+    public class OpenAIController : CustomControllerBase {
 
         private readonly IOpenAIService oaiService;
 

@@ -138,59 +138,6 @@
         "Tags": "organizations,countries,key_phrases,document_segments,email/message_from,email/message_to"
       },
       {
-        "id": "chat",
-        "pageTitle": "Knowledge Mining - Open AI Chat",
-        "name": "Chat",
-        "title": "Have some conversation with ChatGPT !",
-        "enable": true,
-        "path": "/OpenAI/Index",
-        "svgicon": "bi-chat-square-text.svg",
-        "enableExcelExport": false,
-        "enableDateRange": false
-      },
-      {
-        "id": "m365",
-        "pageTitle": "Knowledge Mining - Microsoft 365",
-        "name": "M365",
-        "title": "Explore your Microsoft 365 results here",
-        "enable": true,
-        "path": "/M365/Index",
-        "svgicon": "M365.png",
-        "enableExcelExport": false,
-        "enableDateRange": false
-      },
-      {
-        "id": "web",
-        "pageTitle": "Knowledge Mining - Web",
-        "name": "Bing",
-        "title": "Search across the web",
-        "enable": true,
-        "path": "/Web/Index",
-        "searchMethod": "Microsoft.Web.WebSearch",
-        "svgicon": "newBing_ic_16.svg",
-        "placeHolder": "Explore the web ...",
-        "isSemanticCapable": false,
-        "enableExcelExport": false,
-        "enableDynamicFacets": false,
-        "ResultsRenderings": [
-          {
-            "name": "document",
-            "title": "View web pages as list",
-            "fonticon": "bi bi-list",
-            "method": "Microsoft.Web.UpdateWebResultsAsList",
-            "filter": "",
-            "isdefault": true
-          },
-          {
-            "name": "pages",
-            "title": "Only view document pages",
-            "fonticon": "bi bi-grid",
-            "method": "Microsoft.Web.UpdateWebResultsAsCard",
-            "filter": ""
-          }
-        ]
-      },
-      {
         "id": "images",
         "pageTitle": "Knowledge Mining - Visuals",
         "name": "Visuals",
@@ -292,18 +239,15 @@
         "message": "Please select one or more Entities to view their relationships..."
       },
       {
-        "id": "news",
-        "pageTitle": "Knowledge Mining - News",
-        "name": "Live News",
-        "title": "Look out the latest news",
+        "id": "chat",
+        "pageTitle": "Knowledge Mining - Open AI Chat",
+        "name": "Copilot",
+        "title": "Have some conversation with ChatGPT !",
         "enable": true,
-        "path": "/News/Index",
-        "searchMethod": "Microsoft.News.LiveNewsSearch",
-        "svgicon": "chat.svg",
+        "path": "/OpenAI/Index",
+        "svgicon": "bi-chat-square-text.svg",
         "enableExcelExport": false,
-        "enableDateRange": false,
-        "placeHolder": "Explore the latest news...",
-        "message": "Please select one or more News sources in the dropdown menu to explore the latest news."
+        "enableDateRange": false
       }
     ]
   }

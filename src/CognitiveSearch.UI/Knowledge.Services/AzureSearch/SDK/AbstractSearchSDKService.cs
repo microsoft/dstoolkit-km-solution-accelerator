@@ -13,14 +13,10 @@ namespace Knowledge.Services.AzureSearch.SDK
         protected override void InitSearchClients()
         {
             base.InitSearchClients();
-
-            foreach (var index in this.serviceConfig.GetSearchIndexes())
-            {
-                _searchClients.Add(_searchIndexClient.GetSearchClient(index));
-            }
+            _searchClients.Add(_searchIndexClient.GetSearchClient(serviceConfig.IndexName));
         }
 
-        protected SearchClient GetSearchClient(string indexName=null)
+        protected SearchClient GetSearchClient(string indexName = null)
         {
             if (string.IsNullOrEmpty(indexName))
             {

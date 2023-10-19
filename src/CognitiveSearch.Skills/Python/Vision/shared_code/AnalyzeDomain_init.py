@@ -12,8 +12,8 @@ import base64
 from io import BytesIO
 import os
 
-endpoint = os.environ["COMPUTER_VISION_ENDPOINT"]
-key = os.environ["COMPUTER_VISION_KEY"]
+endpoint = os.environ["COGNITIVE_SERVICES_ENDPOINT"]
+key = os.environ["COGNITIVE_SERVICES_KEY"]
 
 credentials = CognitiveServicesCredentials(key)
 computer_vision_client = ComputerVisionClient(

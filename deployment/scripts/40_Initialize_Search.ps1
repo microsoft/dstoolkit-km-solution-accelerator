@@ -11,9 +11,9 @@ if ($EnvironmentName)
     .  $initPath -Name $EnvironmentName -NoLogin
 }
 
-Start-Transcript
+# Start-Transcript
 
 # Configure the Search Service
 Initialize-Search
 
-Stop-Transcript
+# Stop-Transcript

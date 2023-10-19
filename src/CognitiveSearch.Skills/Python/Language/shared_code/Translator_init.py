@@ -12,7 +12,7 @@ import time
 import math
 
 endpoint = os.environ["TEXT_TRANSLATION_ENDPOINT"]
-subscription_key = os.environ["TEXT_TRANSLATION_KEY"]
+subscription_key = os.environ["COGNITIVE_SERVICES_KEY"]
 location = os.environ["TEXT_TRANSLATION_LOCATION"]
 version = os.environ["TEXT_TRANSLATION_VERSION"]
 # retry = int(os.environ["TEXT_TRANSLATION_RETRY"])

@@ -8,8 +8,8 @@ from azure.core.credentials import AzureKeyCredential
 from azure.ai.textanalytics import TextAnalyticsClient
 import os
 
-endpoint = os.environ["LANGUAGE_ENDPOINT"]
-key = os.environ["LANGUAGE_KEY"]
+endpoint = os.environ["COGNITIVE_SERVICES_ENDPOINT"]
+key = os.environ["COGNITIVE_SERVICES_KEY"]
 
 if 'LANGUAGE_MODEL_VERSION' in os.environ:
     model=os.environ["LANGUAGE_MODEL_VERSION"]

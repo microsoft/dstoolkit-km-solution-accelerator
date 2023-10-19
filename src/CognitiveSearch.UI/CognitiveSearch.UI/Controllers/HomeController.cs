@@ -25,7 +25,7 @@ namespace CognitiveSearch.UI.Controllers
 
         public IActionResult Index()
         {
-            return View(this.GetLandingModel());
+            return RedirectToAction("Search");
         }
 
         #region Search 

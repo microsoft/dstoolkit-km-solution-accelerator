@@ -16,7 +16,7 @@ if ($EnvironmentName)
     .  $initPath -Name $EnvironmentName -NoLogin
 }
 
-Start-Transcript
+# Start-Transcript
 
 if ($DockerBuild) {
     Build-DockerImages;
@@ -25,12 +25,12 @@ else {
     Write-Host "Skipping Docker images build..."
 }
 
-if ($NoProvision) {
-    Write-Host "Skipping Provisionning..."
-}
-else {
-    New-Functions;
-}
+# if ($NoProvision) {
+#     Write-Host "Skipping Provisionning..."
+# }
+# else {
+#     New-Functions;
+# }
 
 # if ($Upgrade) {
 #     Upgrade-Functions;
@@ -43,4 +43,4 @@ Get-FunctionsKeys
 
 Sync-Config
 
-Stop-Transcript
+# Stop-Transcript

@@ -9,25 +9,22 @@ using Knowledge.Configuration.Graph;
 using Knowledge.Configuration.Maps;
 using Knowledge.Configuration.OpenAI;
 using Knowledge.Configuration.SemanticSearch;
-using Knowledge.Configuration.SpellChecking;
 using Knowledge.Configuration.Translation;
-using Knowledge.Configuration.WebSearch;
 using Knowledge.Services;
 using Knowledge.Services.Answers;
 using Knowledge.Services.AzureSearch;
 using Knowledge.Services.AzureSearch.SDK;
-using Knowledge.Services.AzureStorage;
 using Knowledge.Services.Chat;
 using Knowledge.Services.Graph.Facet;
 using Knowledge.Services.Metadata;
+using Knowledge.Services.OpenAI;
 using Knowledge.Services.SemanticSearch;
-using Knowledge.Services.SpellChecking;
 using Knowledge.Services.Translation;
-using Knowledge.Services.WebSearch;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using Neo4j.Driver;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
@@ -44,12 +41,14 @@ namespace Knowledge.API
             this.env = environment;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            if ( ! env.IsDevelopment())
+            var azureAd = new AzureAdConfig();
+            Configuration.GetSection("AzureAd").Bind(azureAd);
+
+            if (true/*!env.IsDevelopment()*/)
             {
-                services.AddMicrosoftIdentityWebAppAuthentication(Configuration);
+                //services.AddMicrosoftIdentityWebAppAuthentication(Configuration);
 
                 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
@@ -61,7 +60,8 @@ namespace Knowledge.API
                         .Build();
                 });
             }
-            else {
+            else
+            {
                 services.AddAuthorization(x =>
                 {
                     x.DefaultPolicy = new AuthorizationPolicyBuilder()
@@ -71,23 +71,46 @@ namespace Knowledge.API
             }
 
             services.AddControllers().AddNewtonsoftJson(jsonOptions =>
-            {
-                jsonOptions.SerializerSettings.Converters.Add(new StringEnumConverter());
-                jsonOptions.SerializerSettings.ContractResolver = new DefaultContractResolver
-                {
-                    //NamingStrategy = new CamelCaseNamingStrategy()
-                    NamingStrategy = new CamelCaseNamingStrategy
-                    {
-                        OverrideSpecifiedNames = false
-                    }
-                };
-                jsonOptions.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.None;
-            });
+                        {
+                            jsonOptions.SerializerSettings.Converters.Add(new StringEnumConverter());
+                            jsonOptions.SerializerSettings.ContractResolver = new DefaultContractResolver
+                            {
+                                NamingStrategy = new CamelCaseNamingStrategy
+                                {
+                                    OverrideSpecifiedNames = false
+                                }
+                            };
+                            jsonOptions.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.None;
+                        });
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "KnowledgeAPI", Version = "v1" });
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Description = "OAuth2.0 Auth Code with PKCE",
+                    Name = "oauth2",
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        AuthorizationCode = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri($"{azureAd.Instance}{azureAd.TenantId}/oauth2/v2.0/authorize"),
+                            TokenUrl = new Uri($"{azureAd.Instance}{azureAd.TenantId}/oauth2/v2.0/token"), 
+                            Scopes = azureAd.Scopes?.ToDictionary(x => x, x => x)
+                        }
+                    }
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                    {
+                        new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
+            },
+            azureAd.Scopes
+        }
+    });
             });
 
             //
@@ -97,7 +120,7 @@ namespace Knowledge.API
 
             // The following line enables Application Insights telemetry collection.
             services.AddApplicationInsightsTelemetry();
-         
+
             StorageConfig sconfigData = Configuration.GetSection("StorageConfig").Get<StorageConfig>();
             services.AddSingleton<StorageConfig>(_ => sconfigData);
 
@@ -114,9 +137,6 @@ namespace Knowledge.API
             Neo4jConfig neo4jonfigData = Configuration.GetSection("Neo4jConfig").Get<Neo4jConfig>();
             services.AddSingleton<Neo4jConfig>(_ => neo4jonfigData);
 
-            WebSearchConfig wsconfigData = Configuration.GetSection("WebSearchConfig").Get<WebSearchConfig>();
-            services.AddSingleton<WebSearchConfig>(_ => wsconfigData);
-
             ChatConfig chatConfigData = Configuration.GetSection("ChatConfig").Get<ChatConfig>();
             services.AddSingleton<ChatConfig>(_ => chatConfigData);
 
@@ -126,14 +146,8 @@ namespace Knowledge.API
             AnswersConfig qconfigData = Configuration.GetSection("AnswersConfig").Get<AnswersConfig>();
             services.AddSingleton<AnswersConfig>(_ => qconfigData);
 
-            //QnAConfig qconfigData = Configuration.GetSection("QnAConfig").Get<QnAConfig>();
-            //services.AddSingleton<QnAConfig>(_ => qconfigData);
-
             TranslationConfig tconfigData = Configuration.GetSection("TranslationConfig").Get<TranslationConfig>();
             services.AddSingleton<TranslationConfig>(_ => tconfigData);
-
-            SpellCheckingConfig scconfigData = Configuration.GetSection("SpellCheckConfig").Get<SpellCheckingConfig>();
-            services.AddSingleton<SpellCheckingConfig>(_ => scconfigData);
 
             MapConfig mapConfigData = Configuration.GetSection("MapConfig").Get<MapConfig>();
             services.AddSingleton<MapConfig>(_ => mapConfigData);
@@ -143,32 +157,34 @@ namespace Knowledge.API
 
 
             // Services Singletons
-            services.AddSingleton<IStorageService, StorageService>();
             services.AddSingleton<IAnswersService, AnswersService>();
-            services.AddSingleton<ISpellCheckingService, SpellCheckingService>();
             services.AddSingleton<ITranslationService, TranslationService>();
             services.AddSingleton<IChatService, ChatService>();
             services.AddSingleton<IMetadataService, MetadataService>();
             services.AddSingleton<ISemanticSearchService, SemanticSearch>();
-            services.AddSingleton<IWebSearchService, WebSearchService>();
             services.AddSingleton<IAzureSearchService, AzureSearchService>();
             services.AddSingleton<IAzureSearchSDKService, AzureSearchSDKService>();
             services.AddSingleton<IFacetGraphService, FacetGraphService>();
-
+            services.AddSingleton<IOpenAIService, OpenAIService>();
             services.AddSingleton<IQueryService, QueryService>();
 
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            // if (env.IsDevelopment())
+            // {
+            app.UseDeveloperExceptionPage();
+            var clientid = Configuration.GetSection("AzureAd:ClientId").Value;
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                app.UseDeveloperExceptionPage();
-
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "KnowledgeAPI v1"));
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "KnowledgeAPI v1");
+                c.OAuthClientId(clientid);
+                c.OAuthUsePkce();
+                c.OAuthScopeSeparator(" ");
+            });
+            //}
 
             app.UseHttpsRedirection();
 

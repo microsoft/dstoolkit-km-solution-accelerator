@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Knowledge.API.Controllers
 {
     [Authorize]
-    public class AbstractApiController : ControllerBase
+    public class CustomControllerBase : ControllerBase
     {
         // Client logs all searches in Application Insights
         protected TelemetryClient telemetryClient;
@@ -20,9 +20,7 @@ namespace Knowledge.API.Controllers
         protected SearchServiceConfig Config { get; set; }
 
         protected IQueryService QueryService { get; set; }
-
-        protected string ConfigurationError { get; set; }
-
+        
         protected IActionResult CreateContentResultResponse(object result)
         {
             return new JsonResult(result);

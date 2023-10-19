@@ -37,8 +37,8 @@ class DateTimeEncoder(JSONEncoder):
 #
 # FORM Rcognizer variables
 #
-form_endpoint = os.environ["FORMS_RECOGNIZER_ENDPOINT"]
-form_key = os.environ["FORMS_RECOGNIZER_KEY"]
+form_endpoint = os.environ["COGNITIVE_SERVICES_ENDPOINT"]
+form_key = os.environ["COGNITIVE_SERVICES_KEY"]
 form_model=os.environ["FORMS_RECOGNIZER_MODEL"]
 
 form_recognizer_client = FormRecognizerClient(form_endpoint, AzureKeyCredential(form_key))

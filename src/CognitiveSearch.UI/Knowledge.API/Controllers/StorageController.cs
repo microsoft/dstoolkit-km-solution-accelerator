@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Azure.Identity;
 using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
@@ -10,6 +11,7 @@ using Knowledge.Services.Helpers;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Neo4j.Driver;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -18,7 +20,7 @@ namespace Knowledge.API.Controllers.api
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class StorageController : AbstractApiController
+    public class StorageController : CustomControllerBase
     {
         private const string BLOB_RETRY_TAG = "AzureSearch_RetryTag";
 
@@ -244,16 +246,10 @@ namespace Knowledge.API.Controllers.api
 
         private BlobContainerClient GetStorageContainer(int storageIndex = 0)
         {
-            string accountName = _storageConfig.StorageAccountName;
-            string accountKey = _storageConfig.StorageAccountKey;
-
             // the first container add. is the primary one where we should upload content
-            var container = new BlobContainerClient(new Uri(_storageConfig.GetStorageContainerAddresses()[storageIndex]), new StorageSharedKeyCredential(accountName, accountKey));
-            return container;
-        }
-        private BlobContainerClient GetStorageContainer(string containerName)
-        {
-            return new BlobContainerClient(_storageConfig.StorageConnectionString, containerName);
+            var blobClient = new BlobServiceClient(new Uri($"https://{_storageConfig.StorageAccountName}.blob.core.windows.net/"), new DefaultAzureCredential());
+            var client = blobClient.GetBlobContainerClient(_storageConfig.StorageContainers.Split(',')[storageIndex]);
+            return client;
         }
 
         [HttpPost("tagblob")]
@@ -265,10 +261,9 @@ namespace Knowledge.API.Controllers.api
                 {
                     BlobUriBuilder bloburi = new(new Uri(request.path));
 
-                    var container = GetStorageContainer(bloburi.BlobContainerName);
-
+                    var blobClient = new BlobServiceClient(new Uri($"https://{_storageConfig.StorageAccountName}.blob.core.windows.net/"), new DefaultAzureCredential());                    
+                    var container = blobClient.GetBlobContainerClient(bloburi.BlobContainerName);         
                     BlobClient blockBlob = container.GetBlobClient(bloburi.BlobName);
-
                     BlobProperties blobprops = await blockBlob.GetPropertiesAsync();
 
                     IDictionary<string, string> metadata = new Dictionary<string, string>();

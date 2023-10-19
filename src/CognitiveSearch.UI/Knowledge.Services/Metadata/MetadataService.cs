@@ -3,6 +3,7 @@
 
 namespace Knowledge.Services.Metadata
 {
+    using Azure.Identity;
     using Azure.Storage;
     using Azure.Storage.Blobs;
     using Knowledge.Configuration.AzureStorage;
@@ -18,20 +19,22 @@ namespace Knowledge.Services.Metadata
     {
         private BlobContainerClient container { get; set; }
 
-        private new StorageConfig config { get; set; }
+        private new StorageConfig _config { get; set; }
 
-        public MetadataService(TelemetryClient telemetry, StorageConfig _config)
+        public MetadataService(TelemetryClient telemetry, StorageConfig config)
         {
             this.telemetryClient = telemetry;
-            this.config = _config;
+            _config = config;
         }
 
         public async Task<string> GetDocumentMetadataAsync(string documentPath, string type)
         {
             if (! String.IsNullOrEmpty(documentPath))
             {
-                container = new BlobContainerClient(config.StorageConnectionString, IMetadataService.Container);
+                var blobClient = new BlobServiceClient(new Uri($"https://{_config.StorageAccountName}.blob.core.windows.net/"), new DefaultAzureCredential());                
+                var container = blobClient.GetBlobContainerClient(IMetadataService.Container);
 
+                
                 BlobUriBuilder blobUriBuilder = new(new Uri(documentPath));
 
                 if (String.IsNullOrEmpty(type))
