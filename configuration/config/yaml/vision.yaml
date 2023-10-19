@@ -29,7 +29,7 @@ spec:
         - name: APPINSIGHTS_INSTRUMENTATIONKEY
           value: "{{param.appInsightsServiceKey}}"
         - name: AzureWebJobsStorage
-          value: "{{param.techStorageConnectionString}}"
+          value: "{{param.techStorageConnString}}"
         - name: COGNITIVE_SERVICES_ENDPOINT
           value: "https://{{param.cogSvcForm}}.cognitiveservices.azure.com"
         - name: COGNITIVE_SERVICES_KEY

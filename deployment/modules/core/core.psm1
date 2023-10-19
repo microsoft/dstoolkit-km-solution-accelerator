@@ -535,13 +535,11 @@ function Get-AppInsightsInstrumentationKey {
     Save-Parameters  
 }
     
-function Get-TechStorageAccountAccessKeys {
-    
+function Get-TechStorageAccountAccessKeys {    
     $techStorageAccountKey = az storage account keys list --account-name $params.techStorageAccountName -g $config.resourceGroupName --query [0].value  --out tsv
-    Add-Param "techStorageAccountKey" $techStorageAccountKey
-    
+        
     $techStorageConnectionString = 'DefaultEndpointsProtocol=https;AccountName=' + $params.techStorageAccountName + ';AccountKey=' + $techStorageAccountKey + ';EndpointSuffix=core.windows.net'
-    Add-Param "techStorageConnectionString" $techStorageConnectionString
+    Add-Param "techStorageConnString" $techStorageConnectionString
     
     Save-Parameters
 }
@@ -1401,7 +1399,7 @@ function New-Functions {
                     }
                 }
     
-                $storekey = $params.techStorageConnectionString
+                $storekey = $params.techStorageConnString
     
                 az functionapp config appsettings set `
                     --name $functionApp.Name `
@@ -1814,7 +1812,7 @@ function New-WebApps {
                             --https-only true `
                             --deployment-container-image-name $webApp.Image
                         
-                        $storekey = $params.techStorageConnectionString
+                        $storekey = $params.techStorageConnString
     
                         az webapp config appsettings set `
                             --name $webApp.Name `
@@ -2495,39 +2493,6 @@ function Optimize-Solution () {
     }
     
     Pop-Location
-}
-
-function Publish-Environment {
-    param (
-        [switch] $CloudShell
-    )
-    
-    Sync-Config
-    
-    $dirName = [System.IO.Path]::GetFileName($global:envpath)
-    
-    Push-Location $global:envpath
-        
-    if ( Test-Path "build") {
-        Remove-Item "build" -Recurse -Force
-    }
-    $reldestpath = join-path ".." ($dirName + ".zip")
-    Compress-Archive -Path ".\*" -DestinationPath $reldestpath -Force
-    
-    if ( $CloudShell) {
-        az storage file upload --account-name $params.techStorageAccountName --account-key $params.techStorageAccountKey --share-name "cloudshell" --source $reldestpath
-    }
-    Pop-Location
-}
-
-function Get-Environment {
-    param (
-        [string] $Name
-    )
-      
-    $reldestpath = join-path $Name ".zip"
-    
-    az storage file download --account-name $params.techStorageAccountName --account-key $params.techStorageAccountKey --share-name "cloudshell" --path $reldestpath --dest ".."
 }
 
 function Test-Solution {

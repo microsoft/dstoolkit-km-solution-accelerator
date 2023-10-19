@@ -6,7 +6,7 @@
   },
   {
     "name": "AzureWebJobsStorage",
-    "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString)",
+    "value": "{{param.techStorageConnString}}",
     "slotSetting": false
   },
   {
