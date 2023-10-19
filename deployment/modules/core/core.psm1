@@ -529,32 +529,10 @@ function Get-AppInsightsInstrumentationKey {
         $key = az monitor app-insights component show --app $tuple.Value -g $config.resourceGroupName --query instrumentationKey  --out tsv
     
         if ( $key -and $key.length -gt 0 ) {
-            Add-Param ($tuple.Name + "Key") $key
+            Add-Param "APPINSIGHTS_INSTRUMENTATIONKEY" $key
         }            
     }
-    Save-Parameters
-    
-    $tuples = Get-Parameters "appInsightsWindows"
-    
-    foreach ($tuple in $tuples) {
-        $key = az monitor app-insights component show --app $tuple.Value -g $config.resourceGroupNameWindows --query instrumentationKey  --out tsv
-    
-        if ( $key -and $key.length -gt 0 ) {
-            Add-Param ($tuple.Name + "Key") $key
-        }            
-    }
-    Save-Parameters
-    
-    $tuples = Get-Parameters "appInsightsLinux"
-    
-    foreach ($tuple in $tuples) {
-        $key = az monitor app-insights component show --app $tuple.Value -g $config.resourceGroupNameLinux --query instrumentationKey  --out tsv
-    
-        if ( $key -and $key.length -gt 0 ) {
-            Add-Param ($tuple.Name + "Key") $key
-        }            
-    }
-    Save-Parameters
+    Save-Parameters  
 }
     
 function Get-TechStorageAccountAccessKeys {
@@ -577,6 +555,28 @@ function Get-DataStorageAccountAccessKeys {
     Add-Param "storageConnectionString" $storageConnectionString
     
     Save-Parameters
+}
+
+function Add-DataStorageRBAC {    
+    $scope = "/subscriptions/" + $config.subscriptionId + "/resourcegroups/" + $config.resourceGroupName + "/providers/Microsoft.Storage/storageAccounts/" + $params.dataStorageAccountName
+    foreach ($plan in $webappscfg.AppPlans) {
+        foreach ($webApp in $plan.Services) {
+            $principalId = az webapp identity show -n $webApp.Name -g $plan.ResourceGroup --query principalId --out tsv  
+            az role assignment create --role "Storage Blob Data Contributor" --assignee $principalId --scope $scope
+            az role assignment create --role "Storage Blob Delegator" --assignee $principalId --scope $scope
+        }
+    }
+
+    foreach ($plan in $functionscfg.AppPlans) {
+        foreach ($functionApp in $plan.Services) {          
+            $principalId = az functionapp identity show -n $functionApp.Name -g $plan.ResourceGroup --query principalId --out tsv    
+            az role assignment create --role "Storage Blob Data Contributor" --assignee $principalId --scope $scope
+        }
+    }
+
+    $currentUserId = ((az ad signed-in-user show) | ConvertFrom-Json).id
+    az role assignment create --role "Storage Blob Data Contributor" --assignee $currentUserId --scope $scope
+    az role assignment create --role "Storage Blob Delegator" --assignee $currentUserId --scope $scope
 }
     
 function Get-CognitiveServiceKey {
@@ -604,7 +604,7 @@ function Get-AzureMapsSubscriptionKey {
     
     if ($mapscfg.enable) {
         $mapsKey = az maps account keys list --name $params.maps --resource-group $config.resourceGroupName --query primaryKey --out tsv
-        Add-Param "mapsSubscriptionKey" $mapsKey
+        Add-Param "MapConfig--AzureMapsSubscriptionKey" $mapsKey
     
         Save-Parameters
     }
@@ -625,15 +625,15 @@ function Initialize-SearchConfig {
                 # Create a partition datasource for documents
                 $datasource = Get-Content -Path (join-path $global:envpath "config" "search" "datasources" "documents.json") -Raw
                 $jsonobj = ConvertFrom-Json $datasource
-                $jsonobj.name = ($config.name + "-documents-" + $i)
+                $jsonobj.name = ("documents-" + $i)
                 $jsonobj.container | Add-Member -MemberType NoteProperty -Name "query" -Value $partitionName -ErrorAction Ignore
                 $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "config" "search" "datasources" ("documents-" + $i + ".json")) -Force
     
                 # Create a partition indexer for documents
                 $datasource = Get-Content -Path (join-path $global:envpath "config" "search" "indexers" "documents.json") -Raw
                 $jsonobj = ConvertFrom-Json $datasource
-                $jsonobj.name = ($config.name + "-documents-" + $i)
-                $jsonobj.dataSourceName = ($config.name + "-documents-" + $i)
+                $jsonobj.name = ("documents-" + $i)
+                $jsonobj.dataSourceName = ("documents-" + $i)
                 $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "config" "search" "indexers" ("documents-" + $i + ".json")) -Force    
             }
     
@@ -642,15 +642,15 @@ function Initialize-SearchConfig {
                 # Create a partition datasource for images
                 $datasource = Get-Content -Path (join-path $global:envpath "config" "search" "datasources" "images.json") -Raw
                 $jsonobj = ConvertFrom-Json $datasource
-                $jsonobj.name = ($config.name + "-images-" + $i)
+                $jsonobj.name = ("images-" + $i)
                 $jsonobj.container | Add-Member -MemberType NoteProperty -Name "query" -Value $partitionName -ErrorAction Ignore
                 $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "config" "search" "datasources" ("images-" + $i + ".json")) -Force
     
                 # Create a partition indexer for images
                 $datasource = Get-Content -Path (join-path $global:envpath "config" "search" "indexers" "images.json") -Raw
                 $jsonobj = ConvertFrom-Json $datasource
-                $jsonobj.name = ($config.name + "-images-" + $i)
-                $jsonobj.dataSourceName = ($config.name + "-images-" + $i)
+                $jsonobj.name = ("images-" + $i)
+                $jsonobj.dataSourceName = ("images-" + $i)
                 $jsonobj | ConvertTo-Json -Depth 100 | Out-File -FilePath $(join-path $global:envpath "config" "search" "indexers" ("images-" + $i + ".json")) -Force
     
             }
@@ -671,7 +671,7 @@ function Initialize-SearchParameters {
     $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "synonyms") -Recurse
     foreach ($file in $files) {
         $item = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-        $value = ($config.name + "-" + $item)
+        $value = ($item)
         Add-Param $item"SynonymMap" $value
         $synonymmaps += $value
     }
@@ -683,7 +683,7 @@ function Initialize-SearchParameters {
     $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "skillsets")
     foreach ($file in $files) {
         $item = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-        $value = ($config.name + "-" + $item)
+        $value = ($item)
         Add-Param $item"SkillSet" $value
         $skillslist += $value
     }
@@ -695,8 +695,8 @@ function Initialize-SearchParameters {
     $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "indexes")
     foreach ($file in $files) {
         $item = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-        $value = ($config.name + "-" + $item)
-        Add-Param $item"Name" $value
+        $value = ($item)
+        Add-Param "indexName" $value
         $indexeslist += $value
     }
     Add-Param "searchIndexes" ($indexeslist | Join-String -Property $_ -Separator ",")
@@ -708,7 +708,7 @@ function Initialize-SearchParameters {
     $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "datasources")
     foreach ($file in $files) {
         $item = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-        $value = ($config.name + "-" + $item)
+        $value = ($item)
         Add-Param $item"DataSource" $value
         Add-Param $item"StorageContainerName" $item            
         $datasourceslist += $value
@@ -723,7 +723,7 @@ function Initialize-SearchParameters {
     $files = Get-ChildItem -File -Path (join-path $global:envpath "config" "search" "indexers")
     foreach ($file in $files) {
         $item = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-        $value = ($config.name + "-" + $item)
+        $value = ($item)
         Add-Param $item"Indexer" $value
         $indexersList += $value
         $indexersStemList += $item
@@ -737,13 +737,35 @@ function Initialize-SearchParameters {
 function Get-SearchServiceKeys {    
     Write-Host "Fetching Search service keys..." -ForegroundColor DarkBlue
 
+    # Still used during deployment
     $searchServiceKey = az search admin-key show --resource-group $config.resourceGroupName --service-name $params.searchServiceName  --query primaryKey --out tsv
-    Add-Param "searchServiceKey" $searchServiceKey
+    Add-Param "searchServiceK" $searchServiceKey
         
+    # Semantic search is currently using REST API, to be removed once migrate to SDK    
     $searchServiceQueryKey = az search query-key list --resource-group $config.resourceGroupName --service-name $params.searchServiceName  --query [0].key --out tsv
-    Add-Param "searchServiceQueryKey" $searchServiceQueryKey
+    Add-Param "SearchServiceConfig--QueryKey" $searchServiceQueryKey
+
+
+    $principalId = az functionapp identity show -n $functionApp.Name -g $plan.ResourceGroup --query principalId --out tsv    
+            az role assignment create --role "Key Vault Secrets Officer" --assignee $principalId --scope $keyVaultScope
     
     Save-Parameters
+}
+
+function Add-SearchRBAC {
+    # Improve this limiting only to API
+    $searchScope = "/subscriptions/" + $config.subscriptionId + "/resourcegroups/" + $config.resourceGroupName + "/providers/Microsoft.Search/searchServices/" + $params.searchServiceName
+    foreach ($plan in $webappscfg.AppPlans) {
+        foreach ($webApp in $plan.Services) {
+            $principalId = az webapp identity show -n $webApp.Name -g $plan.ResourceGroup --query principalId --out tsv  
+            az role assignment create --role "Search Service Contributor" --assignee $principalId --scope $searchScope
+            az role assignment create --role "Search Index Data Contributor" --assignee $principalId --scope $searchScope
+        }
+    }
+
+    $currentUserId = ((az ad signed-in-user show) | ConvertFrom-Json).id
+    az role assignment create --role "Search Service Contributor" --assignee $currentUserId --scope $searchScope
+    az role assignment create --role "Search Index Data Contributor" --assignee $currentUserId --scope $searchScope
 }
 
 function Invoke-SearchAPI {
@@ -753,12 +775,12 @@ function Invoke-SearchAPI {
         [string]$method = "PUT"
     )
     
-    if (! $params.searchServiceKey) {
+    if (! $params.searchServiceK) {
         Get-SearchServiceKeys
     }
 
     $headers = @{
-        'api-key'      = $params.searchServiceKey
+        'api-key'      = $params.searchServiceK
         'Content-Type' = 'application/json'
         'Accept'       = 'application/json'
     }
@@ -844,30 +866,7 @@ function Update-SearchIndex {
         }
     }
 }
-    
-function Remove-SearchIndex {
-    param (
-        [string]$name,
-        [switch]$DeleteAliases
-    )
-    if ( $name ) {
 
-        if ( $DeleteAliases) {
-            Update-SearchAliases -method DELETE
-        }
-
-        $headers = @{
-            'api-key'      = $params.searchServiceKey
-            'Content-Type' = 'application/json'
-            'Accept'       = 'application/json'
-        }
-        $url = ("/indexes/" + $name + "?api-version=" + $searchcfg.Parameters.searchVersion)
-        $baseSearchUrl = "https://" + $params.searchServiceName + ".search.windows.net"
-        $fullUrl = $baseSearchUrl + $url
-
-        Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method Delete
-    }
-}
     
 function Update-SearchDataSource {
     param (
@@ -941,22 +940,7 @@ function Update-SearchIndexer {
         }
     }
 }
-    
-function Search-Query {
-    param (
-        [string]$query = "*"
-    )
-    $headers = @{
-        'api-key'      = $params.searchServiceKey
-        'Content-Type' = 'application/json'
-        'Accept'       = 'application/json'
-    }
-    $baseSearchUrl = "https://" + $params.searchServiceName + ".search.windows.net"
-    $fullUrl = $baseSearchUrl + "/indexes/" + $params.indexName + "/docs?search=" + $query + "&api-version=" + $searchcfg.Parameters.searchVersion
-    
-    Write-Debug -Message ("CallingGet  api: '" + $fullUrl + "'")
-    Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method Get
-};
+
     
 # https://docs.microsoft.com/en-us/rest/api/searchservice/reset-indexer
     
@@ -1397,7 +1381,9 @@ function New-Functions {
                                 --os-type Linux `
                                 --https-only true `
                                 --app-insights $params.appInsightsService `
-                                --deployment-container-image-name $functionApp.Image                        
+                                --deployment-container-image-name $functionApp.Image     
+
+                            az functionapp config set --always-on true --name $functionApp.Name --resource-group $plan.ResourceGroup              
                         }
                         else {
                             az functionapp create --name $functionApp.Name `
@@ -1466,7 +1452,6 @@ function New-Functions {
 function Restore-Functions {
     New-Functions
     Build-Functions -Publish
-    Add-KeyVaultFunctionsPolicies
     Get-FunctionsKeys
     Sync-Config
     Publish-FunctionsSettings
@@ -1558,9 +1543,6 @@ function Build-Functions () {
     if ( $Publish ) {
         Publish-Functions -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly
     }
-    if ( $KeyVaultPolicies ) {
-        Add-KeyVaultFunctionsPolicies        
-    }
     if ( $Settings ) {
         Publish-FunctionsSettings -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly
     }
@@ -1574,7 +1556,7 @@ function Publish-Functions() {
         
     Push-Location $global:envpath
     
-    foreach ($plan in $functionscfg.AppPlans) {
+    foreach ($plan in $functionscfg.AppPlans) {      
         foreach ($functionApp in $plan.Services) {
             if (! $plan.IsLinux) {
                 if (-not $LinuxOnly) {
@@ -1894,20 +1876,20 @@ function New-WebApps {
             Write-Host "FTPS Only " -ForegroundColor DarkYellow
 
             # Disable FTP and SCM Basic Authentication 
-            $parent ="sites/"+$webApp.Name 
-            az resource update --resource-group $plan.ResourceGroup `
-            --name ftp `
-            --namespace Microsoft.Web `
-            --resource-type basicPublishingCredentialsPolicies `
-            --parent $parent `
-            --set properties.allow=false
+            # $parent ="sites/"+$webApp.Name 
+            # az resource update --resource-group $plan.ResourceGroup `
+            # --name ftp `
+            # --namespace Microsoft.Web `
+            # --resource-type basicPublishingCredentialsPolicies `
+            # --parent $parent `
+            # --set properties.allow=false
 
-            az resource update --resource-group $plan.ResourceGroup `
-            --name scm `
-            --namespace Microsoft.Web `
-            --resource-type basicPublishingCredentialsPolicies `
-            --parent $parent `
-            --set properties.allow=false
+            # az resource update --resource-group $plan.ResourceGroup `
+            # --name scm `
+            # --namespace Microsoft.Web `
+            # --resource-type basicPublishingCredentialsPolicies `
+            # --parent $parent `
+            # --set properties.allow=false
 
             Write-Host "FTP and SCM Basic Authentication" -ForegroundColor DarkYellow
         }
@@ -1930,7 +1912,8 @@ function Build-WebApps {
         Write-Host $pwd
         $buildpath = join-path $deploymentdir "webapps" ($function + ".publish." + $now)
         Write-Host $buildpath
-        dotnet publish -c RELEASE -o $buildpath | Out-Null
+        dotnet publish -c RELEASE -o $buildpath 
+        #| Out-Null
         return $buildpath
     }
     function publish_linux($function) {
@@ -1961,6 +1944,7 @@ function Build-WebApps {
                         $respath = publish_windows $webApp.Name
                     }
                 }
+
                 Pop-Location
                 
                 # Add the UI override (i.e. config.json + wwwroot branding support)
@@ -1985,9 +1969,9 @@ function Build-WebApps {
     if ( $Publish ) {
         Publish-WebApps -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly 
     }
-    if ( $KeyVaultPolicies ) {
-        Add-KeyVaultWebAppsPolicies 
-    }
+    # if ( $KeyVaultPolicies ) {
+    #     Add-KeyVaultWebAppsRBAC 
+    # }
     if ( $Settings ) {
         Publish-WebAppsSettings -LinuxOnly:$LinuxOnly -WindowsOnly:$WindowsOnly
     }
@@ -2340,7 +2324,11 @@ function Test-KeyVaultCandidate {
         $name
     )
     if ( $name.endswith("Key") -or $name.endswith("ConnectionString") -or $name.endswith("Password") -or $name.endswith("Username")) {
-        return $true
+        if ($name -ne "APPINSIGHTS_INSTRUMENTATIONKEY") {
+            return $true 
+        } else {
+            return $false
+        }
     }
     else {
         return $false
@@ -2372,28 +2360,22 @@ function Add-KeyVaultSecrets {
     }
 }
 
-function Add-KeyVaultFunctionsPolicies {
-    
-    # Shared Policies for Functions
+function Add-KeyVaultFunctionsRBAC {
+    $keyVaultScope = "/subscriptions/" + $config.subscriptionId + "/resourcegroups/" + $config.resourceGroupName + "/providers/Microsoft.KeyVault/vaults/" + $params.keyvault
     foreach ($plan in $functionscfg.AppPlans) {
-        foreach ($functionApp in $plan.Services) {
-            $principalId = az functionapp identity show -n $functionApp.Name -g $plan.ResourceGroup --query principalId --out tsv
-    
-            az keyvault set-policy -n $params.keyvault -g $plan.ResourceGroup --object-id $principalId --secret-permissions get 
+        foreach ($functionApp in $plan.Services) {          
+            $principalId = az functionapp identity show -n $functionApp.Name -g $plan.ResourceGroup --query principalId --out tsv    
+            az role assignment create --role "Key Vault Secrets User" --assignee $principalId --scope $keyVaultScope
         }
     }
 }
 
-function Add-KeyVaultWebAppsPolicies {
+function Add-KeyVaultWebAppsRBAC {
+    $keyVaultScope = "/subscriptions/" + $config.subscriptionId + "/resourcegroups/" + $config.resourceGroupName + "/providers/Microsoft.KeyVault/vaults/" + $params.keyvault
     foreach ($plan in $webappscfg.AppPlans) {
         foreach ($webApp in $plan.Services) {
-            $principalId = az webapp identity show -n $webApp.Name -g $plan.ResourceGroup --query principalId
-            az keyvault set-policy -n $params.keyvault -g $plan.ResourceGroup --object-id $principalId --secret-permissions get 
-    
-            if ($config.stagingUIEnabled -and -not $plan.IsLinux) {
-                $principalId = az webapp identity show -n $webApp.Name -g $plan.ResourceGroup --slot staging --query principalId
-                az keyvault set-policy -n $params.keyvault -g $plan.ResourceGroup --object-id $principalId --secret-permissions get 
-            }
+            $principalId = az webapp identity show -n $webApp.Name -g $plan.ResourceGroup --query principalId --out tsv  
+            az role assignment create --role "Key Vault Secrets User" --assignee $principalId --scope $keyVaultScope
         }
     }
 }
@@ -2461,11 +2443,7 @@ function Update-Solution {
     
     # if ( $Function ) {
     #     Build-Functions -Publish -KeyVaultPolicies -Settings
-    # }
-
-    # if ($RebuildIndex) {
-    #     Remove-SearchIndex -name $params. -DeleteAliases
-    # }
+    # }  
 
     if ($Search) {
         Initialize-Search
@@ -2613,27 +2591,29 @@ function Deploy-OpenAIModule () {
         [string] $ModelName,
         [string] $ModelVersion
     )
+    Write-Host "Deploying Open AI Model Cognitive Service";
 
     az cognitiveservices account deployment create `
-        -g $openaicfg.Items[0].ResourceGroup `
-        -n $openaicfg.Items[0].Name `
-        --deployment-name $DeploymentName `
-        --model-name $ModelName `
-        --model-version $ModelVersion  `
-        --model-format OpenAI `
-        --scale-settings-scale-type "Standard"    
+        --name $params.OpenAI `
+        --resource-group $config.resourceGroupName `
+        --deployment-name $params.OpenAIEngine `
+        --model-name $params.OpenAIModel `
+        --model-version $params.OpenAIModelVersion  `
+        --model-format "OpenAI" `
+        --sku-capacity $params.OpenAICapacity `
+        --sku-name "Standard"    
 }
 
-function Remove-OpenAIModel() { 
-    param (
-        [string] $DeploymentName
-    )
+# function Remove-OpenAIModel() { 
+#     param (
+#         [string] $DeploymentName
+#     )
 
-    az cognitiveservices account deployment delete `
-    -g $openaicfg.Items[0].ResourceGroup `
-    -n $openaicfg.Items[0].Name `
-    --deployment-name $DeploymentName    
-}
+#     az cognitiveservices account deployment delete `
+#     -g $openaicfg.Items[0].ResourceGroup `
+#     -n $openaicfg.Items[0].Name `
+#     --deployment-name $DeploymentName    
+# }
 #endregion
 
 Export-ModuleMember -Function *

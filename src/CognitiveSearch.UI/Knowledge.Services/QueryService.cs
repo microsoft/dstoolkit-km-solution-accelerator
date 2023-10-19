@@ -4,17 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Knowledge.Configuration;
 using Knowledge.Models;
 using Knowledge.Models.Ingress;
 using Knowledge.Services.Answers;
 using Knowledge.Services.Helpers;
 using Knowledge.Services.SemanticSearch;
-using Knowledge.Services.SpellChecking;
 using Knowledge.Services.Translation;
-using Knowledge.Services.WebSearch;
-
 using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Caching.Distributed;
 
@@ -26,11 +22,9 @@ namespace Knowledge.Services
     {
         protected const string QUERY_ALL = QueryHelper.QUERY_ALL;
 
-        private readonly ISpellCheckingService spellcheckService;
         private readonly ITranslationService translationService;
         private readonly IAnswersService qnaService;
         private readonly ISemanticSearchService semanticService;
-        private readonly IWebSearchService webSearchService;
         private readonly IAzureSearchService searchService;
 
         private readonly QueryServiceConfig queryConfig;
@@ -42,10 +36,8 @@ namespace Knowledge.Services
             TelemetryClient telemetry,
             IAzureSearchService searchSvc,
             IAnswersService qnaService,
-            ISpellCheckingService spellcheckService,
             ITranslationService translationService,
-            ISemanticSearchService semanticService,
-            IWebSearchService websvc)
+            ISemanticSearchService semanticService)
         {
             try
             {
@@ -56,11 +48,9 @@ namespace Knowledge.Services
                 this.config = configuration; 
 
                 this.searchService = searchSvc;
-                this.spellcheckService = spellcheckService;
                 this.translationService = translationService;
                 this.qnaService = qnaService;
                 this.semanticService = semanticService;
-                this.webSearchService = websvc;
 
                 this.CachePrefix = this.GetType().Name;
 
@@ -80,14 +70,9 @@ namespace Knowledge.Services
             request.AddQueryTransformation("0-Original", request.queryText);
 
             if (request.queryText != QUERY_ALL)
-            {
-                // Bing Query SpellChecking
-                // TODO Support the new ACS built-in spellchecker
-                if (request.options.isQuerySpellCheck)
-                {
-                    request.queryText = await spellcheckService.SpellCheckAsync(request.queryText);
-                    request.AddQueryTransformation("1-SpellCheck", request.queryText);
-                }
+            {               
+                // TODO Support the ACS built-in spellchecker
+                //if (request.options.isQuerySpellCheck)               
 
                 // Query Translation
                 if (request.options.isQueryTranslation)
@@ -290,15 +275,6 @@ namespace Knowledge.Services
             SearchResponse result = await this.searchService.GetDocumentSiblings(request);
 
             return result;
-        }
-
-        public async Task<SearchResponse> GetSimilarDocuments(IngressSearchRequest request)
-        {
-            QueryHelper.EnsureDefaultValues(request);
-
-            SearchResponse result = await this.searchService.GetSimilarDocuments(request);
-
-            return result;
-        }
+        }       
     }
 }

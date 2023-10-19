@@ -7,8 +7,8 @@ import os
 from azure.core.credentials import AzureKeyCredential
 from azure.ai.translation.document import DocumentTranslationClient
 
-endpoint = os.environ["DOCUMENT_TRANSLATION_ENDPOINT"]
-subscription_key = os.environ["DOCUMENT_TRANSLATION_KEY"]
+endpoint = os.environ["COGNITIVE_SERVICES_ENDPOINT"]
+subscription_key = os.environ["COGNITIVE_SERVICES_ENDPOINT"]
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     logging.info(f'{context.function_name} Document Translation Ops list ')

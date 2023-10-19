@@ -1,9 +1,7 @@
 ﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
      Licensed under the MIT License. -->
-
 @inject Knowledge.Configuration.Translation.TranslationConfig translationCfg
 @inject Knowledge.Configuration.SemanticSearch.SemanticSearchConfig semanticCfg
-@inject Knowledge.Configuration.SpellChecking.SpellCheckingConfig spellcheckingCfg
 
 <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBackdrop" aria-labelledby="offcanvasWithBackdropLabel">
     <div class="offcanvas-header">
@@ -25,18 +23,17 @@
         {
             <div class="form-check form-switch search-translation-switch">
                 <label class="form-check-label search-translation-label" for="translation-switch">Query Translation</label>
-                    <input class="form-check-input search-translation-input" type="checkbox" id="translation-switch" checked onclick="Microsoft.Search.Options.switchQueryTranslation(this);">                    
+                <input class="form-check-input search-translation-input" type="checkbox" id="translation-switch" checked onclick="Microsoft.Search.Options.switchQueryTranslation(this);">
             </div>
         }
 
-        @if (spellcheckingCfg.IsEnabled)
-        {
-            <br/>
-            <div class="form-check form-switch search-spellcheck-switch">
-                <label class="form-check-label search-spellcheck-label" for="spellcheck-switch">Query Spell Checking</label>
-                    <input class="form-check-input search-spellcheck-input" type="checkbox" id="spellcheck-switch" checked onclick="Microsoft.Search.Options.switchQuerySpellCheck(this);">
-            </div>
-        }
+
+        <br />
+        <div class="form-check form-switch search-spellcheck-switch">
+            <label class="form-check-label search-spellcheck-label" for="spellcheck-switch">Query Spell Checking (not available)</label>
+            <input class="form-check-input search-spellcheck-input" type="checkbox" id="spellcheck-switch" checked onclick="Microsoft.Search.Options.switchQuerySpellCheck(this);">
+        </div>
+
 
         <hr>
         <div class="form-check form-switch search-mv-refiner-operator-switch">
@@ -80,6 +77,6 @@
         </div>
     </div>
     @* <div class="offcanvas-footer">
-        <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Documentation</h5>
+    <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Documentation</h5>
     </div> *@
 </div>

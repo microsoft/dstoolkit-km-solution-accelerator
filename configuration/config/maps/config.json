@@ -1,5 +1,5 @@
 {
-    "enable": false,
+    "enable": true,
     "Parameters": {
         "maps":"{{config.name}}maps"
     },

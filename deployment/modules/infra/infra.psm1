@@ -63,21 +63,16 @@ function New-AzureKeyVault() {
             az keyvault create --location $config.location `
                 --name $azureResource.Name `
                 --resource-group $azureResource.ResourceGroup `
-                --sku $azureResource.Sku
+                --sku $azureResource.Sku `
+                --enable-rbac-authorization true
 
             Write-Host "Adding Az Cli required permissions to KeyVault" -ForegroundColor Yellow
-
-            # 04b07795-8ddb-461a-bbee-02f9e1bf7b46 is AZ CLI client id
-            az keyvault set-policy --name $azureResource.Name --object-id 04b07795-8ddb-461a-bbee-02f9e1bf7b46 `
-                --certificate-permissions get list create delete `
-                --key-permissions get list create delete `
-                --secret-permissions get set list delete
             
             $currentUserId = ((az ad signed-in-user show) | ConvertFrom-Json).id
-            az keyvault set-policy --name $azureResource.Name --object-id $currentUserId `
-                --certificate-permissions get list create delete `
-                --key-permissions get list create delete `
-                --secret-permissions get set list delete
+            $keyVaultScope = "/subscriptions/" + $config.subscriptionId + "/resourcegroups/" + $config.resourceGroupName + "/providers/Microsoft.KeyVault/vaults/" + $params.keyvault
+
+            az role assignment create --role "Key Vault Secrets Officer" --assignee $currentUserId --scope $keyVaultScope            
+            
         }
     }
 }
@@ -164,7 +159,7 @@ function New-StorageAccount {
         }
 
         if ($azureResource.IsDataStorage) {
-            Get-DataStorageAccountAccessKeys
+            Get-DataStorageAccountAccessKeys            
         }
         else {
             Get-TechStorageAccountAccessKeys
@@ -214,6 +209,8 @@ function New-SearchServices {
             az search service create `
                 --name  $azureResource.Name `
                 --resource-group $azureResource.ResourceGroup `
+                --auth-options aadOrApiKey `
+                --aad-auth-failure-mode http401WithBearerChallenge `
                 --sku $params.searchSku `
                 --location $config.location `
                 --partition-count 1 `
@@ -229,7 +226,7 @@ function New-SearchServices {
 
     }
 
-    Get-SearchServiceKeys; 
+    Get-SearchServiceKeys;    
 
 }
 
@@ -292,7 +289,7 @@ function New-AzureMapsService() {
             --accept-tos
 
             $mapsKey = az maps account keys list --name $params.maps --resource-group $config.resourceGroupName --query primaryKey --out tsv
-            Add-Param "mapsSubscriptionKey" $mapsKey
+            Add-Param "MapConfig--AzureMapsSubscriptionKey" $mapsKey
             Save-Parameters
         }
     }

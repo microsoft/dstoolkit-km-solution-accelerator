@@ -20,23 +20,20 @@ namespace Knowledge.Services.OpenAI
     public class OpenAIService : AbstractService, IOpenAIService
     {
         private readonly string[] StopSequence = new string[] { "|||||" }; 
+        private OpenAIConfig _config { get; set; }
 
         public OpenAIService(OpenAIConfig config, IDistributedCache cache, TelemetryClient telemetry)
         {
             this.distCache = cache;
-            this.config = config;
+            _config = config;
             this.CachePrefix = this.GetType().Name;
-        }
-
-        public OpenAIConfig GetConfig() { 
-            return (OpenAIConfig)this.config;
-        }
+        }        
 
         public async Task<string> Completion(ChatRequest request)
         {
             LoggerHelper.Instance.LogVerbose($"Start:Invoked Completion method in Open AI Chat service");
 
-            var uri = this.GetConfig().ChatServiceEndpoint;
+            var uri = _config.ChatServiceEndpoint;
 
             // JSON format for passing question to service
 
@@ -72,7 +69,7 @@ namespace Knowledge.Services.OpenAI
         {
             LoggerHelper.Instance.LogVerbose($"Start:Invoked ChatCompletion method in Open AI Chat service");
 
-            var uri = this.GetConfig().ChatServiceEndpoint;
+            var uri = _config.ChatServiceEndpoint;
 
             // JSON format for passing question to service
 

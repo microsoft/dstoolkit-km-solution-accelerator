@@ -5,51 +5,29 @@
     "Apptype":"CognitiveService",
     "PrivateDNSZone":"privatelink.cognitiveservices.azure.com",
     "Parameters" : {
-        "cogSvcLanguage": "{{config.name}}coglanguage",
-        "cogSvcVision": "{{config.name}}cogvision",
-        "cogSvcForm": "{{config.name}}cogform",
-        "cogSvcTranslate": "{{config.name}}cogtranslate"    
+        "OpenAI": "{{config.name}}-openai",
+        "cognitiveServices": "{{config.name}}-cognsvc"    
     },
     "Items": [
         {
-            "Name": "{{config.name}}cogvision",
-            "Itemtype":"ComputerVision",
-            "Kind":"ComputerVision",
-            "ResourceGroup": "{{config.resourceGroupName}}",
-            "Sku":"S1",
-            "Parameter":"cogSvcVision",
-            "EnablePrivateAccess":true,
-            "AccessSubnetRestriction":true
-        },
-        {
-            "Name": "{{config.name}}cogform",
-            "Itemtype":"FormRecognizer",
-            "Kind":"FormRecognizer",
+            "Name": "{{config.name}}-cognsvc",
+            "Itemtype":"CognitiveServices",
+            "Kind":"CognitiveServices",
             "ResourceGroup": "{{config.resourceGroupName}}",
             "Sku":"S0",
-            "Parameter":"cogSvcForm",
+            "Parameter":"cognitiveServices",
             "EnablePrivateAccess":true,
             "AccessSubnetRestriction":true
         },
         {
-            "Name": "{{config.name}}cogtranslate",
-            "Itemtype":"Translate",
-            "Kind":"TextTranslation",
+            "Name": "{{config.name}}-openai",
+            "Itemtype": "CognitiveServices",
+            "Kind": "OpenAI",
             "ResourceGroup": "{{config.resourceGroupName}}",
-            "Sku":"S1",
-            "Parameter":"cogSvcTranslate",
+            "Sku": "S0",
+            "Parameter": "openAI",
             "EnablePrivateAccess":true,
             "AccessSubnetRestriction":true
-        },
-        {
-            "Name": "{{config.name}}coglanguage",
-            "Itemtype":"Language",
-            "Kind":"TextAnalytics",
-            "ResourceGroup": "{{config.resourceGroupName}}",
-            "Sku":"S",
-            "Parameter":"cogSvcLanguage",
-            "EnablePrivateAccess":true,
-            "AccessSubnetRestriction":true
-        }
+        }             
     ]
 }

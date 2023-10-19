@@ -13,23 +13,17 @@ using Knowledge.Configuration.Graph;
 using Knowledge.Configuration.Maps;
 using Knowledge.Configuration.OpenAI;
 using Knowledge.Configuration.SemanticSearch;
-using Knowledge.Configuration.SpellChecking;
 using Knowledge.Configuration.Translation;
-using Knowledge.Configuration.WebSearch;
 using Knowledge.Services;
 using Knowledge.Services.Answers;
 using Knowledge.Services.AzureSearch;
 using Knowledge.Services.AzureSearch.SDK;
-using Knowledge.Services.AzureStorage;
 using Knowledge.Services.Chat;
 using Knowledge.Services.Graph.Facet;
 using Knowledge.Services.Metadata;
 using Knowledge.Services.OpenAI;
 using Knowledge.Services.SemanticSearch;
-using Knowledge.Services.SpellChecking;
 using Knowledge.Services.Translation;
-using Knowledge.Services.WebSearch;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -39,7 +33,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.Net.Http.Headers;
-
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
@@ -146,9 +140,6 @@ namespace CognitiveSearch.UI
             MapConfig mapConfigData = Configuration.GetSection("MapConfig").Get<MapConfig>();
             services.AddSingleton<MapConfig>(_ => mapConfigData);
 
-            WebSearchConfig wsconfigData = Configuration.GetSection("WebSearchConfig").Get<WebSearchConfig>();
-            services.AddSingleton<WebSearchConfig>(_ => wsconfigData);
-
             GraphConfig gconfigData = Configuration.GetSection("GraphConfig").Get<GraphConfig>();
             services.AddSingleton<GraphConfig>(_ => gconfigData);
 
@@ -158,9 +149,6 @@ namespace CognitiveSearch.UI
             WebAPIBackend webapiconfigData = Configuration.GetSection("WebAPIBackend").Get<WebAPIBackend>();
             services.AddSingleton<WebAPIBackend>(_ => webapiconfigData);
 
-            ApplicationInsights appInsightsData= Configuration.GetSection("ApplicationInsights").Get<ApplicationInsights>();
-            services.AddSingleton<ApplicationInsights>(_ => appInsightsData);
-
             // Global Configuration singleton 
             var appConfig = new AppConfig
             {
@@ -169,9 +157,7 @@ namespace CognitiveSearch.UI
                 UIConfig = uiConfig,
                 MapConfig = mapConfigData,
                 GraphConfig = gconfigData,
-                WebSearchConfig = wsconfigData,
                 WebAPIBackend = webapiconfigData,
-                ApplicationInsights = appInsightsData,
                 UIVersion = Configuration.GetValue("UIVersion", "1.0.0")
             };
             services.AddSingleton(appConfig);
@@ -195,9 +181,6 @@ namespace CognitiveSearch.UI
 
                 TranslationConfig tconfigData = Configuration.GetSection("TranslationConfig").Get<TranslationConfig>();
                 services.AddSingleton<TranslationConfig>(_ => tconfigData);
-
-                SpellCheckingConfig scconfigData = Configuration.GetSection("SpellCheckConfig").Get<SpellCheckingConfig>();
-                services.AddSingleton<SpellCheckingConfig>(_ => scconfigData);
 
             }
 
@@ -224,6 +207,11 @@ namespace CognitiveSearch.UI
                 IAsset jsBundle = pipeline.AddJavaScriptBundle("/js/bundle.js", "js/config.js", "js/site.js", "js/utils.js", "js/common.js", "js/commons/*.js", "js/graph/*.js", "js/details/*.js", "js/details.js", "js/views/*.js");
                 //AssetExtensions.ExcludeFiles(jsBundle, "js/commons/actions.js");
             });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "KnowledgeAPI", Version = "v1" });
+            });
         }
 
 
@@ -243,9 +231,6 @@ namespace CognitiveSearch.UI
             GraphConfig gconfigData = Configuration.GetSection("GraphConfig").Get<GraphConfig>();
             services.AddSingleton<GraphConfig>(_ => gconfigData);
 
-            WebSearchConfig wsconfigData = Configuration.GetSection("WebSearchConfig").Get<WebSearchConfig>();
-            services.AddSingleton<WebSearchConfig>(_ => wsconfigData);
-
             ChatConfig chatConfigData = Configuration.GetSection("ChatConfig").Get<ChatConfig>();
             services.AddSingleton<ChatConfig>(_ => chatConfigData);
 
@@ -258,9 +243,6 @@ namespace CognitiveSearch.UI
             TranslationConfig tconfigData = Configuration.GetSection("TranslationConfig").Get<TranslationConfig>();
             services.AddSingleton<TranslationConfig>(_ => tconfigData);
 
-            SpellCheckingConfig scconfigData = Configuration.GetSection("SpellCheckConfig").Get<SpellCheckingConfig>();
-            services.AddSingleton<SpellCheckingConfig>(_ => scconfigData);
-
             MapConfig mapConfigData = Configuration.GetSection("MapConfig").Get<MapConfig>();
             services.AddSingleton<MapConfig>(_ => mapConfigData);
 
@@ -269,15 +251,12 @@ namespace CognitiveSearch.UI
 
 
             // Services Singletons
-            services.AddSingleton<IStorageService, StorageService>();
             services.AddSingleton<IAnswersService, AnswersService>();
             services.AddSingleton<IChatService, ChatService>();
             services.AddSingleton<IOpenAIService, OpenAIService>();
-            services.AddSingleton<ISpellCheckingService, SpellCheckingService>();
             services.AddSingleton<ITranslationService, TranslationService>();
             services.AddSingleton<IMetadataService, MetadataService>();
             services.AddSingleton<ISemanticSearchService, SemanticSearch>();
-            services.AddSingleton<IWebSearchService, WebSearchService>();
             services.AddSingleton<IAzureSearchService, AzureSearchService>();
 
             services.AddSingleton<IAzureSearchSDKService, AzureSearchSDKService>();
@@ -300,6 +279,10 @@ namespace CognitiveSearch.UI
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "KnowledgeAPI v1"));
 
             app.UseHttpsRedirection();
 

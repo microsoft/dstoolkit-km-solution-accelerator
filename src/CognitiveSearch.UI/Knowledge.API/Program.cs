@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using Azure.Identity;
+using Microsoft.AspNetCore;
 
 namespace Knowledge.API
 {
@@ -10,14 +10,16 @@ namespace Knowledge.API
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                   .ConfigureAppConfiguration((context, config) =>
+                    {
+                        var root = config.Build();
+                        config.AddAzureKeyVault(new Uri($"https://{root["KeyVault"]}.vault.azure.net/"), new DefaultAzureCredential());
+                    })
+                    .UseStartup<Startup>();
     }
 }

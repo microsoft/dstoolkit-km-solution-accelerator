@@ -1,7 +1,7 @@
 [
     {
         "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey)",
+        "value": "{{param.APPINSIGHTS_INSTRUMENTATIONKEY}}",
         "slotSetting": true
     },
     {
@@ -16,22 +16,22 @@
     },
     {
         "name": "OPENAI_ENDPOINT",
-        "value": "{{param.cogSvcOpenAIEndpoint}}",
+        "value": "https://{{param.OpenAI}}.openai.azure.com/",
         "slotSetting": false
     },
     {
         "name": "OPENAI_KEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcOpenAIKey)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/openAIKey)",
         "slotSetting": false
     },
     {
         "name": "OPENAI_VERSION",
-        "value": "{{param.cogSvcOpenAIVersion}}",
+        "value": "{{param.OpenAIVersion}}",
         "slotSetting": false
     },
     {
         "name": "OPENAI_ENGINE",
-        "value": "{{param.cogSvcOpenAIEngine}}",
+        "value": "{{param.OpenAIEngine}}",
         "slotSetting": false
     }
 ]

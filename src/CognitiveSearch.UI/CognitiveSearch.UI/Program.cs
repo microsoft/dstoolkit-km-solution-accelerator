@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Azure.Identity;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using System;
 
 namespace CognitiveSearch.UI
 {
@@ -22,6 +24,8 @@ namespace CognitiveSearch.UI
                         "config.json", optional: false, reloadOnChange: true);
                     config.AddJsonFile(
                         "graph.json", optional: false, reloadOnChange: true);
+                    var root = config.Build();
+                    config.AddAzureKeyVault(new Uri($"https://{root["KeyVault"]}.vault.azure.net/"), new DefaultAzureCredential());
                 })
                 .UseStartup<Startup>()
                 .Build();

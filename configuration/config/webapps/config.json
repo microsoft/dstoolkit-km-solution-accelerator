@@ -21,6 +21,14 @@
                     "slots": [
                         "staging"
                     ]
+                },
+                {
+                    "Id": "api",
+                    "Name": "{{config.name}}api",
+                    "Path": "src\\CognitiveSearch.UI\\CognitiveSearch.UI",
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": false,
+                    "EnablePrivateAccess": false
                 }
             ]
         },
