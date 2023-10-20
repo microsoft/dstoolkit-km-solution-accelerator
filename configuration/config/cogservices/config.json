@@ -17,7 +17,8 @@
             "Sku":"S0",
             "Parameter":"cognitiveServices",
             "EnablePrivateAccess":true,
-            "AccessSubnetRestriction":true
+            "AccessSubnetRestriction":true,
+            "Region": "{{config.location}}"
         },
         {
             "Name": "{{config.name}}-openai",
@@ -27,7 +28,8 @@
             "Sku": "S0",
             "Parameter": "openAI",
             "EnablePrivateAccess":true,
-            "AccessSubnetRestriction":true
+            "AccessSubnetRestriction":true,
+            "Region": "{{param.OpenAIRegion}}"
         }             
     ]
 }

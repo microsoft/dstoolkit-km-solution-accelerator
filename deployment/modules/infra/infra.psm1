@@ -183,7 +183,7 @@ function New-CognitiveServices {
             -g $azureResource.ResourceGroup `
             --kind $azureResource.Kind `
             --sku $azureResource.Sku `
-            --location $config.location `
+            --location $azureResource.Region `
             --custom-domain $azureResource.Name `
             --yes
 
@@ -284,7 +284,8 @@ function New-AzureMapsService() {
         else {
             az maps account create --name $params.maps `
             --resource-group $config.resourceGroupName `
-            --sku S0 `
+            --sku G2 `
+            --kind Gen2 `
             --subscription $config.subscriptionId `
             --accept-tos
 

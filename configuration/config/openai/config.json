@@ -5,7 +5,8 @@
         "OpenAIEngine": "akm-chat",
         "OpenAIModel": "gpt-35-turbo",
         "OpenAIModelVersion": "0301",
-        "OpenAICapacity": "2"
+        "OpenAICapacity": "20",
+        "OpenAIRegion": "EastUS"
     },
     "Items": [
         {

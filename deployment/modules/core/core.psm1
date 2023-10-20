@@ -742,11 +742,7 @@ function Get-SearchServiceKeys {
     # Semantic search is currently using REST API, to be removed once migrate to SDK    
     $searchServiceQueryKey = az search query-key list --resource-group $config.resourceGroupName --service-name $params.searchServiceName  --query [0].key --out tsv
     Add-Param "SearchServiceConfig--QueryKey" $searchServiceQueryKey
-
-
-    $principalId = az functionapp identity show -n $functionApp.Name -g $plan.ResourceGroup --query principalId --out tsv    
-            az role assignment create --role "Key Vault Secrets Officer" --assignee $principalId --scope $keyVaultScope
-    
+   
     Save-Parameters
 }
 
