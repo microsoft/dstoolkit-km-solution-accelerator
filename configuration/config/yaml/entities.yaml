@@ -29,7 +29,7 @@ spec:
         - name: APPINSIGHTS_INSTRUMENTATIONKEY
           value: "{{param.appInsightsServiceKey}}"
         - name: AzureWebJobsStorage
-          value: "{{param.techStorageConnectionString}}"
+          value: "{{param.techStorageConnString}}"
         - name: NoisePhrases
           value: "Document Id,last updated when,Labels,Parentlabels,Title Tags,Attachment Tags,[image: ],<,>,Please document here or link to the file.,[image:,last updated by"
         - name: stopwords

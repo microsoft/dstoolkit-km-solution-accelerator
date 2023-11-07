@@ -43,7 +43,5 @@ namespace Knowledge.Services
         public Task RunIndexer(string indexerName);
 
         public Task TransformQuery(IngressSearchRequest request);
-
-        public Task<SearchResponse> GetSimilarDocuments(IngressSearchRequest request);
     }
 }

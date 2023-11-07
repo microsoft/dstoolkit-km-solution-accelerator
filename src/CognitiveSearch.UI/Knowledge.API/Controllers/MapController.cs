@@ -10,7 +10,7 @@ namespace Knowledge.API.Controllers.api
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class MapController : AbstractApiController
+    public class MapController : CustomControllerBase
     {
         public MapConfig mapService;
 

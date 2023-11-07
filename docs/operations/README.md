@@ -75,7 +75,6 @@ Get-Config                        0.0     core
 Get-ContainerFilesList            0.0     core
 Get-DataStorageAccountAccessKeys  0.0     core
 Get-DeploymentOverlayPath         0.0     core
-Get-Environment                   0.0     core
 Get-FunctionsKeys                 0.0     core
 Get-Parameters                    0.0     core
 Get-SearchIndexer                 0.0     core
@@ -98,7 +97,6 @@ Invoke-SearchAPI                  0.0     core
 New-Functions                     0.0     core
 New-WebApps                       0.0     core
 Optimize-Solution                 0.0     core
-Publish-Environment               0.0     core
 Publish-Functions                 0.0     core
 Publish-FunctionsSettings         0.0     core
 Publish-Solution                  0.0     core

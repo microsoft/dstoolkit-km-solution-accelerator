@@ -14,7 +14,7 @@ namespace Knowledge.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class GraphController : AbstractApiController
+    public class GraphController : CustomControllerBase
     {
         private IFacetGraphService _facetGraphService;
 

@@ -7,8 +7,6 @@ namespace Knowledge.Configuration.OpenAI
     {
         public string ServiceEndpoint { get; set; }
 
-        public string ServiceKey { get; set; }
-
         public string DeploymentName { get; set; }
 
         public string Version { get; set; }

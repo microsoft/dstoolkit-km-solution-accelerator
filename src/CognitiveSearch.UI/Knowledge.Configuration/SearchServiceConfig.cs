@@ -12,22 +12,13 @@ namespace Knowledge.Configuration
         public string ServiceName { get; set; }
 
         public string APIVersion { get; set; }
-
-        public string AdminKey { get; set; }
-        // Default index name
-        public string IndexName { get; set; }
-        // Default indexer name
-        public string IndexerName { get; set; }
-
-        public string Indexes { get; set; }
+        
+        public string IndexName { get; set; }  
 
         public string Indexers { get; set; }
 
-        public string QueryKey { get; set; }
-
-        public string InstrumentationKey { get; set; }
-
-        public int CacheExpirationForSchemaField { get; set; }
+        public string QueryKey { get; set; }        
+        
 
         // Flags 
         public bool IsPathBase64Encoded { get; set; }
@@ -38,12 +29,7 @@ namespace Knowledge.Configuration
         public string PermissionsProtectedFilter { get; set; }
 
         public string GraphFacet { get; set; }
-
-        public string AzureMapsSubscriptionKey { get; set; }
-
-        public bool EnableLogging { get; set; }
-
-        public SeverityLevel MinLogLevel { get; set; }
+        
 
         // Configure Facets, Tags (Facets) & retrievable fields
         public string FacetsAsString { get; set; }
@@ -52,8 +38,7 @@ namespace Knowledge.Configuration
 
         // We don't need the full content of a document in most case, just the HH
         public string ExcludedResultFieldsAsString { get; set; }
-
-        private List<string> SearchIndexes { get; set; }
+        
         private List<string> SearchIndexers { get; set; }
 
         private List<string> Facets { get; set; }
@@ -72,18 +57,7 @@ namespace Knowledge.Configuration
 
         public static readonly int DefaultNumberOfNeighbors = 5;
 
-        public static readonly int DefaultPageSize = 10;
-
-        public List<string> GetSearchIndexes()
-        {
-            if (SearchIndexes == null)
-            {
-                if (!string.IsNullOrEmpty(Indexes.Trim()))
-                    SearchIndexes = new List<string>(Indexes.Split(','));
-            }
-
-            return SearchIndexes;
-        }
+        public static readonly int DefaultPageSize = 10;        
 
         public List<string> GetSearchIndexers()
         {

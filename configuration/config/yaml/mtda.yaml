@@ -29,7 +29,7 @@ spec:
         - name: APPINSIGHTS_INSTRUMENTATIONKEY
           value: "{{param.appInsightsServiceKey}}"
         - name: AzureWebJobsStorage
-          value: "{{param.techStorageConnectionString}}"
+          value: "{{param.techStorageConnString}}"
         - name: ContainerConnectionString
           value: "{{param.storageConnectionString}}"
         resources:

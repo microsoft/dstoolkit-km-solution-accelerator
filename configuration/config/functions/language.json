@@ -1,12 +1,12 @@
 [
     {
         "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/appInsightsServiceKey)",
+        "value": "{{param.APPINSIGHTS_INSTRUMENTATIONKEY}}",
         "slotSetting": true
     },
     {
         "name": "AzureWebJobsStorage",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/techStorageConnectionString)",
+        "value": "{{param.techStorageConnString}}",
         "slotSetting": false
     },
     {
@@ -20,23 +20,13 @@
         "slotSetting": false
     },
     {
-        "name": "LANGUAGE_ENDPOINT",
-        "value": "https://{{param.cogSvcLanguage}}.cognitiveservices.azure.com",
+        "name": "COGNITIVE_SERVICES_ENDPOINT",
+        "value": "https://{{param.cognitiveServices}}.cognitiveservices.azure.com",
         "slotSetting": false
     },
     {
-        "name": "LANGUAGE_KEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcLanguageKey)",
-        "slotSetting": false
-    },
-    {
-        "name": "DOCUMENT_TRANSLATION_ENDPOINT",
-        "value": "https://{{param.cogSvcTranslate}}.cognitiveservices.azure.com",
-        "slotSetting": false
-    },
-    {
-        "name": "DOCUMENT_TRANSLATION_KEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcTranslateKey)",
+        "name": "COGNITIVE_SERVICES_KEY",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cognitiveServicesKey)",
         "slotSetting": false
     },
     {
@@ -47,11 +37,6 @@
     {
         "name": "TEXT_TRANSLATION_ENDPOINT",
         "value": "https://api.cognitive.microsofttranslator.com",
-        "slotSetting": false
-    },
-    {
-        "name": "TEXT_TRANSLATION_KEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cogSvcTranslateKey)",
         "slotSetting": false
     },
     {

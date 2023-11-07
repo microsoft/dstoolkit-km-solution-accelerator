@@ -11,9 +11,9 @@ if ($EnvironmentName)
     .  $initPath -Name $EnvironmentName -NoLogin
 }
 
-Start-Transcript
+# Start-Transcript
 
 Restart-Functions
 Restart-WebApps
 
-Stop-Transcript
+# Stop-Transcript

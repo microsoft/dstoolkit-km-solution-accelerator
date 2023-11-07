@@ -1,9 +1,12 @@
 {
-    "enable": false,
+    "enable": true,
     "Parameters": {
-        "cogSvcOpenAIType": "azure",
-        "cogSvcOpenAIVersion": "2023-03-15-preview",
-        "cogSvcOpenAIEngine": "chat"
+        "OpenAIVersion": "2023-03-15-preview",
+        "OpenAIEngine": "akm-chat",
+        "OpenAIModel": "gpt-35-turbo",
+        "OpenAIModelVersion": "0301",
+        "OpenAICapacity": "20",
+        "OpenAIRegion": "EastUS"
     },
     "Items": [
         {

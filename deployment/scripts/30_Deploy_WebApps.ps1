@@ -14,14 +14,14 @@ if ($EnvironmentName)
     .  $initPath -Name $EnvironmentName -NoLogin
 }
 
-Start-Transcript
+# Start-Transcript
 
-if ($NoProvision) {
-    Write-Host "Skipping Provisionning..."
-}
-else {
-    New-WebApps;
-}
+# if ($NoProvision) {
+#     Write-Host "Skipping Provisionning..."
+# }
+# else {
+#     New-WebApps;
+# }
 
 # Ensure we have the webapp docker images built.
 Build-DockerImages -WebApp
@@ -32,6 +32,6 @@ Build-WebApps -Publish -KeyVaultPolicies -Settings
 Sync-Config
 
 # Ensure the Web Apps when set are access restricted
-Set-WebAppServicesAccessRestriction
+# Set-WebAppServicesAccessRestriction
 
-Stop-Transcript
+# Stop-Transcript

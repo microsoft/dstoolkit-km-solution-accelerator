@@ -1,0 +1,19 @@
+{
+    "id": "unilever",
+    "name": "kmunilever",
+    "cloud": "AzureCloud",
+    "domain": "unilever.onmicrosoft.com",
+    "tenantId": "f66fae02-5d36-495b-bfe0-78a6ff9f8e6e",
+    "clientId": "c8b90af3-227a-4b9d-ba61-19dc6bce67de",
+    "subscriptionId": "01491751-2545-4f64-afa7-54ffc907183d",
+    "organisation": "Unilever",
+    "organisationWebsite": "https://www.unilever.com/",
+    "organisationLogoUrl": "~/images/logos/microsoft-logo.png",
+    "organisationLogoProviderUrl": "~/images/logos/provider-logo.png",
+    "adminUser": "francesco.sparacio@unilever.com",
+    "resourceGroupName": "bnlwe-es01-d-902600-PA03-rg",
+    "spellCheckEnabled": false,
+    "spellCheckProvider": "Bing",
+    "location": "westEurope",
+    "clarityProjectId": ""
+}

@@ -5,7 +5,7 @@
     "Apptype": "Search",
     "PrivateDNSZone":"privatelink.search.windows.net",
     "Parameters": {
-        "searchServiceName": "{{config.name}}search",
+        "searchServiceName": "{{config.name}}src",
         "searchDefaultFromLanguageCode": "en",
         "searchDefaultToLanguageCode": "en",
         "searchVersion": "2021-04-30-Preview",
@@ -16,7 +16,7 @@
     },
     "Items": [
         {
-            "Name": "{{config.name}}search",
+            "Name": "{{config.name}}src",
             "ResourceGroup": "{{config.resourceGroupName}}",
             "EnablePrivateAccess": true,
             "AddIPAddressRule": false,
