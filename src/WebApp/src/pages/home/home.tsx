@@ -24,7 +24,7 @@ interface HomeProps {
 export function Home({ isSearchResultsPage }: HomeProps) {
     const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [query, setQuery] = useState<string>();
+    // const [query, setQuery] = useState<string>();
     const [searchParams, setSearchParams] = useSearchParams();
     const [filters, setFilters] = useState<Record<FacetType, string[]>>();
     const [filterOpen, setFilterOpen] = useState<boolean>(true);
@@ -152,7 +152,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                 </div>
             </Header>
 
-            <main className="w-full border border-red-400 pt-2">
+            <main className="w-full">
                 <div className="grid grid-cols-5 gap-x-2 gap-y-8">
                     <div className="col-span-1 col-start-1 ml-8 pt-1">
                         <FilterButton className="" onFilterPress={onFilterPress} />
