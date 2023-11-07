@@ -14,6 +14,8 @@ import { FilterButton } from "../../components/filter/showHideFilterButton";
 import { DateFilterDropdownMenu } from "../../components/datePicker/dateFilterDropdownMenu";
 import { SearchResultCard } from "../../components/searchResult/searchResultCard";
 import { ChatIntegration } from "../../components/copilot/ChatIntegration";
+import { useEffectOnce } from "../../utils/react/useEffectOnce";
+import { SearchRequest } from "../../types/searchRequest";
 
 interface HomeProps {
     isSearchResultsPage?: boolean;
@@ -27,6 +29,15 @@ export function Home({ isSearchResultsPage }: HomeProps) {
     const [filters, setFilters] = useState<Record<FacetType, string[]>>();
     const [filterOpen, setFilterOpen] = useState<boolean>(true);
     const [showCopilot, setShowCopilot] = useState<boolean>(false);
+
+    const [query, setQuery] = useState(""); // State for queryText
+    const [incomingFilter, setIncomingFilter] = useState(""); // State for incomingFilter
+    const [scoringProfile, setScoringProfile] = useState(""); // State for scoringProfile
+    const [isSemanticSearch, setIsSemanticSearch] = useState(false); // State for isSemanticSearch
+    const [isQueryTranslation, setIsQueryTranslation] = useState(true); // State for isQueryTranslation
+    const [isQuerySpellCheck, setIsQuerySpellCheck] = useState(true); // State for isQuerySpellCheck
+    const [suggestionsAsFilter, setSuggestionsAsFilter] = useState(true); // State for suggestionsAsFilter
+    const [orMVRefinerOperator, setOrMVRefinerOperator] = useState(false);
 
     const navigate = useNavigate();
 
@@ -77,18 +88,33 @@ export function Home({ isSearchResultsPage }: HomeProps) {
 
     // Custom hook that can be used instead of useEffect() with zero dependencies.
     // Avoids a double execution of the effect when in React 18 DEV mode with <React.StrictMode>
-    // useEffectOnce(() => {
-    // });
+    useEffectOnce(() => {});
 
-    // async function loadDataAsync() {
-    //     setIsLoading(true);
-    //     const result: Paged<DataType> = await httpClient.post(
-    //         `${window.ENV.API_URL}/something`,
-    //         payload
-    //     );
-    //     setData(result);
-    //     setIsLoading(false);
-    // }
+    async function loadDataAsync() {
+        setIsLoading(true);
+
+        const payload: SearchRequest = {
+            queryText: query || "*",
+            searchFacets: [],
+            currentPage: 1,
+            incomingFilter: incomingFilter,
+            parameters: {
+                scoringProfile: scoringProfile,
+                inOrderBy: [],
+            },
+            options: {
+                isSemanticSearch: isSemanticSearch,
+                isQueryTranslation: isQueryTranslation,
+                isQuerySpellCheck: isQuerySpellCheck,
+                suggestionsAsFilter: suggestionsAsFilter,
+                orMVRefinerOperator: orMVRefinerOperator,
+            },
+        };
+
+        const result: Paged<DataType> = await httpClient.post(`${window.ENV.API_URL}/something`, payload);
+        setData(result);
+        setIsLoading(false);
+    }
 
     return (
         <>
@@ -126,8 +152,8 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                 </div>
             </Header>
 
-            <main className="w-full pt-2 border border-red-400">
-                <div className="grid gap-y-8 grid-cols-5 gap-x-2">
+            <main className="w-full border border-red-400 pt-2">
+                <div className="grid grid-cols-5 gap-x-2 gap-y-8">
                     <div className="col-span-1 col-start-1 ml-8 pt-1">
                         <FilterButton className="" onFilterPress={onFilterPress} />
                     </div>
