@@ -1,5 +1,36 @@
 ﻿{
   "name": "{{param.indexName}}",
+  "vectorSearch": {
+    "algorithms": [ {               
+        "name": "vectorAlgorithm",         
+        "kind": "hnsw",
+           "hnswParameters": {
+          "metric": "cosine",
+          "m": 4,
+          "efConstruction": 400,
+          "efSearch": 500
+        },
+        "exhaustiveKnnParameters": null      
+      }   
+    
+    
+    ],
+      "vectorizers": [ {           
+        "name": "openai",            
+        "kind": "azureOpenAI",          
+        "azureOpenAIParameters": {                
+          "resourceUri" : "https://{{param.OpenAI}}.openai.azure.com/",      
+          "apiKey" : "{{param.openAIKey}}",             
+          "deploymentId" : "{{param.OpenAIEmbeddingDeploy}}"                     
+        } }        
+        ],       
+        "profiles": [         
+              {             
+                "name": "vectorizationProfile",            
+                "algorithm": "vectorAlgorithm",     
+                "vectorizer":"openai"
+              } ]             
+ },
   "fields": [
     {
       "name": "index_key",
@@ -12,7 +43,7 @@
       "key": true,
       "indexAnalyzer": null,
       "searchAnalyzer": null,
-      "analyzer": null,
+      "analyzer": "keyword",
       "synonymMaps": []
     },
     {
@@ -1214,6 +1245,55 @@
       "searchAnalyzer": null,
       "analyzer": null,
       "synonymMaps": []
+    },
+    {
+      "name": "parent_id",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": true,
+      "retrievable": true,
+      "sortable": true,
+      "facetable": true,
+      "key": false,
+      "indexAnalyzer": null,
+      "searchAnalyzer": null,
+      "analyzer": null,
+      "normalizer": null,
+      "dimensions": null,
+      "synonymMaps": []
+    },
+    {
+      "name": "chunk",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": false,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": false,
+      "key": false,
+      "indexAnalyzer": null,
+      "searchAnalyzer": null,
+      "analyzer": null,
+      "normalizer": null,
+      "dimensions": null,
+      "synonymMaps": []
+    },
+    {
+      "name": "vector",
+      "type": "Collection(Edm.Single)",
+      "searchable": true,
+      "filterable": false,
+      "retrievable": true,
+      "sortable": false,
+      "facetable": false,
+      "key": false,
+      "indexAnalyzer": null,
+      "searchAnalyzer": null,
+      "analyzer": null,
+      "normalizer": null,
+      "dimensions": 1536,
+      "vectorSearchProfile": "vectorizationProfile",
+      "synonymMaps": []
     }
   ],
   "scoringProfiles": [
@@ -1274,6 +1354,9 @@
         "prioritizedFields": {
           "titleField": null,
           "prioritizedContentFields": [
+            {
+              "fieldName": "chunk"
+            },
             {
               "fieldName": "content"
             },

@@ -804,7 +804,6 @@ function Initialize-Search {
     Update-SearchDataSource
     Update-SearchSkillSet
     Update-SearchIndexer
-    
     Update-SearchAliases
 }
 
@@ -2560,6 +2559,16 @@ function Deploy-OpenAIModule () {
         --deployment-name $params.OpenAIEngine `
         --model-name $params.OpenAIModel `
         --model-version $params.OpenAIModelVersion  `
+        --model-format "OpenAI" `
+        --sku-capacity $params.OpenAICapacity `
+        --sku-name "Standard"    
+
+        az cognitiveservices account deployment create `
+        --name $params.OpenAI `
+        --resource-group $config.resourceGroupName `
+        --deployment-name $params.OpenAIEmbeddingDeploy `
+        --model-name $params.OpenAIEmbeddingModel `
+        --model-version $params.OpenAIEmbeddingModelVersion  `
         --model-format "OpenAI" `
         --sku-capacity $params.OpenAICapacity `
         --sku-name "Standard"    
