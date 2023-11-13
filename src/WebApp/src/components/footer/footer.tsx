@@ -5,7 +5,7 @@ export function Footer() {
     const { t } = useTranslation();
 
     return (
-        <footer className="mt-20 w-full bg-neutral-50">
+        <footer className="w-full bg-neutral-50">
             {/* Parent is a full width container */}
             {/* Child is centered and has max width */}
             <ul className="_max-content-width mx-auto flex flex-wrap justify-end gap-6 whitespace-nowrap p-8 text-[12px] text-neutral-700 md:px-24">

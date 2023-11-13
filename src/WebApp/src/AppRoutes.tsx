@@ -1,10 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import { Home } from "./pages/home/home";
+import { ChatWindow } from "./pages/chat/chatWindow";
 
 function App() {
     return (
         <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/chat" element={<ChatWindow />} />
             <Route path="/search" element={<Home isSearchResultsPage={true} />} />
             <Route path="*" element={<NotFound />} />
         </Routes>

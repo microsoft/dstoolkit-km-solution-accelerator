@@ -111,8 +111,8 @@ export function Home({ isSearchResultsPage }: HomeProps) {
             },
         };
 
-        const result: Paged<DataType> = await httpClient.post(`${window.ENV.API_URL}/something`, payload);
-        setData(result);
+        // const result: Paged<DataType> = await httpClient.post(`${window.ENV.API_URL}/something`, payload);
+        // setData(result);
         setIsLoading(false);
     }
 
@@ -120,7 +120,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
         <>
             <Header
                 className="flex flex-col justify-between bg-contain bg-right-bottom bg-no-repeat"
-                size={!isSearchResultsPage ? "large" : "medium"}
+                size={"large"}
             >
                 <div className="-ml-8">
                     <HeaderBar location={NavLocation.Home} />
