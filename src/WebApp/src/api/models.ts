@@ -17,5 +17,5 @@ export type ChatMessage = {
 export type ChatRequest = {
     prompt: string;
     history: ChatMessage[];
-    overrides?: AskRequestOptions;
+    options?: AskRequestOptions;
 };

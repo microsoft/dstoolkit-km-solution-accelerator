@@ -4,6 +4,7 @@ import { AskResponse, ChatRequest, ChatMessage } from "../../api/models";
 import { chatApi } from "../../api/api";
 import { UserChatMessage } from "./UserChatMessage";
 import { Answer } from "./Answer";
+import { OptionsPanel } from "./OptionsPanel";
 
 export function ChatRoom() {
 
@@ -12,6 +13,9 @@ export function ChatRoom() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<unknown>();
     const [answers, setAnswers] = useState<[prompt: string, response: AskResponse][]>([]);
+
+    const [gptModel, setGptModel] = useState<string>("gpt3");
+    const [resourceTarget, setResourceTarget] = useState<string>("LLM");
 
     const makeApiRequest = async (question: string) => {
         lastQuestionRef.current = question;
@@ -22,7 +26,7 @@ export function ChatRoom() {
             const request: ChatRequest = { 
                 prompt: question,
                 history: [...history, { message: question, role: undefined }],
-                overrides: {
+                options: {
                     
                 }
             }
@@ -59,6 +63,11 @@ export function ChatRoom() {
 
     return (
         <div>
+            <div className="">
+                {!lastQuestionRef.current && (
+                    <OptionsPanel />
+                )}
+            </div>
 
             <div className="overflow-auto h-[580px]">
                 
