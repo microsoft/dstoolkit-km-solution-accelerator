@@ -18,14 +18,14 @@ export function ChatWindow() {
     }, []);
 
     return (
-        <>
+        <div className="w-full">
             <Header className="flex flex-col justify-between bg-contain bg-right-bottom bg-no-repeat" size={"medium"}>
                 <div className="-ml-8">
                     <HeaderBar location={NavLocation.Home} />
                 </div>
             </Header>
 
-            <main className="w-full bg-[#f2f2f2] ">
+            <main className="min-w-[100vh] bg-[#f2f2f2] ">
                 <div className="grid grid-cols-7">
                     <div className="col-span-2 col-start-2">
                         <ChatHeaderTabs />
@@ -39,6 +39,6 @@ export function ChatWindow() {
                     </div>
                 </div>
             </main>
-        </>
+        </div>
     );
 }

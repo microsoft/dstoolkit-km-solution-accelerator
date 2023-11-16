@@ -63,13 +63,13 @@ export function ChatRoom() {
 
     return (
         <div>
-            <div className="">
-                {!lastQuestionRef.current && (
-                    <OptionsPanel />
-                )}
-            </div>
 
-            <div className="overflow-auto h-[580px]">
+            {!lastQuestionRef.current ? (
+                <div className="min-h-[50vh]">
+                    <OptionsPanel />
+                </div>
+            ) : (
+                <div className="overflow-auto min-h-[50vh] max-h-[50vh]">
                 
                     {answers.map((answer, index) => (
                         <div key={index}>
@@ -81,8 +81,11 @@ export function ChatRoom() {
                     ))}
 
             </div>
+            )}
 
-            <div className="pt-6 ml-20 mr-20 mb-20">
+            
+
+            <div className="pt-6 ml-20 mr-20 mb-20 mt-20">
                 <ChatInput 
                     onSend={question => makeApiRequest(question)}
                     disabled={isLoading}
