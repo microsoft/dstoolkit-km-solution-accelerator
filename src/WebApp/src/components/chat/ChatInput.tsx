@@ -31,9 +31,7 @@ export function ChatInput({ onSend, disabled, placeholder, clearOnSend }: Props)
     };
 
     const onEnterPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        console.log("onEnterPress");
         if (event.key === "Enter" && !event.shiftKey) {
-            console.log("enter pressed");
             event.preventDefault();
             sendQuestion();
         }
@@ -42,10 +40,8 @@ export function ChatInput({ onSend, disabled, placeholder, clearOnSend }: Props)
     const onQuestionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = event.target.value;
         if (!newValue) {
-            console.log("no new value");
             setQuestion("");
         } else if (newValue.length <= 500) {
-            console.log(newValue);
             setQuestion(newValue);
         }
     };

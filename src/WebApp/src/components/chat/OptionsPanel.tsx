@@ -1,62 +1,58 @@
-import { Label, Switch, ToggleButton, Title1 } from "@fluentui/react-components";
-import { set } from "date-fns";
-import { useCallback, useState } from "react";
+import { Label, ToggleButton } from "@fluentui/react-components";
+import { useState } from "react";
+import { ModelSwitch } from "./modelSwitch";
 
-export function OptionsPanel() {
-    const [gpt4, setGpt4] = useState(false);
-    const [selectedButton, setSelectedButton] = useState("LLM");
+interface OptionsPanelProps {
+    onModelChange: (model: string) => void;
+    onSourceChange: (source: string) => void;
+  }
 
-    const onChecked = (button: string) => {
-        setSelectedButton(button);
+export function OptionsPanel({ onModelChange, onSourceChange }: OptionsPanelProps) {
+    const [model, setModel] = useState("chat_35");
+    const [source, setSource] = useState("rag_wor");
+
+    const handleSwitchChange = (activeSwitch: string) => {
+        setModel(activeSwitch);
+        onModelChange(activeSwitch);
+        console.log("activeSwitch", activeSwitch);
     };
 
-    const onChange = useCallback(
-        (ev) => {
-            setGpt4(ev.target.checked);
-        },
-        [setGpt4]
+    const onChecked = (button: string) => {
+        setSource(button);
+        onSourceChange(button);
+    };
 
-    );
-    
-    console.log("gpt4", gpt4);
-    console.log("selectedButton", selectedButton);
-
+    console.log("source", source);
 
     return (
-        <div className="my-10 flex flex-col items-center justify-center mx-40 shadow-md rounded-xl outline outline-1 outline-transparent bg-opacity-10 bg-neutral-500">
-            <div className="flex w-full justify-start mt-5 ml-[135px]">
-                <Title1 italic
-                >Options</Title1>
-            </div>
+        <div className="mx-40 my-10 flex flex-col items-center justify-center rounded-xl bg-neutral-500 bg-opacity-10 shadow-md outline outline-1 outline-transparent">
             <div className="my-5 mr-2">
-                <Label className="mb-0.5 mr-2 ">GPT-3.5 </Label>
-                <Switch checked={gpt4} onChange={onChange} />
-                <Label className="mb-0.5 ml-2 ">GPT-4 </Label>
+                <ModelSwitch onSwitchChange={handleSwitchChange} />
             </div>
 
-            <Label className="mt-1 mr-40 mb-2 ">What do you want to chat with?</Label>
-            <div className="flex space-x-2 mb-10 ml-7">
+            <Label className="mb-2 mr-40 mt-1 ">What do you want to chat with?</Label>
+            <div className="mb-10 ml-7 flex space-x-2">
                 <ToggleButton
-                    checked={selectedButton === 'LLM'}
-                    onClick={() => onChecked('LLM')}
-                    appearance={selectedButton === 'LLM' ? "primary" : "outline"}
+                    checked={source === "rag_wor"}
+                    onClick={() => onChecked("rag_wor")}
+                    appearance={source === "rag_wor" ? "primary" : "outline"}
                     shape="rounded"
                 >
                     LLM
                 </ToggleButton>
                 <ToggleButton
-                    checked={selectedButton === 'Web of Reports'}
-                    onClick={() => onChecked('Web of Reports')}
-                    appearance={selectedButton === 'Web of Reports' ? "primary" : "outline"}
+                    checked={source === "Web of Reports"}
+                    onClick={() => onChecked("Web of Reports")}
+                    appearance={source === "Web of Reports" ? "primary" : "outline"}
                     shape="rounded"
                 >
                     Web of Reports
                 </ToggleButton>
 
                 <ToggleButton
-                    checked={selectedButton === 'My own documents'}
-                    onClick={() => onChecked('My own documents')}
-                    appearance={selectedButton === 'My own documents' ? "primary" : "outline"}
+                    checked={source === "My own documents"}
+                    onClick={() => onChecked("My own documents")}
+                    appearance={source === "My own documents" ? "primary" : "outline"}
                     shape="rounded"
                 >
                     My own documents

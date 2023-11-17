@@ -1,21 +1,9 @@
-import { Textarea } from "@fluentui/react-components";
 import { Header } from "../../components/header/header";
 import { HeaderBar, NavLocation } from "../../components/headerBar/headerBar";
-import { ChatInput } from "../../components/chat/ChatInput";
-import { ChatHistory } from "../../components/chat/ChatHistory";
-import { useEffect, useState } from "react";
-import { IChatMessage } from "../../types/chatMessage";
-import { HeaderMenu } from "../../components/headerMenu/headerMenu";
 import { ChatHeaderTabs } from "../../components/chat/ChatHeaderTabs";
 import { ChatRoom } from "../../components/chat/ChatRoom";
 
 export function ChatWindow() {
-    const [messages, setMessages] = useState<IChatMessage[]>([]);
-    const [selectedTab, setSelectedTab] = useState<string>("");
-
-    useEffect(() => {
-        console.log("Get chat messages");
-    }, []);
 
     return (
         <div className="w-full">
