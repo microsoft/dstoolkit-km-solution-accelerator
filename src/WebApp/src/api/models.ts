@@ -18,15 +18,23 @@ export type ChatRequest = {
     stop?: string[];
 };
 
-export type ChatApiResponse {
+export type ChatApiResponse = {
     answer: string;
-    // body: string;
-    // status: number;
-    // headers: {
-    //     "Content-Type": string;
-    // };
+    followUpQs: string[];
+    references: Reference[];
 }
+
+export type Reference = {
+    name: string;
+    page: number;
+    parentId: string;
+    chunkId: string;
+    url: string;
+    isAbsoluteUrl: boolean;
+};
 
 export type AskResponse = {
     answer: string;
 };
+
+

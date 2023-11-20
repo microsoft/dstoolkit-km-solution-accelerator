@@ -20,18 +20,12 @@ export function OptionsPanel({ onModelChange, onSourceChange }: OptionsPanelProp
     const handleSwitchChange = (activeSwitch: string) => {
         setModel(activeSwitch);
         onModelChange(activeSwitch);
-        console.log("activeSwitch", activeSwitch);
     };
 
     const onChecked = (button: string) => {
         setSource(button);
         onSourceChange(button);
     };
-
-    console.log("source", source);
-
-    
-    
 
     return (
         <div className="mx-40 my-10 flex flex-col items-center justify-center rounded-xl bg-neutral-500 bg-opacity-10 shadow-md outline outline-1 outline-transparent">

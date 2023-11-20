@@ -21,17 +21,4 @@ export async function chatApi(options: ChatRequest): Promise<ChatApiResponse> {
         },
     };
     
-    // const url = "www.example.com";
-    // return await fetch(url, {
-    //     method: "POST",
-    //     headers: {
-    //         "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify({
-    //         history: options.history,
-    //         overrides: {
-                
-    //         }
-    //     })
-    // });
 }

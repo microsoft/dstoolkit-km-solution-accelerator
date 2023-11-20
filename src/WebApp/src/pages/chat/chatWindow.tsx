@@ -7,7 +7,7 @@ export function ChatWindow() {
 
     return (
         <div className="w-full">
-            <Header className="flex flex-col justify-between bg-contain bg-right-bottom bg-no-repeat" size={"medium"}>
+            <Header className="flex flex-col justify-between bg-contain bg-right-bottom bg-no-repeat" size={"small"}>
                 <div className="-ml-8">
                     <HeaderBar location={NavLocation.Home} />
                 </div>
