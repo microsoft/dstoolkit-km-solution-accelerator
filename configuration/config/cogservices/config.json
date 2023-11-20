@@ -6,7 +6,10 @@
     "PrivateDNSZone":"privatelink.cognitiveservices.azure.com",
     "Parameters" : {
         "OpenAI": "{{config.name}}-openai",
-        "cognitiveServices": "{{config.name}}-cognsvc"    
+        "cognitiveServices": "{{config.name}}-cognsvc",
+        "cogSvcLanguage": "{{config.name}}-language",
+        "CNER_project_name": "nombre projecto",
+        "CNER_deployment_name": "nombre deploymnet"    
     },
     "Items": [
         {
@@ -16,6 +19,17 @@
             "ResourceGroup": "{{config.resourceGroupName}}",
             "Sku":"S0",
             "Parameter":"cognitiveServices",
+            "EnablePrivateAccess":true,
+            "AccessSubnetRestriction":true,
+            "Region": "{{config.location}}"
+        },
+        {
+            "Name": "{{config.name}}-language",
+            "Itemtype":"Language",
+            "Kind":"TextAnalytics",
+            "ResourceGroup": "{{config.resourceGroupName}}",
+            "Sku":"S",
+            "Parameter":"cogSvcLanguage",
             "EnablePrivateAccess":true,
             "AccessSubnetRestriction":true,
             "Region": "{{config.location}}"

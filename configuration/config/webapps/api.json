@@ -36,32 +36,12 @@
     "value": "{{config.clarityProjectId}}"
   }, 
   {
-    "name": "OrganizationConfig:Logo",
-    "value": "{{config.organisationLogoUrl}}"
-  },
-  {
-    "name": "OrganizationConfig:LogoProvider",
-    "value": "{{config.organisationLogoProviderUrl}}"
-  },
-  {
     "name": "OrganizationConfig:Name",
     "value": "{{config.organisation}}"
   },
   {
     "name": "OrganizationConfig:WebSiteUrl",
     "value": "{{config.organisationWebsite}}"
-  },
-  {
-    "name": "WebAPIBackend:IsEnabled",
-    "value": "false"
-  },
-  {
-    "name": "WebAPIBackend:IsAuthenticated",
-    "value": "false"
-  },
-  {
-    "name": "WebAPIBackend:Endpoint",
-    "value": "https://localhost:7101"
   },
   {
     "name": "MapConfig:IsEnabled",
@@ -294,29 +274,5 @@
   {
     "name": "PromptFlowConfig:MLEndpoint",
     "value": "{{config.promptFlowEndpoint}}"
-  },
-  {
-    "name": "OpenAIConfig:IsEnabled",
-    "value": "{{param.openaiEnabled}}"
-  },
-  {
-    "name": "OpenAIConfig:Name",
-    "value": "Open AI Integration"
-  },
-  {
-    "name": "OpenAIConfig:ServiceEndpoint",
-    "value": "{{param.cogSvcOpenAIEndpoint}}"
-  },
-  {
-    "name": "OpenAIConfig:ChatServiceEndpoint",
-    "value": "{{param.openai.ChatCompletion}}"
-  },
-  {
-    "name": "OpenAIConfig:Version",
-    "value": ""
-  },
-  {
-    "name": "OpenAIConfig:CacheExpirationTime",
-    "value": "30"
   }
 ]

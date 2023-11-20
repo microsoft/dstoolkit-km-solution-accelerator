@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Knowledge.API.Models;
 using Knowledge.Configuration;
+using Knowledge.Models.Ingress;
 using Knowledge.Services;
 using Knowledge.Services.Metadata;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +27,7 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("question")]
-        public async Task<IActionResult> AskQuestion(ApiSearchRequest request)
+        public async Task<IActionResult> AskQuestion(IngressSearchRequest request)
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();

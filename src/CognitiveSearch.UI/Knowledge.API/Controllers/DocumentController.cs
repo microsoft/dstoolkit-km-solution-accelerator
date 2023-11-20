@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Knowledge.API.Models;
 using Knowledge.Configuration;
 using Knowledge.Models;
+using Knowledge.Models.Ingress;
 using Knowledge.Services;
 using Knowledge.Services.Metadata;
 using Microsoft.AspNetCore.Authorization;
@@ -30,7 +30,7 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getbyindexkey")]
-        public async Task<IActionResult> GetDocumentByIndexKeyAsync(ApiSearchRequest request)
+        public async Task<IActionResult> GetDocumentByIndexKeyAsync(IngressSearchRequest request)
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
@@ -41,7 +41,7 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getbyid")]
-        public async Task<IActionResult> GetDocumentByIdAsync(ApiSearchRequest request)
+        public async Task<IActionResult> GetDocumentByIdAsync(IngressSearchRequest request)
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
@@ -56,7 +56,7 @@ namespace Knowledge.API.Controllers
         {
             if (!string.IsNullOrEmpty(document_id))
             {
-                ApiSearchRequest request = new()
+                IngressSearchRequest request = new()
                 {
                     document_id = document_id,
                     indexName = DEFAULT_INDEX_NAME,
@@ -86,7 +86,7 @@ namespace Knowledge.API.Controllers
         {
             if (!string.IsNullOrEmpty(index_key))
             {
-                ApiSearchRequest request = new()
+                IngressSearchRequest request = new()
                 {
                     index_key = index_key,
                     indexName = DEFAULT_INDEX_NAME,
@@ -112,7 +112,7 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getmetadata")]
-        public async Task<IActionResult> GetDocumentMetadataAsync(ApiMetadataRequest request)
+        public async Task<IActionResult> GetDocumentMetadataAsync(MetadataRequest request)
         {
             if (!string.IsNullOrEmpty(request.path))
             {
@@ -125,7 +125,7 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("gethtml")]
-        public async Task<IActionResult> GetDocumentHTMLAsync(ApiMetadataRequest request)
+        public async Task<IActionResult> GetDocumentHTMLAsync(MetadataRequest request)
         {
             if (!string.IsNullOrEmpty(request.path))
             {
@@ -144,7 +144,7 @@ namespace Knowledge.API.Controllers
 
 
         [HttpPost("getembedded")]
-        public async System.Threading.Tasks.Task<IActionResult> GetDocumentEmbeddedAsync(ApiSearchRequest request)
+        public async System.Threading.Tasks.Task<IActionResult> GetDocumentEmbeddedAsync(IngressSearchRequest request)
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
@@ -154,7 +154,7 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getsiblings")]
-        public async System.Threading.Tasks.Task<IActionResult> GetDocumentSiblings(ApiSearchRequest request)
+        public async System.Threading.Tasks.Task<IActionResult> GetDocumentSiblings(IngressSearchRequest request)
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();

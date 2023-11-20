@@ -4,8 +4,8 @@
     "skills": [
         {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
-            "name": "ContentMesh",
-            "description": "Send the document content for cleaning/meshing",
+            "name": "Content Trimming",
+            "description": "C# custom skill that trim the content and remove \n and \r",
             "context": "/document",
             "uri": "{{param.text.TextMesh}}",
             "httpMethod": "POST",
@@ -40,7 +40,8 @@
         },
         {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
-            "name": "LanguageDetection",
+            "name": "Language Detection",
+            "description": "Phyton custom skill to detect language of the document",
             "context": "/document",
             "uri": "{{param.language.LanguageDetection}}",
             "httpMethod": "POST",
@@ -67,18 +68,17 @@
                     "targetName": "myLanguageScore"
                 }
             ]
-        },
-        {
+        },{
             "@odata.type": "#Microsoft.Skills.Text.SplitSkill",
-            "name": "PagesSplit",
-            "description": "split the content into pages of max 50K to fit Entity Extraction & Translation limits",
+            "name": "Pages Split",
+            "description": "split the content into pages of max 21K to fit Entity Extraction & Translation limits",
             "context": "/document",
             "textSplitMode": "pages",
             "maximumPageLength": 21000,
             "inputs": [
                 {
                     "name": "text",
-                    "source": "/document/trimmed_content"
+                    "source": "/document/content"
                 },
                 {
                     "name": "languageCode",
@@ -91,10 +91,53 @@
                     "targetName": "pages"
                 }
             ]
+        },   
+        {
+            "@odata.type": "#Microsoft.Skills.Text.SplitSkill",
+            "name": "Chunk Split",
+            "description": "split the content into chunks of max 2048 chars ready for vectorization",
+            "context": "/document",
+            "textSplitMode": "pages",
+            "maximumPageLength": 2048,
+            "pageOverlapLength": 25,
+            "inputs": [
+                {
+                    "name": "text",
+                    "source": "/document/content"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "textItems",
+                    "targetName": "chunks"
+                }
+            ]
+        },   
+        {
+            "@odata.type": "#Microsoft.Skills.Text.AzureOpenAIEmbeddingSkill",
+            "name": "Embeddings generation",
+            "description": "Azure OpenAI Embedding Skill",
+            "context": "/document/chunks/*",
+            "resourceUri": "https://{{param.OpenAI}}.openai.azure.com/",       
+            "apiKey": "{{param.openAIKey}}",          
+            "deploymentId": "{{param.OpenAIEmbeddingDeploy}}",
+            "inputs": [
+                {
+                    "name": "text",
+                    "source": "/document/chunks/*"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "embedding",
+                    "targetName": "vector"
+                }
+            ]
         },
         {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
-            "name": "PagesKeyPhrasesExtraction",
+            "name": "Pages Keyphrases extraction",
+            "description": "Extract KeyPhrases for each page of the document",
             "context": "/document/pages/*",
             "uri": "{{param.language.KeyPhrasesExtraction}}",
             "httpMethod": "POST",
@@ -124,7 +167,8 @@
         },
         {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
-            "name": "ContentTranslation",
+            "name": "Content Translation",
+            "description": "Translate every page to the target language",
             "context": "/document/pages/*",
             "uri": "{{param.language.Translator}}",
             "httpMethod": "POST",
@@ -956,5 +1000,17 @@
                 "suggestedFrom": "{{param.searchDefaultFromLanguageCode}}"
             }
         }
-    ]
+    ],
+    "indexProjections": { 
+        "selectors": [ { 
+            "targetIndexName": "{{param.indexName}}", 
+            "parentKeyFieldName": "parent_id", 
+            "sourceContext": "/document/chunks/*", 
+            "mappings": [ 
+                { "name": "chunk", "source": "/document/chunks/*" }, 
+                { "name": "vector", "source": "/document/chunks/*/vector" },
+                { "name": "title", "source": "/document/skill_metadata/title" },
+                { "name": "metadata_storage_name", "source": "/document/metadata_storage_name" },
+                { "name": "metadata_storage_path", "source": "/document/metadata_storage_path" }
+            ] } ] }
 }

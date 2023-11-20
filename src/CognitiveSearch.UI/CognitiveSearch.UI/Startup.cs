@@ -19,11 +19,13 @@ using Knowledge.Services.Answers;
 using Knowledge.Services.AzureSearch;
 using Knowledge.Services.AzureSearch.SDK;
 using Knowledge.Services.Chat;
+using Knowledge.Services.Chat.FunctionChat;
+using Knowledge.Services.Chat.PromptFlow;
 using Knowledge.Services.Graph.Facet;
 using Knowledge.Services.Metadata;
-using Knowledge.Services.OpenAI;
 using Knowledge.Services.SemanticSearch;
 using Knowledge.Services.Translation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -57,8 +59,12 @@ namespace CognitiveSearch.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            if (!env.IsDevelopment())
+            if (true) //!env.IsDevelopment())
             {
+                //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                //    .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
+
+
                 if (Configuration.GetValue("Authentication:AzureEasyAuthIntegration", true)) {
                     // Easy Auth Integration
                     services.AddMicrosoftIdentityWebAppAuthentication(Configuration);
@@ -237,6 +243,9 @@ namespace CognitiveSearch.UI
             OpenAIConfig oaiConfigData = Configuration.GetSection("OpenAIConfig").Get<OpenAIConfig>();
             services.AddSingleton<OpenAIConfig>(_ => oaiConfigData);
 
+            PromptFlowConfig promptFlowConfigData = Configuration.GetSection("PromptFlowConfig").Get<PromptFlowConfig>();
+            services.AddSingleton<PromptFlowConfig>(_ => promptFlowConfigData);
+
             AnswersConfig qconfigData = Configuration.GetSection("AnswersConfig").Get<AnswersConfig>();
             services.AddSingleton<AnswersConfig>(_ => qconfigData);
 
@@ -253,7 +262,10 @@ namespace CognitiveSearch.UI
             // Services Singletons
             services.AddSingleton<IAnswersService, AnswersService>();
             services.AddSingleton<IChatService, ChatService>();
-            services.AddSingleton<IOpenAIService, OpenAIService>();
+            services.AddSingleton<IChatHistoryService, ChatHistoryService>();
+            services.AddSingleton<IFunctionChatService, FunctionChatService>();
+            services.AddSingleton<IPromptFlowChatService, PromptFlowChatService>();
+
             services.AddSingleton<ITranslationService, TranslationService>();
             services.AddSingleton<IMetadataService, MetadataService>();
             services.AddSingleton<ISemanticSearchService, SemanticSearch>();
@@ -282,7 +294,16 @@ namespace CognitiveSearch.UI
 
 
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "KnowledgeAPI v1"));
+            var clientid = Configuration.GetSection("AzureAd:ClientId").Value;
+
+            app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "KnowledgeAPI v1");
+                    c.OAuthClientId(clientid);
+                    c.OAuthUsePkce();
+                    c.OAuthScopeSeparator(" ");
+                });
+
 
             app.UseHttpsRedirection();
 

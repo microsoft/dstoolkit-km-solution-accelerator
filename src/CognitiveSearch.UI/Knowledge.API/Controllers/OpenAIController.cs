@@ -1,49 +1,50 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
+//// Copyright (c) Microsoft Corporation. All rights reserved.
+//// Licensed under the MIT License.
 
-using Knowledge.API.Models;
-using Knowledge.Services.OpenAI;
+//using Knowledge.Models.Chat;
+//using Knowledge.Services.Chat;
+//using Knowledge.Services.Chat.FunctionChat;
 
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Mvc;
 
-namespace Knowledge.API.Controllers
-{
+//namespace Knowledge.API.Controllers
+//{
 
-    [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
-    public class OpenAIController : CustomControllerBase {
+//    [Route("api/[controller]")]
+//    [ApiController]
+//    [Authorize]
+//    public class OpenAIController : CustomControllerBase {
 
-        private readonly IOpenAIService oaiService;
+//        private readonly IFunctionChatService oaiService;
 
-        public OpenAIController(IOpenAIService client) {
-            this.oaiService = client;
-        }
+//        public OpenAIController(IFunctionChatService client) {
+//            this.oaiService = client;
+//        }
 
-        // [HttpPost("ask")]
-        // public async Task<IActionResult> Completion(ApiChatRequest request) {
+//        // [HttpPost("ask")]
+//        // public async Task<IActionResult> Completion(ApiChatRequest request) {
 
-        //     var result = await this.chatService.Ask(request);
+//        //     var result = await this.chatService.Ask(request);
 
-        //     return CreateContentResultResponse(result);
-        // }
+//        //     return CreateContentResultResponse(result);
+//        // }
 
-        [HttpPost("chat")]
-        public async Task<IActionResult> ChatCompletion(ApiChatRequest request)
-        {
+//        [HttpPost("chat")]
+//        public async Task<IActionResult> ChatCompletion(ChatRequest request)
+//        {
 
-            var result = await this.oaiService.ChatCompletion(request);
+//            var result = await this.oaiService.ChatCompletion(request);
 
-            return CreateContentResultResponse(result);
-        }
+//            return CreateContentResultResponse(result);
+//        }
 
-        [HttpPost("completion")]
-        public async Task<IActionResult> Completion(ApiChatRequest request) {
+//        [HttpPost("completion")]
+//        public async Task<IActionResult> Completion(ChatRequest request) {
 
-            var result = await this.oaiService.Completion(request);
+//            var result = await this.oaiService.Completion(request);
 
-            return CreateContentResultResponse(result);
-        }
-    }
-}
+//            return CreateContentResultResponse(result);
+//        }
+//    }
+//}

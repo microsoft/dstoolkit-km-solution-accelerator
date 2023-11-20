@@ -2,10 +2,13 @@
     "enable": true,
     "Parameters": {
         "OpenAIVersion": "2023-03-15-preview",
-        "OpenAIEngine": "akm-chat",
-        "OpenAIModel": "gpt-35-turbo",
+        "OpenAIEngine": "akm-chat",        
+        "OpenAIModel": "gpt-35-turbo",        
         "OpenAIModelVersion": "0301",
         "OpenAICapacity": "20",
+        "OpenAIEmbeddingDeploy": "akm-embeddings",
+        "OpenAIEmbeddingModel": "text-embedding-ada-002",
+        "OpenAIEmbeddingModelVersion": "2",
         "OpenAIRegion": "EastUS"
     },
     "Items": [

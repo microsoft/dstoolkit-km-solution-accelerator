@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Knowledge.Services.Chat
+namespace Knowledge.Models.Chat
 {
     public class ChatRequest
     {
@@ -9,12 +9,8 @@ namespace Knowledge.Services.Chat
 
         public ChatMessage[] history { get; set; }
 
-        public string[] stop { get; set; }
-    }
+        public ChatOptions options { get; set; }
 
-    public class ChatMessage 
-    {
-        public string role { get; set; }
-        public string content { get; set; }
-    }
+        public string[] stop { get; set; } // ?
+    }        
 }

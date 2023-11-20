@@ -21,12 +21,12 @@
     },
     {
         "name": "COGNITIVE_SERVICES_ENDPOINT",
-        "value": "https://{{param.cognitiveServices}}.cognitiveservices.azure.com",
+        "value": "https://{{param.cogSvcLanguage}}.cognitiveservices.azure.com",
         "slotSetting": false
     },
     {
         "name": "COGNITIVE_SERVICES_KEY",
-        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cognitiveServicesKey)",
+        "value": "@Microsoft.KeyVault(SecretUri=https://{{param.keyvault}}.vault.azure.net/secrets/cognitiveServicesLanguageKey)",
         "slotSetting": false
     },
     {
@@ -108,5 +108,14 @@
         "name": "TS_MODEL_VERSION",
         "value": "v3.2-preview.2",
         "slotSetting": false
+    },
+    ,
+    {
+        "name": "CNER_PROJECT_NAME",
+        "value": "{{param.CNER_project_name}}"
+    },
+    {
+        "name": "CNER_DEPLOYMENT_NAME",
+        "value": "{{param.CNER_deployment_name}}"
     }
 ]

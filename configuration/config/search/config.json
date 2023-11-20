@@ -8,8 +8,8 @@
         "searchServiceName": "{{config.name}}src",
         "searchDefaultFromLanguageCode": "en",
         "searchDefaultToLanguageCode": "en",
-        "searchVersion": "2021-04-30-Preview",
-        "searchManagementVersion": "2021-04-30-Preview",
+        "searchVersion": "2023-10-01-preview",
+        "searchManagementVersion": "2023-10-01-preview",
         "searchSku": "standard",
         "searchIndexerEnvironment": "standard",
         "semanticSearchEnabled": true

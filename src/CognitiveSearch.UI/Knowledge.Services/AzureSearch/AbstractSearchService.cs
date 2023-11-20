@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using Azure.Identity;
+using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Storage.Blobs;
 using Azure.Storage.Sas;
@@ -33,20 +34,9 @@ namespace Knowledge.Services.AzureSearch
 
         protected virtual void InitSearchClients()
         {
-            _searchIndexClient = new SearchIndexClient(new Uri($"https://{this.serviceConfig.ServiceName}.search.windows.net/"), new DefaultAzureCredential());
-
-            try
-            {
-                var schema = new SearchSchema().AddFields(_searchIndexClient.GetIndex(serviceConfig.IndexName).Value.Fields);
-
-                SearchModels.Add(new SearchModel(schema, this.serviceConfig, this.graphConfig, serviceConfig.IndexName));
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Could not initialise Search Models. Validate Search connectivity.");
-            }
-
+            _searchIndexClient = new SearchIndexClient(new Uri($"https://{this.serviceConfig.ServiceName}.search.windows.net/"), new DefaultAzureCredential(), new SearchClientOptions(SearchClientOptions.ServiceVersion.V2023_11_01));
+            var schema = new SearchSchema().AddFields(_searchIndexClient.GetIndex(serviceConfig.IndexName).Value.Fields);
+            SearchModels.Add(new SearchModel(schema, this.serviceConfig, this.graphConfig, serviceConfig.IndexName));
         }
 
         protected SearchModel GetModel(string indexName = null)
