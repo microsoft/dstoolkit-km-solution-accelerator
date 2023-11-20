@@ -59,12 +59,8 @@ namespace CognitiveSearch.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            if (true) //!env.IsDevelopment())
-            {
-                //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                //    .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
-
-
+            if (!env.IsDevelopment())
+            {           
                 if (Configuration.GetValue("Authentication:AzureEasyAuthIntegration", true)) {
                     // Easy Auth Integration
                     services.AddMicrosoftIdentityWebAppAuthentication(Configuration);
