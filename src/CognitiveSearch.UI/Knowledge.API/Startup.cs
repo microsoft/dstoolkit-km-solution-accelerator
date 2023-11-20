@@ -15,16 +15,16 @@ using Knowledge.Services.Answers;
 using Knowledge.Services.AzureSearch;
 using Knowledge.Services.AzureSearch.SDK;
 using Knowledge.Services.Chat;
+using Knowledge.Services.Chat.FunctionChat;
+using Knowledge.Services.Chat.PromptFlow;
 using Knowledge.Services.Graph.Facet;
 using Knowledge.Services.Metadata;
-using Knowledge.Services.OpenAI;
 using Knowledge.Services.SemanticSearch;
 using Knowledge.Services.Translation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-using Neo4j.Driver;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
@@ -143,6 +143,9 @@ namespace Knowledge.API
             OpenAIConfig oaiConfigData = Configuration.GetSection("OpenAIConfig").Get<OpenAIConfig>();
             services.AddSingleton<OpenAIConfig>(_ => oaiConfigData);
 
+            PromptFlowConfig promptFlowConfigData = Configuration.GetSection("PromptFlowConfig").Get<PromptFlowConfig>();
+            services.AddSingleton<PromptFlowConfig>(_ => promptFlowConfigData);
+
             AnswersConfig qconfigData = Configuration.GetSection("AnswersConfig").Get<AnswersConfig>();
             services.AddSingleton<AnswersConfig>(_ => qconfigData);
 
@@ -160,12 +163,15 @@ namespace Knowledge.API
             services.AddSingleton<IAnswersService, AnswersService>();
             services.AddSingleton<ITranslationService, TranslationService>();
             services.AddSingleton<IChatService, ChatService>();
+            services.AddSingleton<IChatHistoryService, ChatHistoryService>();
             services.AddSingleton<IMetadataService, MetadataService>();
             services.AddSingleton<ISemanticSearchService, SemanticSearch>();
             services.AddSingleton<IAzureSearchService, AzureSearchService>();
             services.AddSingleton<IAzureSearchSDKService, AzureSearchSDKService>();
             services.AddSingleton<IFacetGraphService, FacetGraphService>();
-            services.AddSingleton<IOpenAIService, OpenAIService>();
+            services.AddSingleton<IFunctionChatService, FunctionChatService>();
+            services.AddSingleton<IPromptFlowChatService, PromptFlowChatService>();
+
             services.AddSingleton<IQueryService, QueryService>();
 
         }

@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Knowledge.API.Models;
 using Knowledge.Configuration;
 using Knowledge.Models;
+using Knowledge.Models.Ingress;
 using Knowledge.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +24,7 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getdocuments")]
-        public async Task<IActionResult> GetDocumentsAsync(ApiSearchRequest request)
+        public async Task<IActionResult> GetDocumentsAsync(IngressSearchRequest request)
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
@@ -35,7 +35,7 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getlatestdocuments")]
-        public async Task<IActionResult> GetLatestDocumentsAsync(ApiSearchRequest request)
+        public async Task<IActionResult> GetLatestDocumentsAsync(IngressSearchRequest request)
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
@@ -55,7 +55,7 @@ namespace Knowledge.API.Controllers
 
             if (!string.IsNullOrEmpty(term))
             {
-                ApiSuggestionRequest request = new()
+                IngressSuggestionRequest request = new()
                 {
                     indexName = indexName,
                     term = term,
@@ -90,7 +90,7 @@ namespace Knowledge.API.Controllers
 
             if (!string.IsNullOrEmpty(term))
             {
-                ApiSuggestionRequest request = new()
+                IngressSuggestionRequest request = new()
                 {
                     indexName = indexName,
                     term = term,
@@ -114,7 +114,7 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getimages")]
-        public async System.Threading.Tasks.Task<IActionResult> GetImagesAsync(ApiSearchRequest request)
+        public async System.Threading.Tasks.Task<IActionResult> GetImagesAsync(IngressSearchRequest request)
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
@@ -124,7 +124,7 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getlatestimages")]
-        public async System.Threading.Tasks.Task<IActionResult> GetLatestImagesAsync(ApiSearchRequest request)
+        public async System.Threading.Tasks.Task<IActionResult> GetLatestImagesAsync(IngressSearchRequest request)
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();
@@ -134,7 +134,7 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getvideos")]
-        public async System.Threading.Tasks.Task<IActionResult> GetVideosAsync(ApiSearchRequest request)
+        public async System.Threading.Tasks.Task<IActionResult> GetVideosAsync(IngressSearchRequest request)
         {
             request.indexName = DEFAULT_INDEX_NAME;
             request.permissions = GetUserPermissions();

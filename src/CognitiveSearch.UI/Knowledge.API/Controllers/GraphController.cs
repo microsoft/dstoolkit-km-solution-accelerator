@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Knowledge.API.Models;
 using Knowledge.Configuration;
 using Knowledge.Services;
+using Knowledge.Services.Graph;
 using Knowledge.Services.Graph.Facet;
 using Knowledge.Services.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -28,7 +28,7 @@ namespace Knowledge.API.Controllers
         }
 
         [HttpPost("getgraphdata")]
-        public IActionResult GetGraphData(ApiGraphRequest request)
+        public IActionResult GetGraphData(GraphRequest request)
         {
             // Support for common query transformations like spellcheck & translation
             QueryService.TransformQuery(request);

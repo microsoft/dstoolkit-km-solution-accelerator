@@ -3,8 +3,9 @@
 
 using Knowledge.Services.Chat;
 
-namespace Knowledge.API.Models {
-    public class ApiChatRequest : ChatRequest
+namespace Knowledge.Services.Chat.FunctionChat
+{
+    public interface IFunctionChatService : IChatService
     {
     }
 }

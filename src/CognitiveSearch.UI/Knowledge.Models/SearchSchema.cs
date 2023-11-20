@@ -49,7 +49,7 @@ namespace Knowledge.Models
             else if (field.Type == SearchFieldDataType.Int64) type = typeof(Int64);
             else if (field.Type == SearchFieldDataType.String) type = typeof(string);
             else if (field.Type == SearchFieldDataType.GeographyPoint) type = typeof(GeographyPoint);
-   
+
             // Azure Search SearchFieldDataType objects don't follow value comparisons, so use overloaded string conversion operator to be a consistent representation
             else if (field.Type.ToString() == SearchFieldDataType.Collection(SearchFieldDataType.String).ToString()) type = typeof(string[]);
             else if (field.Type == SearchFieldDataType.Complex) type = typeof(string);
@@ -60,6 +60,7 @@ namespace Knowledge.Models
             else if (field.Type.ToString() == SearchFieldDataType.Collection(SearchFieldDataType.Boolean).ToString()) type = typeof(Boolean[]);
             else if (field.Type.ToString() == SearchFieldDataType.Collection(SearchFieldDataType.Int64).ToString()) type = typeof(Int32[]);
             else if (field.Type.ToString() == SearchFieldDataType.Collection(SearchFieldDataType.Int64).ToString()) type = typeof(Int64[]);
+            else if (field.Type.ToString() == SearchFieldDataType.Collection(SearchFieldDataType.Single).ToString()) type = typeof(double[]);
             else
             {
                 throw new ArgumentException($"Cannot map {field.Type} to a C# type");

@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Knowledge.Services.OpenAI
+namespace Knowledge.Services.Chat.FunctionChat
 {
     using System;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
-
     using Knowledge.Configuration.OpenAI;
+    using Knowledge.Models.Chat;
     using Knowledge.Services.Chat;
     using Knowledge.Services.Helpers;
 
@@ -17,17 +17,17 @@ namespace Knowledge.Services.OpenAI
 
     using Newtonsoft.Json;
 
-    public class OpenAIService : AbstractService, IOpenAIService
+    public class FunctionChatService : AbstractService, IFunctionChatService
     {
-        private readonly string[] StopSequence = new string[] { "|||||" }; 
+        private readonly string[] StopSequence = new string[] { "|||||" };
         private OpenAIConfig _config { get; set; }
 
-        public OpenAIService(OpenAIConfig config, IDistributedCache cache, TelemetryClient telemetry)
+        public FunctionChatService(OpenAIConfig config, IDistributedCache cache, TelemetryClient telemetry)
         {
-            this.distCache = cache;
+            distCache = cache;
             _config = config;
-            this.CachePrefix = this.GetType().Name;
-        }        
+            CachePrefix = GetType().Name;
+        }
 
         public async Task<string> Completion(ChatRequest request)
         {
@@ -62,10 +62,10 @@ namespace Knowledge.Services.OpenAI
 
             LoggerHelper.Instance.LogVerbose($"End:Invoked Completion method in Open AI Chat service. Return empty result");
 
-            return String.Empty;
+            return string.Empty;
         }
 
-        public async Task<string> ChatCompletion(ChatRequest request)
+        public async Task<ChatResponse> ChatCompletion(ChatRequest request, string userId = "", string sessionId = "")
         {
             LoggerHelper.Instance.LogVerbose($"Start:Invoked ChatCompletion method in Open AI Chat service");
 
@@ -73,7 +73,7 @@ namespace Knowledge.Services.OpenAI
 
             // JSON format for passing question to service
 
-            string reqBody = "{\"values\":[{\"recordId\": \"1\",\"data\":{\"prompt\":" + JsonConvert.SerializeObject(request.prompt) + ",\"history\":"+ JsonConvert.SerializeObject(request.history) +",\"stop\":" + JsonConvert.SerializeObject(request.stop) + "}}]}";
+            string reqBody = "{\"values\":[{\"recordId\": \"1\",\"data\":{\"prompt\":" + JsonConvert.SerializeObject(request.prompt) + ",\"history\":" + JsonConvert.SerializeObject(request.history) + ",\"stop\":" + JsonConvert.SerializeObject(request.stop) + "}}]}";
 
             try
             {
@@ -88,7 +88,10 @@ namespace Knowledge.Services.OpenAI
                     // Send request to Azure service, get response
                     var response = await httpClient.SendAsync(httpRequest);
 
-                    return await response.Content.ReadAsStringAsync(); ;
+                    return new ChatResponse
+                    {
+                        answer = await response.Content.ReadAsStringAsync()
+                    };
                 }
             }
             catch (Exception ex)
@@ -98,7 +101,7 @@ namespace Knowledge.Services.OpenAI
 
             LoggerHelper.Instance.LogVerbose($"End:Invoked ChatCompletion method in Open AI Chat service. Return empty result");
 
-            return String.Empty;
+            return new ChatResponse();
         }
     }
 }

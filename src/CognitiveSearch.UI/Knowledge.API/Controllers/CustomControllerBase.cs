@@ -8,6 +8,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Identity.Web;
 
 namespace Knowledge.API.Controllers
 {
@@ -55,5 +56,12 @@ namespace Knowledge.API.Controllers
                 return string.Empty;
             }
         }
+
+        protected UserInformation GetUserActionMetadata() => new()
+        {
+            DisplayName = User.Claims.FirstOrDefault(x => x.Type == "name")?.Value,
+            Mail = User.GetDisplayName(),
+            ObjectId = User.GetObjectId()
+        };
     }
 }
