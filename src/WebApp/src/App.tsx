@@ -5,7 +5,7 @@ import { Telemetry } from "./utils/telemetry/telemetry";
 import { AppInsightsContext, ReactPlugin } from "@microsoft/applicationinsights-react-js";
 import { MsalAuthenticationTemplate, MsalProvider } from "@azure/msal-react";
 import { Auth } from "./utils/auth/auth";
-import { FluentProvider, webLightTheme } from "@fluentui/react-components";
+import { FluentProvider, makeStyles, webLightTheme } from "@fluentui/react-components";
 import resolveConfig from "tailwindcss/resolveConfig";
 import TailwindConfig from "../tailwind.config";
 import AppRoutes from "./AppRoutes";

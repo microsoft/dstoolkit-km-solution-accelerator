@@ -13,6 +13,9 @@ import { HeaderMenu } from "../../components/headerMenu/headerMenu";
 import { FilterButton } from "../../components/filter/showHideFilterButton";
 import { DateFilterDropdownMenu } from "../../components/datePicker/dateFilterDropdownMenu";
 import { SearchResultCard } from "../../components/searchResult/searchResultCard";
+import { ChatIntegration } from "../../components/copilot/ChatIntegration";
+import { useEffectOnce } from "../../utils/react/useEffectOnce";
+import { SearchRequest } from "../../types/searchRequest";
 
 interface HomeProps {
     isSearchResultsPage?: boolean;
@@ -21,10 +24,20 @@ interface HomeProps {
 export function Home({ isSearchResultsPage }: HomeProps) {
     const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [query, setQuery] = useState<string>();
+    // const [query, setQuery] = useState<string>();
     const [searchParams, setSearchParams] = useSearchParams();
     const [filters, setFilters] = useState<Record<FacetType, string[]>>();
     const [filterOpen, setFilterOpen] = useState<boolean>(true);
+    const [showCopilot, setShowCopilot] = useState<boolean>(false);
+
+    const [query, setQuery] = useState(""); // State for queryText
+    const [incomingFilter, setIncomingFilter] = useState(""); // State for incomingFilter
+    const [scoringProfile, setScoringProfile] = useState(""); // State for scoringProfile
+    const [isSemanticSearch, setIsSemanticSearch] = useState(false); // State for isSemanticSearch
+    const [isQueryTranslation, setIsQueryTranslation] = useState(true); // State for isQueryTranslation
+    const [isQuerySpellCheck, setIsQuerySpellCheck] = useState(true); // State for isQuerySpellCheck
+    const [suggestionsAsFilter, setSuggestionsAsFilter] = useState(true); // State for suggestionsAsFilter
+    const [orMVRefinerOperator, setOrMVRefinerOperator] = useState(false);
 
     const navigate = useNavigate();
 
@@ -68,26 +81,46 @@ export function Home({ isSearchResultsPage }: HomeProps) {
         setFilterOpen(!filterOpen);
     }
 
+    function toggleCopilot(): void {
+        console.log("*** toggleCopilot");
+        setShowCopilot(!showCopilot);
+    }
+
     // Custom hook that can be used instead of useEffect() with zero dependencies.
     // Avoids a double execution of the effect when in React 18 DEV mode with <React.StrictMode>
-    // useEffectOnce(() => {
-    // });
+    useEffectOnce(() => {});
 
-    // async function loadDataAsync() {
-    //     setIsLoading(true);
-    //     const result: Paged<DataType> = await httpClient.post(
-    //         `${window.ENV.API_URL}/something`,
-    //         payload
-    //     );
-    //     setData(result);
-    //     setIsLoading(false);
-    // }
+    async function loadDataAsync() {
+        setIsLoading(true);
+
+        const payload: SearchRequest = {
+            queryText: query || "*",
+            searchFacets: [],
+            currentPage: 1,
+            incomingFilter: incomingFilter,
+            parameters: {
+                scoringProfile: scoringProfile,
+                inOrderBy: [],
+            },
+            options: {
+                isSemanticSearch: isSemanticSearch,
+                isQueryTranslation: isQueryTranslation,
+                isQuerySpellCheck: isQuerySpellCheck,
+                suggestionsAsFilter: suggestionsAsFilter,
+                orMVRefinerOperator: orMVRefinerOperator,
+            },
+        };
+
+        // const result: Paged<DataType> = await httpClient.post(`${window.ENV.API_URL}/something`, payload);
+        // setData(result);
+        setIsLoading(false);
+    }
 
     return (
         <>
             <Header
                 className="flex flex-col justify-between bg-contain bg-right-bottom bg-no-repeat"
-                size={!isSearchResultsPage ? "large" : "medium"}
+                size={"large"}
             >
                 <div className="-ml-8">
                     <HeaderBar location={NavLocation.Home} />
@@ -119,8 +152,8 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                 </div>
             </Header>
 
-            <main className="w-full pt-2">
-                <div className="grid grid-cols-3 gap-x-4 gap-y-8 md:grid-cols-5 md:gap-x-8">
+            <main className="w-full">
+                <div className="grid grid-cols-5 gap-x-2 gap-y-8">
                     <div className="col-span-1 col-start-1 ml-8 pt-1">
                         <FilterButton className="" onFilterPress={onFilterPress} />
                     </div>
@@ -129,7 +162,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                         <HeaderMenu className="" />
                         <Button
                             className=""
-                            onClick={() => console.log("click")}
+                            onClick={() => toggleCopilot()}
                             icon={<img src="\img\Copilot.png"></img>}
                             appearance="subtle"
                         >
@@ -165,14 +198,21 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                                     <Spinner size="extra-large" />
                                 </div>
                             )}
-                            {!isLoading && 
-                                <div className="ml-5 mt-5" >
-                                  <SearchResultCard />
-                                </div>}
+                            {!isLoading && (
+                                <div className="ml-5 mt-5">
+                                    <SearchResultCard />
+                                </div>
+                            )}
                         </div>
                     </div>
 
-                    
+                    {showCopilot && (
+                        <div className="col-span-1 col-start-5 -mt-8">
+                            <div className="flex flex-col">
+                                <ChatIntegration />
+                            </div>
+                        </div>
+                    )}
                 </div>
             </main>
         </>

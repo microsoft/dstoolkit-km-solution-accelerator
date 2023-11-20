@@ -1,6 +1,6 @@
 window.ENV = {
     ENVIRONMENT: "local",
-    API_URL: "http://localhost:5901",
+    API_URL: "https://dskm4api.azurewebsites.net",
     APP_INSIGHTS_CS: "InstrumentationKey=?;IngestionEndpoint=?",
     AUTH: {
         clientId: "175604f9-b2d4-4aef-b642-4211857111b8",
