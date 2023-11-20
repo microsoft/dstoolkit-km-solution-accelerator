@@ -8,8 +8,14 @@ interface OptionsPanelProps {
   }
 
 export function OptionsPanel({ onModelChange, onSourceChange }: OptionsPanelProps) {
-    const [model, setModel] = useState("chat_35");
-    const [source, setSource] = useState("rag_wor");
+    
+    const GPT35 = "chat_35";
+    const GPT4 = "chat_4";
+    const LLM = "gptchat";
+    const WoR = "rag_wor";
+    
+    const [model, setModel] = useState(GPT35);
+    const [source, setSource] = useState(LLM);
 
     const handleSwitchChange = (activeSwitch: string) => {
         setModel(activeSwitch);
@@ -24,6 +30,9 @@ export function OptionsPanel({ onModelChange, onSourceChange }: OptionsPanelProp
 
     console.log("source", source);
 
+    
+    
+
     return (
         <div className="mx-40 my-10 flex flex-col items-center justify-center rounded-xl bg-neutral-500 bg-opacity-10 shadow-md outline outline-1 outline-transparent">
             <div className="my-5 mr-2">
@@ -33,17 +42,17 @@ export function OptionsPanel({ onModelChange, onSourceChange }: OptionsPanelProp
             <Label className="mb-2 mr-40 mt-1 ">What do you want to chat with?</Label>
             <div className="mb-10 ml-7 flex space-x-2">
                 <ToggleButton
-                    checked={source === "rag_wor"}
-                    onClick={() => onChecked("rag_wor")}
-                    appearance={source === "rag_wor" ? "primary" : "outline"}
+                    checked={source === LLM}
+                    onClick={() => onChecked(LLM)}
+                    appearance={source === LLM ? "primary" : "outline"}
                     shape="rounded"
                 >
                     LLM
                 </ToggleButton>
                 <ToggleButton
-                    checked={source === "Web of Reports"}
-                    onClick={() => onChecked("Web of Reports")}
-                    appearance={source === "Web of Reports" ? "primary" : "outline"}
+                    checked={source === WoR}
+                    onClick={() => onChecked(WoR)}
+                    appearance={source === WoR ? "primary" : "outline"}
                     shape="rounded"
                 >
                     Web of Reports
