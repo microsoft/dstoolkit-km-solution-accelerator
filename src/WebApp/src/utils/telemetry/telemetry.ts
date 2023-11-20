@@ -11,7 +11,7 @@ export class Telemetry {
             config: {
                 connectionString: connectionString,
                 enableAutoRouteTracking: true,
-                extensions: [Telemetry.reactPlugin],
+                // extensions: [Telemetry.reactPlugin],
                 disableTelemetry: !autostart,
             },
         });

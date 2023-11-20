@@ -13,7 +13,7 @@ import { HeaderMenu } from "../../components/headerMenu/headerMenu";
 import { FilterButton } from "../../components/filter/showHideFilterButton";
 import { DateFilterDropdownMenu } from "../../components/datePicker/dateFilterDropdownMenu";
 import { SearchResultCard } from "../../components/searchResult/searchResultCard";
-import { ChatIntegration } from "../../components/copilot/ChatIntegration";
+// import { ChatIntegration } from "../../components/copilot/ChatIntegration";
 import { useEffectOnce } from "../../utils/react/useEffectOnce";
 import { SearchRequest } from "../../types/searchRequest";
 
@@ -209,7 +209,7 @@ export function Home({ isSearchResultsPage }: HomeProps) {
                     {showCopilot && (
                         <div className="col-span-1 col-start-5 -mt-8">
                             <div className="flex flex-col">
-                                <ChatIntegration />
+                                {/* <ChatIntegration /> */}
                             </div>
                         </div>
                     )}
