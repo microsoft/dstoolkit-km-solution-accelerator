@@ -140,11 +140,8 @@ export function HeaderBar({ location }: { location?: NavLocation }) {
                     <img className="my-auto" src="/img/ms-logo-small.png" alt="logo" />
                     <div className="border border-zinc-500"></div>
                     <img className="my-auto " src="/img/Contoso_Logo_sm.png" alt="logo" />
-                    <div className="font-roboto order-4 pt-1 text-base font-bold leading-tight tracking-wider text-white">
-                        CONTOSO
-                    </div>
                     <div className="order-5 pt-2 text-sm font-semibold leading-tight text-white">
-                        Knowledge Mining
+                        Retrieval Augmented Generation & Knowledge Mining Platform
                     </div>
                 </div>
 
