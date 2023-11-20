@@ -4,8 +4,8 @@
     "skills": [
         {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
-            "name": "ContentMesh",
-            "description": "Send the document content for cleaning/meshing",
+            "name": "Content Trimming",
+            "description": "C# custom skill that trim the content and remove \n and \r",
             "context": "/document",
             "uri": "{{param.text.TextMesh}}",
             "httpMethod": "POST",
@@ -40,7 +40,8 @@
         },
         {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
-            "name": "LanguageDetection",
+            "name": "Language Detection",
+            "description": "Phyton custom skill to detect language of the document",
             "context": "/document",
             "uri": "{{param.language.LanguageDetection}}",
             "httpMethod": "POST",
@@ -69,7 +70,7 @@
             ]
         },{
             "@odata.type": "#Microsoft.Skills.Text.SplitSkill",
-            "name": "PagesSplit",
+            "name": "Pages Split",
             "description": "split the content into pages of max 21K to fit Entity Extraction & Translation limits",
             "context": "/document",
             "textSplitMode": "pages",
@@ -135,7 +136,8 @@
         },
         {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
-            "name": "PagesKeyPhrasesExtraction",
+            "name": "Pages Keyphrases extraction",
+            "description": "Extract KeyPhrases for each page of the document",
             "context": "/document/pages/*",
             "uri": "{{param.language.KeyPhrasesExtraction}}",
             "httpMethod": "POST",
@@ -165,7 +167,8 @@
         },
         {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
-            "name": "ContentTranslation",
+            "name": "Content Translation",
+            "description": "Translate every page to the target language",
             "context": "/document/pages/*",
             "uri": "{{param.language.Translator}}",
             "httpMethod": "POST",

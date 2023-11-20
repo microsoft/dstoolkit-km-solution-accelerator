@@ -25,10 +25,19 @@
                 {
                     "Id": "api",
                     "Name": "{{config.name}}api",
-                    "Path": "src\\CognitiveSearch.UI\\CognitiveSearch.UI",
+                    "Path": "src\\CognitiveSearch.UI\\Knowledge.API",
                     "AccessIPRestriction": false,
                     "AccessSubnetRestriction": false,
                     "EnablePrivateAccess": false
+                },
+                {
+                    "Id": "ui",
+                    "Name": "{{config.name}}-ui",
+                    "Path": "src\\CognitiveSearch.UI\\Knowledge.API",
+                    "AccessIPRestriction": false,
+                    "AccessSubnetRestriction": false,
+                    "EnablePrivateAccess": false,
+                    "isReactApp": true
                 }
             ]
         },
