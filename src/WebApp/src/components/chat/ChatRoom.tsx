@@ -1,16 +1,18 @@
 import { useRef, useState } from "react";
 import { ChatInput } from "./ChatInput";
-import { AskResponse, ChatApiResponse, ChatRequest } from "../../api/models";
+import { ChatApiResponse, ChatRequest } from "../../api/models";
 import { UserChatMessage } from "./UserChatMessage";
 import { Answer } from "./Answer";
 import { OptionsPanel } from "./OptionsPanel";
 import { httpClient } from "../../utils/httpClient/httpClient";
-import { Spinner } from "@fluentui/react-components";
+import { Button } from "@fluentui/react-components";
+import { ChatAdd24Regular } from "@fluentui/react-icons";
 
 export function ChatRoom() {
     const lastQuestionRef = useRef<string>("");
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isDisbaled, setIsDisabled] = useState<boolean>(false);
     const [error, setError] = useState<unknown>();
 
     const [answers, setAnswers] = useState<[prompt: string, response: ChatApiResponse][]>([]);
@@ -27,6 +29,7 @@ export function ChatRoom() {
         .flat();
 
     const makeApiRequest = async (question: string) => {
+        setIsDisabled(true);
         setLoading(true);
         //set userInput as last question
         lastQuestionRef.current = question;
@@ -87,32 +90,54 @@ export function ChatRoom() {
         setSource(source);
     };
 
-    return (
-        <div>
-            {!lastQuestionRef.current ? (
-                <div className="min-h-[50vh]">
-                    <OptionsPanel onModelChange={handleModelChange} onSourceChange={handleSourceChange} />
-                </div>
-            ) : (
-                <div className="max-h-[50vh] min-h-[50vh] overflow-auto ">
-                    {answers.map(([prompt, response], index) => (
-                        <div key={index}>
-                            <UserChatMessage prompt={prompt} />
-                            <div className="mb-10 flex">
-                                <Answer loading={index === answers.length - 1 && loading} answer={response} />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
+    const handleFollowUpQuestion = async (question: string) => {
+        await makeApiRequest(question);
+    };
 
-            <div className="mb-20 mt-20 pt-6">
-                <ChatInput
-                    onSend={(question) => makeApiRequest(question)}
-                    disabled={isLoading}
-                    placeholder="Type your message here.."
-                    clearOnSend
+    return (
+        <div className="">
+            <div className="max-h-[50vh] min-h-[50vh] overflow-auto ">
+                <OptionsPanel
+                    onModelChange={handleModelChange}
+                    onSourceChange={handleSourceChange}
+                    disabled={isDisbaled}
                 />
+
+                {answers.map(([prompt, response], index) => (
+                    <div key={index}>
+                        <UserChatMessage prompt={prompt} />
+                        <div className="mb-10 flex">
+                            <Answer loading={index === answers.length - 1 && loading} answer={response} onFollowUpQuestion={handleFollowUpQuestion} />
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className="flex justify-start">
+                <div className="ml-5 mt-20 pt-6">
+                    <div className="group">
+                        <Button
+                            className="flex h-12 w-auto items-center justify-center"
+                            shape="circular"
+                            icon={<ChatAdd24Regular />}
+                            onClick={() => {
+                                clearChat();
+                                setIsDisabled(false);
+                            }}
+                        >
+                            <span className="whitespace-nowrap">New Topic</span>
+                        </Button>
+                    </div>
+                </div>
+
+                <div className="mb-20 ml-2 mr-10 mt-20 w-full pt-6">
+                    <ChatInput
+                        onSend={(question) => makeApiRequest(question)}
+                        disabled={isLoading}
+                        placeholder="Type your message here.."
+                        clearOnSend
+                    />
+                </div>
             </div>
         </div>
     );
