@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChatInput } from "./ChatInput";
 import { ChatApiResponse, ChatRequest } from "../../api/models";
 import { UserChatMessage } from "./UserChatMessage";
@@ -20,6 +20,16 @@ export function ChatRoom() {
     const [model, setModel] = useState<string>("chat_35");
     const [source, setSource] = useState<string>("gptchat");
     const [loading, setLoading] = useState<boolean>(false);
+
+    const chatWindowRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+        if (chatWindowRef.current) {
+            chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+        }
+    };
+
+    useEffect(scrollToBottom, [answers]);
 
     const history = answers
         .map(([prompt, response]) => [
@@ -96,7 +106,7 @@ export function ChatRoom() {
 
     return (
         <div className="">
-            <div className="max-h-[50vh] min-h-[50vh] overflow-auto ">
+            <div className="max-h-[64vh] min-h-[50vh] overflow-auto" ref={chatWindowRef}>
                 <OptionsPanel
                     onModelChange={handleModelChange}
                     onSourceChange={handleSourceChange}
@@ -107,14 +117,18 @@ export function ChatRoom() {
                     <div key={index}>
                         <UserChatMessage prompt={prompt} />
                         <div className="mb-10 flex">
-                            <Answer loading={index === answers.length - 1 && loading} answer={response} onFollowUpQuestion={handleFollowUpQuestion} />
+                            <Answer
+                                loading={index === answers.length - 1 && loading}
+                                answer={response}
+                                onFollowUpQuestion={handleFollowUpQuestion}
+                            />
                         </div>
                     </div>
                 ))}
             </div>
 
             <div className="flex justify-start">
-                <div className="ml-5 mt-20 pt-6">
+                <div className="ml-5 pt-6">
                     <div className="group">
                         <Button
                             className="flex h-12 w-auto items-center justify-center"
@@ -130,7 +144,7 @@ export function ChatRoom() {
                     </div>
                 </div>
 
-                <div className="mb-20 ml-2 mr-10 mt-20 w-full pt-6">
+                <div className="mb-20 ml-2 mr-10 w-full pt-6">
                     <ChatInput
                         onSend={(question) => makeApiRequest(question)}
                         disabled={isLoading}

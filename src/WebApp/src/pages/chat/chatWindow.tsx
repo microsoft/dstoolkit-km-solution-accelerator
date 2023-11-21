@@ -19,7 +19,7 @@ export function ChatWindow() {
                         <ChatHeaderTabs />
                     </div>
                     <div className="col-span-5 col-start-2 ml-8 mt-14 h-full">
-                        <div className="flex h-full flex-col overflow-auto">
+                        <div className="flex h-full flex-col">
                             <div className="">
                                 <ChatRoom />
                             </div>
