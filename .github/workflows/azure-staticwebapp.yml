@@ -1,0 +1,81 @@
+name: Azure Static Web Apps CI/CD
+
+on:
+  push:
+    branches: [ "develop" ]
+    paths:
+       - src/WebApp/**
+       - .github/workflows/azure-staticwebapp.yml
+  workflow_call:
+  workflow_dispatch:
+        inputs:
+            TARGET_ENV:
+                description: "Environment"
+                required: true
+                default: "dev"
+                type: choice
+                options:
+                    - dev
+                    - pre
+                    - pro
+            DEPLOYMENT_ENV:
+                description: "Environment Slot (leave empty for default)"
+                required: false
+                default: ""
+                type: choice
+                options:
+                    - ""
+                    - alpha
+                    - beta
+# Environment variables available to all jobs and steps in this workflow
+env:
+    APP_PATH: "src/WebApp"
+
+jobs:
+    publish:
+      environment: ${{ github.event.inputs.TARGET_ENV }}
+      name: Publish to Azure Static Web App
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v3.8.1
+          with:
+            node-version: '18.x'
+
+        - name: Replace config.js
+          shell: bash
+          run: |
+            sed -i "s+__api_url__+${{ vars.API_URL }}+g; s+__environment__+${{ vars.ENVIRONMENT }}+g; s+__app_insights_cs__+${{ secrets.APP_INSIGHTS_CS }}+g" ${{ env.APP_PATH }}/public/config.env.js
+            sed -i "s+__auth_client_id__+${{ vars.AUTH_CLIENT_ID }}+g; s+__auth_instance__+${{ vars.AUTH_INSTANCE }}+g; s+__auth_tenant_id__+${{ vars.AUTH_TENANT_ID }}+g; s+__auth_scope__+${{ vars.AUTH_SCOPE }}+g" ${{ env.APP_PATH }}/public/config.env.js
+            cp ${{ env.APP_PATH }}/public/config.env.js ${{ env.APP_PATH }}/public/config.js
+            cat ${{ env.APP_PATH }}/public/config.js
+            sed -i "s+__api_url__+${{ vars.API_URL }}+g; s+__app_insights_url__+${{ vars.APP_INSIGHTS_URL }}+g" ./frontend/webapp/public/staticwebapp.config.json
+            
+        - name: Add .npmrc configuration for private registry access
+          run: |
+            cd ${{ env.APP_PATH }}
+            touch .npmrc
+            echo "
+            //pkgs.dev.azure.com/uifabric/_packaging/fluentai-react/npm/registry/:username=kmtoken
+            //pkgs.dev.azure.com/uifabric/_packaging/fluentai-react/npm/registry/:_password=${{ secrets.NPM_TOKEN }}
+            @fluentai:registry=https://pkgs.dev.azure.com/uifabric/_packaging/fluentai-react/npm/registry/
+            always-auth=true" >> .npmrc
+
+        - name: Install dependencies and build
+          shell: bash
+          run: |
+            cd src/WebApp 
+            yarn install
+            yarn run build
+        
+        - name: Deploy to Static Web App
+          uses: Azure/static-web-apps-deploy@v1
+          with:
+            azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
+            action: "upload"
+            skip_app_build: true
+            skip_api_build: true
+            app_location: ${{ env.APP_PATH }}/dist
