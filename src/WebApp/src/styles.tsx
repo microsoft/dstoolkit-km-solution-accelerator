@@ -49,6 +49,11 @@ export const Breakpoints = {
 
 export const ScrollBarStyles: GriffelStyle = {
     overflowY: 'auto',
+    '&::-webkit-scrollbar': {
+        display: 'none', // For WebKit browsers
+    },
+    scrollbarWidth: 'none', // For Firefox
+    '-ms-overflow-style': 'none', // For Internet Explorer and Edge
     '&:hover': {
         '&::-webkit-scrollbar-thumb': {
             backgroundColor: tokens.colorScrollbarOverlay,

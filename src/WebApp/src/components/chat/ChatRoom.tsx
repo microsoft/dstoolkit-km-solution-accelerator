@@ -7,6 +7,8 @@ import { OptionsPanel } from "./OptionsPanel";
 import { httpClient } from "../../utils/httpClient/httpClient";
 import { Button } from "@fluentui/react-components";
 import { ChatAdd24Regular } from "@fluentui/react-icons";
+import { SharedStyles } from "../../styles";
+import './chatRoom.scss'
 
 export function ChatRoom() {
     const lastQuestionRef = useRef<string>("");
@@ -106,7 +108,7 @@ export function ChatRoom() {
 
     return (
         <div className="">
-            <div className="max-h-[64vh] min-h-[50vh] overflow-auto" ref={chatWindowRef}>
+            <div className="max-h-[64vh] min-h-[64vh] overflow-auto scrollbar-hide" ref={chatWindowRef}>
                 <OptionsPanel
                     onModelChange={handleModelChange}
                     onSourceChange={handleSourceChange}
@@ -144,7 +146,7 @@ export function ChatRoom() {
                     </div>
                 </div>
 
-                <div className="mb-20 ml-2 mr-10 w-full pt-6">
+                <div className="mb-20 ml-2 mr-5 w-full pt-6">
                     <ChatInput
                         onSend={(question) => makeApiRequest(question)}
                         disabled={isLoading}
