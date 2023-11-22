@@ -10,7 +10,7 @@ export function ModelSwitch({ onSwitchChange, disabled }: ModelSwitchProps) {
     const GPT35 = "chat_35";
     const GPT4 = "chat_4";
 
-    const [activeSwitch, setActiveSwitch] = useState(GPT35);
+    const [activeSwitch, setActiveSwitch] = useState(GPT4);
 
     const handleClick = (model: string) => {
         if (disabled) {

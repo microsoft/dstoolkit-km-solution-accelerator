@@ -14,8 +14,8 @@ export function OptionsPanel({ onModelChange, onSourceChange, disabled }: Option
     const LLM = "gptchat";
     const WoR = "rag_wor";
 
-    const [model, setModel] = useState(GPT35);
-    const [source, setSource] = useState(LLM);
+    const [model, setModel] = useState(GPT4);
+    const [source, setSource] = useState(WoR);
 
     const handleSwitchChange = (activeSwitch: string) => {
         setModel(activeSwitch);
