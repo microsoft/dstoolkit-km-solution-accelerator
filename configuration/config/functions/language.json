@@ -109,7 +109,6 @@
         "value": "v3.2-preview.2",
         "slotSetting": false
     },
-    ,
     {
         "name": "CNER_PROJECT_NAME",
         "value": "{{param.CNER_project_name}}"

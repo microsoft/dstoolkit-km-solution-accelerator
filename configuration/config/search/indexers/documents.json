@@ -258,6 +258,56 @@
       "sourceFieldName": "/document/skill_metadata/document_segments",
       "targetFieldName": "document_segments",
       "mappingFunction": null
+    },    
+    {
+      "sourceFieldName": "/document/pages/*/ReportType/*",
+      "targetFieldName": "ReportType",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/pages/*/ResearchFacility/*",
+      "targetFieldName": "ResearchFacility",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/pages/*/Subject/*",
+      "targetFieldName": "Subject",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/pages/*/ReportNumber/*",
+      "targetFieldName": "ReportNumber",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/pages/*/ReportTitle/*",
+      "targetFieldName": "ReportTitle",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/pages/*/Author/*",
+      "targetFieldName": "Author",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/pages/*/ProjectLeader/*",
+      "targetFieldName": "ProjectLeader",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/pages/*/PublicationDate/*",
+      "targetFieldName": "PublicationDate",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/pages/*/SearchTerms/*",
+      "targetFieldName": "SearchTerms",
+      "mappingFunction": null
+    },
+    {
+      "sourceFieldName": "/document/pages/*/Contributors/*",
+      "targetFieldName": "Contributors",
+      "mappingFunction": null
     }
   ],
   "encryptionKey": null

@@ -297,6 +297,64 @@
         },
         {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+            "name": "Custom Entity Recognition",
+            "context": "/document/pages/*",
+            "uri": "{{param.language.CustomEntityRecognition}}",
+            "httpMethod": "POST",
+            "timeout": "PT3M",
+            "batchSize": 1,
+            "degreeOfParallelism": 2,
+            "inputs": [
+                {
+                    "name": "text",
+                    "source": "/document/pages/*"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "Report Type",
+                    "targetName": "ReportType"
+                },
+                {
+                    "name": "Research Facility",
+                    "targetName": "ResearchFacility"
+                },
+                {
+                    "name": "Subject",
+                    "targetName": "Subject"
+                },
+                {
+                    "name": "Report Number",
+                    "targetName": "ReportNumber"
+                },
+                {
+                    "name": "Report Title",
+                    "targetName": "ReportTitle"
+                },
+                {
+                    "name": "Author",
+                    "targetName": "Author"
+                },
+                {
+                    "name": "Project Leader",
+                    "targetName": "ProjectLeader"
+                },
+                {                    
+                    "name": "Publication Date",
+                    "targetName": "PublicationDate"
+                },
+                {
+                    "name": "Search Terms",
+                    "targetName": "SearchTerms"
+                },
+                {
+                    "name": "Contributors",
+                    "targetName": "Contributors"
+                }
+            ]
+        },        
+        {
+            "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
             "name": "EntityRecognition",
             "context": "/document/pages/*",
             "uri": "{{param.language.EntityRecognition}}",
@@ -444,6 +502,7 @@
         {
             "@odata.type": "#Microsoft.Skills.Util.ShaperSkill",
             "context": "/document",
+            "name": "Shaper 1",
             "inputs": [
                 {
                     "name": "text",
@@ -563,7 +622,7 @@
         },
         {
             "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
-            "name": "#14",
+            "name": "Remove Stop Words",
             "description": "A custom skill to remove stopwords from keyphrases vs others entities",
             "context": "/document",
             "uri": "{{param.entities.keyphrases-cleansing}}",

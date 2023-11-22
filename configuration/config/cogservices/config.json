@@ -8,8 +8,8 @@
         "OpenAI": "{{config.name}}-openai",
         "cognitiveServices": "{{config.name}}-cognsvc",
         "cogSvcLanguage": "{{config.name}}-language",
-        "CNER_project_name": "nombre projecto",
-        "CNER_deployment_name": "nombre deploymnet"    
+        "CNER_project_name": "{{config.cnerproject}}",
+        "CNER_deployment_name": "{{config.cnerdeploymentId}}"    
     },
     "Items": [
         {

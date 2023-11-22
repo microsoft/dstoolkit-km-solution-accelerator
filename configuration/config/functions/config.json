@@ -193,6 +193,9 @@
                             "Name": "EntityRecognition"
                         },
                         {
+                            "Name": "CustomEntityRecognition"
+                        },
+                        {
                             "Name": "KeyPhrasesExtraction"
                         },
                         {
