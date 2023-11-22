@@ -5,17 +5,17 @@ import { ModelSwitch } from "./modelSwitch";
 interface OptionsPanelProps {
     onModelChange: (model: string) => void;
     onSourceChange: (source: string) => void;
-  }
+    disabled: boolean;
+}
 
-export function OptionsPanel({ onModelChange, onSourceChange }: OptionsPanelProps) {
-    
+export function OptionsPanel({ onModelChange, onSourceChange, disabled }: OptionsPanelProps) {
     const GPT35 = "chat_35";
     const GPT4 = "chat_4";
     const LLM = "gptchat";
     const WoR = "rag_wor";
-    
-    const [model, setModel] = useState(GPT35);
-    const [source, setSource] = useState(LLM);
+
+    const [model, setModel] = useState(GPT4);
+    const [source, setSource] = useState(WoR);
 
     const handleSwitchChange = (activeSwitch: string) => {
         setModel(activeSwitch);
@@ -30,7 +30,7 @@ export function OptionsPanel({ onModelChange, onSourceChange }: OptionsPanelProp
     return (
         <div className="mx-40 my-10 flex flex-col items-center justify-center rounded-xl bg-neutral-500 bg-opacity-10 shadow-md outline outline-1 outline-transparent">
             <div className="my-5 mr-2">
-                <ModelSwitch onSwitchChange={handleSwitchChange} />
+                <ModelSwitch onSwitchChange={handleSwitchChange} disabled={disabled} />
             </div>
 
             <Label className="mb-2 mr-40 mt-1 ">What do you want to chat with?</Label>
@@ -40,6 +40,7 @@ export function OptionsPanel({ onModelChange, onSourceChange }: OptionsPanelProp
                     onClick={() => onChecked(LLM)}
                     appearance={source === LLM ? "primary" : "outline"}
                     shape="rounded"
+                    disabledFocusable={disabled && source !== LLM}
                 >
                     LLM
                 </ToggleButton>
@@ -48,6 +49,7 @@ export function OptionsPanel({ onModelChange, onSourceChange }: OptionsPanelProp
                     onClick={() => onChecked(WoR)}
                     appearance={source === WoR ? "primary" : "outline"}
                     shape="rounded"
+                    disabledFocusable={disabled && source !== WoR}
                 >
                     Web of Reports
                 </ToggleButton>
@@ -57,6 +59,7 @@ export function OptionsPanel({ onModelChange, onSourceChange }: OptionsPanelProp
                     onClick={() => onChecked("My own documents")}
                     appearance={source === "My own documents" ? "primary" : "outline"}
                     shape="rounded"
+                    disabledFocusable={disabled && source !== "My own documents"}
                 >
                     My own documents
                 </ToggleButton>
